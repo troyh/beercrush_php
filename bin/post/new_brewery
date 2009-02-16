@@ -2,9 +2,13 @@
 XML_FILE=$1
 XML_DIR="/home/troy/beerliberation/xml/brewery"
 
+# Do verification on the data
+
 MY_DIR=`dirname $0`;
 
 # Find a unique ID
 ID=`xmlstarlet sel -t -v "/post/doc/new_brewery/name" $XML_FILE | sed -e 's/ /-/g' -e 's/[^a-zA-Z0-9-]//g'`
 
 xmlstarlet tr $MY_DIR/xsl/new_brewery.xsl -s ID=$ID $XML_FILE > $XML_DIR/$ID.xml
+
+# Check the doc into SVN

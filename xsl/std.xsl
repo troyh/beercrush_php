@@ -7,7 +7,28 @@
 
 	<xsl:template name="header">
 		<div id="header">
+			
 			<h1><a href="/html/brewery">Beer Liberation</a></h1>
+
+			<div>
+	            <div class="breadCrumbHolder module">
+					<div id="breadCrumb" class="breadCrumb module">
+	                    <ul>
+	                        <li><a href="../">Home</a></li>
+	                        <li><a href="./index.html">Brewery</a></li>
+	                        <li><a href="#"><xsl:value-of select="name"/></a></li>
+	                        <li><a href="#"><xsl:value-of select="name"/></a></li>
+	                        <li><a href="#"><xsl:value-of select="name"/></a></li>
+	                        <li><a href="#"><xsl:value-of select="name"/></a></li>
+	                        <li><a href="#"><xsl:value-of select="name"/></a></li>
+	                        <li><a href="#"><xsl:value-of select="name"/></a></li>
+	                        <li><a href="#"><xsl:value-of select="name"/></a></li>
+	                    </ul>
+	                </div>
+				</div>
+	            <div class="chevronOverlay main"></div>
+			</div>
+			
 			<ul id="header_menu" class="sf-menu">
 				<li><a href="#">Breweries</a>
 					<ul>
@@ -18,6 +39,7 @@
 				<li><a href="#">Beers</a></li>
 				<li><a href="#">Users</a></li>
 			</ul>
+
 		</div>
 	</xsl:template>
 

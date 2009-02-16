@@ -10,7 +10,7 @@ body {
 	top:0px;
 	left:0px;
 	right:0px;
-	height:50px;
+	height:55px;
 	width:100%;
 	padding:0;
 	margin:0;
@@ -20,6 +20,33 @@ body {
 	border-bottom:1px solid #abc;
 }
 
+#header .breadCrumbHolder {
+	position:absolute;
+	top:23px;
+	left:0px;
+	font-family:Helvetica,Arial;
+	font-size:12px;
+}
+
+#header .breadCrumbHolder a {
+	text-decoration:none;
+}
+
+#header .breadCrumbHolder a:visited {
+	color:#456;
+}
+
+#header .breadCrumbHolder a:hover {
+	text-decoration:underline;
+}
+
+#header > h1 {
+	position:absolute;
+	top:-17px;
+	left:5px;
+	font-size:1.5em;
+}
+
 /* Logo link */
 #header h1 a {
 	color:#abc;
@@ -27,9 +54,13 @@ body {
 }
 
 #page_content {
+	position:relative;
 	margin-top:60px;
-	height:90%;
+	font-family:Helvetica,Arial;
+	font-size:1.2em;
+	color:#666;
 }
+
 #footer {
 	font-size:75%;
 	color:#abc;
@@ -41,14 +72,15 @@ body {
 }
 
 #header_menu {
+	position:absolute;
 	font-family: Helvetica,Arial;
-	font-size:.8em;
+	font-size:1em;
 	position:fixed;
-	top:17px;
-	right:0px;
+	top:18px;
+	right:5px;
 }
 
-h1 {
+#page_content h1 {
 	font-size:175%;
 }
 

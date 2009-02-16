@@ -30,8 +30,12 @@
 				<script type="text/javascript" src="/js/jquery.hoverIntent.js"><xsl:text> </xsl:text></script>
 				<script type="text/javascript" src="/js/jquery.overlay-0.14.js"><xsl:text> </xsl:text></script>
 				<script type="text/javascript" src="/js/jquery.expose-0.14.js"><xsl:text> </xsl:text></script>
-				<LINK href="/css/brewery.css" type="text/css" rel="stylesheet" media="screen" />
-				<LINK href="/css/superfish.css" type="text/css" rel="stylesheet"  media="screen" />
+				<script type="text/javascript" src="/js/jquery.jBreadCrumb.js"><xsl:text> </xsl:text></script>
+				<script type="text/javascript" src="/js/jquery.easing.1.3.js"><xsl:text> </xsl:text></script>
+				<link href="/css/brewery.css" type="text/css" rel="stylesheet" media="screen" />
+				<link href="/css/superfish.css" type="text/css" rel="stylesheet"  media="screen" />
+		        <link href="/css/Base.css"       rel="stylesheet" type="text/css" media="screen"/>
+		        <link href="/css/BreadCrumb.css" rel="stylesheet" type="text/css" media="screen"/>
 			</head>
 			<body>
 			
