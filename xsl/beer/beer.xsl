@@ -4,9 +4,16 @@
 
 	<xsl:output encoding="UTF-8" indent="yes" method="xml" />
 	
-	<xsl:include href="std.xsl"/>
-
+	<xsl:include href="../std.xsl"/>
+	
 	<xsl:template match="/brewery">
+		<xsl:element name="a">
+			<xsl:attribute name="href">/brewery/<xsl:value-of select="@id"/></xsl:attribute>
+			<xsl:value-of select="name"/>
+		</xsl:element>
+	</xsl:template>
+
+	<xsl:template match="/beer">
 		
 		<html xmlns:bl="http://beerliberation.com/">
 			<head>
@@ -27,35 +34,22 @@
 			<body>
 				
 				<xsl:call-template name="header">
-					<xsl:with-param name="Path1" select="string('Brewery')"/>
+					<xsl:with-param name="Path1" select="string('Beer')"/>
 				</xsl:call-template>
 				<div id="page_content">
 					
 				<xsl:element name='h1'>
-					<xsl:attribute name='id'>brewery_name</xsl:attribute>
-					<xsl:attribute name='bl:brewery_id'><xsl:value-of select="@id"/></xsl:attribute>
+					<xsl:attribute name='id'>name</xsl:attribute>
+					<xsl:attribute name='bl:beer_id'><xsl:value-of select="@id"/></xsl:attribute>
 					<xsl:value-of select="name"/>
 				</xsl:element>				
-								
-				<div id="brewery_uri"><xsl:value-of select="uri"/></div>
-				<xsl:element name='a'>
-					<xsl:attribute name='href'><xsl:value-of select="uri"/></xsl:attribute>
-					Visit web site
-				</xsl:element>				
-
-				<div id="brewery_phone"><xsl:value-of select="phone" /></div>
-		
-				<div id="brewery_addr">
-					<div>
-						<xsl:value-of select="address/street"/>
-					</div>
-					<div>
-						<xsl:value-of select="address/city"/>,
-						<xsl:value-of select="address/state"/><xsl:text> </xsl:text>
-						<xsl:value-of select="address/zip"/><xsl:text> </xsl:text>
-						<xsl:value-of select="address/country"/>
-					</div>
+				
+				<div>
+					Made by: <xsl:apply-templates select="document(concat('/home/troy/beerliberation/xml/brewery/',@brewery_id,'.xml'))"/>
 				</div>
+								
+				<div id="beer_descrip"><xsl:value-of select="description"/></div>
+
 				
 				</div>
 				<xsl:call-template name="footer"/>

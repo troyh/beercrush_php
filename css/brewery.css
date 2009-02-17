@@ -48,17 +48,17 @@ body {
 }
 
 /* Logo link */
-#header h1 a {
-	color:#abc;
+#header > h1 a {
 	text-decoration:none;
 }
 
 #page_content {
-	position:relative;
-	margin-top:60px;
+/*	position:relative;*/
+	margin:70px 15px 15px 15px;
 	font-family:Helvetica,Arial;
 	font-size:1.2em;
 	color:#666;
+/*	background:white;*/
 }
 
 #footer {
@@ -77,7 +77,7 @@ body {
 	font-size:1em;
 	position:fixed;
 	top:18px;
-	right:5px;
+	right:0px;
 }
 
 #page_content h1 {

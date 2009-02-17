@@ -6,23 +6,23 @@
 	<xsl:output encoding="UTF-8" indent="yes" method="xml" />
 
 	<xsl:template name="header">
+		<xsl:param name="Path1"/>
 		<div id="header">
 			
-			<h1><a href="/html/brewery">Beer Liberation</a></h1>
+			<h1><a href="/">Beer Liberation</a></h1>
 
 			<div>
 	            <div class="breadCrumbHolder module">
 					<div id="breadCrumb" class="breadCrumb module">
 	                    <ul>
 	                        <li><a href="../">Home</a></li>
-	                        <li><a href="./index.html">Brewery</a></li>
-	                        <li><a href="#"><xsl:value-of select="name"/></a></li>
-	                        <li><a href="#"><xsl:value-of select="name"/></a></li>
-	                        <li><a href="#"><xsl:value-of select="name"/></a></li>
-	                        <li><a href="#"><xsl:value-of select="name"/></a></li>
-	                        <li><a href="#"><xsl:value-of select="name"/></a></li>
-	                        <li><a href="#"><xsl:value-of select="name"/></a></li>
-	                        <li><a href="#"><xsl:value-of select="name"/></a></li>
+	                        <li><a href="./"><xsl:value-of select="$Path1"/></a></li>
+	                        <li>
+								<xsl:element name="a">
+		 							<xsl:attribute name="href"><xsl:value-of select="@id"/></xsl:attribute>
+									<xsl:value-of select="name"/>
+								</xsl:element>
+							</li>
 	                    </ul>
 	                </div>
 				</div>
@@ -33,11 +33,11 @@
 				<li><a href="#">Breweries</a>
 					<ul>
 						<li id="header_menu_new_brewery"><a rel="#overlay_new_brewery">New Brewery</a></li>
-						<li id="header_menu_brewery_list"><a href="/html/brewery/">Brewery List</a></li>
+						<li id="header_menu_brewery_list"><a href="/brewery/">Brewery List</a></li>
 					</ul>
 				</li>
-				<li><a href="#">Beers</a></li>
-				<li><a href="#">Users</a></li>
+				<li><a href="/beer/">Beers</a></li>
+				<li><a href="/users/">Users</a></li>
 			</ul>
 
 		</div>
