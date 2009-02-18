@@ -4,6 +4,8 @@
 
 	<xsl:output encoding="UTF-8" indent="yes" method="xml" />
 	
+	<xsl:param name="XML_DIR"/>
+	
 	<xsl:include href="../std.xsl"/>
 	
 	<xsl:template match="/brewery">
@@ -19,7 +21,8 @@
 			<head>
 				<title><xsl:value-of select="name"/></title>
 				<script type="text/javascript" src="/js/jquery-1.3.1.js"><xsl:text> </xsl:text></script>
-				<script type="text/javascript" src="/js/brewery.js"><xsl:text> </xsl:text></script>
+				<script type="text/javascript" src="/js/std.js"><xsl:text> </xsl:text></script>
+				<script type="text/javascript" src="/js/beer.js"><xsl:text> </xsl:text></script>
 				<script type="text/javascript" src="/js/superfish.js"><xsl:text> </xsl:text></script>
 				<script type="text/javascript" src="/js/jquery.hoverIntent.js"><xsl:text> </xsl:text></script>
 				<script type="text/javascript" src="/js/jquery.overlay-0.14.js"><xsl:text> </xsl:text></script>
@@ -34,22 +37,53 @@
 			<body>
 				
 				<xsl:call-template name="header">
-					<xsl:with-param name="Path1" select="string('Beer')"/>
+					<xsl:with-param name="breadcrumbs" select="meta/breadcrumbs"/>
 				</xsl:call-template>
 				<div id="page_content">
 					
-				<xsl:element name='h1'>
-					<xsl:attribute name='id'>name</xsl:attribute>
-					<xsl:attribute name='bl:beer_id'><xsl:value-of select="@id"/></xsl:attribute>
-					<xsl:value-of select="name"/>
-				</xsl:element>				
+					<xsl:element name='h1'>
+						<xsl:attribute name='id'>beer_name</xsl:attribute>
+						<xsl:attribute name='bl:beer_id'><xsl:value-of select="@id"/></xsl:attribute>
+						<xsl:value-of select="name"/>
+					</xsl:element>				
 				
-				<div>
-					Made by: <xsl:apply-templates select="document(concat('/home/troy/beerliberation/xml/brewery/',@brewery_id,'.xml'))"/>
-				</div>
-								
-				<div id="beer_descrip"><xsl:value-of select="description"/></div>
-
+					<div>
+						Made by: <xsl:apply-templates select="document(concat($XML_DIR,'/brewery/',@brewery_id,'.xml'))"/>
+					</div>
+						
+					<h2>Description</h2>
+					<div id="beer_descrip"><xsl:value-of select="description"/><xsl:text> </xsl:text></div>
+					<div>Alcohol %:
+						<span id="beer_abv">
+							<xsl:choose>
+								<xsl:when test="string-length(abv)">
+									<xsl:value-of select="abv"/>
+								</xsl:when>
+								<xsl:otherwise>
+									Unknown
+								</xsl:otherwise>
+							</xsl:choose>
+						</span>
+					</div>
+					<div>Style:
+						<span id="beer_bjcp_style">
+							<xsl:choose>
+								<xsl:when test="string-length(@bjcp_style_id)">
+									<xsl:value-of select="@bjcp_style_id"/>
+								</xsl:when>
+								<xsl:otherwise>
+									Unknown
+								</xsl:otherwise>
+							</xsl:choose>
+						</span>
+					</div>
+					<div>Average Price:<div id="beer_avg_price"><xsl:text> </xsl:text></div></div>
+					
+					<h2>Reviews</h2>
+					<h2>People Who Like This Beer</h2>
+					<h2>People Who Like This Beer Also Like...</h2>
+					<h2>Where You Can Get This Beer</h2>
+					<h2>Discussions</h2>
 				
 				</div>
 				<xsl:call-template name="footer"/>

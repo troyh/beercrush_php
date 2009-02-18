@@ -55,7 +55,7 @@ $(document).ready(function()
 		var address=$("#new_brewery_address").val();
 		parts=breakUpAddress(address);
 		
-		// Validate the fields as best we can...
+		// TODO: Validate the fields as best we can...
 		
 		$.post('/api/post.fcgi/new_brewery',{
 			name:$('#new_brewery_name').val(),
@@ -73,6 +73,21 @@ $(document).ready(function()
 	});
 	
 	$('#new_brewery_cancel').click(function() {
+		$.overlayClose();
+	});
+
+	$('#new_beer_save').click(function() {
+		// TODO: Validate the fields as best we can...
+		
+		$.post('/api/post.fcgi/new_beer',{
+			name:$('#new_beer_name').val()
+			},
+			function(xml, textStatus) { $.overlayClose(); },
+			'xml');
+		
+	});
+	
+	$('#new_beer_cancel').click(function() {
 		$.overlayClose();
 	});
 	

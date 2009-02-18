@@ -27,7 +27,7 @@
 			<body>
 				
 				<xsl:call-template name="header">
-					<xsl:with-param name="Path1" select="string('Brewery')"/>
+					<xsl:with-param name="breadcrumbs" select="meta/breadcrumbs"/>
 				</xsl:call-template>
 				<div id="page_content">
 					
@@ -56,6 +56,12 @@
 						<xsl:value-of select="address/country"/>
 					</div>
 				</div>
+
+				<h2>Reviews</h2>
+				<h2>People Who Like This Brewer</h2>
+				<h2>People Who Like This Brewer Also Like...</h2>
+				<h2>Where You Can Get Their Beers</h2>
+				<h2>Discussions</h2>
 				
 				</div>
 				<xsl:call-template name="footer"/>

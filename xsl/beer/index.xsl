@@ -14,9 +14,6 @@
 					<xsl:value-of select="name" />
 				</xsl:element>
 			</td>
-			<td>
-				<xsl:value-of select="address/city" />, <xsl:value-of select="address/state" /><xsl:text> </xsl:text><xsl:value-of select="address/country" />
-			</td>
 		</tr>
 	</xsl:template>
 
@@ -38,7 +35,9 @@
 			</head>
 			<body>
 			
-				<xsl:call-template name="header"/>
+				<xsl:call-template name="header">
+					<xsl:with-param name="breadcrumbs" select="meta/breadcrumbs"/>
+				</xsl:call-template>
 				<div id="page_content">
 
 					<table>
@@ -48,7 +47,6 @@
 					</table>
 		
 				</div>
-
 				<xsl:call-template name="footer"/>
 						
 			</body>

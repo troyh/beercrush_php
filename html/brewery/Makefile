@@ -11,6 +11,9 @@ index.html: index.xml $(XSL_DIR)/brewery/index.xsl
 
 index.xml: FORCE
 	echo "<breweries>" > $(XML_DIR)/brewery/$@
+	echo "<meta>" >> $(XML_DIR)/brewery/$@
+	echo "<breadcrumbs><crumb href=\"/brewery/\">Breweries</crumb></breadcrumbs>" >> $(XML_DIR)/brewery/$@
+	echo "</meta>" >> $(XML_DIR)/brewery/$@
 	find $(XML_DIR)/brewery -maxdepth 1 -name "*.xml" ! -name ".*" ! -name "index.xml" -exec xmlstarlet fo --omit-decl {} \; >> $(XML_DIR)/brewery/$@
 	echo "</breweries>" >> $(XML_DIR)/brewery/$@
 
