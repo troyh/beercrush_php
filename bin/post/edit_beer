@@ -32,6 +32,16 @@ while read TAG VAL; do
 	elif [ $TAG == "abv"			]; then XPATH="/beer"; ELEM="abv";
 	elif [ $TAG == "bjcp_style_id"	]; then XPATH="/beer"; ATTR="bjcp_style_id";
 	elif [ $TAG == "brewery_id"		]; then XPATH="/beer"; ATTR="brewery_id";
+	elif [ $TAG == "brewery_name"	]; then
+		# Lookup the brewery_id for brewery_name
+		VAL=`grep "^$VAL" $XML_DIR/../meta/brewery/autocomplete_names.txt | cut -f 2`;
+		XPATH="/beer";
+		ATTR="brewery_id";
+	elif [ $TAG == "bjcp_style_name" ]; then
+		# Lookup the bjcp_style_id for bjcp_style_name
+		VAL=`grep "^$VAL	" $XML_DIR/../misc/autocomplete_styles.txt | cut -f 2`;
+		XPATH="/beer";
+		ATTR="bjcp_style_id";
 	fi
 	
 	if [ -n "$ELEM" ]; then

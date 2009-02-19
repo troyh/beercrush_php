@@ -1,4 +1,4 @@
-function editingOn(ctl,multiline,ajaxURI,docid,fieldname,result_xpath)
+function editingOn(ctl,multiline,ajaxURI,docid,fieldname,result_xpath,func)
 {
 	var ctlid='edit_'+docid.replace(/[^a-zA-Z0-9]/g,'_')+'_'+fieldname;
 	var divid='div_'+docid.replace(/[^a-zA-Z0-9]/g,'_')+'_'+fieldname;
@@ -15,6 +15,10 @@ function editingOn(ctl,multiline,ajaxURI,docid,fieldname,result_xpath)
 	var buttons='<div><input type="button" class="save_button" value="Save" /><input type="button" class="cancel_button" value="Cancel" /></div>';
 	
 	$(ctl).after('<div id="'+divid+'">'+textline+buttons+'</div>').hide();
+	
+	// Call user function 
+	if (func)
+		func($('#'+ctlid));
 
 	$('.save_button').click(function(){
 		var obj=new Object();
@@ -52,7 +56,53 @@ function editingOn(ctl,multiline,ajaxURI,docid,fieldname,result_xpath)
 $(document).ready(function()
 {
 	$('#beer_name').click(function()		{editingOn($(this),false,'/api/post.fcgi/edit_beer','#beer_name[bl:beer_id]','name','beer > name');});
+	$('#beer_brewer').click(
+		function()		
+		{
+			editingOn(
+				$(this),
+				false,
+				'/api/post.fcgi/edit_beer',
+				'#beer_name[bl:beer_id]',
+				'brewery_name',
+				'beer[brewery_id]',
+				function(ctl) 
+				{
+					ctl.autocomplete('/api/autocomplete.fcgi',
+					{
+						width:'200px',
+						mustMatch: true,
+						autoFill: true
+					});
+				}
+			);
+		}
+	);
 	$('#beer_descrip').click(function()		{editingOn($(this),true ,'/api/post.fcgi/edit_beer','#beer_name[bl:beer_id]','description','beer > description');});
-	$('#beer_bjcp_style').click(function()	{editingOn($(this),false,'/api/post.fcgi/edit_beer','#beer_name[bl:beer_id]','bjcp_style','beer[@bjcp_style_id]');});
 	$('#beer_abv').click(function()			{editingOn($(this),false,'/api/post.fcgi/edit_beer','#beer_name[bl:beer_id]','abv','beer > abv');});
+	$('#beer_bjcp_style').click(
+		function()		
+		{
+			editingOn(
+				$(this),
+				false,
+				'/api/post.fcgi/edit_beer',
+				'#beer_name[bl:beer_id]',
+				'bjcp_style_name',
+				'beer[bjcp_style_id]',
+				function(ctl) 
+				{
+					ctl.autocomplete('/api/autocomplete.fcgi',
+						{
+							extraParams:{dataset:"bjcp_style"},
+							width:'200px',
+							mustMatch: true,
+							autoFill: true
+						}
+					);
+				}
+			);
+		}
+	);
+
 })

@@ -15,6 +15,15 @@
 		</xsl:element>
 	</xsl:template>
 
+	<xsl:template match="/styleguide">
+		<xsl:param name="styleid"/>
+		<xsl:element name="a">
+			<xsl:attribute name="href">/style/<xsl:value-of select="$styleid"/></xsl:attribute>
+			<xsl:value-of select="class[@type='beer']/category[@id=$styleid]/name|class[@type='beer']/category/subcategory[@id=$styleid]/name"/>
+		</xsl:element>
+	</xsl:template>
+
+
 	<xsl:template match="/beer">
 		
 		<html xmlns:bl="http://beerliberation.com/">
@@ -29,10 +38,13 @@
 				<script type="text/javascript" src="/js/jquery.expose-0.14.js"><xsl:text> </xsl:text></script>
 				<script type="text/javascript" src="/js/jquery.jBreadCrumb.js"><xsl:text> </xsl:text></script>
 				<script type="text/javascript" src="/js/jquery.easing.1.3.js"><xsl:text> </xsl:text></script>
+				<script type="text/javascript" src="/js/jquery-autocomplete/jquery.autocomplete.js"><xsl:text> </xsl:text></script>
+
 				<link href="/css/brewery.css"    rel="stylesheet" type="text/css" media="screen"/>
 				<link href="/css/superfish.css"  rel="stylesheet" type="text/css" media="screen"/>
 		        <link href="/css/Base.css" rel="stylesheet" type="text/css" media="screen"/>
 		        <link href="/css/BreadCrumb.css" rel="stylesheet" type="text/css" media="screen"/>
+		        <link href="/css/jquery-autocomplete/jquery.autocomplete.css" rel="stylesheet" type="text/css" media="screen"/>
 			</head>
 			<body>
 				
@@ -48,7 +60,17 @@
 					</xsl:element>				
 				
 					<div>
-						Made by: <xsl:apply-templates select="document(concat($XML_DIR,'/brewery/',@brewery_id,'.xml'))"/>
+						Made by: 
+						<span id="beer_brewer">
+							<xsl:choose>
+								<xsl:when test="string-length(@brewery_id)">
+									<xsl:apply-templates select="document(concat($XML_DIR,'/brewery/',@brewery_id,'.xml'))"/>
+								</xsl:when>
+								<xsl:otherwise>
+									Unknown
+								</xsl:otherwise>
+							</xsl:choose>
+						</span>
 					</div>
 						
 					<h2>Description</h2>
@@ -69,7 +91,9 @@
 						<span id="beer_bjcp_style">
 							<xsl:choose>
 								<xsl:when test="string-length(@bjcp_style_id)">
-									<xsl:value-of select="@bjcp_style_id"/>
+									<xsl:apply-templates select="document(concat($XML_DIR,'/misc/styleguide2008.xml'))">
+										<xsl:with-param name="styleid" select="@bjcp_style_id"/>
+									</xsl:apply-templates>
 								</xsl:when>
 								<xsl:otherwise>
 									Unknown
