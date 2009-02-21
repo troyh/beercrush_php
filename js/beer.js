@@ -6,7 +6,7 @@ function editingOn(ctl,multiline,ajaxURI,docid,fieldname,result_xpath,func)
 	var textline;
 	if (multiline)
 	{
-		textline='<div><textarea style="width:'+$(ctl).width()+'px;height:'+($(ctl).height()*1.2)+'px;font-size:'+$(ctl).css('font-size')+';" id="'+ctlid+'" name="'+fieldname+'" value="'+$(ctl).text()+'"></textarea></div>';
+		textline='<div><textarea style="width:'+$(ctl).width()+'px;height:'+($(ctl).height()*1.2)+'px;font-size:'+$(ctl).css('font-size')+';" id="'+ctlid+'" name="'+fieldname+'">'+$(ctl).text()+'</textarea></div>';
 	}
 	else
 	{
@@ -34,7 +34,7 @@ function editingOn(ctl,multiline,ajaxURI,docid,fieldname,result_xpath,func)
 		else
 			obj['id']=$(docid).val();
 		
-		obj[$('#'+ctlid).attr('name')]=$('#'+ctlid).val();
+		obj[$('#'+ctlid).attr('name')]=$('#'+ctlid).val().replace(/&/,'&amp;').replace(/</,'&lt;').replace(/>/,'&gt;');
 		
 		$.post(ajaxURI,
 			obj,
@@ -78,7 +78,19 @@ $(document).ready(function()
 			);
 		}
 	);
-	$('#beer_descrip').click(function()		{editingOn($(this),true ,'/api/post.fcgi/edit_beer','#beer_name[bl:beer_id]','description','beer > description');});
+	$('#beer_descrip').click(
+		function()		
+		{
+			editingOn(
+				$(this),
+				true ,
+				'/api/post.fcgi/edit_beer',
+				'#beer_name[bl:beer_id]',
+				'description',
+				'beer > description'
+			);
+		}
+	);
 	$('#beer_abv').click(function()			{editingOn($(this),false,'/api/post.fcgi/edit_beer','#beer_name[bl:beer_id]','abv','beer > abv');});
 	$('#beer_bjcp_style').click(
 		function()		

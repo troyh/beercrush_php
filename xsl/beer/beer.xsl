@@ -74,7 +74,16 @@
 					</div>
 						
 					<h2>Description</h2>
-					<div id="beer_descrip"><xsl:value-of select="description"/><xsl:text> </xsl:text></div>
+					<div id="beer_descrip">
+						<xsl:choose>
+							<xsl:when test="string-length(description)">
+								<xsl:value-of select="description"/><xsl:text> </xsl:text>
+							</xsl:when>
+							<xsl:otherwise>
+								No description
+							</xsl:otherwise>
+						</xsl:choose>
+					</div>
 					<div>Alcohol %:
 						<span id="beer_abv">
 							<xsl:choose>

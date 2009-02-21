@@ -4,7 +4,7 @@ XML_DIR=/home/troy/beerliberation/xml
 vpath %.xml $(XML_DIR)/brewery
 vpath %.xsl $(XSL_DIR)
 
-.PHONY: FORCE
+.PHONY: FORCE ALL-BREWERY-PAGES
 
 index.html: index.xml $(XSL_DIR)/brewery/index.xsl
 	xmlstarlet tr $(XSL_DIR)/brewery/index.xsl $(XML_DIR)/brewery/index.xml > $(WWWDOCROOT)$(WWWRELPATH)$@
@@ -22,4 +22,12 @@ index.xml: FORCE
 
 $(WWWDOCROOT)$(WWWRELPATH):
 	mkdir -p $(WWWDOCROOT)$(WWWRELPATH)
+	
+ALL-BREWERY-PAGES: FORCE
+	find $(XML_DIR)/brewery/ -maxdepth 1 -name "*.xml" | \
+	while read F; do \
+		ID=`basename $$F .xml`; \
+		echo $$ID; \
+		WWWDOCROOT=$(WWWDOCROOT) WWWRELPATH=$(WWWRELPATH) make --quiet $$ID.html; \
+	done
 	

@@ -60,6 +60,7 @@
 				<h2>Reviews</h2>
 				<h2>People Who Like This Brewer</h2>
 				<h2>People Who Like This Brewer Also Like...</h2>
+				<h2>Their Beers</h2>
 				<h2>Where You Can Get Their Beers</h2>
 				<h2>Discussions</h2>
 				

@@ -23,7 +23,7 @@
 	<xsl:template match="/breweries">
 		<html>
 			<head>
-				<title><xsl:value-of select="name"/></title>
+				<title>Breweries</title>
 				<script type="text/javascript" src="/js/jquery-1.3.1.js"><xsl:text> </xsl:text></script>
 				<script type="text/javascript" src="/js/brewery.js"><xsl:text> </xsl:text></script>
 				<script type="text/javascript" src="/js/superfish.js"><xsl:text> </xsl:text></script>
