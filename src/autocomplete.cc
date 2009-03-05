@@ -6,20 +6,15 @@ extern "C"
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 using namespace std;
 
-const char* brewery_names[]=
-{
-	"Dogfish Head",
-	"Elliott Bay Brewery Pub",
-	"Maritime Pacific Brewing",
-	"my new brewery",
-	"North Coast Brewing Co.",
-	"Russian River Brewing Company",
-	"Sierra Nevada Brewing Co.",
-	"Stone Brewing Co.",
-};
+const char** brewery_names;
+size_t brewery_names_count=0;
 
 const char* beer_styles[]=
 {
@@ -128,9 +123,71 @@ const char* beer_styles[]=
 	"Wood-Aged Beer",
 };
 
+const char** readFile(const char* fname, size_t* count)
+{
+	char* buf=0;
+	char** list=0;
+	size_t entries=0;
+	
+	struct stat statbuf;
+	stat(fname,&statbuf);
+	
+	FILE* f=fopen(fname,"r");
+	if (f)
+	{
+		buf=new char[statbuf.st_size+1];
+		if (buf)
+		{
+			size_t n=fread(buf,sizeof(buf[0]),statbuf.st_size,f);
+			buf[n]='\0';
+		}
+		
+		fclose(f);
+	}
+	
+	if (buf)
+	{
+		// Walk buf and count the newlines
+		for (char* p=strchr(buf,'\n');p;p=strchr(p+1,'\n'))
+		{
+			*p='\0'; // change the newline to a null-terminator
+			++entries;
+		}
+		
+		if (entries)
+		{
+			list=new char*[entries];
+			
+			char* p=buf;
+			for(size_t i = 0; i < entries; ++i)
+			{
+				list[i]=p;
+				for (p+=strlen(p)+1;*p=='\0';++p)
+				{ // Skip to next line, just in case there's multiple null-terminators at the end
+				}
+				
+				// Replace the tab with a null-terminator too
+				char* t=strchr(list[i],'\t');
+				if (t)
+					*t='\0';
+				else
+				{
+					// TODO: this shouldn't happen
+				}
+			}
+		}
+	}
+	
+	*count=entries;
+
+	return (const char**)list;
+}
+
+
 extern "C" void cgiInit() 
 {
 	/* TODO: Load brewery list into memory, it *must* be sorted */
+	brewery_names=readFile("/home/troy/beerliberation/xml/meta/brewery/autocomplete_names.txt",&brewery_names_count);
 	/* TODO: Load style list into memory, it *must* be sorted */
 }
 
@@ -140,9 +197,9 @@ extern "C" void cgiUninit()
 	/* TODO: Free style list from memory */
 }
 
-void autocomplete(const char* query,size_t query_len,const char** list,size_t count)
+void autocomplete(const char* query,size_t query_len,const char** list,size_t count, bool bXMLOutput)
 {
-	// Binary-search brewery_names
+	// Binary-search list
 	size_t hi=count;
 	size_t lo=hi>0?1:hi;
 	// lo and hi are 1-based so that we can decrement lo to zero without wrapping around
@@ -173,7 +230,19 @@ void autocomplete(const char* query,size_t query_len,const char** list,size_t co
 			{
 				++mid;
 				if (strncasecmp(query,list[mid-1],query_len)==0)
-					printf("%s\n",list[mid-1]);
+				{
+					if (bXMLOutput)
+					{
+						printf("<result>");
+						printf("<text>%s</text>",list[mid-1]);
+						printf("<id>%s</id>",list[mid-1]+strlen(list[mid-1])+1);
+						printf("</result>");
+					}
+					else
+					{
+						printf("%s\n",list[mid-1]);
+					}
+				}
 			}
 			while (mid<count);
 			break;
@@ -183,24 +252,41 @@ void autocomplete(const char* query,size_t query_len,const char** list,size_t co
 
 int cgiMain()
 {
-	cgiHeaderContentType((char*)"text/plain");
+	bool bXMLOutput=false;
 	
 	char query[256];
 	char dataset[32];
+	char output[16];
 	
 	cgiFormString((char*)"q",query,sizeof(query));
 	cgiFormString((char*)"dataset",dataset,sizeof(dataset));
-	
+	cgiFormString((char*)"output",output,sizeof(output));
+
+	if (!strcasecmp(output,"xml"))
+		bXMLOutput=true;
+		
+	if (bXMLOutput)
+	{
+		cgiHeaderContentType((char*)"text/xml");
+		printf("<results>");
+	}
+	else
+		cgiHeaderContentType((char*)"text/plain");
+
 	size_t query_len=strlen(query);
 	
 	if (!strlen(dataset) || !strcasecmp(dataset,"brewery"))
 	{
-		autocomplete(query,query_len,brewery_names,sizeof(brewery_names)/sizeof(brewery_names[0]));
+		autocomplete(query,query_len,brewery_names,brewery_names_count,bXMLOutput);
 	}
 	else if (!strcasecmp(dataset,"bjcp_style"))
 	{
-		autocomplete(query,query_len,beer_styles,sizeof(beer_styles)/sizeof(beer_styles[0]));
+		autocomplete(query,query_len,beer_styles,sizeof(beer_styles)/sizeof(beer_styles[0]),bXMLOutput);
 	}
+	
+	if (bXMLOutput)
+		printf("</results>");
+	
 	
 	return 0;
 }

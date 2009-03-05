@@ -1,6 +1,7 @@
 body {
 	font-family: Helvetica,Arial;
 	font-size:1em;
+	background:#fff;
 }
 
 #header {
@@ -58,7 +59,7 @@ body {
 	font-family:Helvetica,Arial;
 	font-size:1.2em;
 	color:#666;
-/*	background:white;*/
+	background:white;
 }
 
 #footer {

@@ -4,7 +4,7 @@
 
 	<xsl:output encoding="UTF-8" indent="yes" method="xml" />
 	
-	<xsl:include href="std.xsl"/>
+	<xsl:include href="../std.xsl"/>
 
 	<xsl:template match="/brewery">
 		
@@ -36,12 +36,19 @@
 					<xsl:attribute name='bl:brewery_id'><xsl:value-of select="@id"/></xsl:attribute>
 					<xsl:value-of select="name"/>
 				</xsl:element>				
-								
-				<div id="brewery_uri"><xsl:value-of select="uri"/></div>
-				<xsl:element name='a'>
-					<xsl:attribute name='href'><xsl:value-of select="uri"/></xsl:attribute>
-					Visit web site
-				</xsl:element>				
+				
+				<xsl:choose>				
+					<xsl:when test="string-length(uri)">
+						<div id="brewery_uri"><xsl:value-of select="uri"/></div>
+						<xsl:element name='a'>
+							<xsl:attribute name='href'><xsl:value-of select="uri"/></xsl:attribute>
+							Visit web site
+						</xsl:element>				
+					</xsl:when>
+					<xsl:otherwise>
+						Add web site
+					</xsl:otherwise>
+				</xsl:choose>
 
 				<div id="brewery_phone"><xsl:value-of select="phone" /></div>
 		

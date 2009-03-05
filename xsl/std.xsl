@@ -21,7 +21,7 @@
                 </ul>
             </div>
 		</div>
-        <div class="chevronOverlay main"></div>
+        <div class="chevronOverlay main"><xsl:text> </xsl:text></div>
 	</xsl:template>
 
 	<xsl:template name="header">

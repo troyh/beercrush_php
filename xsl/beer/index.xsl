@@ -38,6 +38,7 @@
 				<xsl:call-template name="header">
 					<xsl:with-param name="breadcrumbs" select="meta/breadcrumbs"/>
 				</xsl:call-template>
+
 				<div id="page_content">
 
 					<table>

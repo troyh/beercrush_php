@@ -18,17 +18,45 @@
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
-	<integer>200</integer>
+	<integer>230</integer>
 	<key>metaData</key>
 	<dict>
-		<key>html/beer/Makefile</key>
+		<key>css/Base.css</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>31</integer>
+				<integer>1</integer>
 				<key>line</key>
 				<integer>17</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>23</integer>
+		</dict>
+		<key>html/brewery/Makefile</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>69</integer>
+				<key>line</key>
+				<integer>30</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>js/std.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>15</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -40,51 +68,37 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>14</integer>
+				<integer>13</integer>
 				<key>line</key>
-				<integer>47</integer>
+				<integer>58</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>xsl/beer/index.xsl</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>17</integer>
-				<key>line</key>
-				<integer>40</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>26</integer>
 		</dict>
 		<key>xsl/brewery.xsl</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>57</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>29</integer>
+				<integer>48</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>xsl/std.xsl</key>
+		<key>xsl/brewery/index.xsl</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>40</integer>
+				<integer>55</integer>
 				<key>line</key>
-				<integer>39</integer>
+				<integer>12</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -94,11 +108,12 @@
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>xsl/brewery.xsl</string>
-		<string>xsl/beer/index.xsl</string>
+		<string>html/brewery/Makefile</string>
+		<string>js/std.js</string>
 		<string>xsl/beer/beer.xsl</string>
-		<string>xsl/std.xsl</string>
-		<string>html/beer/Makefile</string>
+		<string>xsl/brewery.xsl</string>
+		<string>css/Base.css</string>
+		<string>xsl/brewery/index.xsl</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>

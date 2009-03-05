@@ -10,7 +10,7 @@
 	
 	<xsl:template match="/brewery">
 		<xsl:element name="a">
-			<xsl:attribute name="href">/brewery/<xsl:value-of select="@id"/></xsl:attribute>
+			<xsl:attribute name="href">/beer/<xsl:value-of select="@id"/></xsl:attribute>
 			<xsl:value-of select="name"/>
 		</xsl:element>
 	</xsl:template>
@@ -117,6 +117,8 @@
 					<h2>People Who Like This Beer Also Like...</h2>
 					<h2>Where You Can Get This Beer</h2>
 					<h2>Discussions</h2>
+					
+					<div id="photo"><img src="/img/paleale.jpg" /></div>
 				
 				</div>
 				<xsl:call-template name="footer"/>
