@@ -38,6 +38,18 @@ index.xml: FORCE $(WWWDOCROOT)/$(WWWRELPATH)/
 %: $(XML_DIR)/brewery/%.xml
 	$(MAKE) $@/index.html
 
+#
+# Makes the "by letter" pages
+#
+byletter/%.html: $(XML_DIR)/beer/index.xml $(WWWDOCROOT)/$(WWWRELPATH)/byletter/
+	xmlstarlet tr $(XSL_DIR)/beer/byletter.xsl -s NAVLETTER=$(basename $(@F)) $(XML_DIR)/beer/index.xml > $(WWWDOCROOT)/$(WWWRELPATH)/$@
+
+byletter/:
+	mkdir $(WWWDOCROOT)/$(WWWRELPATH)/byletter/;
+
+$(WWWDOCROOT)/$(WWWRELPATH)/byletter/:
+	mkdir $(WWWDOCROOT)/$(WWWRELPATH)/byletter/;
+
 $(WWWDOCROOT)/$(WWWRELPATH):
 	mkdir -p $(WWWDOCROOT)/$(WWWRELPATH)
 

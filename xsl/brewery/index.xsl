@@ -10,7 +10,7 @@
 		<tr>
 			<td>
 				<xsl:element name='a'>
-					<xsl:attribute name='href'><xsl:value-of select="@id" /></xsl:attribute>
+					<xsl:attribute name='href'>/beer/<xsl:value-of select="@id" /></xsl:attribute>
 					<xsl:value-of select="name" />
 				</xsl:element>
 			</td>
@@ -42,13 +42,45 @@
 				<xsl:call-template name="header">
 					<xsl:with-param name="breadcrumbs" select="meta/breadcrumbs"/>
 				</xsl:call-template>
+				
 				<div id="page_content">
 
-					<table>
-						<tbody>
-							<xsl:apply-templates select="brewery" />
-						</tbody>
-					</table>
+					<h1>All Breweries</h1>
+					
+					<!-- Alphabetic Navigation -->
+					<div>
+						<ul>
+							<li><a href="./byletter/123">123</a></li>
+							<li><a href="./byletter/A">A</a></li>
+							<li><a href="./byletter/B">B</a></li>
+							<li><a href="./byletter/C">C</a></li>
+							<li><a href="./byletter/D">D</a></li>
+							<li><a href="./byletter/E">E</a></li>
+							<li><a href="./byletter/F">F</a></li>
+							<li><a href="./byletter/G">G</a></li>
+							<li><a href="./byletter/H">H</a></li>
+							<li><a href="./byletter/I">I</a></li>
+							<li><a href="./byletter/J">J</a></li>
+							<li><a href="./byletter/K">K</a></li>
+							<li><a href="./byletter/L">L</a></li>
+							<li><a href="./byletter/M">M</a></li>
+							<li><a href="./byletter/N">N</a></li>
+							<li><a href="./byletter/O">O</a></li>
+							<li><a href="./byletter/P">P</a></li>
+							<li><a href="./byletter/Q">Q</a></li>
+							<li><a href="./byletter/R">R</a></li>
+							<li><a href="./byletter/S">S</a></li>
+							<li><a href="./byletter/T">T</a></li>
+							<li><a href="./byletter/U">U</a></li>
+							<li><a href="./byletter/V">V</a></li>
+							<li><a href="./byletter/W">W</a></li>
+							<li><a href="./byletter/X">X</a></li>
+							<li><a href="./byletter/Y">Y</a></li>
+							<li><a href="./byletter/Z">Z</a></li>
+						</ul>
+					</div>
+					
+					There are <xsl:value-of select="format-number(count(brewery),',###')"/> breweries.
 		
 				</div>
 

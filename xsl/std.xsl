@@ -32,6 +32,7 @@
 
 			<div>
 				<xsl:apply-templates select="$breadcrumbs"/>
+				<xsl:text> </xsl:text>
 			</div>
 			
 			<ul id="header_menu" class="sf-menu">

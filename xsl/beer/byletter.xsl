@@ -5,23 +5,25 @@
 	<xsl:output encoding="UTF-8" indent="yes" method="xml" />
 	
 	<xsl:include href="../std.xsl"/>
+	
+	<xsl:param name="NavLetter" select="$NAVLETTER"/>
 
 	<xsl:template match="beer">
-		<tr>
-			<td>
-				<xsl:element name='a'>
-					<xsl:attribute name='href'><xsl:value-of select="@id" /></xsl:attribute>
-					<xsl:value-of select="name" />
-				</xsl:element>
-			</td>
-		</tr>
+		<div>
+			<xsl:element name="a">
+				<xsl:attribute name="href">/beer/<xsl:value-of select="@id"/></xsl:attribute>
+				<xsl:value-of select="name"/>
+			</xsl:element>
+		</div>
 	</xsl:template>
+	
+	<xsl:template match="/">
 
-	<xsl:template match="/beers">
 		<html>
 			<head>
-				<title><xsl:value-of select="name"/></title>
+				<title>Beers</title>
 				<script type="text/javascript" src="/js/jquery-1.3.1.js"><xsl:text> </xsl:text></script>
+				<script type="text/javascript" src="/js/brewery.js"><xsl:text> </xsl:text></script>
 				<script type="text/javascript" src="/js/superfish.js"><xsl:text> </xsl:text></script>
 				<script type="text/javascript" src="/js/jquery.hoverIntent.js"><xsl:text> </xsl:text></script>
 				<script type="text/javascript" src="/js/jquery.overlay-0.14.js"><xsl:text> </xsl:text></script>
@@ -38,7 +40,7 @@
 				<xsl:call-template name="header">
 					<xsl:with-param name="breadcrumbs" select="meta/breadcrumbs"/>
 				</xsl:call-template>
-
+				
 				<div id="page_content">
 
 					<!-- Alphabetic Navigation -->
@@ -74,15 +76,15 @@
 						</ul>
 					</div>
 
-					There are <xsl:value-of select="format-number(count(beer),',###')"/> beers.
-		
+					<xsl:apply-templates select="beers/beer[starts-with(name,$NavLetter)]">
+						<xsl:sort select="name"/>
+					</xsl:apply-templates>
+
+					<xsl:text> </xsl:text>					
 				</div>
-				<xsl:call-template name="footer"/>
-						
 			</body>
 		</html>
-		
-		
+			
 	</xsl:template>
 	
 </xsl:stylesheet>
