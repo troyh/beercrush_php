@@ -1,4 +1,4 @@
-XSL_DIR=$(WWWDOCROOT)/xsl
+XSL_DIR=/home/troy/beerliberation/app/xsl
 XML_DIR=/home/troy/beerliberation/xml
 
 vpath %.xml $(XML_DIR)/beer

@@ -21,7 +21,7 @@ body {
 	border-bottom:1px solid #abc;
 }
 
-#header .breadCrumbHolder {
+#footer .breadCrumbHolder {
 	position:absolute;
 	top:23px;
 	left:0px;
@@ -29,15 +29,15 @@ body {
 	font-size:12px;
 }
 
-#header .breadCrumbHolder a {
+#footer .breadCrumbHolder a {
 	text-decoration:none;
 }
 
-#header .breadCrumbHolder a:visited {
+#footer .breadCrumbHolder a:visited {
 	color:#456;
 }
 
-#header .breadCrumbHolder a:hover {
+#footer .breadCrumbHolder a:hover {
 	text-decoration:underline;
 }
 

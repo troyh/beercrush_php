@@ -1,4 +1,4 @@
-XSL_DIR=$(WWWDOCROOT)/xsl
+XSL_DIR=/home/troy/beerliberation/app/xsl
 XML_DIR=/home/troy/beerliberation/xml
 
 vpath %.xml $(XML_DIR)/brewery
@@ -18,7 +18,7 @@ index.xml: FORCE
 	echo "</breweries>" >> $@
 
 %.html: %.xml brewery.xsl $(WWWDOCROOT)/$(WWWRELPATH)/
-	xmlstarlet tr $(XSL_DIR)/brewery.xsl $< > $(WWWDOCROOT)$(WWWRELPATH)$@
+	xmlstarlet tr $(XSL_DIR)/brewery/brewery.xsl $< > $(WWWDOCROOT)$(WWWRELPATH)$@
 
 #
 # The different XSL for 123 versus A,B,C,.. is required because XSL provides NO MEANS to compare strings. It's shockingly idiotic.

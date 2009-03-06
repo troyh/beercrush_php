@@ -26,9 +26,6 @@
 			</head>
 			<body>
 				
-				<xsl:call-template name="header">
-					<xsl:with-param name="breadcrumbs" select="meta/breadcrumbs"/>
-				</xsl:call-template>
 				<div id="page_content">
 					
 				<xsl:element name='h1'>
@@ -68,10 +65,20 @@
 				<h2>People Who Like This Brewer</h2>
 				<h2>People Who Like This Brewer Also Like...</h2>
 				<h2>Their Beers</h2>
+				
+				<div>
+					<xsl:apply-templates select="document(concat($XML_DIR,'/meta/brewery/',@id,'.xml'))" mode="meta"/>
+					<xsl:text> </xsl:text>
+				</div>
+				
 				<h2>Where You Can Get Their Beers</h2>
 				<h2>Discussions</h2>
 				
 				</div>
+
+				<xsl:call-template name="header">
+					<xsl:with-param name="breadcrumbs" select="meta/breadcrumbs"/>
+				</xsl:call-template>
 				<xsl:call-template name="footer"/>
 				
 				
@@ -79,5 +86,15 @@
 		</html>
 		
 	</xsl:template>
-	
+
+	<xsl:template match="/brewery/beerlist/beer" mode="meta">
+		<div>
+			<xsl:element name="a">
+				<xsl:attribute name="href">/beer/<xsl:value-of select="@id" /></xsl:attribute>
+				<xsl:value-of select="." />
+			</xsl:element>
+		</div>
+	</xsl:template>
+
+
 </xsl:stylesheet>

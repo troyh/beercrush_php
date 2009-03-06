@@ -37,10 +37,6 @@
 			</head>
 			<body>
 			
-				<xsl:call-template name="header">
-					<xsl:with-param name="breadcrumbs" select="meta/breadcrumbs"/>
-				</xsl:call-template>
-				
 				<div id="page_content">
 
 					<!-- Alphabetic Navigation -->
@@ -82,6 +78,12 @@
 
 					<xsl:text> </xsl:text>					
 				</div>
+				
+				<xsl:call-template name="header">
+					<xsl:with-param name="breadcrumbs" select="meta/breadcrumbs"/>
+				</xsl:call-template>
+				<xsl:call-template name="footer"/>
+				
 			</body>
 		</html>
 			
