@@ -39,6 +39,7 @@
 				<script type="text/javascript" src="/js/jquery.jBreadCrumb.js"><xsl:text> </xsl:text></script>
 				<script type="text/javascript" src="/js/jquery.easing.1.3.js"><xsl:text> </xsl:text></script>
 				<script type="text/javascript" src="/js/jquery-autocomplete/jquery.autocomplete.js"><xsl:text> </xsl:text></script>
+				<script type="text/javascript" src="/js/jquery.cookie.js"><xsl:text> </xsl:text></script>
 
 				<link href="/css/brewery.css"    rel="stylesheet" type="text/css" media="screen"/>
 				<link href="/css/superfish.css"  rel="stylesheet" type="text/css" media="screen"/>
@@ -113,6 +114,27 @@
 					<div>Average Price:<div id="beer_avg_price"><xsl:text> </xsl:text></div></div>
 					
 					<h2>Reviews</h2>
+					
+					<div>
+						Post your review:
+						<form id="review_form" method="post" action="/api/post/beer_review">
+							<xsl:element name='input'>
+								<xsl:attribute name='type'>hidden</xsl:attribute>
+								<xsl:attribute name='name'>beer_id</xsl:attribute>
+								<xsl:attribute name='value'><xsl:value-of select="@id"/></xsl:attribute>
+							</xsl:element>
+
+							<input type="radio" name="rating" value="1" />Hated it
+							<input type="radio" name="rating" value="2" />Didn't like it
+							<input type="radio" name="rating" value="3" />Neutral
+							<input type="radio" name="rating" value="4" />Liked it
+							<input type="radio" name="rating" value="5" />Loved it
+							
+							<input id="review_form_button" type="button" value="Rate it"/>
+							<div id="review_form_msg"><xsl:text> </xsl:text></div>
+						</form>
+					</div>
+					
 					<h2>People Who Like This Beer</h2>
 					<h2>People Who Like This Beer Also Like...</h2>
 					<h2>Where You Can Get This Beer</h2>

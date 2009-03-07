@@ -21,6 +21,18 @@ body {
 	border-bottom:1px solid #abc;
 }
 
+#header_login {
+	font-family:Helvetica,Arial;
+	padding:0;
+	margin:0;
+	position:fixed;
+	top:0px;
+	right:5px;
+	width:100px;
+	height:15px;
+	text-align:right;
+}
+
 #footer .breadCrumbHolder {
 	position:absolute;
 	top:23px;

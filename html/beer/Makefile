@@ -29,7 +29,7 @@ index.xml: FORCE $(WWWDOCROOT)/$(WWWRELPATH)/
 #
 # Makes an individual beer page
 #
-%: %.xml $(XSL_DIR)/beer/beer.xsl $(WWWDOCROOT)/$(WWWRELPATH)/
+%.html: %.xml $(XSL_DIR)/beer/beer.xsl $(WWWDOCROOT)/$(WWWRELPATH)/
 	xmlstarlet tr $(XSL_DIR)/beer/beer.xsl -s XML_DIR=$(XML_DIR) $< > $(WWWDOCROOT)/$(WWWRELPATH)/$(if $(suffix $@),$@,$@.html)
 
 #

@@ -116,5 +116,27 @@ $(document).ready(function()
 			);
 		}
 	);
+	
+	$('#review_form_button').click(
+		function()
+		{
+			$.ajax(
+				{
+					data: $('#review_form').serialize(),
+					dataType: 'xml',
+					error: function(data,textStatus)
+					{
+						$('#review_form_msg').html("You must <a href=\"/api/login\">login</a> to review beers.");
+					},
+					success: function()
+					{
+						$('#review_form_msg').html("Success!");
+					},
+					type: 'POST',
+					url: $('#review_form').attr('action'),
+				}
+			)
+		}
+	);
 
 })

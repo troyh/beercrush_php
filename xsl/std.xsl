@@ -29,6 +29,8 @@
 		<div id="header">
 			
 			<h1><a href="/">BeerCrush</a></h1>
+			
+			<div id="header_login"><xsl:text> </xsl:text></div>
 
 			<div>
 				<xsl:apply-templates select="$breadcrumbs"/>
