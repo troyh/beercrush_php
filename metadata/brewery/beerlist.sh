@@ -23,6 +23,7 @@ if [ -d $XML_DIR/beer/$BREWERY_ID/ ]; then
 		cat "$META_FILE.new" | 
 			xmlstarlet ed --subnode "/brewery/beerlist" -t elem -n "beer" -v "$BEER_NAME" |
 			xmlstarlet ed --subnode "/brewery/beerlist/beer[$LOOP]" -t attr -n "id" -v "$BEER_ID" >> "$META_FILE.new2";
+			xmlstarlet ed --subnode "/brewery/beerlist/beer[$LOOP]" -t attr -n "bjcp_style_id" -v "$BEER_ID" >> "$META_FILE.new2";
 		mv "$META_FILE.new2" "$META_FILE.new";
 		LOOP=$((LOOP + 1));
 	done
