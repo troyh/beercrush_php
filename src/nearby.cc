@@ -159,7 +159,7 @@ int cgiMain()
 	size_t min_idx=binary_search(lat_min);
 	size_t max_idx=binary_search(lat_max);
 
-	FCGI_printf("<places>\n");
+	FCGI_printf("<places count=\"%d\">\n",max_idx-min_idx);
 	for(size_t i = min_idx; i < max_idx; ++i)
 	{
 		// Find each longitude value that is between lon_min & lon_max
