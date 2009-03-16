@@ -7,19 +7,9 @@ extern "C"
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include <time.h>
-#include <unistd.h>
-
-#include <string>
 
 // Boost stuff
 #include <boost/filesystem.hpp>
-
-// libxml2 stuff
-#include <libxml/xmlmemory.h>
-#include <libxml/parser.h>
-#include <libxml/xmlwriter.h>
-#include <libxml/xpath.h>
 
 #include <OAK/oak.h>
 #include <OAK/loginutils.h>
@@ -39,54 +29,12 @@ extern "C" void cgiUninit()
 }
 
 
-
-
-
-bool validate_place_state(const char* s, bool* useOrigVal, char* newVal, size_t newValSize)
-{
-	// We can't check every province in the world, so we just accept anything, even bad US state names (!)
-	*useOrigVal=true;
-	return true;
-}
-
-bool validate_place_price_range(const char* s, bool* useOrigVal, char* newVal, size_t newValSize)
-{
-	*useOrigVal=true;
-	return true;
-}
-
-bool validate_place_type(const char* s, bool* useOrigVal, char* newVal, size_t newValSize)
-{
-	const char* acceptables[]=
-	{
-		"Bar",
-		"Brewery",
-		"Brewpub",
-		"Restaurant",
-		"Store",
-	};
-	
-	// Binary search the list
-	int lo=0,hi=sizeof(acceptables)/sizeof(acceptables[0]),mid;
-	while (lo<hi)
-	{
-		mid=(lo+hi)/2;
-		int c=strcasecmp(s,acceptables[mid]);
-		if (c==0)
-		{	// Copy the proper-cased version just to make sure
-			*useOrigVal=false;
-			strncpy(newVal,acceptables[mid],newValSize);
-			return true;
-		}
-		else if (c<0)
-			lo=mid+1;
-		else
-			hi=mid-1;
-	}
-	
-	return false;
-}
-
+bool validate_place_state(const char* s, bool* useOrigVal, char* newVal, size_t newValSize);
+bool validate_place_price_range(const char* s, bool* useOrigVal, char* newVal, size_t newValSize);
+bool validate_place_type(const char* s, bool* useOrigVal, char* newVal, size_t newValSize);
+bool validate_price(const char* s, bool* useOrigVal, char* newVal, size_t newValSize);
+bool validate_beer_upc(const char* s, bool* useOrigVal, char* newVal, size_t newValSize);
+bool validate_beer_bjcp_style_id(const char* s, bool* useOrigVal, char* newVal, size_t newValSize);
 
 
 EDITABLE_FIELDS place_editable_fields[]=
@@ -131,49 +79,51 @@ EDITABLE_FIELDS place_editable_fields[]=
 	{ "/place/uri",							EDITABLE_FIELDS::validate_uri },
 };
 
-xmlXPathObjectPtr queryXPath(xmlDocPtr doc, const xmlChar* xpath)
-{
-	xmlXPathObjectPtr result=NULL; 
-	
-	xmlXPathContextPtr context=xmlXPathNewContext(doc); 
-	if (context) 
-	{ 
-		result=xmlXPathEvalExpression(xpath, context); 
-		
-		xmlXPathFreeContext(context); 
-		
-		if (result && xmlXPathNodeSetIsEmpty(result->nodesetval))
-		{ 
-			xmlXPathFreeObject(result); 
-			result=NULL; 
-		} 
-	}
-	
-	return result; 
-	
-}
+EDITABLE_FIELDS brewery_editable_fields[]=
+{ // IMPORTANT: These must be sorted! They are searched with a binary search.
+	{ "/brewery/address/city",				EDITABLE_FIELDS::validate_text },
+	{ "/brewery/address/country",			EDITABLE_FIELDS::validate_text },
+	{ "/brewery/address/latitude",			EDITABLE_FIELDS::validate_float },
+	{ "/brewery/address/longitude",			EDITABLE_FIELDS::validate_float },
+	{ "/brewery/address/state",				validate_place_state },
+	{ "/brewery/address/street",			EDITABLE_FIELDS::validate_text },
+	{ "/brewery/address/zip",				EDITABLE_FIELDS::validate_uinteger },
+	{ "/brewery/name",						EDITABLE_FIELDS::validate_text },
+	{ "/brewery/phone",						EDITABLE_FIELDS::validate_phone },
+};
 
+EDITABLE_FIELDS beer_editable_fields[]=
+{ // IMPORTANT: These must be sorted! They are searched with a binary search.
+	{ "/beer/@abv",										EDITABLE_FIELDS::validate_uinteger },
+	{ "/beer/@brewery_id",								EDITABLE_FIELDS::validate_text },
+	{ "/beer/@calories_per_ml",							EDITABLE_FIELDS::validate_float },
+	{ "/beer/@ibu",										EDITABLE_FIELDS::validate_uinteger },
+	{ "/beer/availability",								EDITABLE_FIELDS::validate_text },
+	{ "/beer/description",								EDITABLE_FIELDS::validate_text },
+	{ "/beer/grains",									EDITABLE_FIELDS::validate_text },
+	{ "/beer/hops",										EDITABLE_FIELDS::validate_text },
+	{ "/beer/ingredients",								EDITABLE_FIELDS::validate_text },
+	{ "/beer/name",										EDITABLE_FIELDS::validate_text },
+	{ "/beer/otherings",								EDITABLE_FIELDS::validate_text },
+	{ "/beer/sizes/size/@upc",							validate_beer_upc },
+	{ "/beer/sizes/size/description",					EDITABLE_FIELDS::validate_text },
+	{ "/beer/sizes/size/distributor/deposit",			validate_price },
+	{ "/beer/sizes/size/distributor/item",				EDITABLE_FIELDS::validate_text },
+	{ "/beer/sizes/size/distributor/name",				EDITABLE_FIELDS::validate_text },
+	{ "/beer/sizes/size/distributor/net_case_price",	validate_price },
+	{ "/beer/sizes/size/distributor/post_off",			EDITABLE_FIELDS::validate_text },
+	{ "/beer/sizes/size/distributor/reg_price",			validate_price },
+	{ "/beer/sizes/size/distributor/unit_price",		validate_price },
+	{ "/beer/styles/@bjcp_style_id",					validate_beer_bjcp_style_id },
+	{ "/beer/yeast",									EDITABLE_FIELDS::validate_text },
+};
 
-int setValue(xmlDocPtr doc, const xmlChar* xpath, const xmlChar* value, bool bCreateIfNonexistent=false)
-{
-	FCGI_printf("setValue(%p,%s,%s)\n",doc,xpath,value);
-	xmlXPathObjectPtr nodeset=queryXPath(doc,xpath);
-	if (!nodeset)
-	{
-		if (bCreateIfNonexistent)
-		{	// Add the element
-			xmlNodePtr root=xmlDocGetRootElement(doc);
-			xmlNewTextChild(root,NULL,xpath,value);
-		}
-	}
-	else
-	{
-		// Update the element
-		xmlNodeSetContent(nodeset->nodesetval->nodeTab[0],value);
-		xmlXPathFreeObject(nodeset);
-	}
-	return 0;
-}
+EDITABLE_DOCTYPES doctypes[]=
+{ // IMPORTANT: These must be sorted! They are searched with a binary search.
+	{ "/beer"   , "beer_id"   , "beer"   , beer_editable_fields   , sizeof(beer_editable_fields)/sizeof(beer_editable_fields[0])       },
+	{ "/brewery", "brewery_id", "brewery", brewery_editable_fields, sizeof(brewery_editable_fields)/sizeof(brewery_editable_fields[0]) },
+	{ "/place"  , "place_id"  , "place"  , place_editable_fields  , sizeof(place_editable_fields)/sizeof(place_editable_fields[0])     },
+};
 
 int cgiMain()
 {
@@ -185,107 +135,125 @@ int cgiMain()
 	
 	try
 	{
+		bfs::path xml_doc_dir("/home/troy/beerliberation/xml");
+
 		cgiHeaderContentType((char*)"text/plain");
 		
 		char userid[MAX_USERID_LEN];
 		cgiCookieString((char*)"userid",userid,sizeof(userid));
 
-		FCGI_printf("userid:%s\n",userid);
-		FCGI_printf("Path:%s\n",cgiPathInfo);
-		if (!strcmp(cgiPathInfo,"/place"))
-		{
-			char place_id[BEERCRUSH_MAX_PLACE_ID_LEN];
-			if (cgiFormString((char*)"place_id",place_id,sizeof(place_id))!=cgiFormSuccess)
-				throw BeerCrushException("Invalid place_id");
-			
-			bfs::path place_filename("/home/troy/beerliberation/xml/place/");
-			place_filename=place_filename / place_id;
-			place_filename=bfs::change_extension(place_filename,".xml");
-			
-			FCGI_printf("XML doc:%s\n",place_filename.string().c_str());
-
-			xmlDocPtr doc;
-			doc=xmlParseFile(place_filename.string().c_str());
-			if (!doc)
-				throw BeerCrushException("Unable to open document");
+		// FCGI_printf("userid:%s\n",userid);
+		// FCGI_printf("Path:%s\n",cgiPathInfo);
 		
-			char content_type[256];
-			cgiFormResultType res=cgiFormFileContentType((char*)"file",content_type,sizeof(content_type));
-			if (res!=cgiFormNoContentType && res!=cgiFormNotFound)
-				throw BeerCrushException("Unsupported content type");
-				
-			char** fields;
-			if (cgiFormEntries(&fields)==cgiFormSuccess)
-			{
-				try
-				{
-					// Count the number of fields and bytes needed for the data
-					for(size_t i = 0; fields[i]; ++i)
-					{
-						if (!strcmp(fields[i],"place_id")) // Ignore place_id here
-							continue;
-							
-						char buf[256];
-						char* bufptr=0;
-				
-						int n;
-						cgiFormStringSpaceNeeded(fields[i],&n);
-						if (n>sizeof(buf))
-						{	// Alloc space for it
-							bufptr=(char*)calloc(1,n);
-							if (!bufptr)
-								throw BeerCrushException("Internal error");
-						}
+		int doctype_num=EDITABLE_DOCTYPES::find(cgiPathInfo, doctypes, sizeof(doctypes)/sizeof(doctypes[0]));
+		if (doctype_num<0)
+			throw BeerCrushException("Invalid document type");
+			
+		char identifier[BEERCRUSH_MAX_PLACE_ID_LEN];
+		if (cgiFormString((char*)doctypes[doctype_num].id_field,identifier,sizeof(identifier))!=cgiFormSuccess)
+			throw BeerCrushException("Unable to get identifier");
 
-						if (cgiFormString(fields[i],(bufptr?bufptr:buf),(bufptr?n:sizeof(buf)))!=cgiFormSuccess)
-							throw BeerCrushException("CGI error");
-
-						// fields[i] is an xpath string
-						char xpath[256]="/place/";
-						strncat(xpath,fields[i],sizeof(xpath)-strlen(xpath)-1);
-						xpath[sizeof(xpath)-1]='\0';
-						
-						int field=EDITABLE_FIELDS::find(xpath,place_editable_fields,sizeof(place_editable_fields)/sizeof(place_editable_fields[0]));
-						FCGI_printf("editable_field #%d\n",field);
-						if (field>=0)
-						{
-							bool useOrigVal;
-							char newVal[256];
-							if (!place_editable_fields[field].validate_func((bufptr?bufptr:buf), &useOrigVal, newVal, sizeof(newVal)))
-								throw BeerCrushException("Invalid value");
-							else
-							{
-								if (useOrigVal)
-									setValue(doc,(xmlChar*)xpath,(xmlChar*)(bufptr?bufptr:buf));
-								else
-									setValue(doc,(xmlChar*)xpath,(xmlChar*)newVal);
-							}
-						}
-					
-						if (bufptr) // If we had to alloc space
-							free(bufptr);
-					}
-				}
-				catch (...)
-				{
-					cgiStringArrayFree(fields);
-					throw;
-				}
-
-				cgiStringArrayFree(fields);
-			}
-
-			xmlSaveFormatFile(place_filename.string().c_str(), doc, 1);
+		bfs::path xml_filename=xml_doc_dir / doctypes[doctype_num].xmldirpath / identifier;
+		xml_filename=bfs::change_extension(xml_filename,".xml");
 		
-			xmlFreeDoc(doc);
-		}
+		// FCGI_printf("XML doc:%s\n",place_filename.string().c_str());
+		// TODO: check if file exists
+
+		editDoc(xml_filename,doctypes[doctype_num].editable_fields,doctypes[doctype_num].editable_fields_count,doctypes[doctype_num].id_field,cgiPathInfo);
+
 	}
 	catch (exception& x)
 	{
-		// TODO: report failure
+		// TODO: report failure as XML
 		FCGI_printf("Exception: %s\n",x.what());
-		
 	}
 	
 	return 0;
+}
+
+
+bool validate_place_state(const char* s, bool* useOrigVal, char* newVal, size_t newValSize)
+{
+	// We can't check every province in the world, so we just accept anything, even bad US state names (!)
+	*useOrigVal=true;
+	return true;
+}
+
+bool validate_place_price_range(const char* s, bool* useOrigVal, char* newVal, size_t newValSize)
+{
+	*useOrigVal=true;
+	return true;
+}
+
+bool validate_place_type(const char* s, bool* useOrigVal, char* newVal, size_t newValSize)
+{
+	const char* acceptables[]=
+	{
+		"Bar",
+		"Brewery",
+		"Brewpub",
+		"Restaurant",
+		"Store",
+	};
+	
+	// Binary search the list
+	int lo=0,hi=(sizeof(acceptables)/sizeof(acceptables[0]))-1,mid;
+	while (lo<hi)
+	{
+		mid=(lo+hi)/2;
+		int c=strcasecmp(s,acceptables[mid]);
+		if (c==0)
+		{	// Copy the proper-cased version just to make sure
+			*useOrigVal=false;
+			strncpy(newVal,acceptables[mid],newValSize);
+			return true;
+		}
+		else if (c<0)
+			lo=mid+1;
+		else
+			hi=mid-1;
+	}
+	
+	return false;
+}
+
+bool validate_price(const char* s, bool* useOrigVal, char* newVal, size_t newValSize)
+{
+	// It's ok if all chars are digits or decimal point or '$'
+	for(size_t i = 0,len=strlen(s); i < len; ++i)
+	{
+		if (!isdigit(s[i]) && s[i]!='.' && s[i]!='$')
+			return false;
+	}
+	*useOrigVal=true;
+	return true;
+}
+
+bool validate_beer_upc(const char* s, bool* useOrigVal, char* newVal, size_t newValSize)
+{
+	// It's ok if all chars are digits or spaces or hyphens
+	for(size_t i = 0,len=strlen(s); i < len; ++i)
+	{
+		if (!isdigit(s[i]) && !isspace(s[i]) && s[i]!='-')
+			return false;
+	}
+	*useOrigVal=true;
+	return true;
+}
+
+bool validate_beer_bjcp_style_id(const char* s, bool* useOrigVal, char* newVal, size_t newValSize)
+{
+	// It's ok if all chars are digits followed by an optional letter
+	for(size_t i = 0,len=strlen(s); i < len; ++i)
+	{
+		if (!isalnum(s[i]))
+			return false;
+	}
+	// And the value must be between 1 and 23 (inclusive)
+	int n=atoi(s);
+	if (n<1 || n>23)
+		return false;
+		
+	*useOrigVal=true;
+	return true;
 }

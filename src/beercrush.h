@@ -1,6 +1,10 @@
 #include <exception>
 #include <string>
 
+// Boost stuff
+#include <boost/filesystem.hpp>
+
+
 #define BEERCRUSH_MAX_PLACE_ID_LEN 256
 
 class BeerCrushException : public std::exception
@@ -27,3 +31,16 @@ struct EDITABLE_FIELDS
 	static bool validate_uri(const char* s, bool* useOrigVal, char* newVal, size_t newValSize);
 	static bool validate_float(const char* s, bool* useOrigVal, char* newVal, size_t newValSize);
 };
+
+struct EDITABLE_DOCTYPES
+{
+	const char* pathinfo;
+	const char* id_field;
+	const char* xmldirpath;
+	EDITABLE_FIELDS* editable_fields;
+	size_t editable_fields_count;
+
+	static int find(const char* pathinfo, EDITABLE_DOCTYPES* types, size_t types_count);
+};
+
+void editDoc(boost::filesystem::path xml_file,EDITABLE_FIELDS* editable_fields, size_t editable_fields_count, const char* id_string, const char* xpath_prefix);
