@@ -116,7 +116,11 @@ void editDoc(boost::filesystem::path xml_file,EDITABLE_FIELDS* editable_fields, 
 					bool useOrigVal;
 					char newVal[256];
 					if (!editable_fields[field].validate_func((bufptr?bufptr:buf), &useOrigVal, newVal, sizeof(newVal)))
-						throw BeerCrushException("Invalid value");
+					{
+						std::string msg="Invalid value for ";
+						msg=msg + cgi_fields[i] + ':' + (bufptr?bufptr:buf);
+						throw BeerCrushException(msg.c_str());
+					}
 					else
 					{
 						if (useOrigVal)
@@ -245,6 +249,18 @@ bool EDITABLE_FIELDS::validate_float(const char* s, bool* useOrigVal, char* newV
 	return true;
 }
 
+
+bool EDITABLE_FIELDS::validate_zipcode(const char* s, bool* useOrigVal, char* newVal, size_t newValSize)
+{
+	// It's ok if all chars are digits or decimals or +/-
+	for(size_t i = 0,len=strlen(s); i < len; ++i)
+	{
+		if (!isdigit(s[i]) && s[i]!='-')
+			return false;
+	}
+	*useOrigVal=true;
+	return true;
+}
 
 
 int EDITABLE_DOCTYPES::find(const char* pathinfo, EDITABLE_DOCTYPES* types, size_t types_count)

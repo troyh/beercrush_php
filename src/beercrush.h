@@ -30,6 +30,7 @@ struct EDITABLE_FIELDS
 	static bool validate_phone(const char* s, bool* useOrigVal, char* newVal, size_t newValSize);
 	static bool validate_uri(const char* s, bool* useOrigVal, char* newVal, size_t newValSize);
 	static bool validate_float(const char* s, bool* useOrigVal, char* newVal, size_t newValSize);
+	static bool validate_zipcode(const char* s, bool* useOrigVal, char* newVal, size_t newValSize);
 };
 
 struct EDITABLE_DOCTYPES

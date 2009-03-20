@@ -10,21 +10,20 @@ vpath %.fcgi /var/www/beer/api
 FCGI_PROGS=autocomplete.fcgi createlogin.fcgi login.fcgi logout.fcgi post.fcgi nearby.fcgi
 ALL: $(FCGI_PROGS)
 
-autocomplete.fcgi: autocomplete.o
+autocomplete.fcgi: $(OBJ_DIR)/autocomplete.o
 	g++ $^ -lfcgi -lcgic_fcgi -o $(WWWDOCROOT)$(WWWRELPATH)$@
 
-nearby.fcgi: nearby.o
-	g++ $^ -lfcgi -lcgic_fcgi -o $(WWWDOCROOT)$(WWWRELPATH)$@
-	-killall $@
+nearby.fcgi: $(OBJ_DIR)/nearby.o
+	$(CXX) $^ -lfcgi -lcgic_fcgi -o $(WWWDOCROOT)$(WWWRELPATH)$@
 	
 edit.fcgi: $(OBJ_DIR)/edit.o $(OBJ_DIR)/beercrush.o
 	$(CXX) $^ -lboost_filesystem-gcc43-mt-1_36 -L/usr/local/lib/OAK -loak -lxml2 -lmemcached -lgcrypt -lfcgi -lcgic_fcgi -o $(WWWDOCROOT)$(WWWRELPATH)$@
 
-autocomplete.o: autocomplete.cc
-	g++ -c -o $(OBJ_DIR)/$@ $^
+$(OBJ_DIR)/autocomplete.o: $(SRC_DIR)/autocomplete.cc
+	$(CXX) -c -o $@ $^
 
-nearby.o: nearby.cc
-	g++ -c -o $(OBJ_DIR)/$@ $^
+$(OBJ_DIR)/nearby.o: $(SRC_DIR)/nearby.cc
+	$(CXX) -c -o $@ $^
 
 $(OBJ_DIR)/edit.o: $(SRC_DIR)/edit.cc
 	$(CXX) -I/usr/local/include/boost-1_36 -I/usr/include/libxml2 -c -o $@ $^
@@ -43,9 +42,9 @@ logout.fcgi: libapp.so
 post.fcgi: libapp.so
 	-killall $(FCGI_PROGS)
 
-libapp.so: libapp.o
+libapp.so: $(OBJ_DIR)/libapp.o
 	g++ -shared  $^ -lboost_filesystem-gcc43-mt-1_36 -L/usr/local/lib/OAK -loak -lxml2 -lcgic -o $(WWWDOCROOT)/$(WWWRELPATH)/$@
 	
-libapp.o: libapp.cc
+$(OBJ_DIR)/libapp.o: $(SRC_DIR)/libapp.cc
 	$(CXX) -I/usr/local/include/boost-1_36 -I/usr/include/libxml2 -c -o $(OBJ_DIR)/$@ $^
 	

@@ -148,7 +148,7 @@ int cgiMain()
 	double lon_max=lon+(double)(within/lon_deg_len);
 	double lon_min=lon-(double)(within/lon_deg_len);
 	
-	cgiHeaderContentType("text/xml");
+	cgiHeaderContentType((char*)"text/xml");
 	// cgiHeaderStatus(200,(char*)"OK");
 	// FCGI_printf("LatDegLen: %f\nWithin: %f\n",lat_deg_len,within);
 	// FCGI_printf("Lat: %f to %f\nLon: %f to %f\n",lat_min,lat_max,lon_min,lon_max);
@@ -166,11 +166,11 @@ int cgiMain()
 		if (lon_min <= latlonpairs[i].lon && latlonpairs[i].lon <= lon_max)
 		{
 			// Found one!
-			FCGI_printf("<place id=\"%s\"><name>%s</name><latitude>%f</latitude><longitude>%f</longitude></place>\n",
+			FCGI_printf("<place id=\"%s\" latitude=\"%f\" longitude=\"%f\"><name>%s</name></place>\n",
 				latlonpairs[i].place_id,
-				latlonpairs[i].name,
 				latlonpairs[i].lat,
-				latlonpairs[i].lon
+				latlonpairs[i].lon,
+				latlonpairs[i].name
 			);
 		}
 	}

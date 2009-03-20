@@ -60,7 +60,7 @@ EDITABLE_FIELDS place_editable_fields[]=
 	{ "/place/address/neighborhood",		EDITABLE_FIELDS::validate_text },
 	{ "/place/address/state",				validate_place_state },
 	{ "/place/address/street",				EDITABLE_FIELDS::validate_text },
-	{ "/place/address/zip",					EDITABLE_FIELDS::validate_uinteger },
+	{ "/place/address/zip",					EDITABLE_FIELDS::validate_zipcode },
 	{ "/place/description",					EDITABLE_FIELDS::validate_text },
 	{ "/place/established",					EDITABLE_FIELDS::validate_uinteger },
 	{ "/place/hours/open",					EDITABLE_FIELDS::validate_text },
@@ -87,9 +87,10 @@ EDITABLE_FIELDS brewery_editable_fields[]=
 	{ "/brewery/address/longitude",			EDITABLE_FIELDS::validate_float },
 	{ "/brewery/address/state",				validate_place_state },
 	{ "/brewery/address/street",			EDITABLE_FIELDS::validate_text },
-	{ "/brewery/address/zip",				EDITABLE_FIELDS::validate_uinteger },
+	{ "/brewery/address/zip",				EDITABLE_FIELDS::validate_zipcode },
 	{ "/brewery/name",						EDITABLE_FIELDS::validate_text },
 	{ "/brewery/phone",						EDITABLE_FIELDS::validate_phone },
+	{ "/brewery/uri",						EDITABLE_FIELDS::validate_uri },
 };
 
 EDITABLE_FIELDS beer_editable_fields[]=
