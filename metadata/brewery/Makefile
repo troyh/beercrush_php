@@ -1,5 +1,7 @@
-XSL_DIR=/home/troy/beerliberation/app/xsl
-XML_DIR=/home/troy/beerliberation/xml
+include /etc/BeerCrush/BeerCrush.conf
+
+XSL_DIR=$(APP_DIR)/xsl
+XML_DIR=$(DOC_DIR)
 
 vpath %.xml $(XML_DIR)/meta/brewery
 vpath %.xsl $(XSL_DIR)
@@ -13,7 +15,4 @@ vpath %.xsl $(XSL_DIR)
 	./beerlist.sh $(basename $(@F))
 	
 ALL-BREWERY-METADATA: FORCE
-	ls $(XML_DIR)/brewery/ |\
-	while read B; do \
-		$(MAKE) $$B; \
-	done
+	./beerlist.sh

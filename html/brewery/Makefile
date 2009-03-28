@@ -1,5 +1,7 @@
-XSL_DIR=/home/troy/beerliberation/app/xsl
-XML_DIR=/home/troy/beerliberation/xml
+include /etc/BeerCrush/BeerCrush.conf
+
+XSL_DIR=$(APP_DIR)/xsl
+XML_DIR=$(DOC_DIR)
 
 vpath %.xml $(XML_DIR)/brewery
 vpath %.xsl $(XSL_DIR)
@@ -7,17 +9,12 @@ vpath %.xsl $(XSL_DIR)
 .PHONY: FORCE ALL-BREWERY-PAGES
 
 index.html: index.xml $(XSL_DIR)/brewery/index.xsl
-	xmlstarlet tr $(XSL_DIR)/brewery/index.xsl $(XML_DIR)/brewery/index.xml > $(WWWDOCROOT)$(WWWRELPATH)$@
+	./makeindex.sh html
 
 index.xml: FORCE
-	echo "<breweries>" > $@
-	echo "<meta>" >> $@
-	echo "<breadcrumbs><crumb href=\"/brewery/\">Breweries</crumb></breadcrumbs>" >> $@
-	echo "</meta>" >> $@
-	find $(XML_DIR)/brewery -maxdepth 1 -name "*.xml" ! -name ".*" ! -name "index.xml" -exec xmlstarlet fo --omit-decl {} \; >> $@
-	echo "</breweries>" >> $@
+	./makeindex.sh xml
 
-%.html: %.xml brewery.xsl $(WWWDOCROOT)/$(WWWRELPATH)/
+%.html: %.xml makepages.sh brewery.xsl $(WWWDOCROOT)/$(WWWRELPATH)/
 	xmlstarlet tr $(XSL_DIR)/brewery/brewery.xsl $< > $(WWWDOCROOT)$(WWWRELPATH)$@
 
 #
@@ -37,10 +34,5 @@ $(WWWDOCROOT)$(WWWRELPATH):
 	mkdir -p $(WWWDOCROOT)$(WWWRELPATH)
 	
 ALL-BREWERY-PAGES: FORCE
-	find $(XML_DIR)/brewery/ -maxdepth 1 -name "*.xml" | \
-	while read F; do \
-		ID=`basename $$F .xml`; \
-		echo $$ID; \
-		WWWDOCROOT=$(WWWDOCROOT) WWWRELPATH=$(WWWRELPATH) make --quiet $$ID.html; \
-	done
+	./makepages.sh
 	
