@@ -24,14 +24,6 @@ if [ ! -d $WWW_DIR/$WWWRELPATH/byletter ]; then
 fi
 
 
-	
-	# Make the "by letter" pages
-	xmlstarlet tr $XSL_DIR/brewery/byletter_123.xsl $XML_DIR/brewery/index.xml > $WWW_DIR/$WWWRELPATH/byletter/123.html
-	for L in A B C D E F G H I J K L M N O P Q R S T U V W X Y Z; do
-		xmlstarlet tr $XSL_DIR/brewery/byletter.xsl -s NAVLETTER=$L $XML_DIR/brewery/index.xml > $WWW_DIR/$WWWRELPATH/byletter/$L.html
-	done
-exit;
-
 if [ -z "$1" ]; then
 	
 	find $DOC_DIR/brewery/ -maxdepth 1 -name "*.xml" | 
@@ -39,6 +31,12 @@ if [ -z "$1" ]; then
 		ID=`basename $F .xml`; 
 		echo $ID; 
 		make_brewery_page $ID
+	done
+
+	# Make the "by letter" pages
+	xmlstarlet tr $XSL_DIR/brewery/byletter_123.xsl $XML_DIR/brewery/index.xml > $WWW_DIR/$WWWRELPATH/byletter/123.html
+	for L in A B C D E F G H I J K L M N O P Q R S T U V W X Y Z; do
+		xmlstarlet tr $XSL_DIR/brewery/byletter.xsl -s NAVLETTER=$L $XML_DIR/brewery/index.xml > $WWW_DIR/$WWWRELPATH/byletter/$L.html
 	done
 
 else
