@@ -1,0 +1,7 @@
+Required:
+* sudo aptitude install incron
+* sudo aptitude install libboost-dev
+* sudo aptitude install libfcgi-dev
+* patched cgic205
+
+mkdir /var/lock/BeerCrush

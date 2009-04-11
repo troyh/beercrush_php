@@ -1,15 +1,22 @@
+#define NO_FCGI_DEFINES
 #include <fcgi_stdio.h>
+
 extern "C"
 {
 #include <cgic.h>
 }
 
+#include <map>
+#include <string>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <fstream>
+
+#include <boost/filesystem.hpp>
 
 using namespace std;
 
@@ -183,11 +190,66 @@ const char** readFile(const char* fname, size_t* count)
 	return (const char**)list;
 }
 
+class Config
+{
+	map<std::string,std::string> m_settings;
+	
+	void readConfig(boost::filesystem::path path);
+public:
+	Config(boost::filesystem::path path);
+	~Config() {}
+	
+	const char* get(const char* name);
+};
+
+Config::Config(boost::filesystem::path path)
+{
+	readConfig(path);
+}
+
+const char* Config::get(const char* name)
+{
+	return m_settings[name].c_str();
+}
+
+void Config::readConfig(boost::filesystem::path path)
+{
+	ifstream f(path.string().c_str());
+	while (f.good())
+	{
+		char buf[256];
+		f.getline(buf,sizeof(buf));
+		if (f.good())
+		{
+			char* p=buf;
+			while (isspace(*p) && *p)
+				++p;
+			if (*p!='#') // a comment line
+			{
+				p=strchr(p,'=');
+				if (p)
+				{
+					*p++='\0';
+					m_settings[buf]=p;
+				}
+			}
+		}
+	}
+}
 
 extern "C" void cgiInit() 
 {
-	/* TODO: Load brewery list into memory, it *must* be sorted */
-	brewery_names=readFile("/home/troy/beerliberation/xml/meta/brewery/autocomplete_names.txt",&brewery_names_count);
+	// Read the conf file
+	Config cfg("/etc/BeerCrush/BeerCrush.conf");
+	
+	char fname[256];
+	strncpy(fname,cfg.get("DOC_DIR"),sizeof(fname));
+	fname[sizeof(fname)-1]='\0';
+	strncat(fname,"/meta/brewery/autocomplete_names.txt",sizeof(fname)-strlen(fname)-1);
+	fname[sizeof(fname)-1]='\0';
+	
+	/* Load brewery list into memory, it *must* be sorted */
+	brewery_names=readFile(fname,&brewery_names_count);
 	/* TODO: Load style list into memory, it *must* be sorted */
 }
 
@@ -199,6 +261,9 @@ extern "C" void cgiUninit()
 
 void autocomplete(const char* query,size_t query_len,const char** list,size_t count, bool bXMLOutput)
 {
+	if (count==0)
+		return;
+		
 	// Binary-search list
 	size_t hi=count;
 	size_t lo=hi>0?1:hi;

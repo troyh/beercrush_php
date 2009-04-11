@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# --START INCRONTAB RULES--
+#
+# $APP_DIR/src/autocomplete.cc IN_MODIFY
+#
+# --END INCRONTAB RULES--
+
+. /etc/BeerCrush/BeerCrush.conf
+
+. $APP_DIR/etc/utils.sh
+
+DIR=$(dirname $1);
+FILENAME=$(basename $1);
+EXT=$(FILEEXT $1);
+BASENAME=$(basename $1 .$EXT);
+
+OBJ_DIR=/tmp
+INCLUDES="/usr/include/boost"
+
+case "$FILENAME" in
+	autocomplete.cc )
+		g++ -I$INCLUDES -c -o $OBJ_DIR/$BASENAME.o $APP_DIR/src/$FILENAME;
+		g++ $OBJ_DIR/$BASENAME.o -lfcgi -lcgic_fcgi -o $WWW_DIR/api/$BASENAME.fcgi;
+		SYSLOG_INFO "Rebuilt $WWW_DIR/api/$BASENAME.fcgi (after change to $FILENAME)";
+		;;
+esac
