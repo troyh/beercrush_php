@@ -190,52 +190,6 @@ const char** readFile(const char* fname, size_t* count)
 	return (const char**)list;
 }
 
-class Config
-{
-	map<std::string,std::string> m_settings;
-	
-	void readConfig(boost::filesystem::path path);
-public:
-	Config(boost::filesystem::path path);
-	~Config() {}
-	
-	const char* get(const char* name);
-};
-
-Config::Config(boost::filesystem::path path)
-{
-	readConfig(path);
-}
-
-const char* Config::get(const char* name)
-{
-	return m_settings[name].c_str();
-}
-
-void Config::readConfig(boost::filesystem::path path)
-{
-	ifstream f(path.string().c_str());
-	while (f.good())
-	{
-		char buf[256];
-		f.getline(buf,sizeof(buf));
-		if (f.good())
-		{
-			char* p=buf;
-			while (isspace(*p) && *p)
-				++p;
-			if (*p!='#') // a comment line
-			{
-				p=strchr(p,'=');
-				if (p)
-				{
-					*p++='\0';
-					m_settings[buf]=p;
-				}
-			}
-		}
-	}
-}
 
 extern "C" void cgiInit() 
 {

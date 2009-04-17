@@ -26,7 +26,9 @@ if LOCK $AUTOCOMPLETE_NAMES_FILE; then
 	# Only update if the changed file is an XML file
 	if [ $CHANGED_DIR == "$DOC_DIR/brewery" -a $CHANGED_EXT == "xml" ]; then
 		xmlstarlet sel -t -m "/brewery" -v name -o "&#09;" -v "@id" $CHANGED_DIR/$CHANGED_FILENAME > $AUTOCOMPLETE_NAMES_FILE.new
-		# TODO: Remove the line with the modified file's brewery_id
+		
+		# TODO: Remove the line with the modified file's brewery_id, otherwise the old one will remain in the list if the name has changed.
+		
 		cat $AUTOCOMPLETE_NAMES_FILE >> $AUTOCOMPLETE_NAMES_FILE.new
 		sort -u --ignore-case $AUTOCOMPLETE_NAMES_FILE.new > $AUTOCOMPLETE_NAMES_FILE.new2
 		mv $AUTOCOMPLETE_NAMES_FILE.new2 $AUTOCOMPLETE_NAMES_FILE

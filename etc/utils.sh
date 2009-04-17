@@ -10,7 +10,11 @@ function LOCK () {
 }
 
 function SYSLOG_INFO () {
-	logger -t BeerCrush -s -p user.info "$1";
+	if [ ! -z "$1" ]; then
+		logger -t BeerCrush -s -p user.info "$1";
+	else
+		logger -t BeerCrush -s -p user.info ;
+	fi
 }
 
 function SYSLOG_WARN () {
