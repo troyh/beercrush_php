@@ -8,6 +8,7 @@ extern "C"
 
 #include <oak.h>
 #include <string>
+#include <string.h>
 
 #include <boost/filesystem.hpp>
 
@@ -28,6 +29,33 @@ extern "C"
 void cgiUninit()
 {
 }
+
+OAK_RESULT validateBeerID(const char* name, const char* value)
+{
+	// TODO: verify that the ID makes sense, i.e., we have the brewery and the beer already
+	return OAK_OK;
+}
+
+OAK_RESULT validateRange(const char* name, const char* value)
+{
+	int n=atoi(value);
+	if (!strcmp(name,"srm"))
+	{
+		if (n<0 || n>9)
+			return OAK_VALIDATE_BADVALUE;
+	}
+	else if (!strcmp(name,"rating") || 
+			!strcmp(name,"body")	||
+			!strcmp(name,"bitterness") ||
+			!strcmp(name,"sweetness") ||
+			!strcmp(name,"aftertaste"))
+	{
+		if (n<0 || n>5)
+			return OAK_VALIDATE_BADVALUE;
+	}
+	return OAK_OK;
+}
+
 
 int cgiMain()
 {
@@ -52,17 +80,18 @@ int cgiMain()
 			{
 				// Authorized, examine review for validity
 
-				oak.validate_field("beer_id"			, OAK_DATATYPE_TEXT);
-				oak.validate_field("rating"				, OAK_DATATYPE_UINT);
-				oak.validate_field("srm"				, OAK_DATATYPE_UINT);
-				oak.validate_field("body"				, OAK_DATATYPE_UINT);
-				oak.validate_field("bitterness"			, OAK_DATATYPE_UINT);
-				oak.validate_field("sweetness"			, OAK_DATATYPE_UINT);
-				oak.validate_field("aftertaste"			, OAK_DATATYPE_UINT);
+				oak.validate_field("beer_id"			, OAK_DATATYPE_TEXT,  validateBeerID);
+				oak.validate_field("rating"				, OAK_DATATYPE_UINT,  validateRange);
+				oak.validate_field("srm"				, OAK_DATATYPE_UINT,  validateRange);
+				oak.validate_field("body"				, OAK_DATATYPE_UINT,  validateRange);
+				oak.validate_field("bitterness"			, OAK_DATATYPE_UINT,  validateRange);
+				oak.validate_field("sweetness"			, OAK_DATATYPE_UINT,  validateRange);
+				oak.validate_field("aftertaste"			, OAK_DATATYPE_UINT,  validateRange);
 				oak.validate_field("comments"			, OAK_DATATYPE_TEXT);
 				oak.validate_field("price"				, OAK_DATATYPE_MONEY);
 				oak.validate_field("place"				, OAK_DATATYPE_TEXT);
 				oak.validate_field("size"				, OAK_DATATYPE_TEXT);
+				oak.validate_field("drankwithfood"		, OAK_DATATYPE_TEXT);
 				oak.validate_field("food_recommended"	, OAK_DATATYPE_TEXT);
 			
 				if (!oak.get_field_value("beer_id") || !oak.get_field_value("rating"))
@@ -92,7 +121,7 @@ int cgiMain()
 					else
 					{
 						xmlBufferPtr docbuf=oak.document_in_memory(doc);
-						FCGI_printf("%s\n",xmlBufferContent(docbuf));
+						FCGI_printf("Result:\n%s\n",xmlBufferContent(docbuf));
 						xmlBufferFree(docbuf);
 					
 						// FCGI_printf("doc=%p\n",doc);
@@ -105,13 +134,16 @@ int cgiMain()
 						// 
 						// oak.store_document(docname,doc);
 					}
+					
+					if (doc)
+						xmlFreeDoc(doc);
 				}
 			}
 		}
 	}
 	catch (OAK::Exception& x)
 	{
-		FCGI_printf("Exception:%s",x.what());
+		FCGI_printf("OAK Exception:%s",x.what());
 	}
 	catch (...)
 	{
