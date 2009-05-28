@@ -1,6 +1,15 @@
 #include <oak.h>
 
-#include "../gen-cpp/BeerCrush_types.h"
+class DataObj
+{
+public:	
+};
+
+class BeerReview
+{
+	map<std::string, > data;
+public:	
+};
 
 OAK_RESULT validateBeerID(const char* name, const char* value, OAK_CGIFIELD_VALUE_TYPE converted_value)
 {
@@ -11,25 +20,6 @@ OAK_RESULT validateBeerID(const char* name, const char* value, OAK_CGIFIELD_VALU
 
 const char* OAK::OAK::conf_file="/etc/BeerCrush/BeerCrush.conf";
 unsigned int OAK::OAK::cgi_flags=OAK_CGI_REQUIRE_USERID;
-// Field Validations
-// OAK_CGI_FIELD OAK::OAK::cgi_fields[]=
-// {
-// 	{"beer_id"			, OAK_CGIFIELD_REQUIRED,OAK_DATATYPE_TEXT,  0,-1, validateBeerID },
-// 	{"rating"			, OAK_CGIFIELD_REQUIRED,OAK_DATATYPE_UINT16,  0, 5, NULL },
-// 	{"srm"				, 0, 					OAK_DATATYPE_UINT16,  0, 9, NULL },
-// 	{"body"				, 0, 					OAK_DATATYPE_UINT16,  0, 5, NULL },
-// 	{"bitterness"		, 0, 					OAK_DATATYPE_UINT16,  0, 5, NULL },
-// 	{"sweetness"		, 0, 					OAK_DATATYPE_UINT16,  0, 5, NULL },
-// 	{"aftertaste"		, 0, 					OAK_DATATYPE_UINT16,  0, 5, NULL },
-// 	{"comments"			, 0, 					OAK_DATATYPE_TEXT,  0,-1, NULL },
-// 	{"price"			, 0, 					OAK_DATATYPE_MONEY, 0,-1, NULL },
-// 	{"place"			, 0, 					OAK_DATATYPE_TEXT,  0,-1, NULL },
-// 	{"size"				, 0, 					OAK_DATATYPE_TEXT,  0,-1, NULL },
-// 	{"drankwithfood"	, 0, 					OAK_DATATYPE_TEXT,  0,-1, NULL },
-// 	{"food_recommended"	, 0, 					OAK_DATATYPE_BOOL,  0,-1, NULL },
-// 	{0} // Terminator
-// };
-
 OAK_CGI_FIELD OAK::OAK::cgi_fields[]=
 {
 	OAK_CGI_FIELD("beer_id"			, OAK_CGIFIELD_REQUIRED,OAK_DATATYPE_TEXT,  0,-1, validateBeerID ),
@@ -45,7 +35,7 @@ OAK_CGI_FIELD OAK::OAK::cgi_fields[]=
 	OAK_CGI_FIELD("size"			, 0, 					OAK_DATATYPE_TEXT,  0,-1, NULL ),
 	OAK_CGI_FIELD("drankwithfood"	, 0, 					OAK_DATATYPE_TEXT,  0,-1, NULL ),
 	OAK_CGI_FIELD("food_recommended", 0, 					OAK_DATATYPE_BOOL,  0,-1, NULL ),
-	OAK_CGI_FIELD(0) // Terminator
+	OAK_CGI_FIELD_TERMINATOR()
 };
 
 int oakInit()
@@ -58,7 +48,6 @@ int oakUninit()
 
 bool oakException(OAK::Exception& x)
 {
-	FCGI_printf("oakException\n");
 	return false; // Let OAK handle it
 }
 
