@@ -1,0 +1,15 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+if ($argc<2)
+	exit;
+	
+$conf_file="/etc/BeerCrush/json.conf";
+
+$oak=new OAK();
+$jsonobj=new stdClass;
+$oak->get_document($argv[1],$jsonobj);
+print json_encode($jsonobj);
+
+?>

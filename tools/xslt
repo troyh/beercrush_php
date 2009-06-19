@@ -1,0 +1,43 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+function get_document($id)
+{
+	$oak=new OAK();
+	$jsonobj=new stdClass;
+	$oak->get_document($id,$jsonobj);
+
+	$writer=new XMLWriter();
+	$writer->openMemory();
+	$writer->startDocument();
+	
+	$oak->json2xml($jsonobj,$writer);
+	
+	$writer->endDocument();
+	
+	$doc=new DOMDocument();
+	$doc->loadXML($writer->outputMemory());
+	
+	return $doc;
+}
+
+if ($argc<2)
+	exit;
+	
+$xslt=new XSLTProcessor();
+	
+$xsl=new DOMDocument();
+$xsl->load($argv[1]);
+
+$xml=new DOMDocument();
+if ($argc>=3)
+	$xml->load($argv[2]);
+else
+	$xml->load("php://stdin");
+
+$xslt->importStyleSheet($xsl);
+$xslt->registerPHPFunctions();
+echo $xslt->transformToXML($xml);
+
+?>

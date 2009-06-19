@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet version="1.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+				xmlns:php="http://php.net/xsl">
 
-	<xsl:output encoding="UTF-8" indent="yes" method="xml" />
+	<xsl:output encoding="UTF-8" indent="yes" method="html" />
 	
 	<xsl:include href="../std.xsl"/>
 
 	<xsl:template match="/brewery">
 		
-		<html xmlns:bl="http://beerliberation.com/">
+		<html xmlns:bc="http://beercrush.com/">
 			<head>
 				<title><xsl:value-of select="name"/></title>
 				<script type="text/javascript" src="/js/jquery-1.3.1.js"><xsl:text> </xsl:text></script>
@@ -30,7 +31,7 @@
 					
 				<xsl:element name='h1'>
 					<xsl:attribute name='id'>brewery_name</xsl:attribute>
-					<xsl:attribute name='bl:brewery_id'><xsl:value-of select="@id"/></xsl:attribute>
+					<xsl:attribute name='bc:brewery_id'><xsl:value-of select="@id"/></xsl:attribute>
 					<xsl:value-of select="name"/>
 				</xsl:element>				
 				
@@ -67,7 +68,7 @@
 				<h2>Their Beers</h2>
 				
 				<div>
-					<xsl:apply-templates select="document(concat($XML_DIR,'/meta/brewery/',@id,'.xml'))" mode="meta"/>
+					<xsl:apply-templates select="php:function('get_document',concat('/meta/brewery/',@id))" mode="meta"/>
 					<xsl:text> </xsl:text>
 				</div>
 				

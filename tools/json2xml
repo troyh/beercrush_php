@@ -1,0 +1,22 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+$doctag="doc";
+if ($argc>=2)
+	$doctag=$argv[1];
+
+$writer=new XMLWriter();
+$writer->openMemory();
+$writer->startDocument();
+
+$string=file_get_contents("php://stdin");
+$json=json_decode($string);
+
+$oak=new OAK();
+$oak->json2xml($json,$writer);
+
+$writer->endDocument();
+print $writer->outputMemory();
+
+?>

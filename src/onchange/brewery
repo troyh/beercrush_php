@@ -1,0 +1,14 @@
+#!/bin/sh
+. /etc/BeerCrush/BeerCrush.conf
+
+# echo "$1 changed";
+if [ -z "$1" ]; then
+	echo "Usage: brewery <Brewery ID>";
+	exit;
+fi
+
+# Update brewery meta info doc
+$APP_DIR/tools/getdoc "_view/beer/made_by?key=%22$1%22"
+
+# Update brewery page
+$APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/json2xml  | $APP_DIR/tools/xslt $APP_DIR/xsl/brewery/brewery.xsl
