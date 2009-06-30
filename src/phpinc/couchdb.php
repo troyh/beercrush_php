@@ -34,7 +34,7 @@ class CouchDBResponse {
 
 class CouchDBRequest {
 
-    static $VALID_HTTP_METHODS = array('DELETE', 'GET', 'POST', 'PUT');
+    static $VALID_HTTP_METHODS = array('DELETE', 'GET', 'POST', 'PUT', 'COPY');
     
     private $method = 'GET';
     private $url = '';
@@ -63,9 +63,17 @@ class CouchDBRequest {
     function getRequest() {
         $req = "{$this->method} {$this->url} HTTP/1.0\r\nHost: {$this->host}\r\n";
         if($this->data) {
-            $req .= 'Content-Length: '.strlen($this->data)."\r\n";
-            $req .= 'Content-Type: application/json'."\r\n\r\n";
-            $req .= $this->data."\r\n";
+			if ($this->method=='COPY')
+			{
+	            $req .= 'Content-Length: 0\r\n';
+				$req .= 'Destination: '.$this->data."\r\n\r\n";
+			}
+			else
+			{
+	            $req .= 'Content-Length: '.strlen($this->data)."\r\n";
+	            $req .= 'Content-Type: application/json'."\r\n\r\n";
+	            $req .= $this->data."\r\n";
+			}
         } else {
             $req .= "\r\n";
         }

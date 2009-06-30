@@ -1,0 +1,14 @@
+#!/bin/sh
+. /etc/BeerCrush/BeerCrush.conf
+
+if [ -z "$1" ]; then
+	echo "Usage: $0 <Brewery ID>";
+	exit;
+fi
+
+# Get list of beers for brewery
+$APP_DIR/scripts/brewery/beerlist "$1" |
+	$APP_DIR/tools/updatedoc "meta:brewery:$1" beerlist "brewery_meta" | 
+	$APP_DIR/tools/putdoc "meta:brewery:$1"
+
+# echo Updated meta:brewery:$1;

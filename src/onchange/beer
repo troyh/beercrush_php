@@ -1,0 +1,17 @@
+#!/bin/sh
+. /etc/BeerCrush/BeerCrush.conf
+
+# echo "$1 changed";
+if [ -z "$1" ]; then
+	echo "Usage: $0 <Beer ID>";
+	exit;
+fi
+
+# Update beer meta info doc
+# $APP_DIR/scripts/beer/meta "$1"
+
+# Update beer XML doc
+$APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/json2xml > $WWW_DIR/xml/beer/$1.xml
+
+# Update beer page
+# cat $WWW_DIR/xml/beer/$1.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/beer/beer.xsl > $WWW_DIR/html/beer/$1.html

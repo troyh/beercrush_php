@@ -3,12 +3,16 @@
 
 # echo "$1 changed";
 if [ -z "$1" ]; then
-	echo "Usage: brewery <Brewery ID>";
+	echo "Usage: $0 <Brewery ID>";
 	exit;
 fi
 
 # Update brewery meta info doc
-$APP_DIR/tools/getdoc "_view/beer/made_by?key=%22$1%22"
+$APP_DIR/scripts/brewery/meta "$1"
+
+# Update brewery XML doc
+$APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/insertdoc meta "meta:brewery:$1" | $APP_DIR/tools/json2xml > $WWW_DIR/xml/brewery/$1.xml
 
 # Update brewery page
-$APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/json2xml  | $APP_DIR/tools/xslt $APP_DIR/xsl/brewery/brewery.xsl
+cat $WWW_DIR/xml/brewery/$1.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/brewery/brewery.xsl > $WWW_DIR/html/brewery/$1.html
+

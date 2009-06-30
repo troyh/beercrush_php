@@ -1,0 +1,16 @@
+#!/usr/bin/php
+<?php
+
+if ($argc<2)
+{
+	print "Usage: $argv[0] <json property>\n";
+	exit;
+}
+
+$json=file_get_contents("php://stdin");
+$data=json_decode($json);
+
+$new_json=$data->$argv[1];
+print json_encode($new_json)."\n";
+
+?>

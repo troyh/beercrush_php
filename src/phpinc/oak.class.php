@@ -183,16 +183,17 @@ class OAK
 		return true;
 	}
 	
-	function put_document($doc)
+	function put_document($id,$doc)
 	{
-		$json=json_encode($doc);
-		// print "Storing doc:".$doc->getID().":".$json."<br />";
+		if (!is_string($doc))
+			$json=json_encode($doc);
+		// print "Storing doc:$id:".$json."<br />";
 		// print "Database name:".$this->config->couchdb->database."<br />";
 		$couchdb=new CouchDB($this->config->couchdb->database);
-		$rsp=$couchdb->send($doc->getID(),"put",$json);
+		$rsp=$couchdb->send($id,"put",$json);
 
-		// var_dump($rsp->getHeaders());
-		// var_dump($rsp->getBody(true));
+		var_dump($rsp->getHeaders());
+		var_dump($rsp->getBody(true));
 			
 		if ($rsp->getStatusCode()==201)
 			return true;
@@ -200,46 +201,109 @@ class OAK
 		return false;
 	}
 
-	function json2xml($jsonobj,$xmlwriter)
+	function put_document_json($id,$json)
 	{
-		// Get the document element tag from the type property, if it exists
-		if (property_exists($jsonobj,'type'))
-			$tag=$jsonobj->type;
-		else
-			$tag="doc"; // Default to 'doc'
+		$couchdb=new CouchDB($this->config->couchdb->database);
+		$rsp=$couchdb->send($id,"put",$json);
 
-		$xmlwriter->startElement($tag);
+		if ($rsp->getStatusCode()==201)
+			return true;
+			
+		return false;
+	}
+	
+	function copy_document($old_id,$new_id)
+	{
+		// NOTE: COPY only works in CouchDB 0.9+
+		$couchdb=new CouchDB($this->config->couchdb->database);
 
-		if (property_exists($jsonobj,'@attributes'))
+		$rsp=$couchdb->send($old_id,"copy",$new_id);
+		
+		// var_dump($rsp->getHeaders());
+		// var_dump($rsp->getBody(true));
+
+		if ($rsp->getStatusCode()==201)
+			return true;
+			
+		return false;
+	}
+
+	function delete_document($id)
+	{
+		$couchdb=new CouchDB($this->config->couchdb->database);
+
+		$rsp=$couchdb->send($id,"delete");
+		
+		if ($rsp->getStatusCode()==200)
+			return true;
+			
+		return false;
+	}
+
+	function json2xml($jsonobj,$xmlwriter,$tag=null)
+	{
+		if (is_scalar($jsonobj))
 		{
-			$varname="@attributes"; // Need to do this because of the @
-			foreach ($jsonobj->$varname as $k=>$v)
-			{
-				$xmlwriter->writeAttribute($k,$v);
-			}
+			$xmlwriter->text($jsonobj);
 		}
-
-		foreach ($jsonobj as $k=>$v)
+		else if (is_array($jsonobj))
 		{
-			if ($k=="@attributes")
+			if (is_null($tag) || !is_string($tag))
+				$tag="doc";
+
+			$xmlwriter->startElement($tag);
+			foreach ($jsonobj as $array_item)
 			{
-				// Skip it, we did this above
+				$this->json2xml($array_item,$xmlwriter,'item');
 			}
-			else
+			$xmlwriter->endElement();
+		}
+		else if (is_object($jsonobj))
+		{
+			// Get the document element tag from the type property, if it exists
+			if (property_exists($jsonobj,'type'))
 			{
-				if (is_scalar($v))
-					$xmlwriter->writeElement($k,$v);
-				else if (is_array($v))
+				if (is_null($tag) || !is_string($tag))
+					$tag=$jsonobj->type;
+			}
+			else if (is_null($tag) || !is_string($tag))
+				$tag="doc";
+
+			$xmlwriter->startElement($tag);
+
+			if (property_exists($jsonobj,'@attributes'))
+			{
+				$varname="@attributes"; // Need to do this because of the @
+				foreach ($jsonobj->$varname as $k=>$v)
 				{
-					foreach ($v as $array_item)
-						$this->json2xml($array_item,$xmlwriter);
+					$xmlwriter->writeAttribute($k,$v);
 				}
-				else if (is_object($v))
-					$this->json2xml($v,$xmlwriter);
 			}
+			
+			foreach ($jsonobj as $k=>$v)
+			{
+				if ($k=="@attributes")
+				{
+					// Skip it, we did this above
+				}
+				else
+				{
+					if (is_scalar($v))
+						$xmlwriter->writeElement($k,$v);
+					else if (is_object($v) || is_array($v))
+					{
+						$this->json2xml($v,$xmlwriter,$k);
+					}
+				}
+			}
+
+			$xmlwriter->endElement();
+		}
+		else
+		{
+			throw new Exception('Unknown datatype:'.gettype($jsonobj));
 		}
 
-		$xmlwriter->endElement();
 	}
 	
 };

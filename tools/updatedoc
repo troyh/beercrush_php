@@ -1,0 +1,25 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+$conf_file="/etc/BeerCrush/json.conf";
+
+if ($argc<4)
+{
+	print "Usage: $argv[0] <docid> <json property> <doc type>\n";
+	exit;
+}
+
+$json=file_get_contents("php://stdin");
+$new_data=json_decode($json);
+
+$oak=new OAK();
+$doc=new stdClass;
+$oak->get_document($argv[1],$doc);
+
+$doc->$argv[2]=$new_data;
+$doc->type=$argv[3];
+
+print json_encode($doc);
+
+?>

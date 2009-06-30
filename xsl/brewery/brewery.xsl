@@ -68,7 +68,7 @@
 				<h2>Their Beers</h2>
 				
 				<div>
-					<xsl:apply-templates select="php:function('get_document',concat('/meta/brewery/',@id))" mode="meta"/>
+					<xsl:apply-templates select="php:function('get_document',concat('meta:brewery:',@id))" mode="meta"/>
 					<xsl:text> </xsl:text>
 				</div>
 				

@@ -1,0 +1,35 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+$conf_file="/etc/BeerCrush/json.conf";
+
+$oak=new OAK;
+
+$list=new stdClass;
+$oak->get_document("_view/beer/all",$list);
+
+foreach ($list->rows as $row)
+{
+	$old_id=$row->id;
+	$new_id=str_replace('/',':',$old_id);
+
+	$old_id=str_replace('/','%2F',$old_id);
+	
+	$doc=new stdClass;
+	if ($oak->get_document($old_id,$doc)===false)
+		print "GET failed: $old_id";
+	else
+	{
+		unset($doc->_id);
+		unset($doc->_rev);
+		
+		if ($oak->put_document($new_id,$doc)===false)
+			print "PUT Failed: $new_id\n";
+		else if ($oak->delete_document($old_id.'?rev='.$doc->_id)===false)
+			print "DELETE Failed: $old_id\n";
+		else
+			print $old_id.' -> '.$new_id."\n";
+	}
+}
+
+?>

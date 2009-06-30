@@ -1,0 +1,34 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+$conf_file="/etc/BeerCrush/json.conf";
+
+$brewery_id=$argv[1];
+
+$oak=new OAK();
+$list=new stdClass;
+$oak->get_document('_view/beer/made_by?key=%22'.$brewery_id.'%22',$list);
+
+$beerlist=array();
+$attributes='@attributes';
+
+foreach ($list->rows as $beer)
+{
+	$beer_doc=new stdClass;
+	$oak->get_document($beer->id,$beer_doc);
+	
+	if (!strlen($beer_doc->name))
+		continue;
+		
+	$beer=new stdClass;
+	$beer->$attributes->id=$beer_doc->_id;
+	$beer->name=$beer_doc->name;
+	$beer->description=$beer_doc->description;
+	
+	array_push($beerlist,$beer);
+}
+
+print json_encode($beerlist);
+
+?>
