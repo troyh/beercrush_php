@@ -1,0 +1,40 @@
+#!/bin/sh
+. /etc/BeerCrush/BeerCrush.conf
+
+# echo "$1 changed";
+if [ -z "$1" ]; then
+	echo "Usage: $0 <Beer Review ID>";
+	exit;
+fi
+
+# Update beer meta info doc
+# $APP_DIR/scripts/beer/meta "$1"
+
+BREWERY_ID=`echo "$1" | cut -d ':' -f 2`;
+BEER_ID=`echo "$1" | cut -d ':' -f 3`;
+USER_ID=`echo "$1" | cut -d ':' -f 4`;
+
+XMLFILE_DIR="$WWW_DIR/xml/beer_review/$BREWERY_ID/$BEER_ID";
+
+# Update beer review XML doc
+if [ ! -d $XMLFILE_DIR ]; then
+	mkdir -p $XMLFILE_DIR;
+fi
+
+$APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/json2xml > $XMLFILE_DIR/$USER_ID.xml
+
+# Update beer review page
+# cat $WWW_DIR/xml/beer/$1.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/beer/beer.xsl > $WWW_DIR/html/beer/$1.html
+
+# Update user's beer reviews XML doc
+$APP_DIR/tools/getdoc "_view/beer_reviews/for_beer?key=%22$BREWERY_ID:$BEER_ID%22" | 
+$APP_DIR/tools/json2xml | 
+xmlstarlet sel -t -m '//doc/rows/item' -v id -n |
+sed -e '/^ *$/d' |
+while read REVIEW_ID; do
+	REVIEW_XML_FILE="$WWW_DIR/xml/"`echo $REVIEW_ID | sed -e 's/:/\//g'`".xml";
+	# echo $REVIEW_XML_FILE;
+	xmlstarlet fo --omit-decl $REVIEW_XML_FILE;
+done | 
+sed -e '1i\<beer_reviews>' -e '$a\</beer_reviews>' |
+xmlstarlet fo > $WWW_DIR/xml/beer_review/$BREWERY_ID/$BEER_ID/_all.xml

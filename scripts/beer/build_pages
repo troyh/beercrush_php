@@ -12,5 +12,3 @@ while read BEER_ID; do
 	echo $BEER_ID;
 	$APP_DIR/src/onchange/beer "$BEER_ID"
 done
-
-

@@ -15,16 +15,159 @@ class OAK
 	
 	function __destruct() {}
 	
+	/*
+	 * User Credentials Functions
+	 */
+	
+	function login_create($userid,$password)
+	{
+		$user_doc=new stdClass;
+		if ($this->get_document('user:'.$userid,$user_doc)===true)
+			return false; // User account already exists
+
+		$user_doc->userid=$userid;
+		$user_doc->password=$password;
+		$user_doc->secret=rand();
+		$user_doc->type='user';
+		
+		if ($this->put_document('user:'.$userid,$user_doc)!==true)
+			return false; // Failed to store document (internal error)
+			
+		return true; // Login created
+	}
+
 	function get_user_id()
 	{
-		return "troyh";
+		if (!strlen($_COOKIE['userid']))
+			return null; // User is not logged in
+		return $_COOKIE['userid'];
 	}
+
+	function get_user_key()
+	{
+		if (!strlen($_COOKIE['usrkey']))
+			return null; // User is not logged in
+		return $_COOKIE['usrkey'];
+	}
+	
+	function login($userid,$password,&$userkey)
+	{
+		$user_doc=new stdClass;
+		if ($this->get_document('user:'.$userid,$user_doc)!==true)
+			return false;
+
+		// Verify password is correct
+		if ($user_doc->password!==$password)
+			return false;
+		
+		// Create another secret
+		$user_doc->secret=rand();
+		if ($this->put_document('user:'.$userid,$user_doc)!==true)
+			return false;
+		
+		// Return userkey
+		$userkey=md5($userid.$user_doc->secret.$_SERVER['REMOTE_ADDR']);
+		return true;
+	}
+	
+	function login_is_trusted()
+	{
+		$user_doc=new stdClass;
+		if ($this->get_document('user:'.$this->get_user_id(),$user_doc)!==true)
+			return false;
+		
+		$correct_key=md5($this->get_user_id().$user_doc->secret.$_SERVER['REMOTE_ADDR']);
+		if ($correct_key!==$this->get_user_key())
+			return false;
+			
+		return true;
+	}
+	
+	function logout()
+	{
+		if (strlen($this->config->cookies->domain))
+		{
+			setcookie('userid','',time()-86400,'/',$this->config->cookies->domain);
+			setcookie('usrkey','',time()-86400,'/',$this->config->cookies->domain);
+		}
+		else
+		{
+			setcookie('userid','',time()-86400,'/');
+			setcookie('usrkey','',time()-86400,'/');
+		}
+	}
+
+	function login_failure()
+	{
+		$this->logout(); // Clears login cookies
+		
+		$xmlwriter=new XMLWriter;
+		$xmlwriter->openMemory();
+		$xmlwriter->startDocument();
+		$xmlwriter->startElement('login');
+		$xmlwriter->writeAttribute('ok','no');
+		$xmlwriter->writeElement('reason','Incorrect userid and/or password');
+		$xmlwriter->endElement();
+		$xmlwriter->endDocument();
+
+		header("Content-Type: application/xml");
+		print $xmlwriter->outputMemory();
+	}
+	
+	function login_success($userid,$password,$userkey)
+	{
+		if (strlen($this->config->cookies->domain))
+		{
+			setcookie('userid',$userid,time()+$this->config->cookies->lifetime,'/',$this->config->cookies->domain);
+			setcookie('usrkey',$userkey,time()+$this->config->cookies->lifetime,'/',$this->config->cookies->domain);
+		}
+		else
+		{
+			setcookie('userid',$userid,time()+$this->config->cookies->lifetime,'/');
+			setcookie('usrkey',$userkey,time()+$this->config->cookies->lifetime,'/');
+		}
+
+		$xmlwriter=new XMLWriter;
+		$xmlwriter->openMemory();
+		$xmlwriter->startDocument();
+		$xmlwriter->startElement('login');
+		$xmlwriter->writeAttribute('ok','yes');
+		$xmlwriter->writeElement('userid',$userid);
+		$xmlwriter->writeElement('usrkey',$userkey);
+		$xmlwriter->endElement();
+		$xmlwriter->endDocument();
+		
+		header("Content-Type: application/xml");
+		print $xmlwriter->outputMemory();
+	}
+	
+	function login_create_failure($reason='')
+	{
+		$xmlwriter=new XMLWriter;
+		$xmlwriter->openMemory();
+		$xmlwriter->startDocument();
+		$xmlwriter->startElement('login');
+		$xmlwriter->writeAttribute('ok','no');
+		$xmlwriter->writeElement('reason',$reason);
+		$xmlwriter->endElement();
+		$xmlwriter->endDocument();
+
+		header("Content-Type: application/xml");
+		print $xmlwriter->outputMemory();
+	}
+	
+	/*
+	 * User Credentials Functions
+	 */
 	
 	function get_database_name()
 	{
 		return $this->config->couchdb->database;
 	}
 	
+	/*
+	 * CGI Variable Functions
+	 */
 	
 	function validate_field($name,$value,$attribs)
 	{
@@ -187,14 +330,10 @@ class OAK
 	{
 		if (!is_string($doc))
 			$json=json_encode($doc);
-		// print "Storing doc:$id:".$json."<br />";
-		// print "Database name:".$this->config->couchdb->database."<br />";
+
 		$couchdb=new CouchDB($this->config->couchdb->database);
 		$rsp=$couchdb->send($id,"put",$json);
 
-		var_dump($rsp->getHeaders());
-		var_dump($rsp->getBody(true));
-			
 		if ($rsp->getStatusCode()==201)
 			return true;
 			

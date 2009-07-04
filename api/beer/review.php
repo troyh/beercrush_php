@@ -41,7 +41,10 @@ function oakMain($oak)
 	$oak->assign_values(&$review);
 	
 	// Store in db
-	$oak->put_document($review);
+	if ($oak->put_document($review->getID(),$review)!==true)
+	{
+		// TODO: do something for this error
+	}
 }
 
 ?>
