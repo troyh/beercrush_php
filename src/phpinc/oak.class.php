@@ -50,26 +50,49 @@ class OAK
 		return $_COOKIE['usrkey'];
 	}
 	
-	function login($userid,$password,&$userkey)
+	function login($userid,$password,&$usrkey)
 	{
 		$user_doc=new stdClass;
 		if ($this->get_document('user:'.$userid,$user_doc)!==true)
+		{
+			header("HTTP/1.0 201 Login failed");
 			return false;
+		}
 
 		// Verify password is correct
 		if ($user_doc->password!==$password)
+		{
+			header("HTTP/1.0 201 Login failed");
 			return false;
+		}
 		
 		// Create another secret
 		$user_doc->secret=rand();
 		if ($this->put_document('user:'.$userid,$user_doc)!==true)
+		{
+			header("HTTP/1.0 201 Internal error");
 			return false;
+		}
 		
-		// Return userkey
-		$userkey=md5($userid.$user_doc->secret.$_SERVER['REMOTE_ADDR']);
+		// Make and return userkey
+		$usrkey=md5($userid.$user_doc->secret.$_SERVER['REMOTE_ADDR']);
+
+		header("HTTP/1.0 200 Login successful");
+
+		if (strlen($this->config->cookies->domain))
+		{
+			setcookie('userid',$userid,time()+$this->config->cookies->lifetime,'/',$this->config->cookies->domain);
+			setcookie('usrkey',$usrkey,time()+$this->config->cookies->lifetime,'/',$this->config->cookies->domain);
+		}
+		else
+		{
+			setcookie('userid',$userid,time()+$this->config->cookies->lifetime,'/');
+			setcookie('usrkey',$usrkey,time()+$this->config->cookies->lifetime,'/');
+		}
+
 		return true;
 	}
-	
+
 	function login_is_trusted()
 	{
 		$user_doc=new stdClass;
@@ -97,65 +120,7 @@ class OAK
 		}
 	}
 
-	function login_failure()
-	{
-		$this->logout(); // Clears login cookies
-		
-		$xmlwriter=new XMLWriter;
-		$xmlwriter->openMemory();
-		$xmlwriter->startDocument();
-		$xmlwriter->startElement('login');
-		$xmlwriter->writeAttribute('ok','no');
-		$xmlwriter->writeElement('reason','Incorrect userid and/or password');
-		$xmlwriter->endElement();
-		$xmlwriter->endDocument();
 
-		header("Content-Type: application/xml");
-		print $xmlwriter->outputMemory();
-	}
-	
-	function login_success($userid,$password,$userkey)
-	{
-		if (strlen($this->config->cookies->domain))
-		{
-			setcookie('userid',$userid,time()+$this->config->cookies->lifetime,'/',$this->config->cookies->domain);
-			setcookie('usrkey',$userkey,time()+$this->config->cookies->lifetime,'/',$this->config->cookies->domain);
-		}
-		else
-		{
-			setcookie('userid',$userid,time()+$this->config->cookies->lifetime,'/');
-			setcookie('usrkey',$userkey,time()+$this->config->cookies->lifetime,'/');
-		}
-
-		$xmlwriter=new XMLWriter;
-		$xmlwriter->openMemory();
-		$xmlwriter->startDocument();
-		$xmlwriter->startElement('login');
-		$xmlwriter->writeAttribute('ok','yes');
-		$xmlwriter->writeElement('userid',$userid);
-		$xmlwriter->writeElement('usrkey',$userkey);
-		$xmlwriter->endElement();
-		$xmlwriter->endDocument();
-		
-		header("Content-Type: application/xml");
-		print $xmlwriter->outputMemory();
-	}
-	
-	function login_create_failure($reason='')
-	{
-		$xmlwriter=new XMLWriter;
-		$xmlwriter->openMemory();
-		$xmlwriter->startDocument();
-		$xmlwriter->startElement('login');
-		$xmlwriter->writeAttribute('ok','no');
-		$xmlwriter->writeElement('reason',$reason);
-		$xmlwriter->endElement();
-		$xmlwriter->endDocument();
-
-		header("Content-Type: application/xml");
-		print $xmlwriter->outputMemory();
-	}
-	
 	/*
 	 * User Credentials Functions
 	 */

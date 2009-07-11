@@ -25,25 +25,32 @@ require_once('beercrush/oak.php');
 
 function oakMain($oak)
 {
-	$review=new BeerReview;
-
-	// Give it enough info so that an ID can be created
-	$review->user_id=$oak->get_user_id();
-	$review->beer_id=$oak->get_cgi_value('beer_id');
-
-	// Get existing review, if there is one so that we can update just the parts added/changed in this request
-	if ($oak->get_document($review->getID(),&$review)===true)
+	if ($oak->login_is_trusted()!==true) // If the user is not logged in or we can't trust the login
 	{
-		// Do nothing, it doesn't matter
+		header("HTTP/1.0 201 Login required");
 	}
-
-	// Give it this request's edits
-	$oak->assign_values(&$review);
-	
-	// Store in db
-	if ($oak->put_document($review->getID(),$review)!==true)
+	else
 	{
-		// TODO: do something for this error
+		$review=new BeerReview;
+
+		// Give it enough info so that an ID can be created
+		$review->user_id=$oak->get_user_id();
+		$review->beer_id=$oak->get_cgi_value('beer_id');
+
+		// Get existing review, if there is one so that we can update just the parts added/changed in this request
+		if ($oak->get_document($review->getID(),&$review)===true)
+		{
+			// Do nothing, it doesn't matter
+		}
+
+		// Give it this request's edits
+		$oak->assign_values(&$review);
+	
+		// Store in db
+		if ($oak->put_document($review->getID(),$review)!==true)
+		{
+			header("HTTP/1.0 201 Internal error");
+		}
 	}
 }
 
