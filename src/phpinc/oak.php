@@ -2,9 +2,9 @@
 require_once('beercrush/couchdb.php');
 require_once('beercrush/oak.class.php');
 
-
-
 // Validate GET/POST data
+
+global $conf_file;
 $oak=new OAK($conf_file);
 
 try

@@ -1,13 +1,11 @@
 <?php
 require_once 'beercrush/oak.class.php';
 
-$conf_file="/etc/BeerCrush/json.conf";
-
 /*
 	Log the user out.
 */
 
-$oak=new OAK;
+$oak=new OAK('/etc/BeerCrush/json.conf');
 
 $user_id=$oak->get_user_id();
 $user_key=$oak->get_user_key();

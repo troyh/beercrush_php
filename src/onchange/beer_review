@@ -23,6 +23,8 @@ fi
 
 $APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/json2xml > $XMLFILE_DIR/$USER_ID.xml
 
+echo $XMLFILE_DIR/$USER_ID.xml
+
 # Update beer review page
 # cat $WWW_DIR/xml/beer/$1.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/beer/beer.xsl > $WWW_DIR/html/beer/$1.html
 
@@ -38,3 +40,5 @@ while read REVIEW_ID; do
 done | 
 sed -e '1i\<beer_reviews>' -e '$a\</beer_reviews>' |
 xmlstarlet fo > $WWW_DIR/xml/beer_review/$BREWERY_ID/$BEER_ID/_all.xml
+
+echo $WWW_DIR/xml/beer_review/$BREWERY_ID/$BEER_ID/_all.xml

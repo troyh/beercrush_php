@@ -18,13 +18,11 @@ function login_create_failure($reason='')
 }
 
 
-$conf_file="/etc/BeerCrush/json.conf";
-
 /*
 	Take userid and password CGI vars and create a login
 */
 
-$oak=new OAK;
+$oak=new OAK('/etc/BeerCrush/json.conf');
 
 if (empty($_GET['userid']) || empty($_GET['password']))
 {

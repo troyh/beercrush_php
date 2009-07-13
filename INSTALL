@@ -1,7 +1,33 @@
 Required:
-* sudo aptitude install incron
 * sudo aptitude install libboost-dev
 * sudo aptitude install libfcgi-dev
 * patched cgic205
+* libmemcached
+* memcacheq
 
-mkdir /var/lock/BeerCrush
+mkdir /var/lock/BeerCrush (not necessary?)
+
+Build server(s):
+--------------------
+Copy some files to /var/www
+Create some symlinks to the app source
+Make/verify config files
+Install spread toolkit
+Set up spread daemons
+Install and run queue processor script
+mkdir /var/run/BeerCrush
+
+MemcacheQ server(s):
+--------------------
+Install spread toolkit
+Start memcacheq
+
+CouchDB server(s):
+--------------------
+Install and configure couchdb
+Configure replication between servers
+
+Web server(s):
+--------------------
+Install apache2.2 + PHP
+Configure OAK conf

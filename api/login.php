@@ -1,8 +1,6 @@
 <?php
 require_once 'beercrush/oak.class.php';
 
-$conf_file="/etc/BeerCrush/json.conf";
-
 /*
 	Take userid and password CGI vars and validate them against the user db.
 */
@@ -11,7 +9,7 @@ $xmlwriter=new XMLWriter;
 $xmlwriter->openMemory();
 $xmlwriter->startDocument();
 
-$oak=new OAK;
+$oak=new OAK('/etc/BeerCrush/json.conf');
 $user_key="";
 
 // TODO: use OAK's get_cgi_value() instead of $_GET/$_POST directly

@@ -1,0 +1,47 @@
+#!/usr/bin/php
+<?php
+require_once 'beercrush/oak.class.php';
+
+$oak=new OAK('/etc/BeerCrush/json.conf');
+
+$pid_file='/var/run/BeerCrush/'.basename($argv[0]).'.pid';
+
+// Don't run this more than once at a time
+if (file_exists($pid_file))
+{
+	// Refuse to run again
+	$pid=file_get_contents($pid_file);
+	$oak->log("update_doc is currently running (PID $pid). Refusing to run a 2nd instance.");
+	exit;
+}
+
+file_put_contents($pid_file,getmypid());
+
+$msg=$oak->get_queue_msg('updates');
+if ($msg!=false)
+{
+	// Determine the doc type and call the appropriate script
+	$parts=split(':',$msg);
+
+	// Find the script for this onchange
+	$prog=$oak->config_bin_dir().'/onchange/'.$parts[0];
+	
+	if (!is_executable($prog))
+	{
+		// Silently ignore this
+	}
+	else
+	{
+		$r=exec(escapeshellcmd($prog).' '.escapeshellarg($msg),$output,$return_var);
+	
+		foreach ($output as $line)
+		{
+			$oak->log("$msg $line");
+		}
+	}
+}
+
+if (unlink($pid_file)===FALSE)
+	$oak->log("update_doc failed to unlink $pid_file");
+
+?>

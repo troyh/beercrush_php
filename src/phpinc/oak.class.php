@@ -5,9 +5,9 @@ class OAK
 {
 	private $config;
 
-	function __construct() 
+	function __construct($conf_file) 
 	{
-		global $conf_file;
+		// global $conf_file;
 		// Read conf_file
 		$conf_json=file_get_contents($conf_file);
 		$this->config=json_decode($conf_json);
@@ -300,7 +300,10 @@ class OAK
 		$rsp=$couchdb->send($id,"put",$json);
 
 		if ($rsp->getStatusCode()==201)
+		{
+			$this->queue_doc_update($id);
 			return true;
+		}
 			
 		return false;
 	}
@@ -408,6 +411,37 @@ class OAK
 			throw new Exception('Unknown datatype:'.gettype($jsonobj));
 		}
 
+	}
+	
+	function queue_doc_update($id)
+	{
+		$memQ=new Memcached();
+		$memQ->addServers($this->config->memcacheq->servers);
+		$memQ->set('updates',$id);
+	}
+	
+	function get_queue_msg($queue_name)
+	{
+		$memQ=new Memcached();
+		$memQ->addServers($this->config->memcacheq->servers);
+		return $memQ->get($queue_name);
+	}
+	
+	function put_queue_msg($queue_name,$msg)
+	{
+		$memQ=new Memcached();
+		$memQ->addServers($this->config->memcacheq->servers);
+		return $memQ->set($queue_name,$msg);
+	}
+
+	function config_bin_dir()
+	{
+		return $this->config->file_locations->BIN_DIR;
+	}
+	
+	function log($msg)
+	{
+		print "$msg\n"; // TODO: write to a logfile
 	}
 	
 };
