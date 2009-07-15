@@ -1,0 +1,13 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+if ($argc<2)
+	exit;
+	
+$oak=new OAK('/etc/BeerCrush/json.conf');
+$jsonobj=new stdClass;
+if ($oak->delete_document($argv[1])===true)
+	print "Deleted $argv[1]\n";
+
+?>
