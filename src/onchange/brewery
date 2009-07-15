@@ -1,18 +1,28 @@
 #!/bin/sh
 . /etc/BeerCrush/BeerCrush.conf
 
+function process () {
+	# Update brewery meta info doc
+	$APP_DIR/scripts/brewery/meta "$1"
+
+	# Update brewery XML doc
+	$APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/insertdoc meta "meta:brewery:$1" | $APP_DIR/tools/json2xml > $WWW_DIR/xml/brewery/$1.xml
+	echo $WWW_DIR/xml/brewery/$1.xml
+
+	# Update brewery page
+	cat $WWW_DIR/xml/brewery/$1.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/brewery/brewery.xsl > $WWW_DIR/html/brewery/$1.html
+	echo $WWW_DIR/html/brewery/$1.html
+}
+
 # echo "$1 changed";
 if [ -z "$1" ]; then
-	echo "Usage: $0 <Brewery ID>";
-	exit;
+	# *All* brewery docs changed!
+	$APP_DIR/tools/getdoc "/_view/brewery/all" | $APP_DIR/tools/json2xml  | xmlstarlet sel -t -m "/doc/rows/item" -v id -n | sed -e '/^$/d' |
+	while read BREWERY_ID; do
+		process $BREWERY_ID;
+	done
+	# echo "Usage: $0 <Brewery ID>";
+else
+	process $1;
 fi
-
-# Update brewery meta info doc
-$APP_DIR/scripts/brewery/meta "$1"
-
-# Update brewery XML doc
-$APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/insertdoc meta "meta:brewery:$1" | $APP_DIR/tools/json2xml > $WWW_DIR/xml/brewery/$1.xml
-
-# Update brewery page
-cat $WWW_DIR/xml/brewery/$1.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/brewery/brewery.xsl > $WWW_DIR/html/brewery/$1.html
 
