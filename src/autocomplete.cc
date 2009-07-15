@@ -193,17 +193,18 @@ const char** readFile(const char* fname, size_t* count)
 
 extern "C" void cgiInit() 
 {
-	// Read the conf file
-	Config cfg("/etc/BeerCrush/BeerCrush.conf");
-	
-	char fname[256];
-	strncpy(fname,cfg.get("DOC_DIR"),sizeof(fname));
-	fname[sizeof(fname)-1]='\0';
-	strncat(fname,"/meta/brewery/autocomplete_names.txt",sizeof(fname)-strlen(fname)-1);
-	fname[sizeof(fname)-1]='\0';
+	// TODO: make it read from the config file and load the data straight from couchdb so the file location is not hardcoded
+	// // Read the conf file
+	// Config cfg("/etc/BeerCrush/BeerCrush.conf");
+	// 
+	// char fname[256];
+	// strncpy(fname,cfg.get("DOC_DIR"),sizeof(fname));
+	// fname[sizeof(fname)-1]='\0';
+	// strncat(fname,"/meta/brewery/autocomplete_names.txt",sizeof(fname)-strlen(fname)-1);
+	// fname[sizeof(fname)-1]='\0';
 	
 	/* Load brewery list into memory, it *must* be sorted */
-	brewery_names=readFile(fname,&brewery_names_count);
+	brewery_names=readFile("/var/local/BeerCrush/meta/brewery/autocomplete_names.txt",&brewery_names_count);
 	/* TODO: Load style list into memory, it *must* be sorted */
 }
 
