@@ -1,0 +1,123 @@
+#!/bin/bash
+
+if [ -z $1 ]; then
+	echo "Usage: $0 <webserver|dbserver|memcacheqserver|buildserver>"
+	exit;
+fi
+
+function copy_files () {
+	if [ ! -L $2 ]; then
+		rsync --recursive $1 $2
+	fi
+}
+
+BEERCRUSH_WWW_DIR="/var/www/BeerCrush/"
+BEERCRUSH_ETC_DIR="/etc/BeerCrush/"
+BEERCRUSH_PHPINC_DIR="/usr/share/php/beercrush/"
+BEERCRUSH_SOURCE_DIR="~/beercrush/"
+
+#
+# Common setup tasks
+#
+sudo apt-get install rsync
+
+#
+# Node-dependent setup tasks
+#
+case $1 in
+	"webserver" )
+		echo "Setting up web server...";
+		# TODO: copy files from build server to here
+		;;
+	"dbserver" )
+		echo "Setting up database server...";
+		sudo apt-get install couchdb
+		# TODO: get db to here in /var/lib/couchdb
+		# TODO: setup replication between this server and another
+		;;
+	"memcacheqserver" )
+		echo "Setting up memcacheq server...";
+		# See http://memcachedb.org/memcacheq/INSTALL.html
+		# TODO: install Berkeley DB 4.7 or later (required by MemcacheQ)
+		# TODO: install libevent1.4.x or later (required by MemcacheQ)
+		# TODO: install MemcacheQ
+		
+		# Make sure memcacheq is running
+		# If not, start memcacheq:
+		memcacheq -d -r -H /var/lib/memcacheq -N -v -L 1024 -B 1024 > /var/log/memcacheq.log 2>&1
+		;;
+	"buildserver" )
+		echo "Setting up build server...";
+		
+		sudo apt-get install apache2 php5 php5-cli php5-dev spread libspread1-dev libfcgi-dev
+		
+		if [ ! -d $BEERCRUSH_SOURCE_DIR ]; then
+			# Get code from Subversion
+			svn co https://troyandgay.com/svn/projects/beerliberation $BEERCRUSH_SOURCE_DIR
+		else
+			# Get the latest version
+			svn update $BEERCRUSH_SOURCE_DIR
+		fi
+		
+		if [ ! -d $BEERCRUSH_WWW_DIR]; then
+			mkdir $BEERCRUSH_WWW_DIR;
+		fi
+		
+		if [ ! -d $BEERCRUSH_ETC_DIR ]; then
+			mkdir $BEERCRUSH_ETC_DIR;
+		fi
+		
+		if [ ! -f $BEERCRUSH_ETC_DIR/json.conf ]; then
+			echo "$BEERCRUSH_ETC_DIR doesn't exist";
+			exit;
+		fi
+		
+		if [ ! -d /var/run/BeerCrush ]; then
+			mkdir /var/run/BeerCrush;
+		fi
+		
+		if [ ! -f /etc/apache2/sites-enabled/BeerCrush ]; then
+			if [ ! -f /etc/apache2/sites-available/BeerCrush ]; then
+			echo "You must create /etc/apache2/sites-available/BeerCrush and then do a2ensite BeerCrush";
+			exit;
+		fi
+		
+		if [ ! -f /etc/BeerCrush/OAK.conf ]; then
+			echo "You must create /etc/BeerCrush/OAK.conf";
+			exit;
+		fi
+		
+		# TODO: make this work:
+		# sudo pecl install spread
+		
+		# TODO: install cgic205-patched.tar.bz2
+		# TODO: run Make to build what needs to be built (like api/autocomplete.fcgi)
+		
+		# TODO: install libmemcached 0.28+
+		# TODO: pecl install memcached
+		
+		# Copy some files from the source tree
+		copy_files $BEERCRUSH_SOURCE_DIR/api/ $BEERCRUSH_WWW_DIR/api/
+		copy_files $BEERCRUSH_SOURCE_DIR/css/ $BEERCRUSH_WWW_DIR/css/
+		copy_files $BEERCRUSH_SOURCE_DIR/img/ $BEERCRUSH_WWW_DIR/img/
+		copy_files $BEERCRUSH_SOURCE_DIR/js/  $BEERCRUSH_WWW_DIR/js/ 
+		
+		if [ ! -d $BEERCRUSH_PHPINC_DIR ]; then
+			mkdir $BEERCRUSH_PHPINC_DIR;
+		fi
+		copy_files $BEERCRUSH_SOURCE_DIR/src/phpinc/  $BEERCRUSH_PHPINC_DIR
+
+		# Make XML doc directory tree
+		mkdir -p \
+			$BEERCRUSH_WWW_DIR/html \
+			$BEERCRUSH_WWW_DIR/html/brewery \
+			$BEERCRUSH_WWW_DIR/html/beer \
+			$BEERCRUSH_WWW_DIR/xml \
+			$BEERCRUSH_WWW_DIR/xml/brewery \
+			$BEERCRUSH_WWW_DIR/xml/beer \
+			$BEERCRUSH_WWW_DIR/xml/beer_review
+
+		# TODO: make sure permissions are correct for $BEERCRUSH_WWW_DIR and subdirs (beercrush group?)
+		
+		;;
+esac
