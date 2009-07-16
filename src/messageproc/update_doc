@@ -2,6 +2,11 @@
 <?php
 require_once 'beercrush/oak.class.php';
 
+declare(ticks = 1);
+
+
+$keep_running=true;
+
 $oak=new OAK('/etc/BeerCrush/json.conf');
 
 $pid_file='/var/run/BeerCrush/'.basename($argv[0]).'.pid';
@@ -15,33 +20,92 @@ if (file_exists($pid_file))
 	exit;
 }
 
-file_put_contents($pid_file,getmypid());
-
-$msg=$oak->get_queue_msg('updates');
-if ($msg!=false)
+$pid=pcntl_fork();
+if ($pid==-1)
 {
-	// Determine the doc type and call the appropriate script
-	$parts=split(':',$msg);
+	print "Unable to daemonize\n";
+}
+else if ($pid)
+{
+	file_put_contents($pid_file,$pid);
+}
+else
+{
+	// print "PID:".getmypid()."\n";
 
-	// Find the script for this onchange
-	$prog=$oak->config_bin_dir().'/onchange/'.$parts[0];
-	
-	if (!is_executable($prog))
+	pcntl_signal(SIGUSR1,"sig_handler");
+	pcntl_signal(SIGUSR2,"sig_handler");
+	pcntl_signal(SIGHUP,"sig_handler");
+	pcntl_signal(SIGTERM,"sig_handler");
+	pcntl_signal(SIGINT,"sig_handler");
+	pcntl_signal(SIGABRT,"sig_handler");
+	pcntl_signal(SIGCONT,"sig_handler");
+
+	while ($keep_running)
 	{
-		// Silently ignore this
-	}
-	else
-	{
-		$r=exec(escapeshellcmd($prog).' '.escapeshellarg($msg),$output,$return_var);
-	
-		foreach ($output as $line)
+		$msg=$oak->get_queue_msg('updates');
+		if ($msg==false)
 		{
-			$oak->log("$msg $line");
+			sleep(15);
 		}
+		else
+		{
+			// Determine the doc type and call the appropriate script
+			$parts=split(':',$msg);
+
+			// Find the script for this onchange
+			$prog=$oak->config_bin_dir().'/onchange/'.$parts[0];
+	
+			if (!is_executable($prog))
+			{
+				// Silently ignore this
+			}
+			else
+			{
+				$r=exec(escapeshellcmd($prog).' '.escapeshellarg($msg),$output,$return_var);
+	
+				foreach ($output as $line)
+				{
+					$oak->log("$msg $line");
+				}
+			}
+		}
+	}
+
+	print "Cleaning up...";
+	// Remove the PID file
+	if (file_exists($pid_file) && unlink($pid_file)===FALSE)
+		$oak->log("update_doc failed to unlink $pid_file");
+	print "Done.\n";
+}
+
+function sig_handler($signo)
+{
+	print "Received signal $signo\n";
+
+	global $keep_running;
+	
+	switch ($signo)
+	{
+	case SIGTERM: // 15
+	case SIGINT:  // 2
+	case SIGQUIT: // 3       /* Quit (POSIX).  */
+	case SIGABRT: // 6       /* Abort (ANSI).  */
+	case SIGKILL: // 9       /* Kill, unblockable (POSIX).  */
+	case SIGHUP:  // 1
+	case SIGSTOP: // 19      /* Stop, unblockable (POSIX).  */
+	case SIGTSTP: // 20      /* Keyboard stop (POSIX).  */
+		$keep_running=false;
+		break;
+	case SIGUSR1: // 10      /* User-defined signal 1 (POSIX).  */
+	case SIGUSR2: // 12      /* User-defined signal 2 (POSIX).  */
+	case SIGCONT: // 18      /* Continue (POSIX).  */
+		break;
+	default:
+		break;
 	}
 }
 
-if (unlink($pid_file)===FALSE)
-	$oak->log("update_doc failed to unlink $pid_file");
+
 
 ?>

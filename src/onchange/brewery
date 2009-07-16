@@ -7,10 +7,12 @@ function process () {
 
 	# Update brewery XML doc
 	$APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/insertdoc meta "meta:brewery:$1" | $APP_DIR/tools/json2xml > $WWW_DIR/xml/brewery/$1.xml
+	# TODO: handle failure to create the file and log it
 	echo $WWW_DIR/xml/brewery/$1.xml
 
 	# Update brewery page
 	cat $WWW_DIR/xml/brewery/$1.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/brewery/brewery.xsl > $WWW_DIR/html/brewery/$1.html
+	# TODO: handle failure to create the file and log it
 	echo $WWW_DIR/html/brewery/$1.html
 }
 
@@ -21,7 +23,6 @@ if [ -z "$1" ]; then
 	while read BREWERY_ID; do
 		process $BREWERY_ID;
 	done
-	# echo "Usage: $0 <Brewery ID>";
 else
 	process $1;
 fi

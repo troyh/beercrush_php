@@ -1,4 +1,10 @@
 <?php
+class CouchDBException extends Exception {
+    function errorMessage() {
+        $msg = 'CouchDB exception at '.$this->getLine().' in '.$this->getFile().': '.$this->getMessage();
+        return $msg;
+    }
+}
 
 class CouchDBResponse {
 
