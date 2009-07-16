@@ -1,17 +1,27 @@
 #!/bin/sh
 . /etc/BeerCrush/BeerCrush.conf
 
+function process () {
+	# Update beer meta info doc
+	# $APP_DIR/scripts/beer/meta "$1"
+
+	# Update beer XML doc
+	$APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/json2xml > $WWW_DIR/xml/beer/$1.xml
+	echo $WWW_DIR/xml/beer/$1.xml
+
+	# Update beer page
+	# cat $WWW_DIR/xml/beer/$1.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/beer/beer.xsl > $WWW_DIR/html/beer/$1.html
+	# echo > $WWW_DIR/html/beer/$1.html
+}
+
 # echo "$1 changed";
 if [ -z "$1" ]; then
-	echo "Usage: $0 <Beer ID>";
-	exit;
+	# *All* beer docs changed!
+	$APP_DIR/tools/getdoc "/_view/beer/all" | $APP_DIR/tools/json2xml  | xmlstarlet sel -t -m "/doc/rows/item" -v id -n | sed -e '/^$/d' |
+	while read BEER_ID; do
+		process $BEER_ID;
+	done
+else
+	process $1;
 fi
 
-# Update beer meta info doc
-# $APP_DIR/scripts/beer/meta "$1"
-
-# Update beer XML doc
-$APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/json2xml > $WWW_DIR/xml/beer/$1.xml
-
-# Update beer page
-# cat $WWW_DIR/xml/beer/$1.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/beer/beer.xsl > $WWW_DIR/html/beer/$1.html
