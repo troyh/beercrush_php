@@ -337,9 +337,17 @@ class OAK
 
 	function delete_document($id)
 	{
+		$id=urlencode($id);
 		$couchdb=new CouchDB($this->config->couchdb->database);
+		
+		$rsp=$couchdb->send($id,"get");
+		if ($rsp->getStatusCode()!=200)
+			return false; // No existing document
 
-		$rsp=$couchdb->send($id,"delete");
+		$doc=$rsp->getBody(true);
+		$del_id="$id?rev=".$doc->_rev;
+
+		$rsp=$couchdb->send($del_id,"delete");
 		
 		if ($rsp->getStatusCode()==200)
 			return true;
