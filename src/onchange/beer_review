@@ -36,16 +36,24 @@ echo $XMLFILE_DIR/$USER_ID.xml
 if [ ! -d $WWW_DIR/xml/user/$USER_ID ]; then
 	mkdir -p "$WWW_DIR/xml/user/$USER_ID";
 fi
+
 $APP_DIR/tools/getdoc "/_view/beer_reviews/by_user?key=%22$USER_ID%22" |
 $APP_DIR/tools/json2xml | 
 xmlstarlet sel -t -m '//doc/rows/item' -v id -n |
 sed -e '/^ *$/d' |
 while read REVIEW_ID; do
 	REVIEW_XML_FILE="$WWW_DIR/xml/"`echo $REVIEW_ID | sed -e 's/:/\//g'`".xml";
-	xmlstarlet fo --omit-decl $REVIEW_XML_FILE;
+	BEER_ID=`xmlstarlet sel -t -m "/beer_review" -v beer_id "$REVIEW_XML_FILE"`;
+	BEER_XML_FILE=$WWW_DIR/xml/beer/$BEER_ID.xml;
+	BEER_NAME=`xmlstarlet sel -t -m "/beer" -v name $BEER_XML_FILE`;
+	
+	cat "$REVIEW_XML_FILE" |
+		xmlstarlet ed --omit-decl --subnode /beer_review -t elem -n beer -v "" | 
+		xmlstarlet ed --omit-decl --subnode /beer_review/beer -t elem -n name -v "$BEER_NAME"
 done |
 sed -e '1i\<beer_reviews>' -e '$a\</beer_reviews>' |
 xmlstarlet fo > $WWW_DIR/xml/user/$USER_ID/beer_reviews.xml
+
 echo $WWW_DIR/xml/user/$USER_ID/beer_reviews.xml
 
 #
