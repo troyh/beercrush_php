@@ -15,6 +15,7 @@ BEERCRUSH_WWW_DIR="/var/www/BeerCrush/"
 BEERCRUSH_ETC_DIR="/etc/BeerCrush/"
 BEERCRUSH_PHPINC_DIR="/usr/share/php/beercrush/"
 BEERCRUSH_SOURCE_DIR="~/beercrush/"
+BEERCRUSH_LOCALDATA_DIR="/var/local/BeerCrush/"
 
 #
 # Common setup tasks
@@ -49,7 +50,7 @@ case $1 in
 	"buildserver" )
 		echo "Setting up build server...";
 		
-		sudo apt-get install apache2 php5 php5-cli php5-dev spread libspread1-dev libfcgi-dev
+		sudo apt-get install apache2 php5 php5-cli php5-dev spread libspread1-dev libfcgi-dev xmlstarlet
 		
 		if [ ! -d $BEERCRUSH_SOURCE_DIR ]; then
 			# Get code from Subversion
@@ -72,6 +73,10 @@ case $1 in
 			exit;
 		fi
 		
+		if [ ! -d $BEERCRUSH_LOCALDATA_DIR ]; then
+			mkdir $BEERCRUSH_LOCALDATA_DIR;
+		fi
+		
 		if [ ! -d /var/run/BeerCrush ]; then
 			mkdir /var/run/BeerCrush;
 		fi
@@ -86,6 +91,8 @@ case $1 in
 			echo "You must create /etc/BeerCrush/OAK.conf";
 			exit;
 		fi
+		
+		# TODO: verify that the OAK.conf file is correct
 		
 		# TODO: make this work:
 		# sudo pecl install spread

@@ -1,0 +1,43 @@
+#!/usr/bin/php
+<?php
+require_once 'beercrush/oak.class.php';
+
+$list=array();
+
+$oak=new OAK('/etc/BeerCrush/json.conf');
+
+$brewery_list=new stdClass;
+$oak->get_document("/_view/brewery/all",$brewery_list);
+foreach ($brewery_list->rows as $row)
+{
+	$list[]=array('name' => $row->key, 'id' => $row->id);
+}
+
+$beer_list=new stdClass;
+$oak->get_document("/_view/beer/all",$beer_list);
+foreach ($beer_list->rows as $row)
+{
+	$list[]=array('name' => $row->key, 'id' => $row->id);
+}
+
+$place_list=new stdClass;
+$oak->get_document("/_view/place/all",$place_list);
+foreach ($place_list->rows as $row)
+{
+	$list[]=array('name' => $row->key, 'id' => $row->id);
+}
+// var_dump($list);exit;
+if (uasort($list,'cmp_function'))
+{
+	foreach ($list as $item)
+	{
+		print $item['name']."\t".$item['id']."\n";
+	}
+}
+
+function cmp_function($a,$b)
+{
+	return strcasecmp($a['name'],$b['name']);
+}
+
+?>

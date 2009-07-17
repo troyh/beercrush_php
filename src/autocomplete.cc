@@ -204,7 +204,7 @@ extern "C" void cgiInit()
 	// fname[sizeof(fname)-1]='\0';
 	
 	/* Load brewery list into memory, it *must* be sorted */
-	brewery_names=readFile("/var/local/BeerCrush/meta/brewery/autocomplete_names.txt",&brewery_names_count);
+	brewery_names=readFile("/var/local/BeerCrush/meta/autocomplete_names.tsv",&brewery_names_count);
 	/* TODO: Load style list into memory, it *must* be sorted */
 }
 
@@ -253,6 +253,7 @@ void autocomplete(const char* query,size_t query_len,const char** list,size_t co
 				{
 					if (bXMLOutput)
 					{
+						// TODO: use libxml2 to take care of XML entities
 						printf("<result>");
 						printf("<text>%s</text>",list[mid-1]);
 						printf("<id>%s</id>",list[mid-1]+strlen(list[mid-1])+1);
@@ -260,7 +261,7 @@ void autocomplete(const char* query,size_t query_len,const char** list,size_t co
 					}
 					else
 					{
-						printf("%s\n",list[mid-1]);
+						printf("%s\t%s\n",list[mid-1],list[mid-1]+strlen(list[mid-1])+1);
 					}
 				}
 			}
