@@ -1,39 +1,37 @@
 <?php
 
-function validateBeerID($name,$value,$attribs,$converted_value)
-{
-	// TODO: really validate the Beer ID
-	return true;
-}
 
-
-class BeerReview
+class BeerReview extends OAKDocument
 {
+	static function createReview($beer_id,$user_id)
+	{
+		if (empty($beer_id))
+			throw new Exception('beer_id is empty');
+		if (empty($user_id))
+			throw new Exception('user_id is empty');
+
+		// TODO: verify that beer_id and user_id are valid IDs for existing documents
+		$review=new BeerReview;
+		
+		if (empty($review->type))
+			throw new Exception('type is not set');
+		
+		$review->beer_id=$beer_id;
+		$review->user_id=$user_id;
+		$review->setID($review->type.':'.$review->beer_id.':'.$review->user_id);
+		
+		return $review;
+	}
+	
 	function __construct() 
 	{
-		$this->type="beer_review";
-		$this->timestamp=time();
+		parent::__construct('beer_review');
 	}
 
 	function __destruct() 
 	{
 	}
 	
-	function __set($name,$value)
-	{
-		$this->$name=$value;
-	}
-	
-	function getID()
-	{
-		if (!isset($this->user_id))
-			throw new Exception("user_id not set");
-		if (!isset($this->beer_id))
-			throw new Exception("beer_id not set");
-		if (!isset($this->type))
-			throw new Exception("type not set");
-		return $this->type.':'.$this->beer_id.':'.$this->user_id;
-	}
 };
 
 ?>

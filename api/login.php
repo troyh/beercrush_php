@@ -15,8 +15,13 @@ $user_key="";
 // TODO: use OAK's get_cgi_value() instead of $_GET/$_POST directly
 if (empty($_GET['userid']))
 	$userid=$_POST['userid'];
+else
+	$userid=$_GET['userid'];
+
 if (empty($_GET['password']))
 	$password=$_POST['password'];
+else
+	$password=$_GET['password'];
 	
 if ($oak->login($userid,$password,$user_key)!==true)
 {

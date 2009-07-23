@@ -1,13 +1,76 @@
 <?php
 require_once('beercrush/couchdb.php');
 
+class OAKDocument
+{
+	function __construct($type) 
+	{
+		$this->type=$type;
+		$this->timestamp=time();
+	}
+	
+	function __set($name,$val) { $this->$name=$val; }
+	function __get($name)   { return $this->$name; }
+	function __isset($name) { return isset($this->$name); }
+	function __unset($name) { unset($this->$name); }
+	
+	function setID($id) 
+	{
+		if (empty($id))
+			throw new Exception('empty id');
+		$this->_id=$id;
+	}
+	
+	function getID() 
+	{ 
+		if (!isset($this->_id))
+			throw new Exception('id not set');
+		return $this->_id; 
+	}
+};
+
+// class OAK_CGI_FIELD
+// {
+// 	var $m_name;
+// 	var $m_flags;
+// 	var $m_type;
+// 	var $m_min;
+// 	var $m_max;
+// 	var $m_userfunc;
+// 
+// 	function _construct($name,$flags,$type,$min,$max,$userfunc)
+// 	{
+// 		print "function _construct($name,$flags,$type,$min,$max,$userfunc)\n";
+// 		$m_name			=$name;
+// 		$m_flags		=$flag;
+// 		$m_type			=$type;
+// 		$m_min			=$min;
+// 		$m_max			=$max;
+// 		$m_userfunc		=$userfunc;
+// 	}
+// };
+
 class OAK
 {
+	const CGIFLAG_REQUIRE_USERID=1;
+
+	const FIELDFLAG_REQUIRED=1;
+
+	const DATATYPE_INT=1;
+	const DATATYPE_TEXT=2;
+	const DATATYPE_FLOAT=3;
+	const DATATYPE_MONEY=4;
+	const DATATYPE_BOOL=5;
+
 	private $config;
 
-	function __construct($conf_file) 
+	function __construct($conf_file=null) 
 	{
-		// global $conf_file;
+		if (is_null($conf_file))
+		{
+			// Read from environment
+			$conf_file=getenv('OAKConfig');
+		}
 		// Read conf_file
 		$conf_json=file_get_contents($conf_file);
 		$this->config=json_decode($conf_json);
@@ -48,6 +111,11 @@ class OAK
 		if (!strlen($_COOKIE['usrkey']))
 			return null; // User is not logged in
 		return $_COOKIE['usrkey'];
+	}
+	
+	function is_debug_on()
+	{
+		return $this->config->debug==="yes";
 	}
 	
 	function login($userid,$password,&$usrkey)
@@ -134,69 +202,101 @@ class OAK
 	 * CGI Variable Functions
 	 */
 	
-	function validate_field($name,$value,$attribs)
+	private function validate_value_range($attribs)
 	{
-		$validated=true;
-		
+		if (!isset($attribs['min']) || !isset($attribs['max']) || is_null($attribs['min']) || is_null($attribs['max']))
+			return true; // We're not supposed to check range values, assume OK
+			
+		if (gettype($attribs['min'])!=gettype($attribs['max']))
+		{
+			$attribs['validate_failure']='min/max types incompatible';
+			return false; // App config settings are not correct
+		}
+
+		if ($attribs['min']>$attribs['max'])
+		{
+			$attribs['validate_failure']='min > max';
+			return false; // App config settings are not correct
+		}
+
+		if (gettype($attribs['min'])!=gettype($attribs['converted_value']))
+		{
+			$attribs['validate_failure']='min/max and value types incompatible';
+			return false; // Types are not correct
+		}
+			
+		if ($attribs['min']<=$attribs['converted_value'] && $attribs['converted_value']<=$attribs['max'])
+			return true;
+
+		$attribs['validate_failure']='Unknown';
+		return false;
+	}
+	
+	function validate_field($name,$value,&$attribs)
+	{
 		// Verify it's the correct type/format
 		switch ($attribs['type'])
 		{
-			case OAK_DATATYPE_INT:
-				if (is_numeric($value))
-					$attribs['converted_value']=(int)$value;
-				else
-					$validated=false;
+			case OAK::DATATYPE_INT:
+				if (!is_numeric($value))
+					return false;
+
+				$attribs['converted_value']=(int)$value;
 				break;
-			case OAK_DATATYPE_TEXT:
-				if (is_string($value))
-					$attribs['converted_value']=$value;
-				else
-					$validated=false;
+			case OAK::DATATYPE_TEXT:
+				if (!is_string($value))
+				{
+					$attribs['validate_failure']='not string';
+					return false;
+				}
+
+				$attribs['converted_value']=$value;
+
+				// Check min/max length, if specified
+				if (isset($attribs['minlen']) && isset($attribs['maxlen']) && !is_null($attribs['minlen']) && !is_null($attribs['maxlen']))
+				{
+					if ($attribs['minlen']<=strlen($attribs['converted_value']) && strlen($attribs['converted_value'])<=$attribs['maxlen'])
+					{
+						// OK
+					}
+					else
+					{
+						$attribs['validate_failure']='length outside minlen and maxlen';
+						return false;
+					}
+				}
 				break;
-			case OAK_DATATYPE_MONEY:
-				if (is_numeric($value) && is_float($value))
-					$attribs['converted_value']=(float)$value;
-				else
-					$validated=false;
+			case OAK::DATATYPE_MONEY:
+				// TODO: support currency symbol
+				if (!is_numeric($value))
+					return false;
+
+				$attribs['converted_value']=(float)$value;
 				break;
-			case OAK_DATATYPE_BOOL:
-				if ($value)
-					$attribs['converted_value']=true;
-				else
-					$attribs['converted_value']=false;
+			case OAK::DATATYPE_FLOAT:
+				if (!is_numeric($value))
+					return false;
+
+				$attribs['converted_value']=(float)$value;
+				break;
+			case OAK::DATATYPE_BOOL:
+				$attribs['converted_value']=$value?true:false;
 				break;
 			default:
 				throw new Exception("Unknown OAK datatype:".$attribs['type']);
-				
 		}
 		
-		if ($validated===true)
+		if (self::validate_value_range(&$attribs)!==true)
+			return false;
+		
+		// Call user func, if specified
+		if ($attribs['validatefunc'] && is_callable($attribs['validatefunc']))
 		{
-			// Verify it's within the range, if specified
-			if ($attribs['min']<=$attribs['max'])
-			{
-				if ($attribs['min']<=$attribs['converted_value'] && $attribs['converted_value']<=$attribs['max'])
-				{
-					// Do nothing
-				}
-				else
-				{
-					$validated=false;
-				}
-			}
+			if (call_user_func($attribs['validatefunc'],$name,$value,$attribs,$attribs['converted_value'],$this)!==true)
+				return false;
 		}
 		
-		if ($validated===true)
-		{
-			// Call user func, if specified
-			if ($attribs['userfunc'] && is_callable($attribs['userfunc']))
-			{
-				if ($attribs['userfunc']($name,$value,$attribs,$attribs['converted_value'])!==true)
-					$validated=false;
-			}
-		}
-		
-		return $validated;
+		return true;
 	}
 	
 	function load_cgi_fields()
@@ -224,6 +324,12 @@ class OAK
 		}
 	}
 	
+	function cgi_value_exists($name)
+	{
+		global $cgi_fields;
+		return  isset($cgi_fields[$name]) && $cgi_fields[$name]['isset']===true && $cgi_fields[$name]['validated']===true;
+	}
+	
 	function get_cgi_value($name)
 	{
 		global $cgi_fields;
@@ -239,23 +345,25 @@ class OAK
 		global $cgi_fields;
 		foreach ($cgi_fields as $name=>$attribs)
 		{
-			if ($attribs['isset']==false && $attribs['flags']&OAK_FIELDFLAG_REQUIRED)
+			if ($attribs['isset']==false && $attribs['flags']&OAK::FIELDFLAG_REQUIRED)
 				++$total;
 		}
 		return $total;
 	}
 	
-	function get_invalid_field_count()
+	function get_invalid_fields()
 	{
-		$total=0;
+		$fields=array();
 
 		global $cgi_fields;
 		foreach ($cgi_fields as $name=>$attribs)
 		{
-			if ($attribs['isset']==true && $attribs['validated']==false)
-				++$total;
+			if ($attribs['isset']===true && $attribs['validated']===false)
+			{
+				$fields[$name]=$attribs;
+			}
 		}
-		return $total;
+		return $fields;
 	}
 	
 	function __get($name) {
@@ -355,6 +463,15 @@ class OAK
 		return false;
 	}
 
+	function write_document($obj,$xmlwriter)
+	{
+		// Remove implementation-specific data
+		$copyobj=$obj;
+		unset($copyobj->_id);
+		unset($copyobj->_rev);
+		$this->json2xml($copyobj,$xmlwriter);
+	}
+	
 	function json2xml($jsonobj,$xmlwriter,$tag=null)
 	{
 		if (is_scalar($jsonobj))
