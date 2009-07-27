@@ -9,7 +9,22 @@ class OAKDocument
 		$this->timestamp=time();
 	}
 	
-	function __set($name,$val) { $this->$name=$val; }
+	function __set($name,$val) 
+	{
+		switch ($name)
+		{
+		case "_id":
+		case "_rev":
+		case "type":
+		case "timestamp":
+		case "@attributes":
+			$this->$name=$val; 
+			break;
+		default:
+			throw new Exception('Unsupported property:'.$name);
+			break;
+		}
+	}
 	function __get($name)   { return $this->$name; }
 	function __isset($name) { return isset($this->$name); }
 	function __unset($name) { unset($this->$name); }
@@ -52,9 +67,9 @@ class OAKDocument
 
 class OAK
 {
-	const CGIFLAG_REQUIRE_USERID=1;
-
+	// These are bit flags, so they should go 1,2,4,8,...
 	const FIELDFLAG_REQUIRED=1;
+	const FIELDFLAG_CGIONLY=2;
 
 	const DATATYPE_INT=1;
 	const DATATYPE_TEXT=2;
@@ -375,7 +390,7 @@ class OAK
 	{
 		global $cgi_fields;
 		foreach ($cgi_fields as $name => $attribs) {
-			if ($attribs['validated'])
+			if (($attribs['flags']&OAK::FIELDFLAG_CGIONLY)==0 && $attribs['validated'])
 			{
 				$obj->$name=$cgi_fields[$name]['converted_value'];
 			}

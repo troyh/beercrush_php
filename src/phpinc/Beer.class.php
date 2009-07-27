@@ -42,9 +42,18 @@ class Beer extends OAKDocument
 				$this->$attribs=new stdClass;
 			$this->$attribs->$name=$val;
 			break;
+		case "availability":
+		case "bjcp_style_id":
+		case "description":
+		case "grains":
+		case "hops":
+		case "ingredients":
+		case "name":
+		case "otherings":
+		case "yeast":
 		case "sizes":
 		case "styles":
-			throw new Exception("NYI: setting $name");
+			$this->$name=$val;
 			break;
 		default:
 			return parent::__set($name,$val);

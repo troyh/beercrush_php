@@ -1,16 +1,12 @@
 <?php
-require_once("beercrush/oak_defines.php");
+require_once("beercrush/oak.class.php");
 
 $cgi_fields=array(
-	"place_id"		=> array(flags=>OAK_FIELDFLAG_REQUIRED, type=>OAK_DATATYPE_TEXT,  	min=>0, max=>-1, userfunc=>validatePlaceID ),
-	"rating"		=> array(flags=>OAK_FIELDFLAG_REQUIRED, type=>OAK_DATATYPE_INT, 	min=>0, max=>5,  userfunc=>null ),
+	"place_id"		=> array(flags=>OAK::FIELDFLAG_REQUIRED, type=>OAK::DATATYPE_TEXT, userfunc=>validatePlaceID ),
+	"rating"		=> array(flags=>OAK::FIELDFLAG_REQUIRED, type=>OAK::DATATYPE_INT, min=>0, max=>5),
 );
-$conf_file="/etc/BeerCrush/json.conf";
-$cgi_flags=0;
 
 require_once('beercrush/PlaceReview.php');
-require_once('beercrush/oak.php');
-
 
 function oakMain($oak)
 {
@@ -32,5 +28,7 @@ function oakMain($oak)
 	// Store in db
 	$oak->put_document($review);
 }
+
+require_once('beercrush/oak.php');
 
 ?>

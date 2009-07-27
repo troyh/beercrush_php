@@ -28,6 +28,8 @@ if ($oak->login($userid,$password,$user_key)!==true)
 	/*
 		Login failed
 	*/
+	header("HTTP/1.0 401 Login failed");
+
 	$oak->logout(); // Clears login cookies
 
 	$xmlwriter->startElement('login');
@@ -40,6 +42,8 @@ else
 	/*
 		Indicate success.
 	*/
+	header("HTTP/1.0 200 Login OK");
+	
 	$xmlwriter->startElement('login');
 	$xmlwriter->writeAttribute('ok','yes');
 	$xmlwriter->writeElement('userid',$userid);

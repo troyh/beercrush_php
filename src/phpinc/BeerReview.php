@@ -32,6 +32,32 @@ class BeerReview extends OAKDocument
 	{
 	}
 	
+	function __set($name,$val)
+	{
+		switch ($name)
+		{
+		case "beer_id":
+		case "rating":
+		case "srm":
+		case "body":
+		case "bitterness":
+		case "sweetness":
+		case "aftertaste":
+		case "comments":
+		case "price":
+		case "place":
+		case "size":
+		case "drankwithfood":
+		case "food_recommend":
+			$this->$name=$val;
+			break;
+		default:
+			return parent::__set($name,$val);
+			break;
+		}
+		
+	}
+	
 };
 
 ?>

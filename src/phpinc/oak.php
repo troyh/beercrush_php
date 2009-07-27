@@ -8,11 +8,6 @@ $oak=new OAK();
 
 try
 {
-	if ($cgi_flags&OAK::CGIFLAG_REQUIRE_USERID)
-	{
-		// TODO: do authentication
-	}
-
 	$oak->load_cgi_fields();
 
 	if ($oak->get_missing_field_count())
@@ -33,12 +28,11 @@ try
 }
 catch(Exception $x)
 {
+	header("HTTP/1.0 400 Exception");
+	
 	$xmlwriter=new XMLWriter;
 	$xmlwriter->openMemory();
 	$xmlwriter->startDocument();
-	
-	$xmlwriter->startElement('html');
-	$xmlwriter->startElement('body');
 	
 	$xmlwriter->startElement('div');
 	$xmlwriter->writeAttribute('class','exception_msg');

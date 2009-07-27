@@ -12,7 +12,7 @@ function validate_brewery_id($name,$value,$attribs,$converted_value,$oak)
 $cgi_fields=array(
 	"abv"						=> array(type=>OAK::DATATYPE_FLOAT, min=>0.0, max=>100.0),
 	"availability"				=> array(type=>OAK::DATATYPE_TEXT),
-	"beer_id"					=> array(type=>OAK::DATATYPE_TEXT),
+	"beer_id"					=> array(type=>OAK::DATATYPE_TEXT,flags=>OAK::FIELDFLAG_CGIONLY),
 	"bjcp_style_id"				=> array(type=>OAK::DATATYPE_TEXT, validatefunc=>validate_beer_bjcp_style_id),
 	"brewery_id"				=> array(type=>OAK::DATATYPE_TEXT, validatefunc=>validate_brewery_id ),
 	"calories_per_ml"			=> array(type=>OAK::DATATYPE_INT, min=>0, max=>1000),
@@ -33,7 +33,8 @@ function oakMain($oak)
 {
 	if ($oak->login_is_trusted()!==true) // If the user is not logged in or we can't trust the login
 	{
-		header("HTTP/1.0 201 Login required");
+		header("HTTP/1.0 401 Login required");
+		print "Login required";
 	}
 	else
 	{
@@ -63,7 +64,7 @@ function oakMain($oak)
 		// Store in db
 		if ($oak->put_document($beer->getID(),$beer)!==true)
 		{
-			header("HTTP/1.0 201 Internal error");
+			header("HTTP/1.0 500 Save failed");
 		}
 		else
 		{

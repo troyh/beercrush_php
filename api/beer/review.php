@@ -25,7 +25,7 @@ function oakMain($oak)
 {
 	if ($oak->login_is_trusted()!==true) // If the user is not logged in or we can't trust the login
 	{
-		header("HTTP/1.0 201 Login required");
+		header("HTTP/1.0 401 Login required");
 	}
 	else
 	{
@@ -43,7 +43,7 @@ function oakMain($oak)
 		// Store in db
 		if ($oak->put_document($review->getID(),$review)!==true)
 		{
-			header("HTTP/1.0 201 Internal error");
+			header("HTTP/1.0 500 Save failed");
 		}
 		else
 		{
