@@ -33,8 +33,7 @@ function oakMain($oak)
 {
 	if ($oak->login_is_trusted()!==true) // If the user is not logged in or we can't trust the login
 	{
-		header("HTTP/1.0 401 Login required");
-		print "Login required";
+		$oak->request_login();
 	}
 	else
 	{
@@ -68,6 +67,8 @@ function oakMain($oak)
 		}
 		else
 		{
+			$oak->log('Edited:'.$beer->getID());
+			
 			$xmlwriter=new XMLWriter;
 			$xmlwriter->openMemory();
 			$xmlwriter->startDocument();

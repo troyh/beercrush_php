@@ -76,6 +76,11 @@ class OAK
 	const DATATYPE_FLOAT=3;
 	const DATATYPE_MONEY=4;
 	const DATATYPE_BOOL=5;
+	
+	// Priorities for log()
+	const LOGPRI_INFO=LOG_INFO;
+	const LOGPRI_ERR=LOG_ERR;
+	const LOGPRI_CRIT=LOG_CRIT;
 
 	private $config;
 
@@ -89,9 +94,20 @@ class OAK
 		// Read conf_file
 		$conf_json=file_get_contents($conf_file);
 		$this->config=json_decode($conf_json);
+		
+		// Open syslog
+		openlog('OAK',LOG_ODELAY|LOG_CONS|LOG_PID,LOG_LOCAL0);
+		if (!empty($_SERVER['REQUEST_URI']))
+			$this->log_ident($_SERVER['REQUEST_URI']);
+		else
+			$this->log_ident($_SERVER['PHP_SELF']);
 	}
 	
-	function __destruct() {}
+	function __destruct() 
+	{
+		// Close syslog
+		closelog();
+	}
 	
 	/*
 	 * User Credentials Functions
@@ -131,6 +147,12 @@ class OAK
 	function is_debug_on()
 	{
 		return $this->config->debug==="yes";
+	}
+	
+	public function request_login()
+	{
+		header("HTTP/1.0 420 Login required");
+		print "Login required\n";
 	}
 	
 	function login($userid,$password,&$usrkey)
@@ -578,10 +600,15 @@ class OAK
 	{
 		return $this->config->file_locations->BIN_DIR;
 	}
-	
-	function log($msg)
+
+	public function log_ident($ident)
 	{
-		print "$msg\n"; // TODO: write to a logfile
+		$this->log_ident=$ident;
+	}
+	
+	public function log($msg, $priority=OAK::LOGPRI_INFO)
+	{
+		syslog($priority,$this->log_ident.':'.$msg);
 	}
 	
 };

@@ -7,7 +7,14 @@ declare(ticks = 1);
 
 $keep_running=true;
 
-$oak=new OAK('/etc/BeerCrush/json.conf');
+if ($argc<2)
+{
+	print "Usage: ".$argv[0]." <conf file>\n";
+	exit;
+}
+
+$oak=new OAK($argv[1]);
+$oak->log_ident('update_doc');
 
 $pid_file='/var/run/BeerCrush/'.basename($argv[0]).'.pid';
 
@@ -16,7 +23,7 @@ if (file_exists($pid_file))
 {
 	// Refuse to run again
 	$pid=file_get_contents($pid_file);
-	$oak->log("update_doc is currently running (PID $pid). Refusing to run a 2nd instance.");
+	$oak->log("Another process is currently running (PID=$pid). Refusing to run a 2nd instance.");
 	exit;
 }
 
@@ -31,7 +38,7 @@ else if ($pid)
 }
 else
 {
-	// print "PID:".getmypid()."\n";
+	$oak->log('started pid='.getmypid());
 
 	pcntl_signal(SIGUSR1,"sig_handler");
 	pcntl_signal(SIGUSR2,"sig_handler");
@@ -44,7 +51,7 @@ else
 	while ($keep_running)
 	{
 		$msg=$oak->get_queue_msg('updates');
-		if ($msg==false)
+		if ($msg===false)
 		{
 			sleep(15);
 		}
@@ -52,6 +59,12 @@ else
 		{
 			// Determine the doc type and call the appropriate script
 			$parts=split(':',$msg);
+			
+			// TODO: fix in the db so that beer docs have an ID that starts with 'beer:'
+			if (count($parts)==2)  // Beers don't have a doc type in their ID (stupid!)...
+			{	// ...so we pretend it does.
+				array_unshift($parts,'beer');
+			}
 
 			// Find the script for this onchange
 			$prog=$oak->config_bin_dir().'/onchange/'.$parts[0];
@@ -62,6 +75,8 @@ else
 			}
 			else
 			{
+				$oak->log('Queue msg: "'.$msg.'" Running '.escapeshellcmd($prog).' '.escapeshellarg($msg));
+				
 				$r=exec(escapeshellcmd($prog).' '.escapeshellarg($msg),$output,$return_var);
 	
 				foreach ($output as $line)
@@ -72,16 +87,17 @@ else
 		}
 	}
 
-	print "Cleaning up...";
+	$oak->log("Shutting down.");
 	// Remove the PID file
 	if (file_exists($pid_file) && unlink($pid_file)===FALSE)
-		$oak->log("update_doc failed to unlink $pid_file");
-	print "Done.\n";
+		$oak->log("failed to unlink $pid_file");
+
 }
 
 function sig_handler($signo)
 {
-	print "Received signal $signo\n";
+	global $oak;
+	$oak->log("Received signal $signo");
 
 	global $keep_running;
 	

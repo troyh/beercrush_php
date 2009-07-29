@@ -29,6 +29,8 @@ case $1 in
 	"webserver" )
 		echo "Setting up web server...";
 		# TODO: copy files from build server to here
+		# TODO: configure syslog.conf for OAK logging
+		# TODO: config logrotate for /var/log/oak.log
 		;;
 	"dbserver" )
 		echo "Setting up database server...";
@@ -102,6 +104,8 @@ case $1 in
 		
 		# TODO: install libmemcached 0.28+
 		# TODO: pecl install memcached
+		# TODO: configure syslog.conf for OAK logging
+		# TODO: config logrotate for /var/log/oak.log
 		
 		# Copy some files from the source tree
 		copy_files $BEERCRUSH_SOURCE_DIR/api/ $BEERCRUSH_WWW_DIR/api/

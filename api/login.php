@@ -9,7 +9,7 @@ $xmlwriter=new XMLWriter;
 $xmlwriter->openMemory();
 $xmlwriter->startDocument();
 
-$oak=new OAK('/etc/BeerCrush/json.conf');
+$oak=new OAK();
 $user_key="";
 
 // TODO: use OAK's get_cgi_value() instead of $_GET/$_POST directly
@@ -28,7 +28,7 @@ if ($oak->login($userid,$password,$user_key)!==true)
 	/*
 		Login failed
 	*/
-	header("HTTP/1.0 401 Login failed");
+	header("HTTP/1.0 403 Login failed");
 
 	$oak->logout(); // Clears login cookies
 
@@ -36,6 +36,8 @@ if ($oak->login($userid,$password,$user_key)!==true)
 	$xmlwriter->writeAttribute('ok','no');
 	$xmlwriter->writeElement('reason','Incorrect userid and/or password');
 	$xmlwriter->endElement();
+
+	$oak->log('failed login attempt:'.$userid);
 }
 else
 {
@@ -49,6 +51,8 @@ else
 	$xmlwriter->writeElement('userid',$userid);
 	$xmlwriter->writeElement('usrkey',$user_key);
 	$xmlwriter->endElement();
+	
+	$oak->log($userid.' logged in');
 }
 
 $xmlwriter->endDocument();

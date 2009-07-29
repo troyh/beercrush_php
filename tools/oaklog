@@ -1,0 +1,9 @@
+#!/usr/bin/php
+<?php
+require_once 'beercrush/oak.class.php';
+
+$oak=new OAK;
+array_shift($argv);
+$oak->log(implode(' ',$argv));
+
+?>
