@@ -12,7 +12,7 @@ function validate_brewery_id($name,$value,$attribs,$converted_value,$oak)
 $cgi_fields=array(
 	"abv"						=> array(type=>OAK::DATATYPE_FLOAT, min=>0.0, max=>100.0),
 	"availability"				=> array(type=>OAK::DATATYPE_TEXT),
-	"beer_id"					=> array(type=>OAK::DATATYPE_TEXT,flags=>OAK::FIELDFLAG_CGIONLY),
+	"beer_id"					=> array(type=>OAK::DATATYPE_TEXT,flags=>OAK::FIELDFLAG_CGIONLY,minlen=>1),
 	"bjcp_style_id"				=> array(type=>OAK::DATATYPE_TEXT, validatefunc=>validate_beer_bjcp_style_id),
 	"brewery_id"				=> array(type=>OAK::DATATYPE_TEXT, validatefunc=>validate_brewery_id ),
 	"calories_per_ml"			=> array(type=>OAK::DATATYPE_INT, min=>0, max=>1000),
