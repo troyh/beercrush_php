@@ -559,7 +559,11 @@ class OAK
 	
 	function json2xml($jsonobj,$xmlwriter,$tag=null)
 	{
-		if (is_scalar($jsonobj))
+		if (is_bool($jsonobj))
+		{
+			$xmlwriter->text($jsonobj===true?'yes':'no');
+		}
+		else if (is_scalar($jsonobj))
 		{
 			$xmlwriter->text($jsonobj);
 		}
@@ -593,7 +597,10 @@ class OAK
 				$varname="@attributes"; // Need to do this because of the @
 				foreach ($jsonobj->$varname as $k=>$v)
 				{
-					$xmlwriter->writeAttribute($k,$v);
+					if (is_bool($v))
+						$xmlwriter->writeAttribute($k,$v===true?'yes':'no');
+					else
+						$xmlwriter->writeAttribute($k,$v);
 				}
 			}
 			
@@ -605,7 +612,9 @@ class OAK
 				}
 				else
 				{
-					if (is_scalar($v))
+					if (is_bool($v))
+						$xmlwriter->writeElement($k,$v===true?'yes':'no');
+					else if (is_scalar($v))
 						$xmlwriter->writeElement($k,$v);
 					else if (is_object($v) || is_array($v))
 					{

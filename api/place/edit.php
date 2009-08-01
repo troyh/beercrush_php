@@ -100,7 +100,6 @@ function oakMain($oak)
 
 		// Give it this request's edits
 		$oak->assign_cgi_values(&$place,$cgi_fields);
-		var_dump($place);exit;
 	
 		// Store in db
 		if ($oak->put_document($place->getID(),$place)!==true)
