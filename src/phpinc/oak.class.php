@@ -18,11 +18,11 @@ class OAKDocument
 		case "type":
 		case "timestamp":
 		case "@attributes":
+		default:
 			$this->$name=$val; 
 			break;
-		default:
-			throw new Exception('Unsupported property:'.$name);
-			break;
+			// throw new Exception('Unsupported property:'.$name);
+			// break;
 		}
 	}
 	function __get($name)   { return $this->$name; }
@@ -44,43 +44,28 @@ class OAKDocument
 	}
 };
 
-// class OAK_CGI_FIELD
-// {
-// 	var $m_name;
-// 	var $m_flags;
-// 	var $m_type;
-// 	var $m_min;
-// 	var $m_max;
-// 	var $m_userfunc;
-// 
-// 	function _construct($name,$flags,$type,$min,$max,$userfunc)
-// 	{
-// 		print "function _construct($name,$flags,$type,$min,$max,$userfunc)\n";
-// 		$m_name			=$name;
-// 		$m_flags		=$flag;
-// 		$m_type			=$type;
-// 		$m_min			=$min;
-// 		$m_max			=$max;
-// 		$m_userfunc		=$userfunc;
-// 	}
-// };
-
 class OAK
 {
 	// These are bit flags, so they should go 1,2,4,8,...
 	const FIELDFLAG_REQUIRED=1;
 	const FIELDFLAG_CGIONLY=2;
 
+	// Data types
 	const DATATYPE_INT=1;
 	const DATATYPE_TEXT=2;
 	const DATATYPE_FLOAT=3;
 	const DATATYPE_MONEY=4;
 	const DATATYPE_BOOL=5;
+	const DATATYPE_OBJ=6;
+	const DATATYPE_URI=7;
+	const DATATYPE_PHONE=8;
 	
 	// Priorities for log()
 	const LOGPRI_INFO=LOG_INFO;
 	const LOGPRI_ERR=LOG_ERR;
 	const LOGPRI_CRIT=LOG_CRIT;
+	
+	const CGI_NAME_SEP=':';
 
 	private $config;
 
@@ -317,7 +302,45 @@ class OAK
 				$attribs['converted_value']=(float)$value;
 				break;
 			case OAK::DATATYPE_BOOL:
-				$attribs['converted_value']=$value?true:false;
+				if (is_numeric($value))
+					$attribs['converted_value']=$value?true:false;
+				else if (is_string($value))
+				{
+					$value=trim($value);
+					if (strcasecmp($value,'yes')==0)
+						$attribs['converted_value']=true;
+					else if (strcasecmp($value,'true')==0)
+						$attribs['converted_value']=true;
+					else if (strcasecmp($value,'no')==0)
+						$attribs['converted_value']=false;
+					else if (strcasecmp($value,'false')==0)
+						$attribs['converted_value']=false;
+					else
+						$attribs['converted_value']=false;
+				}
+				else
+					$attribs['converted_value']=$value?true:false;
+				break;
+			case OAK::DATATYPE_OBJ:
+				// Shouldn't ever happen
+				break;
+			case OAK::DATATYPE_URI:
+				if (!is_string($value))
+					return false;
+
+				// Simple URI validation					
+				$parts=parse_url($value);
+				if (($parts['scheme']!='http') || // Must be HTTP
+					!preg_match('/\./',$parts['host'])) // Must have at least one dot in it
+					return false;
+					
+				$attribs['converted_value']=$value;
+				break;
+			case OAK::DATATYPE_PHONE:
+				if (empty($value) || preg_match('/[^A-Z0-9\(\)\s-]/',$value))
+					return false;
+					
+				$attribs['converted_value']=(string)preg_replace('/\s+/','',$value); // remove multiple spaces
 				break;
 			default:
 				throw new Exception("Unknown OAK datatype:".$attribs['type']);
@@ -327,7 +350,7 @@ class OAK
 			return false;
 		
 		// Call user func, if specified
-		if ($attribs['validatefunc'] && is_callable($attribs['validatefunc']))
+		if (isset($attribs['validatefunc']) && is_callable($attribs['validatefunc']))
 		{
 			if (call_user_func($attribs['validatefunc'],$name,$value,$attribs,$attribs['converted_value'],$this)!==true)
 				return false;
@@ -336,85 +359,110 @@ class OAK
 		return true;
 	}
 	
-	function load_cgi_fields()
+	function load_cgi_fields(&$cgi_fields, $cgi_name_prefix='')
 	{
-		global $cgi_fields;
+		if (!is_array($cgi_fields))
+			throw new Exception('$cgi_fields must be an array');
+			
 		foreach ($cgi_fields as $name=>&$attribs)
 		{
-			$cgi_fields[$name]['isset']=false;
-			$cgi_fields[$name]['validated']=false;
-			
-			if (isset($_POST[$name]))
+			if ($attribs['type']==OAK::DATATYPE_OBJ)
 			{
-				$cgi_fields[$name]['isset']=true;
-				$cgi_fields[$name]['value']=$_POST[$name];
-				if ($this->validate_field($name,$_POST[$name],&$attribs))
-					$cgi_fields[$name]['validated']=true;
+				$this->load_cgi_fields(&$attribs['properties'],$name.OAK::CGI_NAME_SEP);
 			}
-			else if (isset($_GET[$name]))
+			else
 			{
-				$cgi_fields[$name]['isset']=true;
-				$cgi_fields[$name]['value']=$_GET[$name];
-				if ($this->validate_field($name,$_GET[$name],&$attribs))
-					$cgi_fields[$name]['validated']=true;
+				$attribs['isset']=false;
+				$attribs['validated']=false;
+
+				$cgi_name=$cgi_name_prefix.$name;
+			
+				if (isset($_POST[$cgi_name]))
+				{
+					$aattribs['isset']=true;
+					$aattribs['value']=$_POST[$cgi_name];
+					if ($this->validate_field($cgi_name,$_POST[$cgi_name],&$attribs))
+						$attribs['validated']=true;
+				}
+				else if (isset($_GET[$cgi_name]))
+				{
+					$attribs['isset']=true;
+					$attribs['value']=$_GET[$cgi_name];
+					if ($this->validate_field($cgi_name,$_GET[$cgi_name],&$attribs))
+						$attribs['validated']=true;
+				}
 			}
 		}
 	}
 	
-	function cgi_value_exists($name)
+	function cgi_value_exists($name,$cgi_fields)
 	{
-		global $cgi_fields;
-		return  isset($cgi_fields[$name]) && $cgi_fields[$name]['isset']===true && $cgi_fields[$name]['validated']===true;
+		return $this->get_cgi_value($name,$cgi_fields)===null?false:true;
 	}
 	
-	function get_cgi_value($name)
+	function get_cgi_value($name,$cgi_fields)
 	{
-		global $cgi_fields;
-		if (!isset($cgi_fields[$name]) || $cgi_fields[$name]['isset']!==true || $cgi_fields[$name]['validated']!==true)
-			throw new Exception("CGI field $name not available");
-		return $cgi_fields[$name]['converted_value'];
+		if (empty($name))
+			throw new Exception('$name cannot be empty');
+
+		$parts=split(OAK::CGI_NAME_SEP,$name);
+		
+		if ($cgi_fields[$parts[0]]['type']==OAK::DATATYPE_OBJ)
+		{
+			array_shift($parts); // Remove the first part
+			return $this->get_cgi_value(implode(OAK::CGI_NAME_SEP,$parts),$cgi_fields[$parts[0]]['properties']);
+		}
+			
+		if (isset($cgi_fields[$parts[0]]) && $cgi_fields[$parts[0]]['isset']===true && $cgi_fields[$parts[0]]['validated']===true)
+			return $cgi_fields[$parts[0]]['converted_value'];
+		return null;
 	}
 	
-	function get_missing_field_count()
+	function get_missing_field_count($cgi_fields)
 	{
 		$total=0;
 
-		global $cgi_fields;
 		foreach ($cgi_fields as $name=>$attribs)
 		{
-			if ($attribs['isset']==false && $attribs['flags']&OAK::FIELDFLAG_REQUIRED)
+			if ($cgi_fields['type']==OAK::DATATYPE_OBJ)
+				$total+=$this->get_missing_field_count($cgi_fields['properties']);
+			else if ($attribs['isset']==false && $attribs['flags']&OAK::FIELDFLAG_REQUIRED)
 				++$total;
 		}
+		
 		return $total;
 	}
 	
-	function get_invalid_fields()
+	function get_invalid_fields($cgi_fields,$cgi_name='')
 	{
 		$fields=array();
 
-		global $cgi_fields;
 		foreach ($cgi_fields as $name=>$attribs)
 		{
-			if ($attribs['isset']===true && $attribs['validated']===false)
+			if ($cgi_fields['type']==OAK::DATATYPE_OBJ)
 			{
-				$fields[$name]=$attribs;
+				$a=$this->get_invalid_fields($cgi_fields['properties'],$name.OAK::CGI_NAME_SEP);
+				$fields=array_merge($fields,$a);
+			}
+			else if ($attribs['isset']===true && $attribs['validated']===false)
+			{
+				$fields[$cgi_name.$name]=$attribs;
 			}
 		}
 		return $fields;
 	}
 	
-	function __get($name) {
-		global $cgi_fields;
-		return $cgi_fields[$name]['converted_value'];
-	}
-	
-	function assign_values($obj)
+	function assign_cgi_values($obj,$cgi_fields)
 	{
-		global $cgi_fields;
-		foreach ($cgi_fields as $name => $attribs) {
-			if (($attribs['flags']&OAK::FIELDFLAG_CGIONLY)==0 && $attribs['validated'])
+		foreach ($cgi_fields as $name => $attribs) 
+		{
+			if ($attribs['type']==OAK::DATATYPE_OBJ)
 			{
-				$obj->$name=$cgi_fields[$name]['converted_value'];
+				$this->assign_cgi_values(&$obj->$name,$attribs['properties']);
+			}
+			else if (($attribs['flags']&OAK::FIELDFLAG_CGIONLY)==0 && $attribs['validated'])
+			{
+				$obj->$name=$attribs['converted_value'];
 			}
 		}
 	}
