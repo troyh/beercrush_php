@@ -327,12 +327,15 @@ class OAK
 			case OAK::DATATYPE_URI:
 				if (!is_string($value))
 					return false;
-
-				// Simple URI validation					
-				$parts=parse_url($value);
-				if (($parts['scheme']!='http') || // Must be HTTP
-					!preg_match('/\./',$parts['host'])) // Must have at least one dot in it
-					return false;
+					
+				if (!empty($value)) // URIs can be a zero-length string, if the app wants a minimum length, they can specify minlen in $cgi_fields
+				{
+					// Simple URI validation					
+					$parts=parse_url($value);
+					if (($parts['scheme']!='http') || // Must be HTTP
+						!preg_match('/\./',$parts['host'])) // Must have at least one dot in it
+						return false;
+				}
 					
 				$attribs['converted_value']=$value;
 				break;
@@ -379,7 +382,7 @@ class OAK
 			
 				if (isset($_POST[$cgi_name]))
 				{
-					$aattribs['isset']=true;
+					$attribs['isset']=true;
 					$aattribs['value']=$_POST[$cgi_name];
 					if ($this->validate_field($cgi_name,$_POST[$cgi_name],&$attribs))
 						$attribs['validated']=true;
@@ -412,7 +415,7 @@ class OAK
 			array_shift($parts); // Remove the first part
 			return $this->get_cgi_value(implode(OAK::CGI_NAME_SEP,$parts),$cgi_fields[$parts[0]]['properties']);
 		}
-			
+
 		if (isset($cgi_fields[$parts[0]]) && $cgi_fields[$parts[0]]['isset']===true && $cgi_fields[$parts[0]]['validated']===true)
 			return $cgi_fields[$parts[0]]['converted_value'];
 		return null;
