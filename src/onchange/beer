@@ -5,17 +5,23 @@ function process () {
 	# Update beer meta info doc
 	# $APP_DIR/scripts/beer/meta "$1"
 
+	PATHNAME=`echo $1 | cut -d ':' -f 1,2 | sed -e 's/:/\//g'`;
+	BEERNAME=`echo $1 | cut -d ':' -f 3`;
+
 	# Update beer XML doc
-	$APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/json2xml > $WWW_DIR/xml/beer/$1.xml
-	echo $WWW_DIR/xml/beer/$1.xml
+	if [ ! -d $WWW_DIR/xml/$PATHNAME ]; then
+		mkdir -p $WWW_DIR/xml/$PATHNAME;
+	fi
+	$APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/json2xml > $WWW_DIR/xml/$PATHNAME/$BEERNAME.xml
+	echo xml/$PATHNAME/$BEERNAME.xml
 	
 	# Update beerlist for the brewery
 	BREWERY_ID=`$APP_DIR/tools/getdoc "$1" | tools/json2xml | xmlstarlet sel -t -m '/beer' -v '@brewery_id'`;
 	$APP_DIR/src/onchange/brewery "$BREWERY_ID"
 
 	# Update beer page
-	# cat $WWW_DIR/xml/beer/$1.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/beer/beer.xsl > $WWW_DIR/html/beer/$1.html
-	# echo > $WWW_DIR/html/beer/$1.html
+	# cat $WWW_DIR/xml/$FILENAME.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/beer/beer.xsl > $WWW_DIR/html/$FILENAME.html
+	# echo > $WWW_DIR/html/$FILENAME.html
 }
 
 # echo "$1 changed";

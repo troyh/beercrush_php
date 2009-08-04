@@ -1,0 +1,33 @@
+#!/bin/sh
+. /etc/BeerCrush/BeerCrush.conf
+
+function process () {
+	TYPE=`echo $1|cut -d ':' -f 1`;
+	if [ "$TYPE" != "place" ]; then
+		exit;
+	fi
+	
+	PLACE=`echo $1|cut -d ':' -f 2`;
+
+	# Update place XML doc
+	$APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/json2xml > $WWW_DIR/xml/place/$PLACE.xml
+	# TODO: handle failure to create the file and log it
+	echo xml/place/$PLACE.xml
+
+	# Update place page
+	# cat $WWW_DIR/xml/place/$PLACE.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/place/place.xsl > $WWW_DIR/html/$FILENAME.html
+	# TODO: handle failure to create the file and log it
+	# echo html/place/$PLACE.html
+}
+
+# echo "$1 changed";
+if [ -z "$1" ]; then
+	# *All* place docs changed!
+	$APP_DIR/tools/getdoc "/_view/place/all" | $APP_DIR/tools/json2xml  | xmlstarlet sel -t -m "/doc/rows/item" -v id -n | sed -e '/^$/d' |
+	while read PLACE_ID; do
+		process $PLACE_ID;
+	done
+else
+	process $1;
+fi
+

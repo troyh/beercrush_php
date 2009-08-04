@@ -4,23 +4,23 @@ require_once 'beercrush/oak.class.php';
 
 $list=array();
 
-$oak=new OAK('/etc/BeerCrush/json.conf');
+$oak=new OAK;
 
-$brewery_list=new stdClass;
+$brewery_list=new OAKDocument('');
 $oak->get_document("/_view/brewery/all",$brewery_list);
 foreach ($brewery_list->rows as $row)
 {
 	$list[]=array('name' => $row->key, 'id' => $row->id);
 }
 
-$beer_list=new stdClass;
+$beer_list=new OAKDocument('');
 $oak->get_document("/_view/beer/all",$beer_list);
 foreach ($beer_list->rows as $row)
 {
 	$list[]=array('name' => $row->key, 'id' => $row->id);
 }
 
-$place_list=new stdClass;
+$place_list=new OAKDocument('');
 $oak->get_document("/_view/place/all",$place_list);
 foreach ($place_list->rows as $row)
 {

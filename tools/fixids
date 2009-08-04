@@ -2,57 +2,108 @@
 <?php
 require_once('beercrush/oak.class.php');
 
-function changeid($doc,$new_id)
+function savedoc($doc,$new_id,$bSaveDoc=false)
 {
 	global $oak;
 	
-	$old_id=$doc->getID();
-	$doc->setID($new_id);
-	unset($doc->_rev); // Couchdb will refuse to store it if _rev exists on a new doc
+	$bRemoveOld=false;
 	
-	if ($oak->put_document($doc->getID(),$doc)===false)
-		throw new Exception("Failed to put new document ".$doc->getID());
-	else
+	$old_id=$doc->getID();
+	if ($old_id!=$new_id)
 	{
-		// Remove old doc
-		if ($oak->delete_document($old_id)===false)
-			throw new Exception('Old document must be removed:'.$old_id);
+		$doc->setID($new_id);
+		unset($doc->_rev); // Couchdb will refuse to store it if _rev exists on a new doc
+		$bRemoveOld=true;
+		$bSaveDoc=true;
+	}
+
+	$attribs="@attributes";
+	if (isset($doc->$attribs->id) && $doc->$attribs->id!=$new_id)
+	{
+		$doc->$attribs->id=$new_id;
+		$bSaveDoc=true;
+	}
+	
+	if ($bSaveDoc)
+	{
+		if ($oak->put_document($doc->getID(),$doc)===false)
+			throw new Exception("Failed to put document ".$doc->getID());
+
+		print "Saved ".$doc->getID()."\n";
 		
-		print "Changed $old_id to ".$doc->getID()."\n";
+		if ($bRemoveOld)
+		{
+			// Remove old doc
+			if ($oak->delete_document($old_id)===false)
+				throw new Exception('Old document must be removed:'.$old_id);
+		
+			print "Moved $old_id to ".$doc->getID()."\n";
+		}
 	}
 }
 
-$oak=new OAK('/etc/BeerCrush/json.conf');
-$alldocs=new OAKDocument('');
-if ($oak->get_document('_all_docs',$alldocs)==false)
-	throw new Exception('Failed to get _all_docs');
-
-foreach ($alldocs->rows as $row)
+function check_id($id)
 {
+	global $oak;
 	$doc=new OAKDocument('');
-	$oak->get_document($row->id,&$doc);
-	$parts=split(':',$row->id);
+	$oak->get_document($id,&$doc);
+	$parts=split(':',$id);
 	switch ($doc->type)
 	{
 		case 'place':
 		case 'brewery':
 			if (count($parts)==1)
-			{
-				$new_id=$doc->type.':'.$row->id;
-				changeid($doc,$new_id);
-			}
+				$new_id=$doc->type.':'.$id;
+			else
+				$new_id=$doc->getID();
+
+			savedoc($doc,$new_id);
 			break;
 		case 'beer':
 			if (count($parts)==2)
+				$new_id=$doc->type.':'.$id;
+			else
+				$new_id=$doc->getID();
+				
+			$attribs="@attributes";
+			$parts=split(':',$doc->$attribs->brewery_id);
+			$bForceSave=false;
+			if (count($parts)==1)
 			{
-				$new_id=$doc->type.':'.$row->id;
-				changeid($doc,$new_id);
+				$doc->$attribs->brewery_id='brewery:'.$doc->$attribs->brewery_id;
+				$bForceSave=true;
 			}
+			else if (count($parts)>2)
+			{
+				$doc->$attribs->brewery_id='brewery:'.$parts[count($parts)-1];
+				$bForceSave=true;
+			}
+			
+			savedoc($doc,$new_id,$bForceSave);
 			break;
 		default:
 			break;
 	}
-
 }
+
+$oak=new OAK('/etc/BeerCrush/json.conf');
+
+if ($argc>1)
+{
+	check_id($argv[1]);
+}
+else
+{
+	// Do all docs
+	$alldocs=new OAKDocument('');
+	if ($oak->get_document('_all_docs',$alldocs)==false)
+		throw new Exception('Failed to get _all_docs');
+		
+	foreach ($alldocs->rows as $row)
+	{
+		check_id($row->id);
+	}
+}
+
 
 ?>

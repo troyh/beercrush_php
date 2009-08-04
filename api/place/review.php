@@ -6,19 +6,19 @@ $cgi_fields=array(
 	"rating"		=> array(flags=>OAK::FIELDFLAG_REQUIRED, type=>OAK::DATATYPE_INT, min=>0, max=>5),
 );
 
-require_once('beercrush/PlaceReview.php');
-
 function oakMain($oak)
 {
-	$review=new PlaceReview;
-
+	global $cgi_fields;
+	
 	if ($oak->login_is_trusted()!==true) // If the user is not logged in or we can't trust the login
 	{
 		header("HTTP/1.0 401 Login required");
 	}
 	else
 	{
-		$review=PlaceReview::createReview($oak->get_cgi_value('place_id'),$oak->get_user_id());
+		$review=new OAKDocument('review');
+		$review->user_id=$oak->get_user_id();
+		$review->setID($review->type.':'.$oak->get_cgi_value('place_id',&$cgi_fields).':'.$review->user_id);
 
 		// Get existing review, if there is one so that we can update just the parts added/changed in this request
 		if ($oak->get_document($review->getID(),&$review)===true)
@@ -27,7 +27,7 @@ function oakMain($oak)
 		}
 
 		// Give it this request's edits
-		$oak->assign_values(&$review);
+		$oak->assign_cgi_values(&$review,$cgi_fields);
 	
 		// Store in db
 		if ($oak->put_document($review->getID(),$review)!==true)

@@ -2,18 +2,25 @@
 . /etc/BeerCrush/BeerCrush.conf
 
 function process () {
+	TYPE=`echo $1|cut -d ':' -f 1`;
+	if [ "$TYPE" != "brewery" ]; then
+		exit;
+	fi
+	BREWERY=`echo $1|cut -d ':' -f 2`;
 	# Update brewery meta info doc
 	$APP_DIR/scripts/brewery/meta "$1"
 
+	FILENAME=`echo $1 | sed -e 's/:/\//'`;
+
 	# Update brewery XML doc
-	$APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/insertdoc meta "meta:brewery:$1" | $APP_DIR/tools/json2xml > $WWW_DIR/xml/brewery/$1.xml
+	$APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/insertdoc meta "meta:$1" | $APP_DIR/tools/json2xml > $WWW_DIR/xml/$FILENAME.xml
 	# TODO: handle failure to create the file and log it
-	echo $WWW_DIR/xml/brewery/$1.xml
+	echo xml/$FILENAME.xml
 
 	# Update brewery page
-	cat $WWW_DIR/xml/brewery/$1.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/brewery/brewery.xsl > $WWW_DIR/html/brewery/$1.html
+	cat $WWW_DIR/xml/$FILENAME.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/brewery/brewery.xsl > $WWW_DIR/html/$FILENAME.html
 	# TODO: handle failure to create the file and log it
-	echo $WWW_DIR/html/brewery/$1.html
+	echo html/$FILENAME.html
 }
 
 # echo "$1 changed";

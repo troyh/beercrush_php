@@ -117,15 +117,23 @@ case $1 in
 			mkdir $BEERCRUSH_PHPINC_DIR;
 		fi
 		copy_files $BEERCRUSH_SOURCE_DIR/src/phpinc/  $BEERCRUSH_PHPINC_DIR
+		
+		# TODO: kill update_doc, if running, and start new process
 
 		# Make XML doc directory tree
 		mkdir -p \
 			$BEERCRUSH_WWW_DIR/html \
 			$BEERCRUSH_WWW_DIR/html/brewery \
+			$BEERCRUSH_WWW_DIR/html/place \
 			$BEERCRUSH_WWW_DIR/html/beer \
+			$BEERCRUSH_WWW_DIR/html/review/place \
+			$BEERCRUSH_WWW_DIR/html/review/beer \
 			$BEERCRUSH_WWW_DIR/xml \
 			$BEERCRUSH_WWW_DIR/xml/brewery \
+			$BEERCRUSH_WWW_DIR/xml/place \
 			$BEERCRUSH_WWW_DIR/xml/beer \
+			$BEERCRUSH_WWW_DIR/xml/review/place \
+			$BEERCRUSH_WWW_DIR/xml/review/beer \
 			$BEERCRUSH_WWW_DIR/xml/beer_review
 
 		# TODO: make sure permissions are correct for $BEERCRUSH_WWW_DIR and subdirs (beercrush group?)
