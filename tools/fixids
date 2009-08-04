@@ -1,0 +1,58 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+function changeid($doc,$new_id)
+{
+	global $oak;
+	
+	$old_id=$doc->getID();
+	$doc->setID($new_id);
+	unset($doc->_rev); // Couchdb will refuse to store it if _rev exists on a new doc
+	
+	if ($oak->put_document($doc->getID(),$doc)===false)
+		throw new Exception("Failed to put new document ".$doc->getID());
+	else
+	{
+		// Remove old doc
+		if ($oak->delete_document($old_id)===false)
+			throw new Exception('Old document must be removed:'.$old_id);
+		
+		print "Changed $old_id to ".$doc->getID()."\n";
+	}
+}
+
+$oak=new OAK('/etc/BeerCrush/json.conf');
+$alldocs=new OAKDocument('');
+if ($oak->get_document('_all_docs',$alldocs)==false)
+	throw new Exception('Failed to get _all_docs');
+
+foreach ($alldocs->rows as $row)
+{
+	$doc=new OAKDocument('');
+	$oak->get_document($row->id,&$doc);
+	$parts=split(':',$row->id);
+	switch ($doc->type)
+	{
+		case 'place':
+		case 'brewery':
+			if (count($parts)==1)
+			{
+				$new_id=$doc->type.':'.$row->id;
+				changeid($doc,$new_id);
+			}
+			break;
+		case 'beer':
+			if (count($parts)==2)
+			{
+				$new_id=$doc->type.':'.$row->id;
+				changeid($doc,$new_id);
+			}
+			break;
+		default:
+			break;
+	}
+
+}
+
+?>
