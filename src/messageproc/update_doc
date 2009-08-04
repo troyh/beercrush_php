@@ -65,6 +65,11 @@ else
 			{	// ...so we pretend it does.
 				array_unshift($parts,'beer');
 			}
+			// TODO: fix in the db so that brewery docs have an ID that starts with 'brewery:'
+			else if (count($parts)==1)  // Breweries don't have a doc type in their ID (stupid!)...
+			{	// ...so we pretend it does.
+				array_unshift($parts,'brewery');
+			}
 
 			// Find the script for this onchange
 			$prog=$oak->config_bin_dir().'/onchange/'.$parts[0];
