@@ -1,0 +1,32 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+$oak=new OAK;
+$reviews=new OAKDocument('');
+$oak->get_document('_view/beer_reviews/all',&$reviews);
+foreach ($reviews->rows as $row)
+{
+	// print $row->id."\n";
+	$review=new OAKDocument('');
+	$oak->get_document($row->id,&$review);
+	if (preg_match('/^beer_review:/',$review->getID()))
+	{
+		$old_id=$review->getID();
+		$new_id=str_replace('beer_review:','review:beer:',$old_id);
+		$review->setID($new_id);
+		unset($review->_rev);
+
+		if ($oak->put_document($new_id,$review)===false)
+			throw new Exception('Unable to put doc: '.$new_id);
+		else
+		{
+			// Remove old doc
+			if ($oak->delete_document($old_id)===false)
+				throw new Exception('Unable to delete doc: '.$old_id);
+
+			print "$old_id -> $new_id\n";
+		}
+	}
+}
+?>
