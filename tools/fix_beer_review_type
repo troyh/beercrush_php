@@ -1,0 +1,23 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+$oak=new OAK;
+$reviews=new OAKDocument('');
+$oak->get_document('_view/beer_reviews/all',&$reviews);
+foreach ($reviews->rows as $row)
+{
+	// print $row->id."\n";
+	$review=new OAKDocument('');
+	$oak->get_document($row->id,&$review);
+	if ($review->type==='beer_review')
+	{
+		$review->type='review';
+
+		if ($oak->put_document($review->getID(),$review)===false)
+			throw new Exception('Unable to put doc: '.$new_id);
+
+		print $review->getID()."\n";
+	}
+}
+?>
