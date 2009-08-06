@@ -18,14 +18,14 @@ class BeerReview extends OAKDocument
 		
 		$review->beer_id=$beer_id;
 		$review->user_id=$user_id;
-		$review->setID($review->type.':'.$review->beer_id.':'.$review->user_id);
+		$review->setID('review:beer:'.$review->beer_id.':'.$review->user_id);
 		
 		return $review;
 	}
 	
 	function __construct() 
 	{
-		parent::__construct('beer_review');
+		parent::__construct('review');
 	}
 
 	function __destruct() 
