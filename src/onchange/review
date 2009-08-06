@@ -72,7 +72,7 @@ function process($id,$oak)
 			///////////////////////////////////////////
 			write_reviews_doc(
 				'/_view/place_reviews/by_place_id?key=%22'.$doc_id.'%22',
-				$oak->get_file_location('WWW_DIR').'/xml/'.str_replace(':','/',$doc_id),
+				$oak->get_file_location('WWW_DIR').'/xml/review/'.str_replace(':','/',$doc_id),
 				'_all');
 			break;
 		case "beer":
