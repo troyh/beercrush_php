@@ -134,6 +134,13 @@ class OAK
 		return $this->config->debug==="yes";
 	}
 	
+	public function get_file_location($value)
+	{
+		if (!isset($this->config->file_locations->$value))
+			throw new Exception('file location '.$value.' does not exist');
+		return $this->config->file_locations->$value;
+	}
+	
 	public function request_login()
 	{
 		header("HTTP/1.0 420 Login required");
@@ -558,6 +565,22 @@ class OAK
 		unset($copyobj->_id);
 		unset($copyobj->_rev);
 		$this->json2xml($copyobj,$xmlwriter);
+	}
+	
+	public function write_document_to_xmlfile($id,$filename)
+	{
+		$doc=new OAKDocument('');
+		if ($this->get_document($id,&$doc)===false)
+			throw new Exception("Unable to get document $id");
+
+		$xmlwriter=new XMLWriter;
+		$xmlwriter->openMemory();
+		$xmlwriter->startDocument();
+
+		$this->write_document($doc,$xmlwriter);
+
+		$xmlwriter->endDocument();
+		file_put_contents($filename,$xmlwriter->outputMemory());
 	}
 	
 	function json2xml($jsonobj,$xmlwriter,$tag=null)
