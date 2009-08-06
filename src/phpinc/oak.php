@@ -31,6 +31,8 @@ catch(Exception $x)
 {
 	header("HTTP/1.0 400 Exception");
 	
+	$oak->log('Exception:'.$x->getMessage()."\nStack Trace:\n".$x->getTraceAsString());
+	
 	$xmlwriter=new XMLWriter;
 	$xmlwriter->openMemory();
 	$xmlwriter->startDocument();
