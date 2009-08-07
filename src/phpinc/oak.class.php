@@ -6,17 +6,21 @@ class OAKDocument
 	function __construct($type) 
 	{
 		$this->type=$type;
-		$this->timestamp=time();
+		if (!isset($this->meta))
+			$this->meta=new stdClass;
+		$this->meta->timestamp=time();
 	}
 	
 	function __set($name,$val) 
 	{
 		switch ($name)
 		{
+		case "timestamp":
+			$this->meta->$name;
+			break;
 		case "_id":
 		case "_rev":
 		case "type":
-		case "timestamp":
 		case "@attributes":
 		default:
 			$this->$name=$val; 
@@ -84,9 +88,13 @@ class OAK
 			// Read from environment
 			$conf_file=getenv('OAKConfig');
 		}
+		if (empty($conf_file))
+			throw new Exception('Config file not found');
 		// Read conf_file
 		$conf_json=file_get_contents($conf_file);
 		$this->config=json_decode($conf_json);
+		if ($this->config==NULL)
+			throw new Exception($conf_file.' could not be read');
 		
 		// Open syslog
 		openlog('OAK',LOG_ODELAY|LOG_CONS|LOG_PID,LOG_LOCAL0);
@@ -485,11 +493,15 @@ class OAK
 		}
 	}
 	
-	function get_document($id,$obj)
+	function get_document($id,$obj,$rev=null)
 	{
 		if (empty($id))
 			throw new Exception('id is empty');
 		$couchdb=new CouchDB($this->config->couchdb->database);
+
+		if (!is_null($rev))
+			$id=$id.'?rev='.$rev;
+
 		$rsp=$couchdb->send($id,"get");
 		if ($rsp->getStatusCode()!=200)
 		{
@@ -512,34 +524,35 @@ class OAK
 	function put_document($id,$doc)
 	{
 		if (!is_string($doc))
+		{
+			if (is_object($doc))
+			{
+				if (!isset($doc->meta))
+					$doc->meta=new StdClass;
+				$doc->meta->mtime=time(); // Record modified time
+			}
 			$json=json_encode($doc);
+		}
 
 		$couchdb=new CouchDB($this->config->couchdb->database);
 		$rsp=$couchdb->send($id,"put",$json);
 
 		if ($rsp->getStatusCode()==201)
 		{
-			$this->queue_doc_update($id);
+			$body=$rsp->getBody(true);
+
+			$update_msg=new stdClass;
+			$update_msg->docid=$body->id;
+			$update_msg->old_rev=$doc->_rev;
+			$update_msg->new_rev=$body->rev;
+			
+			$this->put_queue_msg('updates',json_encode($update_msg));
 			return true;
 		}
 			
 		return false;
 	}
 
-	function put_document_json($id,$json)
-	{
-		$couchdb=new CouchDB($this->config->couchdb->database);
-		$rsp=$couchdb->send($id,"put",$json);
-
-		if ($rsp->getStatusCode()==201)
-		{
-			$this->queue_doc_update($id);
-			return true;
-		}
-			
-		return false;
-	}
-	
 	function copy_document($old_id,$new_id)
 	{
 		// NOTE: COPY only works in CouchDB 0.9+
@@ -676,13 +689,6 @@ class OAK
 
 	}
 	
-	function queue_doc_update($id)
-	{
-		$memQ=new Memcached();
-		$memQ->addServers($this->config->memcacheq->servers);
-		$memQ->set('updates',$id);
-	}
-	
 	function get_queue_msg($queue_name)
 	{
 		$memQ=new Memcached();
@@ -695,11 +701,6 @@ class OAK
 		$memQ=new Memcached();
 		$memQ->addServers($this->config->memcacheq->servers);
 		return $memQ->set($queue_name,$msg);
-	}
-
-	function config_bin_dir()
-	{
-		return $this->config->file_locations->BIN_DIR;
 	}
 
 	public function log_ident($ident)
