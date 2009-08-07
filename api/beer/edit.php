@@ -37,18 +37,20 @@ function oakMain($oak)
 	}
 	else
 	{
+		global $cgi_fields;
+		
 		$beer=new Beer;
 
-		if ($oak->cgi_value_exists('beer_id')) // Editing existing beer
+		if ($oak->cgi_value_exists('beer_id',$cgi_fields)) // Editing existing beer
 		{
-			$beer_id=$oak->get_cgi_value('beer_id');
+			$beer_id=$oak->get_cgi_value('beer_id',$cgi_fields);
 			// Get existing beer, if there is one so that we can update just the parts added/changed in this request
 			if ($oak->get_document($beer_id,&$beer)!==true)
 				throw new Exception("No existing beer $beer_id");
 		}
 		else  // Adding a new beer
 		{
-			$beer=Beer::createBeer($oak->get_cgi_value('brewery_id'),$oak->get_cgi_value('name'));
+			$beer=Beer::createBeer($oak->get_cgi_value('brewery_id',$cgi_fields),$oak->get_cgi_value('name',$cgi_fields));
 			
 			// See if this beer already exists
 			if ($oak->get_document($beer->getID(),&$beer)===true)
@@ -58,7 +60,7 @@ function oakMain($oak)
 		}
 
 		// Give it this request's edits
-		$oak->assign_values(&$beer);
+		$oak->assign_cgi_values(&$beer);
 	
 		// Store in db
 		if ($oak->put_document($beer->getID(),$beer)!==true)
