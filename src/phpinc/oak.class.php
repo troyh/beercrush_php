@@ -42,6 +42,14 @@ class OAKDocument
 			throw new Exception('id not set');
 		return $this->_id; 
 	}
+	
+	public function getAttribute($attr_name)
+	{
+		if (empty($attr_name))
+			throw new Exception('Attribute name is empty');
+		$attribs="@attributes";
+		return $this->$attribs->$attr_name;
+	}
 };
 
 class OAK
@@ -479,6 +487,8 @@ class OAK
 	
 	function get_document($id,$obj)
 	{
+		if (empty($id))
+			throw new Exception('id is empty');
 		$couchdb=new CouchDB($this->config->couchdb->database);
 		$rsp=$couchdb->send($id,"get");
 		if ($rsp->getStatusCode()!=200)
