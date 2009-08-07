@@ -11,7 +11,7 @@ if ($argc<2)
 $doc=file_get_contents("php://stdin");
 
 $oak=new OAK("/etc/BeerCrush/json.conf");
-if ($oak->put_document_json($argv[1],$doc))
+if ($oak->put_document($argv[1],$doc))
 	return 1;
 return 0;
 
