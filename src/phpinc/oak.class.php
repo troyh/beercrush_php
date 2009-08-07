@@ -504,6 +504,11 @@ class OAK
 		return true;
 	}
 	
+	public function get_view($url,$obj)
+	{
+		return $this->get_document('_view/'.$url,$obj);
+	}
+	
 	function put_document($id,$doc)
 	{
 		if (!is_string($doc))
@@ -527,7 +532,10 @@ class OAK
 		$rsp=$couchdb->send($id,"put",$json);
 
 		if ($rsp->getStatusCode()==201)
+		{
+			$this->queue_doc_update($id);
 			return true;
+		}
 			
 		return false;
 	}
