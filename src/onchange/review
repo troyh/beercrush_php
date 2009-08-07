@@ -7,7 +7,7 @@ $oak=new OAK;
 if ($argc<2)
 {
 	$all_reviews=new OAKDocument('');
-	if ($oak->get_document('_view/review/all',&$all_reviews)===false)
+	if ($oak->get_view('review/all',&$all_reviews)===false)
 		throw new Exception('Unable to get all reviews');
 		
 	foreach ($all_reviews->rows as $row)
@@ -63,7 +63,7 @@ function process($id,$oak)
 			// Write out all the user's place reviews
 			///////////////////////////////////////////
 			write_reviews_doc(
-				'/_view/place_reviews/by_user_id?key=%22'.$user_id.'%22',
+				'place_reviews/by_user_id?key=%22'.$user_id.'%22',
 				$oak->get_file_location('WWW_DIR').'/xml/user/'.$user_id.'/reviews',
 				'place');
 
@@ -71,7 +71,7 @@ function process($id,$oak)
 			// Write out all the place's reviews
 			///////////////////////////////////////////
 			write_reviews_doc(
-				'/_view/place_reviews/by_place_id?key=%22'.$doc_id.'%22',
+				'place_reviews/by_place_id?key=%22'.$doc_id.'%22',
 				$oak->get_file_location('WWW_DIR').'/xml/review/'.str_replace(':','/',$doc_id),
 				'_all');
 			break;
@@ -80,7 +80,7 @@ function process($id,$oak)
 			// Write out all the user's beer reviews
 			///////////////////////////////////////////
 			write_reviews_doc(
-				'/_view/beer_reviews/by_user?key=%22'.$user_id.'%22',
+				'beer_reviews/by_user?key=%22'.$user_id.'%22',
 				$oak->get_file_location('WWW_DIR').'/xml/user/'.$user_id.'/reviews',
 				'beer');
 
@@ -88,7 +88,7 @@ function process($id,$oak)
 			// Write out all the beer's reviews
 			///////////////////////////////////////////
 			write_reviews_doc(
-				'/_view/beer_reviews/for_beer?key=%22'.$doc_id.'%22',
+				'beer_reviews/for_beer?key=%22'.$doc_id.'%22',
 				$oak->get_file_location('WWW_DIR').'/xml/review/'.str_replace(':','/',$doc_id),
 				'_all');
 			break;
@@ -111,8 +111,8 @@ function write_reviews_doc($doc_url,$directory,$basefilename,$chunk_size=20)
 		
 	$reviews=new OAKDocument('');
 
-	if ($oak->get_document($doc_url,&$reviews)!==true)
-		$oak->log('Unable to get document: '.$doc_url);
+	if ($oak->get_view($doc_url,&$reviews)!==true)
+		$oak->log('Unable to get view: '.$doc_url);
 	else
 	{
 		$chunked_reviews=array_chunk($reviews->rows,$chunk_size);
