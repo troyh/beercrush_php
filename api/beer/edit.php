@@ -60,7 +60,7 @@ function oakMain($oak)
 		}
 
 		// Give it this request's edits
-		$oak->assign_cgi_values(&$beer);
+		$oak->assign_cgi_values(&$beer,$cgi_fields);
 	
 		// Store in db
 		if ($oak->put_document($beer->getID(),$beer)!==true)
