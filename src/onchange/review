@@ -136,6 +136,32 @@ function write_reviews_doc($doc_url,$directory,$basefilename,$chunk_size=20)
 			{
 				unset($review->value->_id);
 				unset($review->value->_rev);
+				
+				// Add in the info for the document that is being reviewed
+				if (isset($review->value->beer_id))
+				{
+					$beer=new OAKDocument('');
+					if ($oak->get_document($review->value->beer_id,&$beer)===true)
+					{
+						$review->value->beer->name=$beer->name;
+						$brewery=new OAKDocument('');
+						if ($oak->get_document($beer->getAttribute('brewery_id'),&$brewery)===true)
+						{
+							$attribs="@attributes";
+							$review->value->beer->brewery->$attribs->id=$brewery->_id;
+							$review->value->beer->brewery->name=$brewery->name;
+						}
+					}
+				}
+				else if (isset($review->value->place_id))
+				{
+					$place=new OAKDocument('');
+					if ($oak->get_document($review->value->place_id,&$place)===true)
+					{
+						$review->value->place->name=$place->name;
+					}
+				}
+				
 				$oak->json2xml($review->value,$xmlwriter);
 			}
 			
