@@ -54,7 +54,7 @@ function oakMain($oak)
 		{
 			$dels=preg_split('/\s+/',$oak->get_cgi_value('del_item',$cgi_fields));
 		}
-		
+
 		if (count($adds) || count($dels))
 		{
 			if (!isset($menu->items))
@@ -63,12 +63,29 @@ function oakMain($oak)
 			// Make the requested changes
 			foreach ($dels as $id)
 			{
-				unset($menu->items[$id]);
+				for ($i=0,$j=count($menu->items);$i<$j;++$i)
+				{
+					if ($menu->items[$i]['@attributes']['id']==$id)
+						unset($menu->items[$i]);
+				}
 			}
+
+			$attribs='@attributes';
 			foreach ($adds as $id)
 			{
-				$attribs="@attributes";
-				$menu->items[$id]->$attribs=array(
+				// Does it already exist?
+				$item=null;
+				for ($i=0,$j=count($menu->items);$i<$j;++$i)
+				{
+					if ($menu->items[$i]->$attribs->id==$id)
+						$item=$i;
+				}
+				if (is_null($item))
+					$item=count($menu->items); // Add to end
+
+				$parts=split(':',$id);
+				$menu->items[$item]->$attribs=array(
+					'type' => $parts[0],
 					'id'=>$id,
 					'ontap'=>true,
 					'inbottle'=>false,
