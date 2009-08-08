@@ -23,38 +23,26 @@ else
 function process($id,$oak)
 {
 	/*
-
 		Review IDs are of the form:
 
 			review:<doc id>:<user_id>
 
 		where <doc id> is the ID of the document being reviewed (which may contain subparts) and <user_id> is the user who is doing the review.
-
 	*/
 
-	$parts=split(':',$id);
-	if ($parts[0]!='review')
+	if (strncmp($id,'review:',7))
 	{
-		$oak->log($parts[0]." is not a review\n");
+		$oak->log("$id is not a review\n");
 		return;
 	}
+	
+	$oak->persist_document($id); // Save the actual document to the filesystem
 
 	// Make sure directory is there for the files we will create/update
-	array_shift($parts); // Remove the 'review:'
+	$parts=split(':',$id);
+	array_shift($parts); // Remove the review: part
 	$user_id=array_pop($parts); // Remove the user_id at the end
 	$doc_id=join(':',$parts);
-	$dirname=$oak->get_file_location('WWW_DIR').'/xml/review/'.join('/',$parts);
-	$fullpath="$dirname/$user_id.xml";
-
-	if (!is_dir($dirname))
-	{
-		if (mkdir($dirname,0777,true)===false)
-			$oak->log('Unable to mkdir '.$dirname);
-	}
-
-	// Write XML doc for this review
-	$oak->write_document_to_xmlfile($id,$fullpath);
-	$oak->log('Wrote '.$fullpath);
 
 	switch ($parts[0])
 	{
