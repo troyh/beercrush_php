@@ -1,0 +1,28 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+$oak=new OAK;
+
+if ($argc<2)
+{
+	$all_menus=new OAKDocument('');
+	if ($oak->get_view('menu/all',&$all_menus)===false)
+		throw new Exception('Unable to get all menus');
+		
+	foreach ($all_menus->rows as $row)
+	{
+		process($row->id,$oak);
+	}
+}
+else
+{
+	process($argv[1],$oak);
+}
+
+function process($id,$oak)
+{
+	$oak->persist_document($id);
+}
+
+?>
