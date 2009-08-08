@@ -541,11 +541,15 @@ class OAK
 		{
 			$body=$rsp->getBody(true);
 
-			$update_msg=new stdClass;
-			$update_msg->docid=$body->id;
-			$update_msg->old_rev=$doc->_rev;
-			$update_msg->new_rev=$body->rev;
-			
+			// Record pertinent info about the change and put it in the updates queue
+			$update_msg=array(
+				docid=>$body->id,
+				old_rev=>$doc->_rev,
+				new_rev=>$body->rev,
+				timestamp=>time()
+			);
+			if ($this->get_user_id()!=null)
+				$update_msg['user_id']=$this->get_user_id();
 			$this->put_queue_msg('updates',json_encode($update_msg));
 			return true;
 		}
@@ -611,7 +615,52 @@ class OAK
 		$this->write_document($doc,$xmlwriter);
 
 		$xmlwriter->endDocument();
+
+		if (!is_dir(dirname($filename)))
+		{
+			if (mkdir(dirname($filename),0777,true)===false)
+				$this->log('Unable to mkdir '.dirname($filename));
+		}
+
 		file_put_contents($filename,$xmlwriter->outputMemory());
+		$this->log('Wrote '.$filename);
+	}
+	
+	public function write_document_to_jsonfile($id,$filename)
+	{
+		$doc=new OAKDocument('');
+		if ($this->get_document($id,&$doc)===false)
+			throw new Exception("Unable to get document $id");
+
+		// Make sure directory is there for the files we will create/update
+		if (!is_dir(dirname($filename)))
+		{
+			if (mkdir(dirname($filename),0777,true)===false)
+				$this->log('Unable to mkdir '.dirname($filename));
+		}
+
+		file_put_contents($filename,json_encode($doc));
+		$this->log('Wrote '.$filename);
+	}
+	
+	public function persist_document($id)
+	{
+		if (!isset($this->config->doc_persistence->locations))
+			throw new Exception('Document persistence locations unknown');
+
+		$parts=split(':',$id);
+			
+		if (!empty($this->config->doc_persistence->locations->xml))
+		{
+			$fullpath=$this->config->doc_persistence->locations->xml.'/'.join('/',$parts).'.xml';
+			$this->write_document_to_xmlfile($id,$fullpath);
+		}
+
+		if (!empty($this->config->doc_persistence->locations->json))
+		{
+			$fullpath=$this->config->doc_persistence->locations->json.'/'.join('/',$parts).'.json';
+			$this->write_document_to_jsonfile($id,$fullpath);
+		}
 	}
 	
 	function json2xml($jsonobj,$xmlwriter,$tag=null)
