@@ -1,0 +1,61 @@
+#!/usr/bin/php
+<?php
+
+$a=json_decode(file_get_contents($argv[1]));
+$b=json_decode(file_get_contents($argv[2]));
+
+// var_dump($a);
+// var_dump($b);
+
+function diff($a,$b,$prefix='')
+{
+	if (gettype($a)!=gettype($b))
+	{
+		print "Changed $prefix: ".json_encode($a).'->'.json_encode($b)."\n";
+	}
+	else if (is_scalar($a) && is_scalar($b))
+	{
+		if ($a!=$b)
+			print "$prefix\t\t$a\t$b\n";
+	}
+	else if (is_object($a))
+	{
+		// Get union of keys
+		$all_keys=array();
+		foreach ($a as $k=>$v)
+		{
+			$all_keys[]=$k;
+		}
+		foreach ($b as $k=>$v)
+		{
+			if (!in_array($k,$all_keys))
+				$all_keys[]=$k;
+		}
+
+		foreach ($all_keys as $k)
+		{
+			if (!empty($prefix))
+				$prefix.='->';
+			if (!isset($b->$k))
+			{
+				print "$prefix$k\t\t{$a->$k}\t\n";
+			}
+			else if (!isset($a->$k))
+			{
+				print "$prefix$k\t\t\t";print json_encode($b->$k);print "\n";
+			}
+			else if ($a->$k!==$b->$k)
+			{
+				diff($a->$k,$b->$k,$prefix.$k);
+			}
+		}
+	}
+}
+
+if ($a!==$b)
+{
+	print "\t\tOld\tNew\n";
+	diff($a,$b);
+}
+
+?>
