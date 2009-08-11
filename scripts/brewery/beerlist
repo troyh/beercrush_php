@@ -7,7 +7,7 @@ $brewery_id=$argv[1];
 $oak=new OAK("/etc/BeerCrush/json.conf");
 
 $list=new stdClass;
-$oak->get_document('_view/beer/made_by?key=%22'.$brewery_id.'%22',$list);
+$oak->get_view('beer/made_by?key=%22'.$brewery_id.'%22',$list);
 
 $beerlist=array();
 $attributes='@attributes';
