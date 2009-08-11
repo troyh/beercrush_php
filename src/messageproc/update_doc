@@ -7,13 +7,7 @@ declare(ticks = 1);
 
 $keep_running=true;
 
-if ($argc<2)
-{
-	print "Usage: ".$argv[0]." <conf file>\n";
-	exit;
-}
-
-$oak=new OAK($argv[1]);
+$oak=new OAK;
 $oak->log_ident('update_doc');
 
 $pid_file='/var/run/BeerCrush/'.basename($argv[0]).'.pid';
@@ -27,7 +21,15 @@ if (file_exists($pid_file))
 	exit;
 }
 
-$pid=pcntl_fork();
+$bRunOnce=false; // For debug purposes set to true
+if ($bRunOnce==false)
+	$pid=pcntl_fork();
+else
+{
+	$keep_running=false;
+	$pid=0;
+}
+	
 if ($pid==-1)
 {
 	print "Unable to daemonize\n";
@@ -48,20 +50,23 @@ else
 	pcntl_signal(SIGABRT,"sig_handler");
 	pcntl_signal(SIGCONT,"sig_handler");
 
-	while ($keep_running)
+	do
 	{
 		$msg=$oak->get_queue_msg('updates');
 		if ($msg===false)
 		{
-			sleep(15);
+			if ($bRunOnce==false)
+				sleep(15);
 		}
 		else
 		{
+			$obj=json_decode($msg);
+			$oak->log('user_id='.$obj->user_id.' docid='.$obj->docid.' old_rev='.$obj->old_rev.' new_rev='.$obj->new_rev);
+
 			// Determine the doc type and call the appropriate script
-			$parts=split(':',$msg);
-			
+			$parts=split(':',$obj->docid);
 			// Find the script for this onchange
-			$prog=$oak->config_bin_dir().'/onchange/'.$parts[0];
+			$prog=$oak->get_file_location('BIN_DIR').'/onchange/'.$parts[0];
 	
 			if (!is_executable($prog))
 			{
@@ -69,17 +74,18 @@ else
 			}
 			else
 			{
-				$oak->log('Queue msg: "'.$msg.'" Running '.escapeshellcmd($prog).' '.escapeshellarg($msg));
+				$oak->log('Running: '.escapeshellcmd($prog).' '.escapeshellarg($obj->docid));
 				
-				$r=exec(escapeshellcmd($prog).' '.escapeshellarg($msg),$output,$return_var);
+				$r=exec(escapeshellcmd($prog).' '.escapeshellarg($obj->docid),$output,$return_var);
 	
 				foreach ($output as $line)
 				{
-					$oak->log("$msg $line");
+					$oak->log($line);
 				}
 			}
 		}
 	}
+	while ($keep_running);
 
 	$oak->log("Shutting down.");
 	// Remove the PID file
