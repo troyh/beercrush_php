@@ -29,16 +29,20 @@ function oakMain($oak)
 		}
 		else if ($oak->cgi_value_exists('place_id',$cgi_fields)!==true)
 		{
-			throw new Exception("place_id required to create a menu");
+			throw new Exception("place_id required if menu_id is not specified");
 		}
-		else  // Adding a new menu
+		else // Create or edit menu based on place_id
 		{
-			$menu->setID('menu:'.$oak->get_cgi_value('place_id',$cgi_fields));
+			$place=new OAKDocument('');
+			if ($oak->get_document($oak->get_cgi_value('place_id',$cgi_fields),&$place)!==true)
+				throw new Exception($oak->get_cgi_value('place_id',$cgi_fields)." is  not an existing place");
+				
+			$menu->setID('menu:'.$place->getID());
 			
 			// See if a menu for this place already exists
 			if ($oak->get_document($menu->getID(),&$menu)===true)
 			{
-				throw new Exception($menu->getID()." already exists");
+				// Do nothing, we don't care if it already exists or not.
 			}
 		}
 
