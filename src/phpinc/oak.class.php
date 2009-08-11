@@ -523,7 +523,9 @@ class OAK
 	
 	function put_document($id,$doc)
 	{
-		if (!is_string($doc))
+		if (is_string($doc))
+			$json=$doc;
+		else
 		{
 			if (is_object($doc))
 			{
