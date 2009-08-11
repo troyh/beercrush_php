@@ -23,6 +23,9 @@ function process () {
 	echo html/$FILENAME.html
 }
 
+# Always refresh the list of breweries XML doc (their name may have changed)
+$APP_DIR/scripts/brewery/brewery_list > $WWW_DIR/xml/breweries.xml
+
 # echo "$1 changed";
 if [ -z "$1" ]; then
 	# *All* brewery docs changed!
