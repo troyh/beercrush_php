@@ -604,11 +604,20 @@ class OAK
 		$this->json2xml($copyobj,$xmlwriter);
 	}
 	
-	public function write_document_to_xmlfile($id,$filename)
+	public function write_document_to_xmlfile($doc,$filename)
 	{
-		$doc=new OAKDocument('');
-		if ($this->get_document($id,&$doc)===false)
-			throw new Exception("Unable to get document $id");
+		if (is_string($doc)) // Assume it's an ID string
+		{
+			$id=$doc;
+			$doc=new OAKDocument('');
+			if ($this->get_document($id,&$doc)===false)
+				throw new Exception("Unable to get document $id");
+		}
+		else if (is_object($doc) && (get_class($doc)==='OAKDocument' || is_subclass_of($doc,'OAKDocument')))
+		{
+		}
+		else
+			throw new Exception('Unsupported argument');
 
 		$xmlwriter=new XMLWriter;
 		$xmlwriter->openMemory();
@@ -628,11 +637,20 @@ class OAK
 		$this->log('Wrote '.$filename);
 	}
 	
-	public function write_document_to_jsonfile($id,$filename)
+	public function write_document_to_jsonfile($doc,$filename)
 	{
-		$doc=new OAKDocument('');
-		if ($this->get_document($id,&$doc)===false)
-			throw new Exception("Unable to get document $id");
+		if (is_string($doc)) // Assume it's an ID string
+		{
+			$id=$doc;
+			$doc=new OAKDocument('');
+			if ($this->get_document($id,&$doc)===false)
+				throw new Exception("Unable to get document $id");
+		}
+		else if (is_object($doc) && (get_class($doc)==='OAKDocument' || is_subclass_of($doc,'OAKDocument')))
+		{
+		}
+		else
+			throw new Exception('Unsupported argument');
 
 		// Make sure directory is there for the files we will create/update
 		if (!is_dir(dirname($filename)))
@@ -645,23 +663,28 @@ class OAK
 		$this->log('Wrote '.$filename);
 	}
 	
-	public function persist_document($id)
+	public function persist_document($doc)
 	{
 		if (!isset($this->config->doc_persistence->locations))
 			throw new Exception('Document persistence locations unknown');
 
-		$parts=split(':',$id);
+		if (is_string($doc)) // Assume it's an ID string
+			$parts=split(':',$doc);
+		else if (is_object($doc) && (get_class($doc)==='OAKDocument' || is_subclass_of($doc,'OAKDocument')))
+			$parts=split(':',$doc->getID());
+		else
+			throw new Exception('Unsupported argument');
 			
 		if (!empty($this->config->doc_persistence->locations->xml))
 		{
 			$fullpath=$this->config->doc_persistence->locations->xml.'/'.join('/',$parts).'.xml';
-			$this->write_document_to_xmlfile($id,$fullpath);
+			$this->write_document_to_xmlfile($doc,$fullpath);
 		}
 
 		if (!empty($this->config->doc_persistence->locations->json))
 		{
 			$fullpath=$this->config->doc_persistence->locations->json.'/'.join('/',$parts).'.json';
-			$this->write_document_to_jsonfile($id,$fullpath);
+			$this->write_document_to_jsonfile($doc,$fullpath);
 		}
 	}
 	
