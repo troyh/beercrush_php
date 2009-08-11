@@ -22,7 +22,22 @@ else
 
 function process($id,$oak)
 {
-	$oak->persist_document($id);
+	// Add in the beer/name element to the item element
+	$menu=new OAKDocument('');
+	if ($oak->get_document($id,$menu)===false)
+		throw new Exception('Unable to get document '.$id);
+
+	$attribs="@attributes";
+	foreach ($menu->items as $item)
+	{
+		$itemdoc=new OAKDocument('');
+		if ($oak->get_document($item->$attribs->id,&$itemdoc)===false)
+			throw new Exception('Unable to get document '.$item->id);
+		
+		$item->name=$itemdoc->name;
+	}
+
+	$oak->persist_document($menu);
 }
 
 ?>
