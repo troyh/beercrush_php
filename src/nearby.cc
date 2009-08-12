@@ -9,7 +9,7 @@ extern "C"
 #include <string.h>
 #include <ctype.h>
 
-#define MAX_PLACE_ID_LEN 128
+#define MAX_PLACE_ID_LEN 256
 
 struct LATLONPAIR
 {
@@ -34,7 +34,7 @@ extern "C" void cgiInit()
 	char buf[256];
 		
 	size_t lines=0;
-	ifstream f("/home/troy/beerliberation/xml/meta/place/latlonpairs.txt");
+	ifstream f("/var/local/BeerCrush/meta/latlonpairs.txt");
 	while (f.good())
 	{
 		f.getline(buf,sizeof(buf));

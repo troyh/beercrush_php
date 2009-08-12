@@ -1,0 +1,15 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+$oak=new OAK;
+$result=new OAKDocument('');
+if ($oak->get_view("place/gps_coords",&$result)===false)
+	throw new Exception('Unable to get view');
+	
+foreach ($result->rows as $row)
+{
+	print $row->value->lat.' '.$row->value->lon.' '.$row->id.' '.htmlentities($row->key)."\n";
+}
+
+?>
