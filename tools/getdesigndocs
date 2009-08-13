@@ -1,0 +1,21 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+$oak=new OAK;
+$designdocs=new OAKDocument('');
+if ($oak->get_document("_all_docs?startkey=\"_design/\"&endkey=\"_design/zzz\"",&$designdocs)===false)
+{
+	print "Unable to get design docs\n";
+	exit;
+}
+
+foreach ($designdocs->rows as $row)
+{
+	// print $row->id."\n";
+	$doc=new stdClass;
+	$oak->get_document($row->id,&$doc);
+	print json_encode($doc)."\n";
+	
+}
+?>

@@ -1,0 +1,32 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+$oak=new OAK;
+
+// Parse each line of stdin as a series of JSON objects
+$input=fopen('php://stdin','r');
+while (($line=fgets($input))!=null)
+{
+	// print $line;
+	$new_document=json_decode($line);
+	if (is_null($new_document))
+		throw new Exception('Input not correct JSON format. Use output of the tools/getdesigndocs script.');
+
+	$current_doc=new stdClass;
+	$oak->get_document($new_document->_id,&$current_doc);
+	
+	if ($current_doc==$new_document)
+	{
+		print "No change for {$new_document->_id}\n";
+	}
+	else
+	{
+		print "Updating {$new_document->_id}\n";
+		$json->_rev=$current_doc->_rev;
+		// $oak->put_document($json->_id,$json);
+	}
+}
+fclose($input);
+
+?>
