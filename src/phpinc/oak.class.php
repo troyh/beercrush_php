@@ -20,6 +20,16 @@ class OAKDocument
 			break;
 		case "_id":
 		case "_rev":
+			$attributes="@attributes";
+			if (isset($this->$attributes))
+				$attribs=$this->$attributes;
+			else
+				$attribs=new stdClass;
+
+			$modified_name=substr($name,1); // remove underscore
+			$attribs->$modified_name=$val;
+			$this->$attributes=$attribs;
+			// Fall through and assign it normally too
 		case "type":
 		case "@attributes":
 		default:
@@ -38,6 +48,8 @@ class OAKDocument
 		if (empty($id))
 			throw new Exception('empty id');
 		$this->_id=$id;
+		// $attribs="@attributes";
+		// $this->$attribs->id=$id;
 	}
 	
 	function getID() 
@@ -663,7 +675,7 @@ class OAK
 		$this->log('Wrote '.$filename);
 	}
 	
-	public function persist_document($doc)
+	public function persist_document($doc,$alternate_path=null)
 	{
 		if (!isset($this->config->doc_persistence->locations))
 			throw new Exception('Document persistence locations unknown');
@@ -677,13 +689,19 @@ class OAK
 			
 		if (!empty($this->config->doc_persistence->locations->xml))
 		{
-			$fullpath=$this->config->doc_persistence->locations->xml.'/'.join('/',$parts).'.xml';
+			if (is_null($alternate_path))
+				$fullpath=$this->config->doc_persistence->locations->xml.'/'.join('/',$parts).'.xml';
+			else
+				$fullpath=$this->config->doc_persistence->locations->xml.'/'.$alternate_path.'.xml';
 			$this->write_document_to_xmlfile($doc,$fullpath);
 		}
 
 		if (!empty($this->config->doc_persistence->locations->json))
 		{
-			$fullpath=$this->config->doc_persistence->locations->json.'/'.join('/',$parts).'.json';
+			if (is_null($alternate_path))
+				$fullpath=$this->config->doc_persistence->locations->json.'/'.join('/',$parts).'.json';
+			else
+				$fullpath=$this->config->doc_persistence->locations->json.'/'.$alternate_path.'.json';
 			$this->write_document_to_jsonfile($doc,$fullpath);
 		}
 	}
