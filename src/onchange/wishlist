@@ -1,0 +1,45 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+$oak=new OAK;
+
+if ($argc<2)
+{
+	$all_wishlists=new OAKDocument('');
+	if ($oak->get_view('wishlist/all',&$all_wishlists)===false)
+		throw new Exception('Unable to get all wishlists');
+		
+	foreach ($all_wishlists->rows as $row)
+	{
+		process($row->id,$oak);
+	}
+}
+else
+{
+	process($argv[1],$oak);
+}
+
+function process($id,$oak)
+{
+	$wishlist=new OAKDocument('');
+	if ($oak->get_document($id,$wishlist)===false)
+		throw new Exception('Unable to get document '.$id);
+
+	// Add in the beer/name element to the item element
+	// $attribs="@attributes";
+	foreach ($wishlist->items as $item)
+	{
+		$itemdoc=new OAKDocument('');
+		if ($oak->get_document($item->item_id,&$itemdoc)===false)
+			throw new Exception('Unable to get document '.$item->id);
+		
+		$item->name=$itemdoc->name;
+	}
+
+	// TODO: make pages of documents for very long wishlists
+	list($type,$user_id)=split(':',$wishlist->getID());
+	$oak->persist_document($wishlist,'user/'.$user_id.'/wishlist');
+}
+
+?>
