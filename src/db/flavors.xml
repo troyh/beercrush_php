@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<flavors>
+  <group>
+    <title>Berry</title>
+    <flavors>
+      <flavor>Black Currant/Cassis</flavor>
+      <flavor>Blackberry</flavor>
+      <flavor>Blueberry</flavor>
+      <flavor>Raspberry</flavor>
+      <flavor>Strawberry</flavor>
+    </flavors>
+  </group>
+  <group>
+    <title>Chemical</title>
+    <flavors>
+      <flavor>Alcohol</flavor>
+      <flavor>Burnt Match</flavor>
+      <flavor>Medicinal</flavor>
+      <flavor>Menthold</flavor>
+      <flavor>Metallic</flavor>
+      <flavor>Mineral</flavor>
+      <flavor>Paint Thinner</flavor>
+      <flavor>Petroleum</flavor>
+      <flavor>Plastic</flavor>
+      <flavor>Rubber</flavor>
+      <flavor>Stale</flavor>
+      <flavor>Sulfer/Rotten Eggs</flavor>
+      <flavor>Tar</flavor>
+      <flavor>Vinegar</flavor>
+      <flavor>Citrus,Grapefruit</flavor>
+    </flavors>
+  </group>
+  <group>
+    <title>Citrus</title>
+    <flavors>
+      <flavor>Lemon</flavor>
+      <flavor>Lime</flavor>
+      <flavor>Orange</flavor>
+    </flavors>
+  </group>
+  <group>
+    <title>Earthy</title>
+    <flavors>
+      <flavor>Baked Bread</flavor>
+      <flavor>Cereal</flavor>
+      <flavor>Chalk</flavor>
+      <flavor>Game</flavor>
+      <flavor>Grainy</flavor>
+      <flavor>Leather</flavor>
+      <flavor>Soil</flavor>
+      <flavor>Sticky Feet</flavor>
+      <flavor>Stinky Cheese</flavor>
+      <flavor>Wet Wool</flavor>
+      <flavor>Yeast</flavor>
+      <flavor>Yogurt</flavor>
+    </flavors>
+  </group>
+  <group>
+    <flavors>
+      <title>Floral</title>
+      <flavor>Fresh Flowers</flavor>
+      <flavor>Geranium</flavor>
+      <flavor>Honeysuckle</flavor>
+      <flavor>Lavendar</flavor>
+      <flavor>Rose</flavor>
+      <flavor>Violet</flavor>
+    </flavors>
+  </group>
+  <group>
+    <title>Fruit</title>
+    <flavors>
+      <flavor>Apricot</flavor>
+      <flavor>Cherry</flavor>
+      <flavor>Fig</flavor>
+      <flavor>Green Apple</flavor>
+      <flavor>Peach</flavor>
+      <flavor>Pear</flavor>
+      <flavor>Plum</flavor>
+    </flavors>
+  </group>
+  <group>
+    <title>Herbal</title>
+    <flavors>
+      <flavor>Cut Green Grass</flavor>
+      <flavor>Dill</flavor>
+      <flavor>Eucalyptus</flavor>
+      <flavor>Mint</flavor>
+      <flavor>Resinous</flavor>
+      <flavor>Sage</flavor>
+      <flavor>Tea</flavor>
+      <flavor>Tobacco</flavor>
+      <flavor>Hoppy</flavor>
+    </flavors>
+  </group>
+  <group>
+    <title>Nuts</title>
+    <flavors>
+      <flavor>Almond</flavor>
+      <flavor>Hazelnut</flavor>
+      <flavor>Peanuts</flavor>
+      <flavor>Pecan</flavor>
+      <flavor>Walnut</flavor>
+    </flavors>
+  </group>
+  <group>
+    <title>Smokey/Woody</title>
+    <flavors>
+      <flavor>Bacon</flavor>
+      <flavor>Burnt Wood</flavor>
+      <flavor>Cedar</flavor>
+      <flavor>Oak</flavor>
+      <flavor>Pine</flavor>
+      <flavor>Roasty</flavor>
+      <flavor>Smoke</flavor>
+      <flavor>Toast</flavor>
+    </flavors>
+  </group>
+  <group>
+    <title>Spice</title>
+    <flavors>
+      <flavor>Black Pepper</flavor>
+      <flavor>Cinnamon</flavor>
+      <flavor>Clove</flavor>
+      <flavor>Coffee</flavor>
+      <flavor>Ginger</flavor>
+      <flavor>Licorice/Anise</flavor>
+      <flavor>Nutmeg</flavor>
+      <flavor>Rum</flavor>
+      <flavor>Salt</flavor>
+      <flavor>Vanilla</flavor>
+    </flavors>
+  </group>
+  <group>
+    <title>Sweets</title>
+    <flavors>
+      <flavor>Bourbon</flavor>
+      <flavor>Butter</flavor>
+      <flavor>Butterscotch</flavor>
+      <flavor>Caramel</flavor>
+      <flavor>Chocolate</flavor>
+      <flavor>Cream</flavor>
+      <flavor>Dried Plum/Prune</flavor>
+      <flavor>Honey</flavor>
+      <flavor>Molasses</flavor>
+      <flavor>Raisins</flavor>
+      <flavor>Toffee</flavor>
+    </flavors>
+  </group>
+  <group>
+    <title>Tropical</title>
+    <flavors>
+      <flavor>Banana</flavor>
+      <flavor>Coconut</flavor>
+      <flavor>Guava</flavor>
+      <flavor>Mango</flavor>
+      <flavor>Melon</flavor>
+      <flavor>Papaya</flavor>
+      <flavor>Passionfruit</flavor>
+      <flavor>Pineapple</flavor>
+    </flavors>
+  </group>
+  <group>
+    <title>Vegetables</title>
+    <flavors>
+      <flavor>Artichoke</flavor>
+      <flavor>Asparagus</flavor>
+      <flavor>Creamed Corn</flavor>
+      <flavor>Garlic</flavor>
+      <flavor>Green Beans</flavor>
+      <flavor>Mushrooms</flavor>
+      <flavor>Olives</flavor>
+      <flavor>Rhubarb</flavor>
+      <flavor>Sauerkraut</flavor>
+      <flavor>Tomato Juice</flavor>
+    </flavors>
+  </group>
+</flavors>
