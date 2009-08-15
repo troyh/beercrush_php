@@ -462,9 +462,9 @@ class OAK
 
 		foreach ($cgi_fields as $name=>$attribs)
 		{
-			if ($cgi_fields['type']==OAK::DATATYPE_OBJ)
-				$total+=$this->get_missing_field_count($cgi_fields['properties']);
-			else if ($attribs['isset']==false && $attribs['flags']&OAK::FIELDFLAG_REQUIRED)
+			if ($attribs['type']==OAK::DATATYPE_OBJ)
+				$total+=$this->get_missing_field_count($attribs['properties']);
+			else if ($attribs['isset']==false && (isset($attribs['flags']) && $attribs['flags']&OAK::FIELDFLAG_REQUIRED))
 				++$total;
 		}
 		
@@ -477,9 +477,9 @@ class OAK
 
 		foreach ($cgi_fields as $name=>$attribs)
 		{
-			if ($cgi_fields['type']==OAK::DATATYPE_OBJ)
+			if ($attribs['type']==OAK::DATATYPE_OBJ)
 			{
-				$a=$this->get_invalid_fields($cgi_fields['properties'],$name.OAK::CGI_NAME_SEP);
+				$a=$this->get_invalid_fields($attribs['properties'],$name.OAK::CGI_NAME_SEP);
 				$fields=array_merge($fields,$a);
 			}
 			else if ($attribs['isset']===true && $attribs['validated']===false)
@@ -498,7 +498,7 @@ class OAK
 			{
 				$this->assign_cgi_values(&$obj->$name,$attribs['properties']);
 			}
-			else if (($attribs['flags']&OAK::FIELDFLAG_CGIONLY)==0 && $attribs['validated'])
+			else if ((!isset($attribs['flags']) || ($attribs['flags']&OAK::FIELDFLAG_CGIONLY)==0) && $attribs['validated'])
 			{
 				$obj->$name=$attribs['converted_value'];
 			}
@@ -557,10 +557,10 @@ class OAK
 
 			// Record pertinent info about the change and put it in the updates queue
 			$update_msg=array(
-				docid=>$body->id,
-				old_rev=>$doc->_rev,
-				new_rev=>$body->rev,
-				timestamp=>time()
+				'docid'=>$body->id,
+				'old_rev'=>$doc->_rev,
+				'new_rev'=>$body->rev,
+				'timestamp'=>time()
 			);
 			if ($this->get_user_id()!=null)
 				$update_msg['user_id']=$this->get_user_id();
