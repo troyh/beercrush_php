@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<colors>
+	<color srm="2" srmmin="0" srmmax="2.4"><name>Pale Straw</name></color>
+	<color srm="3"  srmmin="2.5" srmmax="3.4"><name>Straw</name></color>
+	<color srm="4"  srmmin="3.4" srmmax="4.9"><name>Pale Gold</name></color>
+	<color srm="6"  srmmin="5" srmmax="7.4"><name>Deep Gold</name></color>
+	<color srm="9"  srmmin="7.5" srmmax="10.4"><name>Pale Amber</name></color>
+	<color srm="12" srmmin="10.5" srmmax="13.4"><name>Medium Amber</name></color>
+	<color srm="15" srmmin="13.5" srmmax="16.4"><name>Deep Amber</name></color>
+	<color srm="18" srmmin="16.5" srmmax="19.4"><name>Amber Brown</name></color>
+	<color srm="21" srmmin="19.5" srmmax="22.9"><name>Brown</name></color>
+	<color srm="24" srmmin="23" srmmax="26.9"><name>Ruby Brown</name></color>
+	<color srm="30" srmmin="27" srmmax="34.9"><name>Deep Brown</name></color>
+	<color srm="40" srmmin="35"><name>Black</name></color>
+</colors>
