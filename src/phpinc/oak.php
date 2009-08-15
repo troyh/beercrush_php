@@ -6,6 +6,11 @@ require_once('beercrush/oak.class.php');
 
 $oak=new OAK();
 
+// error_reporting(E_ALL|E_STRICT);
+if ($oak->is_debug_on())
+set_error_handler('OAK_error_handler',E_ALL|($oak->is_debug_on()?E_NOTICE|E_STRICT:0));
+// register_shutdown_function('OAK_shutdown_function');
+
 try
 {
 	global $cgi_fields;
@@ -76,6 +81,60 @@ catch(Exception $x)
 
 	$xmlwriter->endDocument();
 	print $xmlwriter->outputMemory();
+}
+
+function OAK_error_handler($errno,$errstr,$errfile,$errline,$errcontext)
+{
+	header("HTTP/1.0 500 Internal error");
+	
+	print <<<EOF
+<html>
+	<body>
+		<pre>
+EOF;
+
+	switch ($errno) 
+	{
+	    case E_NOTICE:
+	    case E_USER_NOTICE:
+			print "Notice: $errfile($errline): $errstr ($errno)";
+	        break;
+	    case E_WARNING:
+	    case E_USER_WARNING:
+			print "Warning: $errfile($errline): $errstr ($errno)";
+	        break;
+	    case E_ERROR:
+	    case E_USER_ERROR:
+			print "Fatal: $errfile($errline): $errstr ($errno)";
+	        break;
+	    default:
+			print "Unknown: $errfile($errline): $errstr ($errno)";
+	        break;
+    }
+
+	print <<<EOF
+		</pre>
+	</body>
+</html>
+EOF;
+	return TRUE; // Prevent PHP from doing the normal error handler
+}
+
+function OAK_shutdown_function()
+{
+	$error=error_get_last();
+	if (!is_null($error))
+	{
+		$error_types=array(
+			'E_ERROR'		  => 'ERROR',
+			'E_CORE_ERROR'    => 'CORE_ERROR',
+			'E_COMPILE_ERROR' => 'COMPILE_ERROR',
+			'E_USER_ERROR'    => 'USER_ERROR',
+		);
+		if (isset($error_types[$error['type']]))
+			print $error_types[$error['type']].':';
+		print $error['message'];
+	}
 }
 
 ?>
