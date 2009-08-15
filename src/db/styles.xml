@@ -1,0 +1,382 @@
+<?xml version="1.0"?>
+<styles>
+  <style num="1">
+    <name>Light Lager</name>
+    <style num="1A">
+      <name>Light American Lager</name>
+    </style>
+    <style num="1B">
+      <name>Standard American Lager</name>
+    </style>
+    <style num="1C">
+      <name>Premium American Lager</name>
+    </style>
+    <style num="1D">
+      <name>Munich Helles</name>
+    </style>
+    <style num="1E">
+      <name>Dortmunder Export</name>
+    </style>
+  </style>
+  <style num="2">
+    <name>Pilsner</name>
+    <style num="2A">
+      <name>German Pilsner</name>
+    </style>
+    <style num="2B">
+      <name>Boehmian Pilsner</name>
+    </style>
+    <style num="2C">
+      <name>Classic American Pilsner</name>
+    </style>
+  </style>
+  <style num="3">
+    <name>European Amber Lager</name>
+    <style num="3A">
+      <name>Vienna Lager</name>
+    </style>
+    <style num="3B">
+      <name>Oktoberfest/Maerzen</name>
+    </style>
+  </style>
+  <style num="4">
+    <name>Dark Lager</name>
+    <style num="4A">
+      <name>Dark American Lager</name>
+    </style>
+    <style num="4B">
+      <name>Munich Dunkel</name>
+    </style>
+    <style num="4C">
+      <name>Schwarzbier (Black Beer)</name>
+    </style>
+  </style>
+  <style num="5">
+    <name>Bock</name>
+    <style num="5A">
+      <name>Maibock/Helles Bock</name>
+    </style>
+    <style num="5B">
+      <name>Traditional Bock</name>
+    </style>
+    <style num="5C">
+      <name>Doppelbock</name>
+    </style>
+    <style num="5D">
+      <name>Eisbock</name>
+    </style>
+  </style>
+  <style num="6">
+    <name>Light Hybrid Beer</name>
+    <style num="6A">
+      <name>Cream Ale</name>
+    </style>
+    <style num="6B">
+      <name>Blonde Ale</name>
+    </style>
+    <style num="6C">
+      <name>Kolsch</name>
+    </style>
+    <style num="6D">
+      <name>American Wheat or Rye</name>
+    </style>
+  </style>
+  <style num="7">
+    <name>Amber Hybrid Beer</name>
+    <style num="7A">
+      <name>Northern German Altbier</name>
+    </style>
+    <style num="7B">
+      <name>California Common Beer</name>
+    </style>
+    <style num="7C">
+      <name>Dusseldorf Altbier</name>
+    </style>
+  </style>
+  <style num="8">
+    <name>English Pale Ale</name>
+    <style num="8A">
+      <name>Standard/Ordinary Bitter</name>
+    </style>
+    <style num="8B">
+      <name>Special/Best/Premium Bitter</name>
+    </style>
+    <style num="8C">
+      <name>Extra Special/Strong Bitter</name>
+    </style>
+  </style>
+  <style num="9">
+    <name>Scottish and Irish Ales</name>
+    <style num="9A">
+      <name>Scottish Light 60/-</name>
+    </style>
+    <style num="9B">
+      <name>Scottish Heavy 70/-</name>
+    </style>
+    <style num="9C">
+      <name>Scottish Export 80/-</name>
+    </style>
+    <style num="9D">
+      <name>Irish Red Ale</name>
+    </style>
+    <style num="9E">
+      <name>Strong Scotch Ale</name>
+    </style>
+  </style>
+  <style num="10">
+    <name>American Ale</name>
+    <style num="10A">
+      <name>American Pale Ale</name>
+    </style>
+    <style num="10B">
+      <name>American Amber Ale</name>
+    </style>
+    <style num="10C">
+      <name>American Brown Ale</name>
+    </style>
+  </style>
+  <style num="11">
+    <name>English Brown Ale</name>
+    <style num="11A">
+      <name>Mild</name>
+    </style>
+    <style num="11B">
+      <name>Southern English Brown</name>
+    </style>
+    <style num="11C">
+      <name>Northern English Brown Ale</name>
+    </style>
+  </style>
+  <style num="12">
+    <name>Porter</name>
+    <style num="12A">
+      <name>Brown Porter</name>
+    </style>
+    <style num="12B">
+      <name>Robust Porter</name>
+    </style>
+    <style num="12C">
+      <name>Baltic Porter</name>
+    </style>
+  </style>
+  <style num="13">
+    <name>Stout</name>
+    <style num="13A">
+      <name>Dry Stout</name>
+    </style>
+    <style num="13B">
+      <name>Sweet Stout</name>
+    </style>
+    <style num="13C">
+      <name>Oatmeal Stout</name>
+    </style>
+    <style num="13D">
+      <name>Foreign Extra Stout</name>
+    </style>
+    <style num="13E">
+      <name>American Stout</name>
+    </style>
+    <style num="13F">
+      <name>Russian Imperial Stout</name>
+    </style>
+  </style>
+  <style num="14">
+    <name>India Pale Ale</name>
+    <style num="14A">
+      <name>English IPA</name>
+    </style>
+    <style num="14B">
+      <name>American IPA</name>
+    </style>
+    <style num="14C">
+      <name>Imperial IPA</name>
+    </style>
+  </style>
+  <style num="15">
+    <name>German Wheat and Rye Beer</name>
+    <style num="15A">
+      <name>Weizen/Weissbier</name>
+    </style>
+    <style num="15B">
+      <name>Dunkelweizen</name>
+    </style>
+    <style num="15C">
+      <name>Weizenbock</name>
+    </style>
+    <style num="15D">
+      <name>Roggenbier</name>
+    </style>
+  </style>
+  <style num="16">
+    <name>Belgian and French Ale</name>
+    <style num="16A">
+      <name>Witbier</name>
+    </style>
+    <style num="16B">
+      <name>Belgian Pale Ale</name>
+    </style>
+    <style num="16C">
+      <name>Saison</name>
+    </style>
+    <style num="16D">
+      <name>Biere de Garde</name>
+    </style>
+    <style num="16E">
+      <name>Belgian Specialty Ale</name>
+    </style>
+  </style>
+  <style num="17">
+    <name>Sour Ale</name>
+    <style num="17A">
+      <name>Berliner Weisse</name>
+    </style>
+    <style num="17B">
+      <name>Flanders Red Ale</name>
+    </style>
+    <style num="17C">
+      <name>Flanders Brown Ale/Oud Bruin</name>
+    </style>
+    <style num="17D">
+      <name>Straight (Unblended) Lambic</name>
+    </style>
+    <style num="17E">
+      <name>Gueuze</name>
+    </style>
+    <style num="17F">
+      <name>Fruit Lambic</name>
+    </style>
+  </style>
+  <style num="18">
+    <name>Begian Strong Ale</name>
+    <style num="18A">
+      <name>Belgian Blond Ale</name>
+    </style>
+    <style num="18B">
+      <name>Belgian Dubbel</name>
+    </style>
+    <style num="18C">
+      <name>Belgian Tripel</name>
+    </style>
+    <style num="18D">
+      <name>Belgian Golden Strong Ale</name>
+    </style>
+    <style num="18E">
+      <name>Belgian Dark Strong Ale</name>
+    </style>
+  </style>
+  <style num="19">
+    <name>Strong Ale</name>
+    <style num="19A">
+      <name>Old Ale</name>
+    </style>
+    <style num="19B">
+      <name>English Barleywine</name>
+    </style>
+    <style num="19C">
+      <name>American Barleywine</name>
+    </style>
+  </style>
+  <style num="20">
+    <name>Fruit Beer</name>
+    <style num="20A">
+      <name>Fruit Beer</name>
+    </style>
+  </style>
+  <style num="21">
+    <name>Spice/Herb/Vegetable Beer</name>
+    <style num="21A">
+      <name>Spice/Herb/Vegetable Beer</name>
+    </style>
+    <style num="21B">
+      <name>Christmas/Winter Specialty Spiced</name>
+    </style>
+  </style>
+  <style num="22">
+    <name>Smoke Flavored and Wood Aged Beer</name>
+    <style num="22A">
+      <name>Classic Rauchbier</name>
+    </style>
+    <style num="22B">
+      <name>Other Smoked Beer</name>
+    </style>
+    <style num="22C">
+      <name>Wood-Aged Beer</name>
+    </style>
+  </style>
+  <style num="23">
+    <name>Specialty Beer</name>
+    <style num="23A">
+      <name>Specialty Beer</name>
+    </style>
+  </style>
+  <style num="24">
+    <name>Traditional Mead</name>
+    <style num="24A">
+      <name>Dry Mead</name>
+    </style>
+    <style num="24B">
+      <name>Semi-Sweet Mead</name>
+    </style>
+    <style num="24C">
+      <name>Sweet Mead</name>
+    </style>
+  </style>
+  <style num="25">
+    <name>Melomel (Fruit Mead)</name>
+    <style num="25A">
+      <name>Cyser (Apple Melomel)</name>
+    </style>
+    <style num="25B">
+      <name>Pyment (Grape Melomel)</name>
+    </style>
+    <style num="25C">
+      <name>Other Fruit Melomel</name>
+    </style>
+  </style>
+  <style num="26">
+    <name>Other Mead</name>
+    <style num="26A">
+      <name>Metheglin</name>
+    </style>
+    <style num="26B">
+      <name>Braggot</name>
+    </style>
+    <style num="26C">
+      <name>Open Category Mead</name>
+    </style>
+  </style>
+  <style num="27">
+    <name>Standard Cider and Perry</name>
+    <style num="27A">
+      <name>Common Cider</name>
+    </style>
+    <style num="27B">
+      <name>English Cider</name>
+    </style>
+    <style num="27C">
+      <name>French Cider</name>
+    </style>
+    <style num="27D">
+      <name>Common Perry</name>
+    </style>
+    <style num="27E">
+      <name>Traditional Perry</name>
+    </style>
+  </style>
+  <style num="28">
+    <name>Specialty Cider and Perry</name>
+    <style num="28A">
+      <name>New England Cider</name>
+    </style>
+    <style num="28B">
+      <name>Fruit Cider</name>
+    </style>
+    <style num="28C">
+      <name>Applewine</name>
+    </style>
+    <style num="28D">
+      <name>Other Specialty Cider/Perry</name>
+    </style>
+  </style>
+  <styles></styles>
+</styles>
