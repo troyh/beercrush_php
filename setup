@@ -113,6 +113,8 @@ case $1 in
 		copy_files $BEERCRUSH_SOURCE_DIR/img/ $BEERCRUSH_WWW_DIR/img/
 		copy_files $BEERCRUSH_SOURCE_DIR/js/  $BEERCRUSH_WWW_DIR/js/ 
 		
+		cp $BEERCRUSH_SOURCE_DIR/src/db/flavors.xml $BEERCRUSH_WWW_DIR/xml/flavors.xml
+		
 		if [ ! -d $BEERCRUSH_PHPINC_DIR ]; then
 			mkdir $BEERCRUSH_PHPINC_DIR;
 		fi
