@@ -18,7 +18,7 @@ class BeerReview extends OAKDocument
 		
 		$review->beer_id=$beer_id;
 		$review->user_id=$user_id;
-		$review->setID('review:beer:'.$review->beer_id.':'.$review->user_id);
+		$review->setID('review:'.$review->beer_id.':'.$review->user_id);
 		
 		return $review;
 	}
@@ -30,32 +30,6 @@ class BeerReview extends OAKDocument
 
 	function __destruct() 
 	{
-	}
-	
-	function __set($name,$val)
-	{
-		switch ($name)
-		{
-		case "beer_id":
-		case "rating":
-		case "srm":
-		case "body":
-		case "bitterness":
-		case "sweetness":
-		case "aftertaste":
-		case "comments":
-		case "price":
-		case "place":
-		case "size":
-		case "drankwithfood":
-		case "food_recommend":
-			$this->$name=$val;
-			break;
-		default:
-			return parent::__set($name,$val);
-			break;
-		}
-		
 	}
 	
 };

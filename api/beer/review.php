@@ -7,15 +7,14 @@ $cgi_fields=array(
 	"rating"		   => array(flags=>OAK::FIELDFLAG_REQUIRED, type=>OAK::DATATYPE_INT, min=>0, max=>5),
 	"srm"			   => array(type=>OAK::DATATYPE_INT, min=>0, max=>9),
 	"body"			   => array(type=>OAK::DATATYPE_INT, min=>0, max=>5),
-	"bitterness"	   => array(type=>OAK::DATATYPE_INT, min=>0, max=>5),
-	"sweetness"		   => array(type=>OAK::DATATYPE_INT, min=>0, max=>5),
+	"balance"	   	   => array(type=>OAK::DATATYPE_INT, min=>0, max=>5),
 	"aftertaste"	   => array(type=>OAK::DATATYPE_INT, min=>0, max=>5),
 	"comments"		   => array(type=>OAK::DATATYPE_TEXT),
-	"price"			   => array(type=>OAK::DATATYPE_MONEY),
-	"place"			   => array(type=>OAK::DATATYPE_TEXT),
-	"size"			   => array(type=>OAK::DATATYPE_TEXT),
-	"drankwithfood"	   => array(type=>OAK::DATATYPE_TEXT),
-	"food_recommended" => array(type=>OAK::DATATYPE_BOOL),
+	// "price"			   => array(type=>OAK::DATATYPE_MONEY),
+	// "place"			   => array(type=>OAK::DATATYPE_TEXT),
+	// "size"			   => array(type=>OAK::DATATYPE_TEXT),
+	// "drankwithfood"	   => array(type=>OAK::DATATYPE_TEXT),
+	// "food_recommended" => array(type=>OAK::DATATYPE_BOOL),
 );
 
 require_once('beercrush/BeerReview.php');
@@ -25,11 +24,12 @@ function oakMain($oak)
 {
 	if ($oak->login_is_trusted()!==true) // If the user is not logged in or we can't trust the login
 	{
-		header("HTTP/1.0 401 Login required");
+		$oak->request_login();
 	}
 	else
 	{
-		$review=BeerReview::createReview($oak->get_cgi_value('beer_id'),$oak->get_user_id());
+		global $cgi_fields;
+		$review=BeerReview::createReview($oak->get_cgi_value('beer_id',$cgi_fields),$oak->get_user_id());
 
 		// Get existing review, if there is one so that we can update just the parts added/changed in this request
 		if ($oak->get_document($review->getID(),&$review)===true)
@@ -38,7 +38,7 @@ function oakMain($oak)
 		}
 
 		// Give it this request's edits
-		$oak->assign_values(&$review);
+		$oak->assign_cgi_values(&$review,$cgi_fields);
 	
 		// Store in db
 		if ($oak->put_document($review->getID(),$review)!==true)
