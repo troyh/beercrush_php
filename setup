@@ -26,20 +26,20 @@ sudo apt-get install rsync
 # Node-dependent setup tasks
 #
 case $1 in
-	"webserver" )
+	webserver)
 		echo "Setting up web server...";
 		# TODO: copy files from build server to here
 		# TODO: configure syslog.conf for OAK logging
 		# TODO: config logrotate for /var/log/oak.log
 		# TODO: install and setup PHP's APC (opcode cache)
 		;;
-	"dbserver" )
+	dbserver)
 		echo "Setting up database server...";
 		sudo apt-get install couchdb
 		# TODO: get db to here in /var/lib/couchdb
 		# TODO: setup replication between this server and another
 		;;
-	"memcacheqserver" )
+	memcacheqserver)
 		echo "Setting up memcacheq server...";
 		# See http://memcachedb.org/memcacheq/INSTALL.html
 		# TODO: install Berkeley DB 4.7 or later (required by MemcacheQ)
@@ -50,7 +50,7 @@ case $1 in
 		# If not, start memcacheq:
 		memcacheq -d -r -H /var/lib/memcacheq -N -v -L 1024 -B 1024 > /var/log/memcacheq.log 2>&1
 		;;
-	"buildserver" )
+	buildserver)
 		echo "Setting up build server...";
 		
 		sudo apt-get install apache2 php5 php5-cli php5-dev spread libspread1-dev libfcgi-dev xmlstarlet
@@ -63,7 +63,7 @@ case $1 in
 			svn update $BEERCRUSH_SOURCE_DIR
 		fi
 		
-		if [ ! -d $BEERCRUSH_WWW_DIR]; then
+		if [ ! -d $BEERCRUSH_WWW_DIR ]; then
 			mkdir $BEERCRUSH_WWW_DIR;
 		fi
 		
@@ -84,17 +84,6 @@ case $1 in
 			mkdir /var/run/BeerCrush;
 		fi
 		
-		if [ ! -f /etc/apache2/sites-enabled/BeerCrush ]; then
-			if [ ! -f /etc/apache2/sites-available/BeerCrush ]; then
-			echo "You must create /etc/apache2/sites-available/BeerCrush and then do a2ensite BeerCrush";
-			exit;
-		fi
-		
-		if [ ! -f /etc/BeerCrush/OAK.conf ]; then
-			echo "You must create /etc/BeerCrush/OAK.conf";
-			exit;
-		fi
-		
 		# TODO: verify that the OAK.conf file is correct
 		
 		# TODO: make this work:
@@ -107,6 +96,7 @@ case $1 in
 		# TODO: pecl install memcached
 		# TODO: configure syslog.conf for OAK logging
 		# TODO: config logrotate for /var/log/oak.log
+		# TODO: make sure permissions are correct for $BEERCRUSH_WWW_DIR and subdirs (beercrush group?)
 		
 		# Copy some files from the source tree
 		copy_files $BEERCRUSH_SOURCE_DIR/api/ $BEERCRUSH_WWW_DIR/api/
@@ -115,6 +105,7 @@ case $1 in
 		copy_files $BEERCRUSH_SOURCE_DIR/js/  $BEERCRUSH_WWW_DIR/js/ 
 		
 		cp $BEERCRUSH_SOURCE_DIR/src/db/flavors.xml $BEERCRUSH_WWW_DIR/xml/flavors.xml
+		cp $BEERCRUSH_SOURCE_DIR/src/db/beercolors.xml $BEERCRUSH_WWW_DIR/xml/beercolors.xml
 		
 		if [ ! -d $BEERCRUSH_PHPINC_DIR ]; then
 			mkdir $BEERCRUSH_PHPINC_DIR;
@@ -139,7 +130,16 @@ case $1 in
 			$BEERCRUSH_WWW_DIR/xml/review/beer \
 			$BEERCRUSH_WWW_DIR/xml/beer_review
 
-		# TODO: make sure permissions are correct for $BEERCRUSH_WWW_DIR and subdirs (beercrush group?)
+		if [ ! -f /etc/apache2/sites-enabled/BeerCrush ]; then
+			echo "You must create /etc/apache2/sites-available/BeerCrush and then do a2ensite BeerCrush";
+			exit;
+		fi
+		
+		if [ ! -f /etc/BeerCrush/OAK.conf ]; then
+			echo "You must create /etc/BeerCrush/OAK.conf";
+			exit;
+		fi
+		
 		
 		;;
 esac
