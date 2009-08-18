@@ -110,10 +110,10 @@ class OAK
 		
 		// Open syslog
 		openlog('OAK',LOG_ODELAY|LOG_CONS|LOG_PID,LOG_LOCAL0);
-		if (!empty($_SERVER['REQUEST_URI']))
-			$this->log_ident($_SERVER['REQUEST_URI']);
+		if (!empty($_SERVER['SCRIPT_NAME']))
+			$this->log_ident($_SERVER['SCRIPT_NAME']);
 		else
-			$this->log_ident($_SERVER['PHP_SELF']);
+			$this->log_ident(__FILE__);
 	}
 	
 	function __destruct() 
@@ -710,11 +710,17 @@ class OAK
 	{
 		if (is_bool($jsonobj))
 		{
-			$xmlwriter->text($jsonobj===true?'yes':'no');
+			if (!is_null($tag))
+				$xmlwriter->writeElement($tag,($jsonobj===true?'yes':'no'));
+			else
+				$xmlwriter->text($jsonobj===true?'yes':'no');
 		}
 		else if (is_scalar($jsonobj))
 		{
-			$xmlwriter->text($jsonobj);
+			if (!is_null($tag))
+				$xmlwriter->writeElement($tag,$jsonobj);
+			else
+				$xmlwriter->text($jsonobj);
 		}
 		else if (is_array($jsonobj))
 		{
