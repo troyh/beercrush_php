@@ -31,6 +31,7 @@ case $1 in
 		# TODO: copy files from build server to here
 		# TODO: configure syslog.conf for OAK logging
 		# TODO: config logrotate for /var/log/oak.log
+		# TODO: install and setup PHP's APC (opcode cache)
 		;;
 	"dbserver" )
 		echo "Setting up database server...";
