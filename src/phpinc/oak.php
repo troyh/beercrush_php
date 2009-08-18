@@ -7,8 +7,8 @@ require_once('beercrush/oak.class.php');
 $oak=new OAK();
 
 // error_reporting(E_ALL|E_STRICT);
-if ($oak->is_debug_on())
-set_error_handler('OAK_error_handler',E_ALL|($oak->is_debug_on()?E_NOTICE|E_STRICT:0));
+if (!$oak->is_debug_on())
+	set_error_handler('OAK_error_handler',E_ALL|($oak->is_debug_on()?E_NOTICE|E_STRICT:0));
 // register_shutdown_function('OAK_shutdown_function');
 
 try
