@@ -10,6 +10,7 @@ $cgi_fields=array(
 	"balance"	   	   => array(type=>OAK::DATATYPE_INT, min=>0, max=>5),
 	"aftertaste"	   => array(type=>OAK::DATATYPE_INT, min=>0, max=>5),
 	"comments"		   => array(type=>OAK::DATATYPE_TEXT),
+	"flavors"		   => array(type=>OAK::DATATYPE_TEXT,flags=>OAK::FIELDFLAG_CGIONLY),
 	// "price"			   => array(type=>OAK::DATATYPE_MONEY),
 	// "place"			   => array(type=>OAK::DATATYPE_TEXT),
 	// "size"			   => array(type=>OAK::DATATYPE_TEXT),
@@ -19,6 +20,46 @@ $cgi_fields=array(
 
 require_once('beercrush/BeerReview.php');
 
+function load_flavors_data(&$flavorslist, $oak)
+{
+	$flavorslist=array(); // If everything fails, they get an empty array back
+	
+	// If the flavors info is not in shared memory...
+	$shm_key=ftok(__FILE__,"B");
+	$shm_id=shm_attach($shm_key);
+	if ($shm_id)
+	{
+		$flavorslist=@shm_get_var($shm_id,'1');
+		if ($flavorslist===false) // Damn, we have to read the XML doc and put it in shared memory
+		{
+			$flavorslist=array(); // Make sure they get an empty array back, if the rest fails
+
+			$oak->log('Loading flavors data from XML document');
+
+			// Read Flavors XML doc
+			$xml=simplexml_load_file($oak->get_file_location('XML_DIR').'/flavors.xml');
+			if ($xml===false)
+				$oak->log('Unable to parse XML doc:'.$oak->get_file_location('XML_DIR').'/flavors.xml',OAK::LOGPRI_CRIT);
+			else
+			{
+				$flavors=$xml->xpath('/flavors/group/flavors/flavor');
+				foreach ($flavors as $flavor)
+				{
+					$flavorslist[(string)$flavor['id']]=(string)$flavor;
+				}
+				
+				// Store list in shared mem
+				if (shm_put_var($shm_id,'1',$flavorslist)===false)
+				{
+					// TODO: what to do? We don't want to keep parsing the XML doc if this keeps failing.
+					$oak->log('Failed to store flavors data in shared memory',OAK::LOGPRI_CRIT);
+				}
+			}
+		}
+
+		shm_detach($shm_id);
+	}
+}
 
 function oakMain($oak)
 {
@@ -35,10 +76,38 @@ function oakMain($oak)
 		if ($oak->get_document($review->getID(),&$review)===true)
 		{
 			// Do nothing, it doesn't matter
+			$oak->log('Updating review:'.$review->getID());
 		}
+		else
+			$oak->log('New review:'.$review->getID());
 
 		// Give it this request's edits
 		$oak->assign_cgi_values(&$review,$cgi_fields);
+		
+		// Add flavors
+		if ($oak->cgi_value_exists('flavors',$cgi_fields))
+		{
+			// Separate them into an array and remove duplicates
+			$flavors=array_unique(preg_split('/[^a-zA-Z0-9]+/',$oak->get_cgi_value('flavors',$cgi_fields)));
+			
+			if (count($flavors))
+			{
+				$flavorslist=array();
+				load_flavors_data(&$flavorslist, $oak);
+
+				// Always remove all existing flavors if this is an edit of an existing review
+				$review->flavors=array();
+					
+				foreach ($flavors as $flavor)
+				{
+					// Make sure each flavor is valid
+					if (!empty($flavorslist[$flavor]))
+					{
+						$review->flavors[]=$flavor;
+					}
+				}
+			}
+		}
 	
 		// Store in db
 		if ($oak->put_document($review->getID(),$review)!==true)
@@ -47,6 +116,8 @@ function oakMain($oak)
 		}
 		else
 		{
+			header("Content-Type: text/xml");
+			
 			$xmlwriter=new XMLWriter;
 			$xmlwriter->openMemory();
 			$xmlwriter->startDocument();
