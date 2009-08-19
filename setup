@@ -32,6 +32,8 @@ case $1 in
 		# TODO: configure syslog.conf for OAK logging
 		# TODO: config logrotate for /var/log/oak.log
 		# TODO: install and setup PHP's APC (opcode cache)
+		# TODO: make autocompletenames.txt and latlonpairs.txt in /var/local/BeerCrush/meta
+		# TODO: build fcgi binaries
 		;;
 	dbserver)
 		echo "Setting up database server...";
