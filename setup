@@ -38,6 +38,7 @@ case $1 in
 		sudo apt-get install couchdb
 		# TODO: get db to here in /var/lib/couchdb
 		# TODO: setup replication between this server and another
+		# TODO: update design docs from src/db/designdocs.json
 		;;
 	memcacheqserver)
 		echo "Setting up memcacheq server...";
