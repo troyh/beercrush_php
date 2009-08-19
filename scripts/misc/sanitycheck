@@ -1,0 +1,220 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+// TODO: Verify all values in each doc are valid
+// TODO: Verify document structures are correct
+
+$oak=new OAK;
+$alldocs=new OAKDocument('');
+$oak->get_document('_all_docs',&$alldocs);
+
+$totals=array();
+
+foreach ($alldocs->rows as $doc)
+{
+	// print_r($doc);
+	// print $doc->id."\n";
+	$parts=split(':',$doc->id);
+	
+	$totals[$parts[0]]++;
+	
+	switch ($parts[0])
+	{
+		case "review":
+			check_review($doc->id);
+			break;
+		case "user":
+			check_user($doc->id);
+			break;
+		case "place":
+			check_place($doc->id);
+			break;
+		case "wishlist":
+			check_wishlist($doc->id);
+			break;
+		case "meta":
+			check_meta($doc->id);
+			break;
+		case "brewery":
+			check_brewery($doc->id);
+			break;
+		case "menu":
+			check_menu($doc->id);
+			break;
+		case "beer":
+			check_beer($doc->id);
+			break;
+		default:
+			if (substr($parts[0],0,8)!='_design/')
+				print "Unknown document type:".$parts[0]."\n";
+			break;
+	}
+}
+
+foreach ($totals as $type=>$count)
+{
+	if (substr($type,0,8)!='_design/')
+		print "$type: $count\n";
+}
+
+
+function check_beer($id)
+{
+	// Verify the ID makes sense
+	$parts=split(':',$id);
+	if (count($parts)!=3)
+	{
+		print "Invalid Beer ID:$id\n";
+	}
+	
+	// global $oak;
+	// 
+	// $beer=new OAKDocument('');
+	// $oak->get_document($id,&$beer);
+}
+
+function check_menu($id)
+{
+	// Verify the ID makes sense
+	$parts=split(':',$id);
+	if (count($parts)!=3 || $parts[1]!='place')
+	{
+		print "Invalid Menu ID:$id\n";
+	}
+	
+	// TODO: verify that $parts[1] (the place_id) is a valid place
+	
+	// global $oak;
+	// 
+	// $beer=new OAKDocument('');
+	// $oak->get_document($id,&$beer);
+}
+
+function check_brewery($id)
+{
+	// Verify the ID makes sense
+	$parts=split(':',$id);
+	if (count($parts)!=2)
+	{
+		print "Invalid Brewery ID:$id\n";
+	}
+	
+	// global $oak;
+	// 
+	// $beer=new OAKDocument('');
+	// $oak->get_document($id,&$beer);
+}
+
+function check_meta($id)
+{
+	// Verify the ID makes sense
+	$parts=split(':',$id);
+	if (count($parts)!=3 || $parts[1]!='brewery')
+	{
+		print "Invalid Meta ID:$id\n";
+	}
+	
+	// global $oak;
+	// 
+	// $beer=new OAKDocument('');
+	// $oak->get_document($id,&$beer);
+}
+
+function check_wishlist($id)
+{
+	// Verify the ID makes sense
+	$parts=split(':',$id);
+	if (count($parts)!=2)
+	{
+		print "Invalid Wishlist ID:$id\n";
+	}
+	
+	// TODO: verify that $parts[1] (the userid) is a valid user
+	
+	// global $oak;
+	// 
+	// $beer=new OAKDocument('');
+	// $oak->get_document($id,&$beer);
+}
+
+function check_place($id)
+{
+	// Verify the ID makes sense
+	$parts=split(':',$id);
+	if (count($parts)!=2)
+	{
+		print "Invalid Place ID:$id\n";
+	}
+	
+	// global $oak;
+	// 
+	// $beer=new OAKDocument('');
+	// $oak->get_document($id,&$beer);
+}
+
+function check_user($id)
+{
+	// Verify the ID makes sense
+	$parts=split(':',$id);
+	if (count($parts)!=2)
+	{
+		print "Invalid User ID:$id\n";
+	}
+	
+	// global $oak;
+	// 
+	// $user=new OAKDocument('');
+	// if ($oak->get_document($id,&$user)===false)
+	// {
+	// 	print "User $id does not exist";
+	// }
+}
+
+function check_review($id)
+{
+	// Verify the ID makes sense
+	$parts=split(':',$id);
+	$user_id=array_pop($parts);
+	array_shift($parts);
+	if (2 <= count($parts) && count($parts)<=3)
+	{
+	}
+	else
+	{
+		print "Invalid Review ID:$id\n";
+	}
+	
+	// TODO: verify that $parts[1] (the doc type) is a valid doc type
+	switch ($parts[0])
+	{
+		case "beer":
+		case "place":
+			break;
+		default:
+			print $parts[0]." is not a valid doc type for a review\n";
+			return;
+	}
+	global $oak;
+	
+	$user=new OAKDocument('');
+	if ($oak->get_document(join(':',$parts),&$user)===false)
+	{
+		print "Document ".join(':',$parts)." does not exist";
+	}
+	
+	// TODO: verify that $user_id is a valid user
+	$userdoc=new OAKDocument('');
+	if ($oak->get_document('user:'.$user_id,&$userdoc)===false)
+	{
+		print "No such user for review: $user_id\n";
+	}
+	
+	// global $oak;
+	// 
+	// $beer=new OAKDocument('');
+	// $oak->get_document($id,&$beer);
+}
+
+
+?>
