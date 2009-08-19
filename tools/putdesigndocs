@@ -15,6 +15,10 @@ while (($line=fgets($input))!=null)
 
 	$current_doc=new stdClass;
 	$oak->get_document($new_document->_id,&$current_doc);
+
+	$current_rev=$current_doc->_rev;
+	unset($current_doc->_rev);
+	unset($new_document->_rev);
 	
 	if ($current_doc==$new_document)
 	{
@@ -23,8 +27,8 @@ while (($line=fgets($input))!=null)
 	else
 	{
 		print "Updating {$new_document->_id}\n";
-		$json->_rev=$current_doc->_rev;
-		// $oak->put_document($json->_id,$json);
+		$new_document->_rev=$current_rev;
+		$oak->put_document($new_document->_id,$new_document);
 	}
 }
 fclose($input);
