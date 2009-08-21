@@ -70,7 +70,14 @@ function oakMain($oak)
 	else
 	{
 		global $cgi_fields;
-		$review=BeerReview::createReview($oak->get_cgi_value('beer_id',$cgi_fields),$oak->get_user_id());
+		
+		$beer_id=$oak->get_cgi_value('beer_id',$cgi_fields);
+		// Validate the beer_id
+		$beer=new OAKDocument('');
+		if ($oak->get_document($beer_id,&$beer)!==true)
+			throw new Exception('Invalid beer_id:'.$beer_id);
+
+		$review=BeerReview::createReview($beer_id,$oak->get_user_id());
 
 		// Get existing review, if there is one so that we can update just the parts added/changed in this request
 		if ($oak->get_document($review->getID(),&$review)===true)
