@@ -9,6 +9,11 @@ function validate_brewery_id($name,$value,$attribs,$converted_value,$oak)
 	return $oak->get_document($converted_value,$brewery_doc);
 }
 
+function valid_srm_value($name,$value,$attribs,$converted_value,$oak)
+{
+	return (in_array($converted_value,array(2,3,4,6,9,12,15,18,21,24,30,40)));
+}
+
 $cgi_fields=array(
 	"abv"						=> array(type=>OAK::DATATYPE_FLOAT, min=>0.0, max=>100.0),
 	"availability"				=> array(type=>OAK::DATATYPE_TEXT),
@@ -16,12 +21,15 @@ $cgi_fields=array(
 	"bjcp_style_id"				=> array(type=>OAK::DATATYPE_TEXT, validatefunc=>validate_beer_bjcp_style_id),
 	"brewery_id"				=> array(type=>OAK::DATATYPE_TEXT, validatefunc=>validate_brewery_id ),
 	"calories_per_ml"			=> array(type=>OAK::DATATYPE_INT, min=>0, max=>1000),
+	"srm"						=> array(type=>OAK::DATATYPE_INT, validatefunc=>validate_srm_value),
 	"description"				=> array(type=>OAK::DATATYPE_TEXT),
+	"fg"						=> array(type=>OAK::DATATYPE_FLOAT, min=>1.0, max=>2.0),
 	"grains"					=> array(type=>OAK::DATATYPE_TEXT),
 	"hops"						=> array(type=>OAK::DATATYPE_TEXT),
 	"ibu"						=> array(type=>OAK::DATATYPE_INT, min=>0, max=>1000),
 	"ingredients"				=> array(type=>OAK::DATATYPE_TEXT),
 	"name"						=> array(type=>OAK::DATATYPE_TEXT , minlen=>1, maxlen=>200),
+	"og"						=> array(type=>OAK::DATATYPE_FLOAT, min=>1.0, max=>2.0),
 	"otherings"					=> array(type=>OAK::DATATYPE_TEXT),
 	"yeast"						=> array(type=>OAK::DATATYPE_TEXT),
 );

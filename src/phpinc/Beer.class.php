@@ -36,6 +36,9 @@ class Beer extends OAKDocument
 		case "calories_per_ml":
 		case "abv":
 		case "ibu":
+		case "og":
+		case "fg":
+		case "srm":
 		case "brewery_id":
 			$attribs="@attributes";
 			if (!isset($this->$attribs))
