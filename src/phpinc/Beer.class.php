@@ -12,7 +12,10 @@ class Beer extends OAKDocument
 		
 		$beer=new Beer;
 		// Create an ID based on brewery_id and name
-		$beer->setID($brewery_id.':'.preg_replace('/[^a-zA-Z0-9]+/','-',$beer_name));
+		// Strip off the 'brewery:' part of the brewery_id
+		if (substr($brewery_id,0,8)==='brewery:')
+			$brewery_id=substr($brewery_id,8);
+		$beer->setID('beer:'.$brewery_id.':'.preg_replace('/[^a-zA-Z0-9]+/','-',$beer_name));
 		// TODO: Verify that there is not an existing beer with this ID
 		return $beer;
 	}
