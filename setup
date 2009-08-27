@@ -109,6 +109,7 @@ case $1 in
 		
 		cp $BEERCRUSH_SOURCE_DIR/src/db/flavors.xml $BEERCRUSH_WWW_DIR/xml/flavors.xml
 		cp $BEERCRUSH_SOURCE_DIR/src/db/beercolors.xml $BEERCRUSH_WWW_DIR/xml/beercolors.xml
+		cp $BEERCRUSH_SOURCE_DIR/src/db/styles.xml $BEERCRUSH_WWW_DIR/xml/styles.xml
 		
 		if [ ! -d $BEERCRUSH_PHPINC_DIR ]; then
 			mkdir $BEERCRUSH_PHPINC_DIR;
