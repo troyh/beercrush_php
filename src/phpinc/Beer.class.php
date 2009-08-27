@@ -46,7 +46,6 @@ class Beer extends OAKDocument
 			$this->$attribs->$name=$val;
 			break;
 		case "availability":
-		case "bjcp_style_id":
 		case "description":
 		case "grains":
 		case "hops":
