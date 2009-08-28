@@ -29,8 +29,7 @@ extern "C" void cgiInit()
 	// Init list of latitude/longitude pairs values, sorted by latitude
 	// TODO: use shared memory so all processes don't duplicate the data
 	
-	// To make the list:
-	// find ~/beerliberation/xml/place/ -type f -name "*.xml"  -exec xmlstarlet sel -t -m "/place[address/latitude]" -v "address/latitude" -o " " -v "address/longitude" -o " " -v "@id" -o " " -v name  {} \; | sort -n > /home/troy/beerliberation/xml/meta/place/latlonpairs.txt
+	// To make the list, use the script in scripts/nearby/latlonfile:
 	char buf[256];
 		
 	size_t lines=0;
@@ -159,19 +158,35 @@ int cgiMain()
 	size_t min_idx=binary_search(lat_min);
 	size_t max_idx=binary_search(lat_max);
 
-	FCGI_printf("<places count=\"%d\">\n",max_idx-min_idx);
+	// Count them first
+	size_t count=0;
 	for(size_t i = min_idx; i < max_idx; ++i)
 	{
 		// Find each longitude value that is between lon_min & lon_max
 		if (lon_min <= latlonpairs[i].lon && latlonpairs[i].lon <= lon_max)
 		{
-			// Found one!
-			FCGI_printf("<place id=\"%s\" latitude=\"%f\" longitude=\"%f\"><name>%s</name></place>\n",
-				latlonpairs[i].place_id,
-				latlonpairs[i].lat,
-				latlonpairs[i].lon,
-				latlonpairs[i].name
-			);
+			++count;
+		}
+	}
+
+	FCGI_printf("<places count=\"%d\">\n",count);
+	if (count)
+	{
+		// Repeat to output the XML doc
+		for(size_t i = min_idx; i < max_idx; ++i)
+		{
+			// Find each longitude value that is between lon_min & lon_max
+			// FCGI_printf("Potential loc:%f,%f\n",latlonpairs[i].lat,latlonpairs[i].lon);
+			if (lon_min <= latlonpairs[i].lon && latlonpairs[i].lon <= lon_max)
+			{
+				// Found one!
+				FCGI_printf("<place id=\"%s\" latitude=\"%f\" longitude=\"%f\"><name>%s</name></place>\n",
+					latlonpairs[i].place_id,
+					latlonpairs[i].lat,
+					latlonpairs[i].lon,
+					latlonpairs[i].name
+				);
+			}
 		}
 	}
 	FCGI_printf("</places>\n");
