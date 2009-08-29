@@ -20,8 +20,13 @@ extern "C"
 
 using namespace std;
 
-const char** brewery_names;
-size_t brewery_names_count=0;
+const char* const dataFilename="/var/local/BeerCrush/meta/autocomplete_names.tsv";
+
+// Searchable data structures
+const char** searchable_names;
+typedef enum { UNKNOWN=0, BEER=1, BREWERY=2, PLACE=4, STYLE=128 } TYPES;
+TYPES *searchable_types;
+size_t searchable_names_count=0;
 
 const char* beer_styles[]=
 {
@@ -130,15 +135,18 @@ const char* beer_styles[]=
 	"Wood-Aged Beer",
 };
 
-const char** readFile(const char* fname, size_t* count)
+bool readFile(const char* fname, size_t* count, const char*** names, TYPES** types)
 {
 	char* buf=0;
-	char** list=0;
+	const char** list=0;
+	TYPES* list_types=0;
 	size_t entries=0;
 	
 	struct stat statbuf;
 	stat(fname,&statbuf);
-	
+	// TODO: use the file's time to determine whether to load the file again
+
+	// Read the entire file into memory
 	FILE* f=fopen(fname,"r");
 	if (f)
 	{
@@ -163,7 +171,8 @@ const char** readFile(const char* fname, size_t* count)
 		
 		if (entries)
 		{
-			list=new char*[entries];
+			list=new const char*[entries];
+			list_types=new TYPES[entries];
 			
 			char* p=buf;
 			for(size_t i = 0; i < entries; ++i)
@@ -176,7 +185,17 @@ const char** readFile(const char* fname, size_t* count)
 				// Replace the tab with a null-terminator too
 				char* t=strchr(list[i],'\t');
 				if (t)
+				{
 					*t='\0';
+					if (!strncmp(t+1,"beer:",5))
+						list_types[i]=BEER;
+					else if (!strncmp(t+1,"brewery:",8))
+						list_types[i]=BREWERY;
+					else if (!strncmp(t+1,"place:",6))
+						list_types[i]=PLACE;
+					else
+						list_types[i]=UNKNOWN;
+				}
 				else
 				{
 					// TODO: this shouldn't happen
@@ -187,7 +206,8 @@ const char** readFile(const char* fname, size_t* count)
 	
 	*count=entries;
 
-	return (const char**)list;
+	*names=list;
+	*types=list_types;
 }
 
 
@@ -204,8 +224,7 @@ extern "C" void cgiInit()
 	// fname[sizeof(fname)-1]='\0';
 	
 	/* Load brewery list into memory, it *must* be sorted */
-	brewery_names=readFile("/var/local/BeerCrush/meta/autocomplete_names.tsv",&brewery_names_count);
-	/* TODO: Load style list into memory, it *must* be sorted */
+	readFile(dataFilename,&searchable_names_count,&searchable_names,&searchable_types);
 }
 
 extern "C" void cgiUninit() 
@@ -214,7 +233,7 @@ extern "C" void cgiUninit()
 	/* TODO: Free style list from memory */
 }
 
-void autocomplete(const char* query,size_t query_len,const char** list,size_t count, bool bXMLOutput)
+void autocomplete(const char* query,size_t query_len,const char** list,size_t count, bool bXMLOutput,int requested_types)
 {
 	if (count==0)
 		return;
@@ -251,17 +270,21 @@ void autocomplete(const char* query,size_t query_len,const char** list,size_t co
 				++mid;
 				if (strncasecmp(query,list[mid-1],query_len)==0)
 				{
-					if (bXMLOutput)
+					// See if it's the correct type we want
+					if ((requested_types==0) || (searchable_types[mid-1] & requested_types))
 					{
-						// TODO: use libxml2 to take care of XML entities
-						printf("<result>");
-						printf("<text>%s</text>",list[mid-1]);
-						printf("<id>%s</id>",list[mid-1]+strlen(list[mid-1])+1);
-						printf("</result>");
-					}
-					else
-					{
-						printf("%s\t%s\n",list[mid-1],list[mid-1]+strlen(list[mid-1])+1);
+						if (bXMLOutput)
+						{
+							// TODO: use libxml2 to take care of XML entities
+							printf("<result>");
+							printf("<text>%s</text>",list[mid-1]);
+							printf("<id>%s</id>",list[mid-1]+strlen(list[mid-1])+1);
+							printf("</result>");
+						}
+						else
+						{
+							printf("%s\t%s\n",list[mid-1],list[mid-1]+strlen(list[mid-1])+1);
+						}
 					}
 				}
 			}
@@ -273,11 +296,15 @@ void autocomplete(const char* query,size_t query_len,const char** list,size_t co
 
 int cgiMain()
 {
+	// See if we should refresh the data (older than 1 hour)
+	readFile(dataFilename,&searchable_names_count,&searchable_names,&searchable_types);
+		
 	bool bXMLOutput=false;
 	
 	char query[256];
 	char dataset[32];
 	char output[16];
+	char types[16];
 	
 	cgiFormString((char*)"q",query,sizeof(query));
 	cgiFormString((char*)"dataset",dataset,sizeof(dataset));
@@ -295,14 +322,28 @@ int cgiMain()
 		cgiHeaderContentType((char*)"text/plain");
 
 	size_t query_len=strlen(query);
-	
-	if (!strlen(dataset) || !strcasecmp(dataset,"brewery"))
-	{
-		autocomplete(query,query_len,brewery_names,brewery_names_count,bXMLOutput);
-	}
+
+	int dataset_mask=UNKNOWN;
+	if (!strlen(dataset))
+		dataset_mask=BEER|BREWERY|PLACE;
+	else if (!strcasecmp(dataset,"beersandbreweries"))
+		dataset_mask=BEER|BREWERY;
+	else if (!strcasecmp(dataset,"beers"))
+		dataset_mask=BEER;
+	else if (!strcasecmp(dataset,"places"))
+		dataset_mask=PLACE;
 	else if (!strcasecmp(dataset,"bjcp_style"))
+		dataset_mask=STYLE;
+	else
+		dataset_mask=BEER|BREWERY|PLACE;
+
+	if (dataset_mask==STYLE)
 	{
-		autocomplete(query,query_len,beer_styles,sizeof(beer_styles)/sizeof(beer_styles[0]),bXMLOutput);
+		autocomplete(query,query_len,beer_styles,sizeof(beer_styles)/sizeof(beer_styles[0]),bXMLOutput,0);
+	}
+	else
+	{
+		autocomplete(query,query_len,searchable_names,searchable_names_count,bXMLOutput,dataset_mask);
 	}
 	
 	if (bXMLOutput)
