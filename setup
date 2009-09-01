@@ -132,7 +132,8 @@ case $1 in
 			$BEERCRUSH_WWW_DIR/xml/beer \
 			$BEERCRUSH_WWW_DIR/xml/review/place \
 			$BEERCRUSH_WWW_DIR/xml/review/beer \
-			$BEERCRUSH_WWW_DIR/xml/beer_review
+			$BEERCRUSH_WWW_DIR/xml/beer_review \
+			$BEERCRUSH_WWW_DIR/json/brewery
 
 		if [ ! -f /etc/apache2/sites-enabled/BeerCrush ]; then
 			echo "You must create /etc/apache2/sites-available/BeerCrush and then do a2ensite BeerCrush";

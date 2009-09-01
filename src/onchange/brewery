@@ -21,6 +21,10 @@ function process () {
 	cat $WWW_DIR/xml/$FILENAME.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/brewery/brewery.xsl > $WWW_DIR/html/$FILENAME.html
 	# TODO: handle failure to create the file and log it
 	echo html/$FILENAME.html
+	
+	# Update the brewery page in JSON
+	$APP_DIR/tools/getdoc "$1" > $WWW_DIR/json/$FILENAME.json
+	echo json/$FILENAME.json
 }
 
 # Always refresh the list of breweries XML doc (their name may have changed)
