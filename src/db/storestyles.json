@@ -1,0 +1,11 @@
+{ "styles": [
+		{"name":"Beer Shop"},
+		{"name":"Convenience Store"},
+		{"name":"Grocery Store"},
+		{"name":"Liquor Store"},
+		{"name":"Online Store"},
+		{"name":"Superstore"},
+		{"name":"Warehouse Store"},
+		{"name":"Wine Shop"}
+	]
+}

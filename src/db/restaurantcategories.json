@@ -1,0 +1,102 @@
+{ "categories": [
+	{ "name": "Africa", "categories": [ 
+			{"name":"African"},
+			{"name":"Ethiopian"},
+			{"name":"Moroccan"}
+		] 
+	},
+	{ "name": "Asia", "categories": [
+			{"name":"Afghan"},
+			{"name":"Asian Fusion"},
+			{"name":"Chinese"},
+			{"name":"Filipino"},
+			{"name":"Indian"},
+			{"name":"Indonesian"},
+			{"name":"Japanese"},
+			{"name":"Korean"},
+			{"name":"Malaysian"},
+			{"name":"Middle Eastern"},
+			{"name":"Pakistani"},
+			{"name":"Persian/Iranian"},
+			{"name":"Singaporean"},
+			{"name":"Taiwanese"},
+			{"name":"Thai"},
+			{"name":"Turkish"},
+			{"name":"Vietnamese"}
+		]
+	},
+	{ "name": "European", "categories": [
+			{"name":"Basque"},
+			{"name":"Belgian"},
+			{"name":"British"},
+			{"name":"French"},
+			{"name":"German"},
+			{"name":"Greek"},
+			{"name":"Hungarian"},
+			{"name":"Irish"},
+			{"name":"Italian"},
+			{"name":"Mediterranean"},
+			{"name":"Modern European"},
+			{"name":"Polish"},
+			{"name":"Portuguese"},
+			{"name":"Russian"},
+			{"name":"Scandinavian"},
+			{"name":"Spanish"},
+			{"name":"Ukrainian"}
+		]
+	},
+	{ "name": "North America", "categories": [
+			{"name":"American (New)"},
+			{"name":"American (Traditional)"},
+			{"name":"Cajun/Creole"},
+			{"name":"Caribbean"},
+			{"name":"Cuban"},
+			{"name":"Hawaiian"},
+			{"name":"Latin American"},
+			{"name":"Mexican"},
+			{"name":"Pacific Northwest"},
+			{"name":"Southern/Soul Food"},
+			{"name":"Tex-Mex"}
+		]
+	},
+	{ "name": "North America", "categories": [
+			{"name":"Argentine"},
+			{"name":"Brazilian"}
+		]
+	},
+	{ "name": "Diet", "categories": [
+			{"name":"Gluten-Free"},
+			{"name":"Halal"},
+			{"name":"Kosher"},
+			{"name":"Vegan"},
+			{"name":"Vegetarian"}
+		]
+	},
+	{ "name": "Food Specialty", "categories": [
+			{"name":"Barbeque"},
+			{"name":"Breakfast & Brunch"},
+			{"name":"Burgers"},
+			{"name":"Chicken Wings"},
+			{"name":"Dessert"},
+			{"name":"Fish & Chips"},
+			{"name":"Hot Dogs"},
+			{"name":"Pizza"},
+			{"name":"Sandwiches"},
+			{"name":"Seafood"},
+			{"name":"Steakhouse"},
+			{"name":"Sushi"}
+		]
+	},
+	{ "name": "Style", "categories": [
+			{"name":"Biker Bar"},
+			{"name":"Deli"},
+			{"name":"Diner"},
+			{"name":"Food Stand"},
+			{"name":"Gastropub"},
+			{"name":"Gay Bar"},
+			{"name":"Sports Bar"},
+			{"name":"Tapas Bar"}
+		]
+	}
+]
+}
