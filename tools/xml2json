@@ -1,0 +1,7 @@
+#!/usr/bin/php
+<?php
+
+$xml=simplexml_load_file($argv[1]);
+print json_encode($xml);
+
+?>
