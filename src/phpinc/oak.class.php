@@ -365,6 +365,9 @@ class OAK
 					
 				if (!empty($value)) // URIs can be a zero-length string, if the app wants a minimum length, they can specify minlen in $cgi_fields
 				{
+					// Lowercase it
+					$value=strtolower($value);
+					
 					// Simple URI validation					
 					$parts=parse_url($value);
 					if (($parts['scheme']!='http') || // Must be HTTP
