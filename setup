@@ -123,6 +123,7 @@ case $1 in
 
 		# Make XML doc directory tree
 		mkdir -p \
+			$BEERCRUSH_WWW_DIR/uploads \
 			$BEERCRUSH_WWW_DIR/html \
 			$BEERCRUSH_WWW_DIR/html/brewery \
 			$BEERCRUSH_WWW_DIR/html/place \
@@ -136,7 +137,11 @@ case $1 in
 			$BEERCRUSH_WWW_DIR/xml/review/place \
 			$BEERCRUSH_WWW_DIR/xml/review/beer \
 			$BEERCRUSH_WWW_DIR/xml/beer_review \
-			$BEERCRUSH_WWW_DIR/json/brewery
+			$BEERCRUSH_WWW_DIR/json/brewery \
+			$BEERCRUSH_WWW_DIR/json/place \
+			$BEERCRUSH_WWW_DIR/json/beer \
+			$BEERCRUSH_WWW_DIR/json/review/place \
+			$BEERCRUSH_WWW_DIR/json/review/beer
 
 		if [ ! -f /etc/apache2/sites-enabled/BeerCrush ]; then
 			echo "You must create /etc/apache2/sites-available/BeerCrush and then do a2ensite BeerCrush";
