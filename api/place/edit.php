@@ -45,8 +45,8 @@ $cgi_fields=array(
 		"tour"    => array(type=>OAK::DATATYPE_TEXT),
 		"tasting" => array(type=>OAK::DATATYPE_TEXT),
 	)),
-	"kid_friendly" => array(type=>OAK::DATATYPE_BOOL),
-	"parking" 	   => array(type=>OAK::DATATYPE_BOOL),
+	"kid_friendly" 			=> array(type=>OAK::DATATYPE_BOOL),
+	"parking" 	   			=> array(type=>OAK::DATATYPE_BOOL),
 	"phone"		   => array(type=>OAK::DATATYPE_PHONE),
 	"restaurant" => array(type=>OAK::DATATYPE_OBJ, properties => array(
 		"reservations" 			=> array(type=>OAK::DATATYPE_BOOL),
@@ -57,12 +57,14 @@ $cgi_fields=array(
 		"smoking" 				=> array(type=>OAK::DATATYPE_BOOL),
 		"food_description" 		=> array(type=>OAK::DATATYPE_TEXT),
 		"menu_uri" 				=> array(type=>OAK::DATATYPE_URI),
-		"price_range" 			=> array(type=>OAK::DATATYPE_TEXT),
+		"price_range" 			=> array(type=>OAK::DATATYPE_INT, min=>0, max=>4),
 		"attire" 				=> array(type=>OAK::DATATYPE_TEXT),
 		"waiter_service" 		=> array(type=>OAK::DATATYPE_BOOL),
 	)),
 	"tour_info" => array(type=>OAK::DATATYPE_TEXT),
 	"uri" => array(type=>OAK::DATATYPE_URI),
+	"placetype" => array(type=>OAK::DATATYPE_TEXT),
+	"placestyle" => array(type=>OAK::DATATYPE_TEXT),
 );
 
 
@@ -110,14 +112,16 @@ function oakMain($oak)
 		{
 			$oak->log('Edited:'.$place->getID());
 			
-			$xmlwriter=new XMLWriter;
-			$xmlwriter->openMemory();
-			$xmlwriter->startDocument();
+			print json_encode($place);
 			
-			$oak->write_document($place,$xmlwriter);
-
-			$xmlwriter->endDocument();
-			print $xmlwriter->outputMemory();
+			// $xmlwriter=new XMLWriter;
+			// $xmlwriter->openMemory();
+			// $xmlwriter->startDocument();
+			// 
+			// $oak->write_document($place,$xmlwriter);
+			// 
+			// $xmlwriter->endDocument();
+			// print $xmlwriter->outputMemory();
 		}
 	}
 }
