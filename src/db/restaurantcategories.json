@@ -1,101 +1,101 @@
 { "categories": [
 	{ "name": "Africa", "categories": [ 
-			{"name":"African"},
-			{"name":"Ethiopian"},
-			{"name":"Moroccan"}
+			{"name":"African", "id": "african"},
+			{"name":"Ethiopian", "id": "ethiopian"},
+			{"name":"Moroccan", "id": "moroccan"}
 		] 
 	},
 	{ "name": "Asia", "categories": [
-			{"name":"Afghan"},
-			{"name":"Asian Fusion"},
-			{"name":"Chinese"},
-			{"name":"Filipino"},
-			{"name":"Indian"},
-			{"name":"Indonesian"},
-			{"name":"Japanese"},
-			{"name":"Korean"},
-			{"name":"Malaysian"},
-			{"name":"Middle Eastern"},
-			{"name":"Pakistani"},
-			{"name":"Persian/Iranian"},
-			{"name":"Singaporean"},
-			{"name":"Taiwanese"},
-			{"name":"Thai"},
-			{"name":"Turkish"},
-			{"name":"Vietnamese"}
+			{"name":"Afghan", "id": "afghan"},
+			{"name":"Asian Fusion", "id": "asian"},
+			{"name":"Chinese", "id": "chinese"},
+			{"name":"Filipino", "id": "filipino"},
+			{"name":"Indian", "id": "indian"},
+			{"name":"Indonesian", "id": "indonesian"},
+			{"name":"Japanese", "id": "japanese"},
+			{"name":"Korean", "id": "korean"},
+			{"name":"Malaysian", "id": "malaysian"},
+			{"name":"Middle Eastern", "id": "middleeastern"},
+			{"name":"Pakistani", "id": "pakistani"},
+			{"name":"Persian/Iranian", "id": "persian"},
+			{"name":"Singaporean", "id": "singaporean"},
+			{"name":"Taiwanese", "id": "taiwanese"},
+			{"name":"Thai", "id": "thai"},
+			{"name":"Turkish", "id": "turkish"},
+			{"name":"Vietnamese", "id": "vietnamese"}
 		]
 	},
 	{ "name": "European", "categories": [
-			{"name":"Basque"},
-			{"name":"Belgian"},
-			{"name":"British"},
-			{"name":"French"},
-			{"name":"German"},
-			{"name":"Greek"},
-			{"name":"Hungarian"},
-			{"name":"Irish"},
-			{"name":"Italian"},
-			{"name":"Mediterranean"},
-			{"name":"Modern European"},
-			{"name":"Polish"},
-			{"name":"Portuguese"},
-			{"name":"Russian"},
-			{"name":"Scandinavian"},
-			{"name":"Spanish"},
-			{"name":"Ukrainian"}
+			{"name":"Basque", "id": "basque"},
+			{"name":"Belgian", "id": "belgian"},
+			{"name":"British", "id": "british"},
+			{"name":"French", "id": "french"},
+			{"name":"German", "id": "german"},
+			{"name":"Greek", "id": "greek"},
+			{"name":"Hungarian", "id": "hungarian"},
+			{"name":"Irish", "id": "irish"},
+			{"name":"Italian", "id": "italian"},
+			{"name":"Mediterranean", "id": "mediterranean"},
+			{"name":"Modern European", "id": "modern"},
+			{"name":"Polish", "id": "polish"},
+			{"name":"Portuguese", "id": "portuguese"},
+			{"name":"Russian", "id": "russian"},
+			{"name":"Scandinavian", "id": "scandinavian"},
+			{"name":"Spanish", "id": "spanish"},
+			{"name":"Ukrainian", "id": "ukrainian"}
 		]
 	},
 	{ "name": "North America", "categories": [
-			{"name":"American (New)"},
-			{"name":"American (Traditional)"},
-			{"name":"Cajun/Creole"},
-			{"name":"Caribbean"},
-			{"name":"Cuban"},
-			{"name":"Hawaiian"},
-			{"name":"Latin American"},
-			{"name":"Mexican"},
-			{"name":"Pacific Northwest"},
-			{"name":"Southern/Soul Food"},
-			{"name":"Tex-Mex"}
+			{"name":"American (New)", "id": "americannew"},
+			{"name":"American (Traditional)", "id": "americantrad"},
+			{"name":"Cajun/Creole", "id": "cajun"},
+			{"name":"Caribbean", "id": "caribbean"},
+			{"name":"Cuban", "id": "cuban"},
+			{"name":"Hawaiian", "id": "hawaiian"},
+			{"name":"Latin American", "id": "latinamerican"},
+			{"name":"Mexican", "id": "mexican"},
+			{"name":"Pacific Northwest", "id": "pacificnw"},
+			{"name":"Southern/Soul Food", "id": "southernsoul"},
+			{"name":"Tex-Mex", "id": "texmex"}
 		]
 	},
 	{ "name": "South America", "categories": [
-			{"name":"Argentine"},
-			{"name":"Brazilian"}
+			{"name":"Argentine", "id": "argentine"},
+			{"name":"Brazilian", "id": "brazilian"}
 		]
 	},
 	{ "name": "Diet", "categories": [
-			{"name":"Gluten-Free"},
-			{"name":"Halal"},
-			{"name":"Kosher"},
-			{"name":"Vegan"},
-			{"name":"Vegetarian"}
+			{"name":"Gluten-Free", "id": "glutenfree"},
+			{"name":"Halal", "id": "halal"},
+			{"name":"Kosher", "id": "kosher"},
+			{"name":"Vegan", "id": "vegan"},
+			{"name":"Vegetarian", "id": "vegetarian"}
 		]
 	},
 	{ "name": "Food Specialty", "categories": [
-			{"name":"Barbeque"},
-			{"name":"Breakfast & Brunch"},
-			{"name":"Burgers"},
-			{"name":"Chicken Wings"},
-			{"name":"Dessert"},
-			{"name":"Fish & Chips"},
-			{"name":"Hot Dogs"},
-			{"name":"Pizza"},
-			{"name":"Sandwiches"},
-			{"name":"Seafood"},
-			{"name":"Steakhouse"},
-			{"name":"Sushi"}
+			{"name":"Barbeque", "id": "barbeque"},
+			{"name":"Breakfast & Brunch", "id": "breakfastbrunch"},
+			{"name":"Burgers", "id": "burgers"},
+			{"name":"Chicken Wings", "id": "chickenwings"},
+			{"name":"Dessert", "id": "dessert"},
+			{"name":"Fish & Chips", "id": "fishchips"},
+			{"name":"Hot Dogs", "id": "hotdogs"},
+			{"name":"Pizza", "id": "pizza"},
+			{"name":"Sandwiches", "id": "sandwiches"},
+			{"name":"Seafood", "id": "seafood"},
+			{"name":"Steakhouse", "id": "steakhouse"},
+			{"name":"Sushi", "id": "sushi"}
 		]
 	},
 	{ "name": "Style", "categories": [
-			{"name":"Biker Bar"},
-			{"name":"Deli"},
-			{"name":"Diner"},
-			{"name":"Food Stand"},
-			{"name":"Gastropub"},
-			{"name":"Gay Bar"},
-			{"name":"Sports Bar"},
-			{"name":"Tapas Bar"}
+			{"name":"Biker Bar", "id": "bikerbar"},
+			{"name":"Deli", "id": "deli"},
+			{"name":"Diner", "id": "diner"},
+			{"name":"Food Stand", "id": "foodstand"},
+			{"name":"Gastropub", "id": "gastropub"},
+			{"name":"Gay Bar", "id": "gaybar"},
+			{"name":"Sports Bar", "id": "sportsbar"},
+			{"name":"Tapas Bar", "id": "tapasbar"}
 		]
 	}
 ]
