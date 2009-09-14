@@ -14,6 +14,10 @@ function process () {
 	# TODO: handle failure to create the file and log it
 	echo xml/place/$PLACE.xml
 
+	# Update place JSON doc
+	$APP_DIR/tools/getdoc "$1" > $WWW_DIR/json/place/$PLACE.json
+	echo json/place/$PLACE.json
+
 	# Update place page
 	# cat $WWW_DIR/xml/place/$PLACE.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/place/place.xsl > $WWW_DIR/html/$FILENAME.html
 	# TODO: handle failure to create the file and log it
