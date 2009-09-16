@@ -1,0 +1,5 @@
+#!/bin/sh
+USERID=$1
+PASSWORD=$2
+
+curl --cookie-jar mycookies  "http://macdev/api/login?userid=$USERID&password=$PASSWORD"

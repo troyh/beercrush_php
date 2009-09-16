@@ -794,11 +794,17 @@ class OAK
 	{
 		$memQ=new Memcached();
 		$memQ->addServers($this->config->memcacheq->servers);
-		return $memQ->get($queue_name);
+		$msg=$memQ->get($queue_name);
+		if ($msg===FALSE)
+			return FALSE;
+		return json_decode($msg);
 	}
 	
 	function put_queue_msg($queue_name,$msg)
 	{
+		if (!is_string($msg))
+			$msg=json_encode($msg);
+			
 		$memQ=new Memcached();
 		$memQ->addServers($this->config->memcacheq->servers);
 		return $memQ->set($queue_name,$msg);
@@ -812,6 +818,64 @@ class OAK
 	public function log($msg, $priority=OAK::LOGPRI_INFO)
 	{
 		syslog($priority,$this->log_ident.':'.$msg);
+	}
+	
+	public function get_config_info()
+	{
+		return $this->config;
+	}
+	
+	public function make_image_size($original,$size)
+	{
+		if (!isset($this->config->photos->sizes->$size))
+			throw new Exception('Unknown photo size:'.$size);
+		if (!isset($this->config->photos->sizes->$size->maxdim))
+			throw new Exception('Misconfigured photo size:'.$size);
+			
+		$newimage = new Imagick($original);
+
+		if ($this->config->photos->sizes->$size->thumbnail)
+		{	// Make a thumbnail, a special-case image size
+			$new_width=$this->config->photos->sizes->$size->maxdim;
+			$new_height=$this->config->photos->sizes->$size->maxdim;
+
+			$newimage->cropThumbnailImage($new_width,$new_height);
+		}
+		else
+		{	// Calculate the dimensions
+			$original_width=$newimage->getImageWidth();
+			$original_height=$newimage->getImageHeight();
+
+			if ($original_width >= $original_height) // Landscape
+			{
+				$new_width=$this->config->photos->sizes->$size->maxdim;
+				$new_height=(int)($original_height*($new_width/$original_width));
+			}
+			else // Portrait
+			{
+				$new_height=$this->config->photos->sizes->$size->maxdim;
+				$new_width=(int)($original_width*($new_height/$original_height));
+			}
+			$newimage->resizeImage($new_width,$new_height,Imagick::FILTER_LANCZOS,1);
+		}
+		
+		// Calculate the filename
+		$pi=pathinfo($original);
+		$newimage_filename=$pi['dirname'].'/'.$size.'.'.$pi['extension'];
+		
+		$newimage->writeImage($newimage_filename);
+		$newimage->destroy(); 
+
+		// Return info about new photo
+		return array(
+			'filename' => $newimage_filename,
+			'size' => array('width' => $new_width, 'height' => $new_height)
+		);
+	}
+	
+	public function broadcast_msg($type,$msg)
+	{
+		// TODO: broadcast the message via the Spread Toolkit (or something similar)
 	}
 	
 };

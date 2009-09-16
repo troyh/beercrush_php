@@ -1,0 +1,35 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+$oak=new OAK;
+$oak->log_ident('onchange/photoset');
+
+if ($argc<2)
+{
+	// $all_wishlists=new OAKDocument('');
+	// if ($oak->get_view('wishlist/all',&$all_wishlists)===false)
+	// 	throw new Exception('Unable to get all wishlists');
+	// 	
+	// foreach ($all_wishlists->rows as $row)
+	// {
+	// 	process($row->id,$oak);
+	// }
+}
+else
+{
+	process($argv[1],$oak);
+}
+
+function process($id,$oak)
+{
+	$photoset=new OAKDocument('');
+	if ($oak->get_document($id,$photoset)===false)
+		throw new Exception('Unable to get document '.$id);
+
+	// TODO: make pages of documents for very long photosets
+	$oak->persist_document($photoset,str_replace(':','/',$id));
+}
+
+
+?>

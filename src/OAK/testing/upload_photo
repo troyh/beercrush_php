@@ -1,0 +1,8 @@
+#!/bin/sh
+
+PHOTOFILENAME=$1
+URL=$2
+
+curl --silent --cookie mycookies -w "%{http_code}\n" -F photo=@$PHOTOFILENAME $URL
+
+

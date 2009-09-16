@@ -17,7 +17,7 @@ try
 	$oak->load_cgi_fields(&$cgi_fields);
 
 	if ($oak->get_missing_field_count($cgi_fields))
-		throw new Exception($oak->get_missing_field_count()." required field(s) missing.");
+		throw new Exception($oak->get_missing_field_count($cgi_fields)." required field(s) missing.");
 
 	$invalid_fields=$oak->get_invalid_fields($cgi_fields);
 	if (count($invalid_fields))

@@ -56,7 +56,7 @@ case $1 in
 	buildserver)
 		echo "Setting up build server...";
 		
-		sudo apt-get install apache2 php5 php5-cli php5-dev spread libspread1-dev libfcgi-dev xmlstarlet
+		sudo apt-get install apache2 php5 php5-cli php5-dev php5-curl php5-imagick spread libspread1-dev libfcgi-dev xmlstarlet
 		
 		if [ ! -d $BEERCRUSH_SOURCE_DIR ]; then
 			# Get code from Subversion
@@ -141,7 +141,8 @@ case $1 in
 			$BEERCRUSH_WWW_DIR/json/place \
 			$BEERCRUSH_WWW_DIR/json/beer \
 			$BEERCRUSH_WWW_DIR/json/review/place \
-			$BEERCRUSH_WWW_DIR/json/review/beer
+			$BEERCRUSH_WWW_DIR/json/review/beer \
+			$BEERCRUSH_WWW_DIR/json/photoset
 
 		if [ ! -f /etc/apache2/sites-enabled/BeerCrush ]; then
 			echo "You must create /etc/apache2/sites-available/BeerCrush and then do a2ensite BeerCrush";

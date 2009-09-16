@@ -1,7 +1,9 @@
 <?php
 require_once 'beercrush/oak.class.php';
 
-$cgi_fields=array();
+$cgi_fields=array(
+	"place_id"					=> array(flags=>OAK::FIELDFLAG_REQUIRED|OAK::FIELDFLAG_CGIONLY,type=>OAK::DATATYPE_TEXT)
+);
 
 function oakMain($oak)
 {
@@ -17,30 +19,36 @@ function oakMain($oak)
 	}
 	else
 	{
-		$file = $oak
-		$uploadfile = $oak->get_file_location('WWW_DIR').'/uploads/'.$file;
+		// TODO: verify that it's a JPEG
+		
+		$filename=uniqid('',FALSE).'.jpg';
+		$uploadfile = $oak->get_file_location('WWW_DIR').'/uploads/'.$filename;
+
+		$info=array(
+			'user' => $oak->get_user_id(),
+			'id' => $oak->get_cgi_value('place_id',&$cgi_fields),
+			'fetchurl' => '/uploads/'.$filename,
+			'filename' => $filename,
+			'hostname' => php_uname('n'),
+			'timestamp' => time(),
+			'type' => 'photo'
+		);
+		$json_info=json_encode($info);
+		
+		// Make info file as a backup (used in the event the queue is destroyed for any reason)
+		$infofile = $oak->get_file_location('WWW_DIR').'/uploads/'.$filename.'.info';
 
 		if (@move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfile)===FALSE) 
 		{
-			header("HTTP/1.0 500 Upload failed");
+			header("HTTP/1.0 500 Unable to save photo");
 		}
-		else
+		else if (file_put_contents($infofile,$json_info)===FALSE)
 		{
-			/*
-			
-			Should we queue the upload info or put it in the database? I'd prefer the queue, but it's
-			not fault-tolerant because if the queue daemon dies or the machine itself dies or goes away,
-			the photo is orphaned.
-			
-			A solution to that is to store the data (user info, place ID, etc.) in a metafile with the
-			image file and a regular cleanup process could scan all the web servers for any forgotten
-			uploads and process them. This is just to avoid storing the info in the database, so maybe
-			avoiding the database is unnecessary.
-			
-			Of course, the database could die as well and if it didn't replicate to the other databases
-			servers, we have the same orphan problem.
-			
-			*/
+			header("HTTP/1.0 500 Unable to save photo info");
+		}
+		else if ($oak->put_queue_msg('uploads',$json_info)===FALSE) // Add the info to the queue
+		{
+			header("HTTP/1.0 500 Unable to queue upload");
 		}
 	}
 }

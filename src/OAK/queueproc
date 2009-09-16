@@ -1,0 +1,223 @@
+#!/usr/bin/php
+<?php
+require_once 'beercrush/oak.class.php';
+
+declare(ticks = 1);
+
+
+$keep_running=true;
+
+$oak=new OAK;
+$oak->log_ident('queueproc');
+
+$cfginfo=$oak->get_config_info();
+$pid_file=$cfginfo->queueproc->piddir.basename($argv[0]).'.pid';
+
+if (!isset($cfginfo->tally_update_interval))
+	$cfginfo->tally_update_interval=86400; // Default to once every 24 hours
+
+// Don't run this more than once at a time
+if (file_exists($pid_file))
+{
+	// Refuse to run again
+	$pid=file_get_contents($pid_file);
+	$oak->log("Another process is currently running (PID=$pid). Refusing to run a 2nd instance.");
+	exit;
+}
+
+$bRunOnce=false; // For debug purposes set to true
+if ($bRunOnce==false)
+	$pid=pcntl_fork();
+else
+{
+	$keep_running=false;
+	$pid=0;
+}
+	
+if ($pid==-1)
+{
+	print "Unable to daemonize\n";
+}
+else if ($pid)
+{
+	file_put_contents($pid_file,$pid);
+}
+else
+{
+	$tallies=array();
+	$last_tally_update=time();
+
+	$oak->log('started pid='.getmypid().' pidfile='.$pid_file);
+	$queue_names=array();
+	foreach ($cfginfo->queueproc->queues as $queue)
+	{
+		array_push($queue_names,$queue->name);
+		$tallies[$queue->name]=array('messages'=>0,'failures'=>0);
+	}
+	$oak->log('queues='.join(',',$queue_names));
+	$oak->log('tally_update_interval='.$cfginfo->queueproc->tally_update_interval.' seconds');
+	$oak->log('sleep_interval='.$cfginfo->queueproc->sleep_interval.' seconds');
+
+	pcntl_signal(SIGUSR1,"sig_handler");
+	pcntl_signal(SIGUSR2,"sig_handler");
+	pcntl_signal(SIGHUP,"sig_handler");
+	pcntl_signal(SIGTERM,"sig_handler");
+	pcntl_signal(SIGINT,"sig_handler");
+	pcntl_signal(SIGABRT,"sig_handler");
+	pcntl_signal(SIGCONT,"sig_handler");
+	
+	
+	do
+	{
+		foreach ($cfginfo->queueproc->queues as $queue)
+		{
+			do
+			{
+				$msg=$oak->get_queue_msg($queue->name);
+				if ($msg===FALSE)
+				{ 
+					// Nothing to do
+					$bQueueEmpty=TRUE;
+				}
+				else
+				{
+					$bQueueEmpty=FALSE;
+					$bMsgProcessed=FALSE;
+				
+					// Run the queue processor for this queue
+				
+					// Find the processor binary for this queue
+					$prog=$oak->get_file_location('BIN_DIR').'/'.$queue->processor;
+
+					if (!is_executable($prog))
+					{
+						$oak->log($prog.' is not executable, not running the processor for queue '.$queue->name);
+					}
+					else
+					{
+						$oak->log('Running: '.escapeshellcmd($prog));
+
+						$descriptors = array(
+						   0 => array("pipe", "r"),
+						   1 => array("pipe", "w"),
+						   2 => array("pipe", "w")
+						);
+					
+						$process=proc_open($prog,$descriptors,$pipes);
+						if (!is_resource($process))
+							$oak->log("Failed to run $prog");
+						else
+						{
+							// Feed the message to the process
+							fwrite($pipes[0],json_encode($msg));
+							fclose($pipes[0]);
+						
+							// $oak->log(stream_get_contents($pipes[1]));
+							fclose($pipes[1]);
+							fclose($pipes[2]);
+
+							$return_value=proc_close($process);
+						
+							if ($return_value)
+								$oak->log($prog.' returned '.$return_value,OAK::LOGPRI_ERR);
+							else
+								$bMsgProcessed=TRUE;
+						}
+					}
+
+					if ($bMsgProcessed===FALSE)
+					{ 	// Put the message back in the queue
+						$oak->log('Queueing message in failedmsg queue');
+						$failed_msg=array(
+							'queuename'=>$queue->name,
+							'msg' => $msg
+						);
+						$oak->put_queue_msg('failedmsg',$failed_msg);
+
+						$tallies['$queue->name']['failures']++;
+					}
+					else
+					{
+						$tallies['$queue->name']['messages']++;
+					}
+				}
+			}
+			while ($bQueueEmpty===FALSE);
+		}
+
+		/**********************************
+			Re-queue all failed messages
+		**********************************/
+		do
+		{
+			$msg=$oak->get_queue_msg('failedmsg');
+			if ($msg===FALSE)
+				break;
+
+			if ($oak->put_queue_msg($msg->queuename,$msg->msg)===FALSE)
+				$oak->log('Failed to re-queue msg in queue '.$msg->queuename);
+			else
+				$oak->log('Re-queued msg in queue '.$msg->queuename.':'.json_encode($msg->msg));
+		}
+		while (TRUE);
+		
+		/**********************************
+			Do a heartbeat log message
+		**********************************/
+		$seconds_since_last_update=(time()-$last_tally_update);
+		if ($seconds_since_last_update>=$cfginfo->queueproc->tally_update_interval)
+		{
+			$last_tally_update=time();
+			// Log a tally update
+			foreach ($cfginfo->queueproc->queues as $queue)
+			{
+				$oak->log('Processed '.$tallies[$queue->name]['messages'].' messages, '.$tallies[$queue->name]['failures'].' failures in '.$queue->name.' queue in the last '.$seconds_since_last_update.' seconds');
+			}
+		}
+
+		/**********************************
+			Sleep for a while...
+		**********************************/
+		if ($bRunOnce==false)
+			sleep($cfginfo->queueproc->sleep_interval);
+	}
+	while ($keep_running);
+
+	$oak->log("Shutting down.");
+	// Remove the PID file
+	if (file_exists($pid_file) && unlink($pid_file)===FALSE)
+		$oak->log("failed to unlink $pid_file");
+
+}
+
+function sig_handler($signo)
+{
+	global $oak;
+	$oak->log("Received signal $signo");
+
+	global $keep_running;
+	
+	switch ($signo)
+	{
+	case SIGTERM: // 15
+	case SIGINT:  // 2
+	case SIGQUIT: // 3       /* Quit (POSIX).  */
+	case SIGABRT: // 6       /* Abort (ANSI).  */
+	case SIGKILL: // 9       /* Kill, unblockable (POSIX).  */
+	case SIGHUP:  // 1
+	case SIGSTOP: // 19      /* Stop, unblockable (POSIX).  */
+	case SIGTSTP: // 20      /* Keyboard stop (POSIX).  */
+		$keep_running=false;
+		break;
+	case SIGUSR1: // 10      /* User-defined signal 1 (POSIX).  */
+	case SIGUSR2: // 12      /* User-defined signal 2 (POSIX).  */
+	case SIGCONT: // 18      /* Continue (POSIX).  */
+		break;
+	default:
+		break;
+	}
+}
+
+
+
+?>

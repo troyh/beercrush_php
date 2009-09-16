@@ -2,126 +2,36 @@
 <?php
 require_once 'beercrush/oak.class.php';
 
-declare(ticks = 1);
-
-
-$keep_running=true;
-
 $oak=new OAK;
 $oak->log_ident('update_doc');
 
-$pid_file='/var/run/BeerCrush/'.basename($argv[0]).'.pid';
+$msg=file_get_contents('php://stdin');
+$obj=json_decode($msg);
+$oak->log('user_id='.$obj->user_id.' docid='.$obj->docid.' old_rev='.$obj->old_rev.' new_rev='.$obj->new_rev);
 
-// Don't run this more than once at a time
-if (file_exists($pid_file))
-{
-	// Refuse to run again
-	$pid=file_get_contents($pid_file);
-	$oak->log("Another process is currently running (PID=$pid). Refusing to run a 2nd instance.");
-	exit;
-}
+// Determine the doc type and call the appropriate script
+$parts=split(':',$obj->docid);
+// Find the script for this onchange
+$prog=$oak->get_file_location('BIN_DIR').'/onchange/'.$parts[0];
 
-$bRunOnce=false; // For debug purposes set to true
-if ($bRunOnce==false)
-	$pid=pcntl_fork();
-else
+if (!is_executable($prog))
 {
-	$keep_running=false;
-	$pid=0;
+	// Silently ignore this
 }
-	
-if ($pid==-1)
+else if (!is_executable($prog))
 {
-	print "Unable to daemonize\n";
-}
-else if ($pid)
-{
-	file_put_contents($pid_file,$pid);
+	$oak->log($prog.' is not executable, not running the processor for queue '.$queue->name);
 }
 else
 {
-	$oak->log('started pid='.getmypid());
+	$oak->log('Running: '.escapeshellcmd($prog).' '.escapeshellarg($obj->docid));
+	
+	$r=exec(escapeshellcmd($prog).' '.escapeshellarg($obj->docid),$output,$return_var);
 
-	pcntl_signal(SIGUSR1,"sig_handler");
-	pcntl_signal(SIGUSR2,"sig_handler");
-	pcntl_signal(SIGHUP,"sig_handler");
-	pcntl_signal(SIGTERM,"sig_handler");
-	pcntl_signal(SIGINT,"sig_handler");
-	pcntl_signal(SIGABRT,"sig_handler");
-	pcntl_signal(SIGCONT,"sig_handler");
-
-	do
+	foreach ($output as $line)
 	{
-		$msg=$oak->get_queue_msg('updates');
-		if ($msg===false)
-		{
-			if ($bRunOnce==false)
-				sleep(15);
-		}
-		else
-		{
-			$obj=json_decode($msg);
-			$oak->log('user_id='.$obj->user_id.' docid='.$obj->docid.' old_rev='.$obj->old_rev.' new_rev='.$obj->new_rev);
-
-			// Determine the doc type and call the appropriate script
-			$parts=split(':',$obj->docid);
-			// Find the script for this onchange
-			$prog=$oak->get_file_location('BIN_DIR').'/onchange/'.$parts[0];
-	
-			if (!is_executable($prog))
-			{
-				// Silently ignore this
-			}
-			else
-			{
-				$oak->log('Running: '.escapeshellcmd($prog).' '.escapeshellarg($obj->docid));
-				
-				$r=exec(escapeshellcmd($prog).' '.escapeshellarg($obj->docid),$output,$return_var);
-	
-				foreach ($output as $line)
-				{
-					$oak->log($line);
-				}
-			}
-		}
-	}
-	while ($keep_running);
-
-	$oak->log("Shutting down.");
-	// Remove the PID file
-	if (file_exists($pid_file) && unlink($pid_file)===FALSE)
-		$oak->log("failed to unlink $pid_file");
-
-}
-
-function sig_handler($signo)
-{
-	global $oak;
-	$oak->log("Received signal $signo");
-
-	global $keep_running;
-	
-	switch ($signo)
-	{
-	case SIGTERM: // 15
-	case SIGINT:  // 2
-	case SIGQUIT: // 3       /* Quit (POSIX).  */
-	case SIGABRT: // 6       /* Abort (ANSI).  */
-	case SIGKILL: // 9       /* Kill, unblockable (POSIX).  */
-	case SIGHUP:  // 1
-	case SIGSTOP: // 19      /* Stop, unblockable (POSIX).  */
-	case SIGTSTP: // 20      /* Keyboard stop (POSIX).  */
-		$keep_running=false;
-		break;
-	case SIGUSR1: // 10      /* User-defined signal 1 (POSIX).  */
-	case SIGUSR2: // 12      /* User-defined signal 2 (POSIX).  */
-	case SIGCONT: // 18      /* Continue (POSIX).  */
-		break;
-	default:
-		break;
+		$oak->log($line);
 	}
 }
-
-
 
 ?>

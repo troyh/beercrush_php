@@ -1,0 +1,155 @@
+#!/usr/bin/php
+<?php
+require_once 'beercrush/oak.class.php';
+
+$oak=new OAK;
+$oak->log_ident('handle_upload');
+
+$config=$oak->get_config_info();
+
+$msg=file_get_contents('php://stdin');
+$info=json_decode($msg);
+
+$oak->log('Upload: userid='.$info->user.' id='.$info->id);
+
+// $info=array(
+// 	'user' => $oak->get_user_id(),
+// 	'id' => $oak->get_cgi_value('place_id',&$cgi_fields),
+//	'fetchurl' => '/uploads/'.$filename,
+// 	'filename' => $filename,
+// 	'hostname' => php_uname('n'),
+// 	'timestamp' => time(),
+// );
+
+// Move the file from the upload server to a "safe" place, i.e., a real filesystem that's backed-up
+
+$exitcode=1;
+
+$dest_file=$oak->get_file_location('WWW_DIR');
+if ($info->type!=='photo')
+{
+	$oak->log('I can only handle photos, not '.$info->type,OAK::LOGPRI_CRIT);
+}
+else
+{
+	$dest_file.='/img/';
+	$pi=pathinfo($info->filename);
+	$dest_file.=str_replace(':','/',$info->id).'/'.$pi['filename'];
+	if (file_exists($dest_file)===FALSE && mkdir($dest_file,0770,TRUE)===FALSE) // Make sure the directory is there
+	{
+		$oak->log('Unable to mkdir '.$dest_file,OAK::LOGPRI_CRIT);
+	}
+	else
+	{
+		$dest_file.='/original.'.$pi['extension'];
+
+		/******************************
+			Pull the file from the server that accepted the upload
+		******************************/
+		if (pullfile($info,$dest_file,$oak)===FALSE)
+		{
+			$oak->log('Unable to retrieve file from host '.$info->hostname);
+		}
+		else
+		{
+			/******************************
+				Add it to the database
+			******************************/
+			$photolist_id='photoset:'.$info->id;
+			$photolist=new OAKDocument('photoset');
+			if ($oak->get_document($photolist_id,&$photolist)===FALSE)
+			{
+				// No existing doc yet, create an empty photos array
+				$photolist->photos=array();
+			}
+
+			/******************************
+				Make all the sizes (thumbnail, small, medium and large)
+			******************************/
+			$idx=count($photolist->photos);
+			
+			$photolist->photos[$idx]['meta']=array(
+				'user_id' => $info->user,
+				'timestamp' => $info->timestamp
+			);
+			
+			foreach (array('large','medium','small','thumbnail') as $size)
+			{
+				$new_photo=$oak->make_image_size($dest_file,$size);
+				$oak->broadcast_msg('newphoto',$new_photo);
+				
+				// Adding to an existing photoset
+				$photolist->photos[$idx][$size]=array(
+					'url' => str_replace($oak->get_file_location('WWW_DIR'),'http://'.$config->domainname,$new_photo['filename']),
+					'size' => $new_photo['size'],
+				);
+			}
+
+			/******************************
+				Store it in the database
+			******************************/
+			if ($oak->put_document($photolist_id,$photolist)===FALSE)
+			{
+				$oak->log('Failed to put document in database',OAK::LOGPRI_CRIT);
+			}
+			else
+			{
+				$oak->log('Added photo for '.$info->id);
+				$exitcode=0;
+			}
+		}
+	}
+}
+
+if ($exitcode)
+	exit($exitcode);
+
+function pullfile($info,$dest_file,$oak)
+{
+	$bOK=FALSE;
+
+	$ch = curl_init('http://'.$info->hostname.$info->fetchurl);
+	if ($ch===FALSE)
+	{
+		$oak->log('Unable to curl_init()',OAK::LOGPRI_CRIT);
+	}
+	else
+	{
+		$fp = fopen($dest_file, "w");
+		if ($fp===FALSE)
+		{
+			$oak->log('Unable to open file '.$dest_file,OAK::LOGPRI_CRIT);
+		}
+		else
+		{
+			if (curl_setopt($ch, CURLOPT_FILE, $fp)===FALSE)
+			{
+				$oak->log('curl_setopt() failed',OAK::LOGPRI_CRIT);
+			}
+			else if (curl_setopt($ch, CURLOPT_HEADER, FALSE)===FALSE)
+			{
+				$oak->log('curl_setopt() failed',OAK::LOGPRI_CRIT);
+			}
+			else if (curl_exec($ch)===FALSE)
+			{
+				$oak->log('curl_exec() failed',OAK::LOGPRI_CRIT);
+			}
+			else if (curl_getinfo($ch,CURLINFO_CONTENT_TYPE)!=="image/jpeg")
+			{
+				$oak->log('Content-Type does not indicate a JPEG:'.curl_getinfo($ch,CURLINFO_CONTENT_TYPE),OAK::LOGPRI_CRIT);
+			}
+			else
+			{
+				$bOK=TRUE;
+			}
+
+			fclose($fp);
+		}
+
+		curl_close($ch);
+	}
+
+	return $bOK;
+}
+
+?>
