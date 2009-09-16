@@ -6,7 +6,7 @@ $conf_file="/etc/BeerCrush/json.conf";
 $oak=new OAK;
 
 $list=new stdClass;
-$oak->get_document("_view/beer/all",$list);
+$oak->get_view("beer/all",$list);
 
 foreach ($list->rows as $row)
 {

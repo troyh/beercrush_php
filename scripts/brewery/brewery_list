@@ -4,7 +4,7 @@ require_once('beercrush/oak.class.php');
 
 $oak=new OAK;
 $breweries=new OAKDocument('');
-$oak->get_view("/brewery/all",&$breweries);
+$oak->get_view("brewery/all",&$breweries);
 
 $xmlwriter=new XMLWriter;
 $xmlwriter->openMemory();

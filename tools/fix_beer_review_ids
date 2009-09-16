@@ -4,7 +4,7 @@ require_once('beercrush/oak.class.php');
 
 $oak=new OAK;
 $reviews=new OAKDocument('');
-$oak->get_document('_view/beer_reviews/all',&$reviews);
+$oak->get_view('beer_reviews/all',&$reviews);
 foreach ($reviews->rows as $row)
 {
 	// print $row->id."\n";

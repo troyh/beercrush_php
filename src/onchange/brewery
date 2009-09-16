@@ -33,7 +33,7 @@ $APP_DIR/scripts/brewery/brewery_list > $WWW_DIR/xml/breweries.xml
 # echo "$1 changed";
 if [ -z "$1" ]; then
 	# *All* brewery docs changed!
-	$APP_DIR/tools/getdoc "/_view/brewery/all" | $APP_DIR/tools/json2xml  | xmlstarlet sel -t -m "/doc/rows/item" -v id -n | sed -e '/^$/d' |
+	$APP_DIR/tools/getview "brewery/all" | $APP_DIR/tools/json2xml  | xmlstarlet sel -t -m "/doc/rows/item" -v id -n | sed -e '/^$/d' |
 	while read BREWERY_ID; do
 		process $BREWERY_ID;
 	done

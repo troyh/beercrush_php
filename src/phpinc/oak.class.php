@@ -533,7 +533,8 @@ class OAK
 	
 	public function get_view($url,$obj)
 	{
-		return $this->get_document('_view/'.$url,$obj);
+		list($designname,$viewname)=preg_split("/\//",$url,2);
+		return $this->get_document('_design/'.$designname.'/_view/'.$viewname,$obj);
 	}
 	
 	function put_document($id,$doc)

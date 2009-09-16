@@ -27,7 +27,7 @@ function process () {
 # echo "$1 changed";
 if [ -z "$1" ]; then
 	# *All* place docs changed!
-	$APP_DIR/tools/getdoc "/_view/place/all" | $APP_DIR/tools/json2xml  | xmlstarlet sel -t -m "/doc/rows/item" -v id -n | sed -e '/^$/d' |
+	$APP_DIR/tools/getview "place/all" | $APP_DIR/tools/json2xml  | xmlstarlet sel -t -m "/doc/rows/item" -v id -n | sed -e '/^$/d' |
 	while read PLACE_ID; do
 		process $PLACE_ID;
 	done
