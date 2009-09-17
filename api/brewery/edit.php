@@ -12,6 +12,7 @@ function validate_brewery_id($name,$value,$attribs,$converted_value,$oak)
 $cgi_fields=array(
 	"brewery_id"				=> array(flags=>OAK::FIELDFLAG_CGIONLY,type=>OAK::DATATYPE_TEXT, validatefunc=>validate_brewery_id ),
 	"name"						=> array(type=>OAK::DATATYPE_TEXT , minlen=>1, maxlen=>200),
+	"description"				=> array(type=>OAK::DATATYPE_TEXT),
 	"address" => array(type=>OAK::DATATYPE_OBJ, properties => array(
 		"street"					=> array(type=>OAK::DATATYPE_TEXT , minlen=>1, maxlen=>200),
 		"city"						=> array(type=>OAK::DATATYPE_TEXT , minlen=>1, maxlen=>200),
@@ -24,8 +25,15 @@ $cgi_fields=array(
 	"established"	=> array(type=>OAK::DATATYPE_INT, min=>1500, max=>(int)date('Y')),
 	"phone"		   	=> array(type=>OAK::DATATYPE_PHONE),
 	"uri" 			=> array(type=>OAK::DATATYPE_URI),
+	"togo" => array(type=>OAK::DATATYPE_OBJ, properties => array(
+		"bottles" 	=> array(type=>OAK::DATATYPE_BOOL),
+		"growlers" 	=> array(type=>OAK::DATATYPE_BOOL),
+		"kegs" 		=> array(type=>OAK::DATATYPE_BOOL),
+	)),
+	"tourinfo"					=> array(type=>OAK::DATATYPE_TEXT),
+	"tasting"					=> array(type=>OAK::DATATYPE_TEXT),
+	"hours"						=> array(type=>OAK::DATATYPE_TEXT),
 );
-
 
 
 
@@ -39,7 +47,6 @@ function oakMain($oak)
 	}
 	else
 	{
-
 		if ($oak->cgi_value_exists('brewery_id',$cgi_fields)) // Editing existing brewery
 		{
 			$brewery_id=$oak->get_cgi_value('brewery_id',$cgi_fields);
@@ -71,14 +78,7 @@ function oakMain($oak)
 		{
 			$oak->log('Edited:'.$brewery->getID());
 			
-			$xmlwriter=new XMLWriter;
-			$xmlwriter->openMemory();
-			$xmlwriter->startDocument();
-			
-			$oak->write_document($brewery,$xmlwriter);
-
-			$xmlwriter->endDocument();
-			print $xmlwriter->outputMemory();
+			print json_encode($brewery);
 		}
 	}
 }

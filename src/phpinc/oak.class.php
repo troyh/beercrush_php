@@ -499,6 +499,8 @@ class OAK
 		{
 			if ($attribs['type']==OAK::DATATYPE_OBJ)
 			{
+				if (is_null($obj->$name))
+					$obj->$name=new stdClass;
 				$this->assign_cgi_values(&$obj->$name,$attribs['properties']);
 			}
 			else if ((!isset($attribs['flags']) || ($attribs['flags']&OAK::FIELDFLAG_CGIONLY)==0) && $attribs['validated'])
