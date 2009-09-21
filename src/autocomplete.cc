@@ -23,9 +23,9 @@ using namespace std;
 const char* const dataFilename="/var/local/BeerCrush/meta/autocomplete_names.tsv";
 
 // Searchable data structures
-const char** searchable_names;
+const char** searchable_names=NULL;
 typedef enum { UNKNOWN=0, BEER=1, BREWERY=2, PLACE=4, STYLE=128 } TYPES;
-TYPES *searchable_types;
+TYPES *searchable_types=NULL;
 size_t searchable_names_count=0;
 
 const char* beer_styles[]=
@@ -229,7 +229,11 @@ extern "C" void cgiInit()
 
 extern "C" void cgiUninit() 
 {
-	/* TODO: Free brewery list from memory */
+	if (searchable_names)
+		free(searchable_names);
+	if (searchable_types)
+		free(searchable_types);
+
 	/* TODO: Free style list from memory */
 }
 
@@ -276,17 +280,19 @@ void autocomplete(const char* query,size_t query_len,const char** list,size_t co
 						if (bXMLOutput)
 						{
 							// TODO: use libxml2 to take care of XML entities
-							printf("<result>");
-							printf("<text>%s</text>",list[mid-1]);
-							printf("<id>%s</id>",list[mid-1]+strlen(list[mid-1])+1);
-							printf("</result>");
+							FCGI_printf("<result>");
+							FCGI_printf("<text>%s</text>",list[mid-1]);
+							FCGI_printf("<id>%s</id>",list[mid-1]+strlen(list[mid-1])+1);
+							FCGI_printf("</result>");
 						}
 						else
 						{
-							printf("%s\t%s\n",list[mid-1],list[mid-1]+strlen(list[mid-1])+1);
+							FCGI_printf("%s\t%s\n",list[mid-1],list[mid-1]+strlen(list[mid-1])+1);
 						}
 					}
 				}
+				else
+					break;
 			}
 			while (mid<count);
 			break;
@@ -297,7 +303,7 @@ void autocomplete(const char* query,size_t query_len,const char** list,size_t co
 int cgiMain()
 {
 	// See if we should refresh the data (older than 1 hour)
-	readFile(dataFilename,&searchable_names_count,&searchable_names,&searchable_types);
+	// readFile(dataFilename,&searchable_names_count,&searchable_names,&searchable_types);
 		
 	bool bXMLOutput=false;
 	
@@ -316,7 +322,7 @@ int cgiMain()
 	if (bXMLOutput)
 	{
 		cgiHeaderContentType((char*)"text/xml");
-		printf("<results>");
+		FCGI_printf("<results>");
 	}
 	else
 		cgiHeaderContentType((char*)"text/plain");
@@ -347,7 +353,7 @@ int cgiMain()
 	}
 	
 	if (bXMLOutput)
-		printf("</results>");
+		FCGI_printf("</results>");
 	
 	
 	return 0;
