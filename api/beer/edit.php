@@ -30,7 +30,7 @@ $cgi_fields=array(
 	"abv"						=> array(type=>OAK::DATATYPE_FLOAT, min=>0.0, max=>100.0),
 	"availability"				=> array(type=>OAK::DATATYPE_TEXT),
 	"beer_id"					=> array(type=>OAK::DATATYPE_TEXT,flags=>OAK::FIELDFLAG_CGIONLY,minlen=>1),
-	"bjcp_style_id"				=> array(type=>OAK::DATATYPE_TEXT,flags=>OAK::FIELDFLAG_CGIONLY, validatefunc=>validate_beer_bjcp_style_id),
+	"styles"					=> array(type=>OAK::DATATYPE_TEXT,flags=>OAK::FIELDFLAG_CGIONLY, validatefunc=>validate_beer_bjcp_style_id),
 	"brewery_id"				=> array(type=>OAK::DATATYPE_TEXT, validatefunc=>validate_brewery_id ),
 	"calories_per_ml"			=> array(type=>OAK::DATATYPE_INT, min=>0, max=>1000),
 	"srm"						=> array(type=>OAK::DATATYPE_INT, validatefunc=>validate_srm_value),
@@ -83,10 +83,10 @@ function oakMain($oak)
 		$oak->assign_cgi_values(&$beer,$cgi_fields);
 		
 		// Set styles too
-		if ($oak->cgi_value_exists('bjcp_style_id',$cgi_fields))
+		if ($oak->cgi_value_exists('styles',$cgi_fields))
 		{
 			// Could be more than one...
-			$beer->styles=preg_split('/\s+/',$oak->get_cgi_value('bjcp_style_id',$cgi_fields));
+			$beer->styles=preg_split('/\s+/',$oak->get_cgi_value('styles',$cgi_fields));
 		}
 	
 		// Store in db
@@ -96,16 +96,8 @@ function oakMain($oak)
 		}
 		else
 		{
+			print json_encode($beer);
 			$oak->log('Edited:'.$beer->getID());
-			
-			$xmlwriter=new XMLWriter;
-			$xmlwriter->openMemory();
-			$xmlwriter->startDocument();
-			
-			$oak->write_document($beer,$xmlwriter);
-
-			$xmlwriter->endDocument();
-			print $xmlwriter->outputMemory();
 		}
 	}
 }

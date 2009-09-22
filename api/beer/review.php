@@ -123,16 +123,8 @@ function oakMain($oak)
 		}
 		else
 		{
-			header("Content-Type: text/xml");
-			
-			$xmlwriter=new XMLWriter;
-			$xmlwriter->openMemory();
-			$xmlwriter->startDocument();
-			
-			$oak->write_document($review,$xmlwriter);
-			
-			$xmlwriter->endDocument();
-			print $xmlwriter->outputMemory();
+			header("Content-Type: application/javascript");
+			print json_encode($review);
 		}
 	}
 }
