@@ -8,12 +8,12 @@ function process () {
 	PATHNAME=`echo $1 | cut -d ':' -f 1,2 | sed -e 's/:/\//g'`;
 	BEERNAME=`echo $1 | cut -d ':' -f 3`;
 
-	# Update beer XML doc
-	if [ ! -d $WWW_DIR/xml/$PATHNAME ]; then
-		mkdir -p $WWW_DIR/xml/$PATHNAME;
+	# Update beer JSON doc
+	if [ ! -d $WWW_DIR/json/$PATHNAME ]; then
+		mkdir -p $WWW_DIR/json/$PATHNAME;
 	fi
-	$APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/json2xml > $WWW_DIR/xml/$PATHNAME/$BEERNAME.xml
-	echo xml/$PATHNAME/$BEERNAME.xml
+	$APP_DIR/tools/getdoc "$1" > $WWW_DIR/json/$PATHNAME/$BEERNAME.json
+	echo json/$PATHNAME/$BEERNAME.json
 	
 	# Update beerlist for the brewery
 	BREWERY_ID=`$APP_DIR/tools/getdoc "$1" | tools/json2xml | xmlstarlet sel -t -m '/beer' -v '@brewery_id'`;
