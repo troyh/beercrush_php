@@ -34,6 +34,7 @@ case $1 in
 		# TODO: install and setup PHP's APC (opcode cache)
 		# TODO: make autocompletenames.txt and latlonpairs.txt in /var/local/BeerCrush/meta
 		# TODO: build fcgi binaries
+		# TODO: Config PHP FastCGI
 		;;
 	dbserver)
 		echo "Setting up database server...";
@@ -41,6 +42,9 @@ case $1 in
 		# TODO: get db to here in /var/lib/couchdb
 		# TODO: setup replication between this server and another
 		# TODO: update design docs from src/db/designdocs.json
+		;;
+	solrserver)
+		# TODO: install Solr
 		;;
 	memcacheqserver)
 		echo "Setting up memcacheq server...";
