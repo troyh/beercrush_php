@@ -7,28 +7,26 @@ function process () {
 		exit;
 	fi
 	BREWERY=`echo $1|cut -d ':' -f 2`;
-	# Update brewery meta info doc
-	$APP_DIR/scripts/brewery/meta "$1"
-
 	FILENAME=`echo $1 | sed -e 's/:/\//'`;
 
+	# Update the brewery page in JSON
+	$APP_DIR/tools/getdoc "$1" > $WWW_DIR/json/$FILENAME.json
+	echo json/$FILENAME.json
+
 	# Update brewery XML doc
-	$APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/insertdoc meta "meta:$1" | $APP_DIR/tools/json2xml > $WWW_DIR/xml/$FILENAME.xml
+	cat $WWW_DIR/json/$FILENAME.json | $APP_DIR/tools/json2xml > $WWW_DIR/xml/$FILENAME.xml
 	# TODO: handle failure to create the file and log it
 	echo xml/$FILENAME.xml
 
-	# Update brewery page
+	# Update brewery HTML page
 	cat $WWW_DIR/xml/$FILENAME.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/brewery/brewery.xsl > $WWW_DIR/html/$FILENAME.html
 	# TODO: handle failure to create the file and log it
 	echo html/$FILENAME.html
 	
-	# Update the brewery page in JSON
-	$APP_DIR/tools/getdoc "$1" > $WWW_DIR/json/$FILENAME.json
-	echo json/$FILENAME.json
 }
 
 # Always refresh the list of breweries XML doc (their name may have changed)
-$APP_DIR/scripts/brewery/brewery_list > $WWW_DIR/xml/breweries.xml
+$APP_DIR/scripts/brewery/brewery_list > $WWW_DIR/json/breweries.json
 
 # echo "$1 changed";
 if [ -z "$1" ]; then

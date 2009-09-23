@@ -6,12 +6,7 @@ $oak=new OAK;
 $breweries=new OAKDocument('');
 $oak->get_view("brewery/all",&$breweries);
 
-$xmlwriter=new XMLWriter;
-$xmlwriter->openMemory();
-$xmlwriter->startDocument();
-$xmlwriter->startElement('breweries');
-
-$last_letter=null;
+$output=new stdClass;
 
 foreach ($breweries->rows as $row)
 {
@@ -23,22 +18,16 @@ foreach ($breweries->rows as $row)
 	else
 		$letter="#";
 		
-	if ($last_letter!=$letter) // A new alphabetic section?
-	{
-		if (!is_null($last_letter)) // End the last alphabetic section
-			$xmlwriter->endElement();
-		$xmlwriter->startElement('group');
-		$xmlwriter->writeAttribute('title',$letter);
-		$last_letter=$letter;
-	}
-	
-	$xmlwriter->startElement('brewery');
-	$xmlwriter->writeAttribute('id',$brewery->getID());
-	$xmlwriter->writeElement('name',$brewery->name);
-	$xmlwriter->endElement();
+	if (!isset($output->$letter))
+		$output->$letter=array();
+
+	$brewery_info=array(
+		'id' => $brewery->getID(),
+		'name' => $brewery->name,
+	);
+	array_push($output->$letter,$brewery_info);
 }
 
-$xmlwriter->endDocument();
-print $xmlwriter->outputMemory();
+print json_encode($output);
 
 ?>

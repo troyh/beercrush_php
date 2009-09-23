@@ -111,10 +111,9 @@ case $1 in
 		copy_files $BEERCRUSH_SOURCE_DIR/img/ $BEERCRUSH_WWW_DIR/img/
 		copy_files $BEERCRUSH_SOURCE_DIR/js/  $BEERCRUSH_WWW_DIR/js/ 
 		
-		cp $BEERCRUSH_SOURCE_DIR/src/db/flavors.xml $BEERCRUSH_WWW_DIR/xml/flavors.xml
-		cp $BEERCRUSH_SOURCE_DIR/src/db/beercolors.xml $BEERCRUSH_WWW_DIR/xml/beercolors.xml
+		cp $BEERCRUSH_SOURCE_DIR/src/db/flavors.json $BEERCRUSH_WWW_DIR/json/flavors.json
 		cp $BEERCRUSH_SOURCE_DIR/src/db/beercolors.json $BEERCRUSH_WWW_DIR/json/beercolors.json
-		cp $BEERCRUSH_SOURCE_DIR/src/db/styles.xml $BEERCRUSH_WWW_DIR/xml/styles.xml
+		cp $BEERCRUSH_SOURCE_DIR/src/db/styles.json $BEERCRUSH_WWW_DIR/json/styles.json
 		cp $BEERCRUSH_SOURCE_DIR/src/db/restaurantcategories.json $BEERCRUSH_WWW_DIR/json/restaurantcategories.json
 		cp $BEERCRUSH_SOURCE_DIR/src/db/storestyles.json $BEERCRUSH_WWW_DIR/json/storestyles.json
 		
@@ -125,7 +124,7 @@ case $1 in
 		
 		# TODO: kill update_doc, if running, and start new process
 
-		# Make XML doc directory tree
+		# Make doc directory tree
 		mkdir -p \
 			$BEERCRUSH_WWW_DIR/uploads \
 			$BEERCRUSH_WWW_DIR/html \
@@ -134,13 +133,6 @@ case $1 in
 			$BEERCRUSH_WWW_DIR/html/beer \
 			$BEERCRUSH_WWW_DIR/html/review/place \
 			$BEERCRUSH_WWW_DIR/html/review/beer \
-			$BEERCRUSH_WWW_DIR/xml \
-			$BEERCRUSH_WWW_DIR/xml/brewery \
-			$BEERCRUSH_WWW_DIR/xml/place \
-			$BEERCRUSH_WWW_DIR/xml/beer \
-			$BEERCRUSH_WWW_DIR/xml/review/place \
-			$BEERCRUSH_WWW_DIR/xml/review/beer \
-			$BEERCRUSH_WWW_DIR/xml/beer_review \
 			$BEERCRUSH_WWW_DIR/json/brewery \
 			$BEERCRUSH_WWW_DIR/json/place \
 			$BEERCRUSH_WWW_DIR/json/beer \

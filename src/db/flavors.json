@@ -1,0 +1,189 @@
+{
+    "flavors":[
+        {
+            "title":"Berry",
+            "flavors":[
+				{"id":"cassis"    , "title": "Black Currant\/Cassis"},
+				{"id":"blackberry", "title": "Blackberry"},
+				{"id":"blueberry" , "title": "Blueberry"},
+				{"id":"raspberry" , "title": "Raspberry"},
+				{"id":"strawberry", "title": "Strawberry"}
+			]
+        },
+        {
+            "title":"Chemical",
+            "flavors":[
+				{"id":"alcohol"     , "title": "Alcohol"},
+				{"id":"burntmatch"  , "title": "Burnt Match"},
+				{"id":"medicinal"   , "title": "Medicinal"},
+				{"id":"menthol"     , "title": "Menthol"},
+				{"id":"metallic"    , "title": "Metallic"},
+				{"id":"mineral"     , "title": "Mineral"},
+				{"id":"paintthinner", "title": "Paint Thinner"},
+				{"id":"petroleum"   , "title": "Petroleum"},
+				{"id":"plastic"     , "title": "Plastic"},
+				{"id":"rubber"      , "title": "Rubber"},
+				{"id":"stale"       , "title": "Stale"},
+				{"id":"sulfur"      , "title": "Sulfur\/Rotten Eggs"},
+				{"id":"tar"         , "title": "Tar"},
+				{"id":"vinegar"     , "title": "Vinegar"},
+				{"id":"citrus"      , "title": "Citrus, Grapefruit"},
+               ]
+        },
+        {
+            "title":"Citrus",
+                "flavors":
+                [
+					{"id":"lemon",   "title": "Lemon"},
+					{"id":"lime",    "title": "Lime"},
+					{"id":"orange",  "title": "Orange"}
+                ]
+        },
+        {
+            "title":"Earthy",
+                "flavors":
+                [
+					{"id":"bakedbread"  , "title": "Baked Bread"},
+					{"id":"cereal"      , "title": "Cereal"},
+					{"id":"chalk"       , "title": "Chalk"},
+					{"id":"game"        , "title": "Game"},
+					{"id":"grainy"      , "title": "Grainy"},
+					{"id":"leather"     , "title": "Leather"},
+					{"id":"soil"        , "title": "Soil"},
+					{"id":"stinkyfeet"  , "title": "Stinky Feet"},
+					{"id":"stinkycheese", "title": "Stinky Cheese"},
+					{"id":"wetwool"     , "title": "Wet Wool"},
+					{"id":"yeast"       , "title": "Yeast"},
+					{"id":"yogurt"      , "title": "Yogurt"},
+                ]
+        },
+        {
+                "title":"Floral",
+                "flavors":
+                [
+					{"id":"fresh"        , "title": "Fresh Flowers"},
+					{"id":"geranium"     , "title": "Geranium"},
+					{"id":"honeysuckle"  , "title": "Honeysuckle"},
+					{"id":"lavender"     , "title": "Lavender"},
+					{"id":"rose"         , "title": "Rose"},
+					{"id":"violet"       , "title": "Violet"},
+                ]
+        },
+        {
+            "title":"Fruit",
+                "flavors":
+                [
+                    {"id":"apricot", "title":"Apricot"},
+                    {"id":"cherry", "title":"Cherry"},
+                    {"id":"fig", "title":"Fig"},
+                    {"id":"green", "title":"Green Apple"},
+                    {"id":"peach", "title":"Peach"},
+                    {"id":"pear", "title":"Pear"},
+                    {"id":"plum", "title":"Plum"},
+                ]
+        },
+        {
+            "title":"Herbal",
+                "flavors":
+                [
+                    {"id":"cutgreengrass", "title":"Cut Green Grass"},
+                    {"id":"dill", "title":"Dill"},
+                    {"id":"eucalyptus", "title":"Eucalyptus"},
+                    {"id":"mint", "title":"Mint"},
+                    {"id":"resinous", "title":"Resinous"},
+                    {"id":"sage", "title":"Sage"},
+                    {"id":"tea", "title":"Tea"},
+                    {"id":"tobacco", "title":"Tobacco"},
+                    {"id":"hoppy", "title":"Hoppy"},
+                ]
+        },
+        {
+            "title":"Nuts",
+                "flavors":
+                [
+                    {"id":"almond", "title":"Almond"},
+                    {"id":"hazelnut", "title":"Hazelnut"},
+                    {"id":"peanuts", "title":"Peanuts"},
+                    {"id":"pecan", "title":"Pecan"},
+                    {"id":"walnut", "title":"Walnut"},
+                ]
+        },
+        {
+            "title":"Smokey\/Woody",
+                "flavors":
+                [
+                    {"id":"bacon", "title":"Bacon"},
+                    {"id":"burnt", "title":"Burnt Wood"},
+                    {"id":"cedar", "title":"Cedar"},
+                    {"id":"oak", "title":"Oak"},
+                    {"id":"pine", "title":"Pine"},
+                    {"id":"roasty", "title":"Roasty"},
+                    {"id":"smoke", "title":"Smoke"},
+                    {"id":"toast", "title":"Toast"},
+                ]
+        },
+        {
+            "title":"Spice",
+                "flavors":
+                [
+                    {"id":"blackpepper", "title":"Black Pepper"},
+                    {"id":"cinnamon", "title":"Cinnamon"},
+                    {"id":"clove", "title":"Clove"},
+                    {"id":"coffee", "title":"Coffee"},
+                    {"id":"ginger", "title":"Ginger"},
+                    {"id":"licorice", "title":"Licorice\/Anise"},
+                    {"id":"nutmeg", "title":"Nutmeg"},
+                    {"id":"rum", "title":"Rum"},
+                    {"id":"salt", "title":"Salt"},
+                    {"id":"vanilla", "title":"Vanilla"},
+                ]
+        },
+        {
+            "title":"Sweets",
+                "flavors":
+                [
+                    {"id":"bourbon", "title":"Bourbon"},
+                    {"id":"butter", "title":"Butter"},
+                    {"id":"butterscotch", "title":"Butterscotch"},
+                    {"id":"caramel", "title":"Caramel"},
+                    {"id":"chocolate", "title":"Chocolate"},
+                    {"id":"cream", "title":"Cream"},
+                    {"id":"driedplum", "title":"Dried Plum\/Prune"},
+                    {"id":"honey", "title":"Honey"},
+                    {"id":"molasses", "title":"Molasses"},
+                    {"id":"raisins", "title":"Raisins"},
+                    {"id":"toffee", "title":"Toffee"},
+                ]
+        },
+        {
+            "title":"Tropical",
+                "flavors":
+                [
+                    {"id":"banana", "title":"Banana"},
+                    {"id":"coconut", "title":"Coconut"},
+                    {"id":"guava", "title":"Guava"},
+                    {"id":"mango", "title":"Mango"},
+                    {"id":"melon", "title":"Melon"},
+                    {"id":"papaya", "title":"Papaya"},
+                    {"id":"passionfruit", "title":"Passionfruit"},
+                    {"id":"pineapple", "title":"Pineapple"},
+                ]
+        },
+        {
+            "title":"Vegetables",
+                 "flavors":
+                [
+                    {"id":"artichoke", "title":"Artichoke"},
+                    {"id":"asparagus", "title":"Asparagus"},
+                    {"id":"creamedcorn", "title":"Creamed Corn"},
+                    {"id":"garlic", "title":"Garlic"},
+                    {"id":"greenbeans", "title":"Green Beans"},
+                    {"id":"mushrooms", "title":"Mushrooms"},
+                    {"id":"olives", "title":"Olives"},
+                    {"id":"rhubarb", "title":"Rhubarb"},
+                    {"id":"sauerkraut", "title":"Sauerkraut"},
+                    {"id":"tomatojuice", "title":"Tomato Juice"},
+                ]
+         }
+    ]
+}

@@ -1,0 +1,6 @@
+#!/usr/bin/php
+<?php
+$s=file_get_contents("php://stdin");
+print_r(json_decode($s));
+?>
+

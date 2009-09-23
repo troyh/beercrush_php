@@ -106,15 +106,8 @@ function oakMain($oak)
 			else
 			{
 				$oak->log('Edited:'.$menu->getID());
-			
-				$xmlwriter=new XMLWriter;
-				$xmlwriter->openMemory();
-				$xmlwriter->startDocument();
-			
-				$oak->write_document($menu,$xmlwriter);
-
-				$xmlwriter->endDocument();
-				print $xmlwriter->outputMemory();
+				
+				print json_encode($menu);
 			}
 		}
 	}

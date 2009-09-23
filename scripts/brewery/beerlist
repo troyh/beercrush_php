@@ -4,7 +4,7 @@ require_once('beercrush/oak.class.php');
 
 $brewery_id=$argv[1];
 
-$oak=new OAK("/etc/BeerCrush/json.conf");
+$oak=new OAK;
 
 $list=new stdClass;
 $oak->get_view('beer/made_by?key=%22'.$brewery_id.'%22',$list);

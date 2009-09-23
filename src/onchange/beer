@@ -16,8 +16,12 @@ function process () {
 	echo json/$PATHNAME/$BEERNAME.json
 	
 	# Update beerlist for the brewery
-	BREWERY_ID=`$APP_DIR/tools/getdoc "$1" | tools/json2xml | xmlstarlet sel -t -m '/beer' -v '@brewery_id'`;
-	$APP_DIR/src/onchange/brewery "$BREWERY_ID"
+	BREWERY_ID=`cat $WWW_DIR/json/$PATHNAME/$BEERNAME.json | php -r '$s=file_get_contents("php://stdin");$o=json_decode($s);$a="@attributes";print $o->$a->brewery_id;'`;
+	BREWERY_PATHNAME=`echo $BREWERY_ID | sed -e 's/:/\//'`;
+	if [ ! -d $WWW_DIR/json/$BREWERY_PATHNAME/ ]; then
+		mkdir -p $WWW_DIR/json/$BREWERY_PATHNAME/;
+	fi
+	$APP_DIR/scripts/brewery/beerlist $BREWERY_ID > $WWW_DIR/json/$BREWERY_PATHNAME/beerlist.json
 
 	# Update beer page
 	# cat $WWW_DIR/xml/$FILENAME.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/beer/beer.xsl > $WWW_DIR/html/$FILENAME.html

@@ -1,0 +1,270 @@
+{
+	"styles":[
+		{
+		   "id":"1",
+		   "name":"Light Lager",
+		   "styles":[
+		      {"id":"1A","name":"Light American Lager"},
+		      {"id":"1B","name":"Standard American Lager"},
+		      {"id":"1C","name":"Premium American Lager"},
+		      {"id":"1D","name":"Munich Helles"},
+		      {"id":"1E","name":"Dortmunder Export"}
+		   ]
+		},
+		{
+		   "id":"2",
+		   "name":"Pilsner",
+		   "styles":[
+		      {"id":"2A","name":"German Pilsner"},
+		      {"id":"2B","name":"Boehmian Pilsner"},
+		      {"id":"2C","name":"Classic American Pilsner"}
+		   ]
+		},
+		{
+		   "id":"3",
+		   "name":"European Amber Lager",
+		   "styles":[
+		      {"id":"3A","name":"Vienna Lager"},
+		      {"id":"3B","name":"Oktoberfest/Maerzen"}
+		   ]
+		},
+		{
+		   "id":"4",
+		   "name":"Dark Lager",
+		   "styles":[
+		      {"id":"4A","name":"Dark American Lager"},
+		      {"id":"4B","name":"Munich Dunkel"},
+		      {"id":"4C","name":"Schwarzbier (Black Beer)"}
+		   ]
+		},
+		{
+		   "id":"5",
+		   "name":"Bock",
+		   "styles":[
+		      {"id":"5A","name":"Maibock/Helles Bock"},
+		      {"id":"5B","name":"Traditional Bock"},
+		      {"id":"5C","name":"Doppelbock"},
+		      {"id":"5D","name":"Eisbock"}
+		   ]
+		},
+		{
+		   "id":"6",
+		   "name":"Light Hybrid Beer",
+		   "styles":[
+		      {"id":"6A","name":"Cream Ale"},
+		      {"id":"6B","name":"Blonde Ale"},
+		      {"id":"6C","name":"Kolsch"},
+		      {"id":"6D","name":"American Wheat or Rye"}
+		   ]
+		},
+		{
+		   "id":"7",
+		   "name":"Amber Hybrid Beer",
+		   "styles":[
+		      {"id":"7A","name":"Northern German Altbier"},
+		      {"id":"7B","name":"California Common Beer"},
+		      {"id":"7C","name":"Dusseldorf Altbier"}
+		   ]
+		},
+		{
+		   "id":"8",
+		   "name":"English Pale Ale",
+		   "styles":[
+		      {"id":"8A","name":"Standard/Ordinary Bitter"},
+		      {"id":"8B","name":"Special/Best/Premium Bitter"},
+		      {"id":"8C","name":"Extra Special/Strong Bitter"}
+		   ]
+		},
+		{
+		   "id":"9",
+		   "name":"Scottish and Irish Ales",
+		   "styles":[
+		      {"id":"9A","name":"Scottish Light 60/-"},
+		      {"id":"9B","name":"Scottish Heavy 70/-"},
+		      {"id":"9C","name":"Scottish Export 80/-"},
+		      {"id":"9D","name":"Irish Red Ale"},
+		      {"id":"9E","name":"Strong Scotch Ale"}
+		   ]
+		},
+		{
+		   "id":"10",
+		   "name":"American Ale",
+		   "styles":[
+		      {"id":"10A","name":"American Pale Ale"},
+		      {"id":"10B","name":"American Amber Ale"},
+		      {"id":"10C","name":"American Brown Ale"}
+		   ]
+		},
+		{
+		   "id":"11",
+		   "name":"English Brown Ale",
+		   "styles":[
+		      {"id":"11A","name":"Mild"},
+		      {"id":"11B","name":"Southern English Brown"},
+		      {"id":"11C","name":"Northern English Brown Ale"}
+		   ]
+		},
+		{
+		   "id":"12",
+		   "name":"Porter",
+		   "styles":[
+		      {"id":"12A","name":"Brown Porter"},
+		      {"id":"12B","name":"Robust Porter"},
+		      {"id":"12C","name":"Baltic Porter"}
+		   ]
+		},
+		{
+		   "id":"13",
+		   "name":"Stout",
+		   "styles":[
+		      {"id":"13A","name":"Dry Stout"},
+		      {"id":"13B","name":"Sweet Stout"},
+		      {"id":"13C","name":"Oatmeal Stout"},
+		      {"id":"13D","name":"Foreign Extra Stout"},
+		      {"id":"13E","name":"American Stout"},
+		      {"id":"13F","name":"Russian Imperial Stout"}
+		   ]
+		},
+		{
+		   "id":"14",
+		   "name":"India Pale Ale",
+		   "styles":[
+		      {"id":"14A","name":"English IPA"},
+		      {"id":"14B","name":"American IPA"},
+		      {"id":"14C","name":"Imperial IPA"}
+		   ]
+		},
+		{
+		   "id":"15",
+		   "name":"German Wheat and Rye Beer",
+		   "styles":[
+		      {"id":"15A","name":"Weizen/Weissbier"},
+		      {"id":"15B","name":"Dunkelweizen"},
+		      {"id":"15C","name":"Weizenbock"},
+		      {"id":"15D","name":"Roggenbier"}
+		   ]
+		},
+		{
+		   "id":"16",
+		   "name":"Belgian and French Ale",
+		   "styles":[
+		      {"id":"16A","name":"Witbier"},
+		      {"id":"16B","name":"Belgian Pale Ale"},
+		      {"id":"16C","name":"Saison"},
+		      {"id":"16D","name":"Biere de Garde"},
+		      {"id":"16E","name":"Belgian Specialty Ale"}
+		   ]
+		},
+		{
+		   "id":"17",
+		   "name":"Sour Ale",
+		   "styles":[
+		      {"id":"17A","name":"Berliner Weisse"},
+		      {"id":"17B","name":"Flanders Red Ale"},
+		      {"id":"17C","name":"Flanders Brown Ale/Oud Bruin"},
+		      {"id":"17D","name":"Straight (Unblended) Lambic"},
+		      {"id":"17E","name":"Gueuze"},
+		      {"id":"17F","name":"Fruit Lambic"}
+		   ]
+		},
+		{
+		   "id":"18",
+		   "name":"Begian Strong Ale",
+		   "styles":[
+		      {"id":"18A","name":"Belgian Blond Ale"},
+		      {"id":"18B","name":"Belgian Dubbel"},
+		      {"id":"18C","name":"Belgian Tripel"},
+		      {"id":"18D","name":"Belgian Golden Strong Ale"},
+		      {"id":"18E","name":"Belgian Dark Strong Ale"}
+		   ]
+		},
+		{
+		   "id":"19",
+		   "name":"Strong Ale",
+		   "styles":[
+		      {"id":"19A","name":"Old Ale"},
+		      {"id":"19B","name":"English Barleywine"},
+		      {"id":"19C","name":"American Barleywine"}
+		   ]
+		},
+		{
+		   "id":"20",
+		   "name":"Fruit Beer",
+		   "styles":[
+		      {"id":"20A","name":"Fruit Beer"}
+		   ]
+		},
+		{
+		   "id":"21",
+		   "name":"Spice/Herb/Vegetable Beer",
+		   "styles":[
+		      {"id":"21A","name":"Spice/Herb/Vegetable Beer"},
+		      {"id":"21B","name":"Christmas/Winter Specialty Spiced"}
+		   ]
+		},
+		{
+		   "id":"22",
+		   "name":"Smoke Flavored and Wood Aged Beer",
+		   "styles":[
+		      {"id":"22A","name":"Classic Rauchbier"},
+		      {"id":"22B","name":"Other Smoked Beer"},
+		      {"id":"22C","name":"Wood-Aged Beer"}
+		   ]
+		},
+		{
+		   "id":"23",
+		   "name":"Specialty Beer",
+		   "styles":[
+		      {"id":"23A","name":"Specialty Beer"}
+		   ]
+		},
+		{
+		   "id":"24",
+		   "name":"Traditional Mead",
+		   "styles":[
+		      {"id":"24A","name":"Dry Mead"},
+		      {"id":"24B","name":"Semi-Sweet Mead"},
+		      {"id":"24C","name":"Sweet Mead"}
+		   ]
+		},
+		{
+		   "id":"25",
+		   "name":"Melomel (Fruit Mead)",
+		   "styles":[
+		      {"id":"25A","name":"Cyser (Apple Melomel)"},
+		      {"id":"25B","name":"Pyment (Grape Melomel)"},
+		      {"id":"25C","name":"Other Fruit Melomel"}
+		   ]
+		},
+		{
+		   "id":"26",
+		   "name":"Other Mead",
+		   "styles":[
+		      {"id":"26A","name":"Metheglin"},
+		      {"id":"26B","name":"Braggot"},
+		      {"id":"26C","name":"Open Category Mead"}
+		   ]
+		},
+		{
+		   "id":"27",
+		   "name":"Standard Cider and Perry",
+		   "styles":[
+		      {"id":"27A","name":"Common Cider"},
+		      {"id":"27B","name":"English Cider"},
+		      {"id":"27C","name":"French Cider"},
+		      {"id":"27D","name":"Common Perry"},
+		      {"id":"27E","name":"Traditional Perry"}
+		   ]
+		},
+		{
+		   "id":"28",
+		   "name":"Specialty Cider and Perry",
+		   "styles":[
+		      {"id":"28A","name":"New England Cider"},
+		      {"id":"28B","name":"Fruit Cider"},
+		      {"id":"28C","name":"Applewine"},
+		      {"id":"28D","name":"Other Specialty Cider/Perry"}
+		   ]
+		}
+	]
+}
