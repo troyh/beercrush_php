@@ -27,7 +27,7 @@
 				{"id":"sulfur"      , "title": "Sulfur\/Rotten Eggs"},
 				{"id":"tar"         , "title": "Tar"},
 				{"id":"vinegar"     , "title": "Vinegar"},
-				{"id":"citrus"      , "title": "Citrus, Grapefruit"},
+				{"id":"citrus"      , "title": "Citrus, Grapefruit"}
                ]
         },
         {
@@ -54,7 +54,7 @@
 					{"id":"stinkycheese", "title": "Stinky Cheese"},
 					{"id":"wetwool"     , "title": "Wet Wool"},
 					{"id":"yeast"       , "title": "Yeast"},
-					{"id":"yogurt"      , "title": "Yogurt"},
+					{"id":"yogurt"      , "title": "Yogurt"}
                 ]
         },
         {
@@ -66,7 +66,7 @@
 					{"id":"honeysuckle"  , "title": "Honeysuckle"},
 					{"id":"lavender"     , "title": "Lavender"},
 					{"id":"rose"         , "title": "Rose"},
-					{"id":"violet"       , "title": "Violet"},
+					{"id":"violet"       , "title": "Violet"}
                 ]
         },
         {
@@ -79,7 +79,7 @@
                     {"id":"green", "title":"Green Apple"},
                     {"id":"peach", "title":"Peach"},
                     {"id":"pear", "title":"Pear"},
-                    {"id":"plum", "title":"Plum"},
+                    {"id":"plum", "title":"Plum"}
                 ]
         },
         {
@@ -94,7 +94,7 @@
                     {"id":"sage", "title":"Sage"},
                     {"id":"tea", "title":"Tea"},
                     {"id":"tobacco", "title":"Tobacco"},
-                    {"id":"hoppy", "title":"Hoppy"},
+                    {"id":"hoppy", "title":"Hoppy"}
                 ]
         },
         {
@@ -105,7 +105,7 @@
                     {"id":"hazelnut", "title":"Hazelnut"},
                     {"id":"peanuts", "title":"Peanuts"},
                     {"id":"pecan", "title":"Pecan"},
-                    {"id":"walnut", "title":"Walnut"},
+                    {"id":"walnut", "title":"Walnut"}
                 ]
         },
         {
@@ -119,7 +119,7 @@
                     {"id":"pine", "title":"Pine"},
                     {"id":"roasty", "title":"Roasty"},
                     {"id":"smoke", "title":"Smoke"},
-                    {"id":"toast", "title":"Toast"},
+                    {"id":"toast", "title":"Toast"}
                 ]
         },
         {
@@ -135,7 +135,7 @@
                     {"id":"nutmeg", "title":"Nutmeg"},
                     {"id":"rum", "title":"Rum"},
                     {"id":"salt", "title":"Salt"},
-                    {"id":"vanilla", "title":"Vanilla"},
+                    {"id":"vanilla", "title":"Vanilla"}
                 ]
         },
         {
@@ -152,7 +152,7 @@
                     {"id":"honey", "title":"Honey"},
                     {"id":"molasses", "title":"Molasses"},
                     {"id":"raisins", "title":"Raisins"},
-                    {"id":"toffee", "title":"Toffee"},
+                    {"id":"toffee", "title":"Toffee"}
                 ]
         },
         {
@@ -166,7 +166,7 @@
                     {"id":"melon", "title":"Melon"},
                     {"id":"papaya", "title":"Papaya"},
                     {"id":"passionfruit", "title":"Passionfruit"},
-                    {"id":"pineapple", "title":"Pineapple"},
+                    {"id":"pineapple", "title":"Pineapple"}
                 ]
         },
         {
@@ -182,7 +182,7 @@
                     {"id":"olives", "title":"Olives"},
                     {"id":"rhubarb", "title":"Rhubarb"},
                     {"id":"sauerkraut", "title":"Sauerkraut"},
-                    {"id":"tomatojuice", "title":"Tomato Juice"},
+                    {"id":"tomatojuice", "title":"Tomato Juice"}
                 ]
          }
     ]
