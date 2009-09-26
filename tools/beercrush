@@ -1,0 +1,74 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/BeerCrushClient.class.php');
+
+// shift function from http://us.php.net/manual/en/function.getopt.php
+function shift($options_array)
+{
+    foreach( $options_array as $o => $a )
+    {
+        // Look for all occurrences of option in argv and remove if found :
+        // ----------------------------------------------------------------
+        // Look for occurrences of -o (simple option with no value) or -o<val> (no space in between):
+        while($k=array_search("-".$o.$a,$GLOBALS['argv']))
+        {    // If found remove from argv:
+            if($k)
+                unset($GLOBALS['argv'][$k]);
+        }
+        // Look for remaining occurrences of -o <val> (space in between):
+        while($k=array_search("-".$o,$GLOBALS['argv']))
+        {    // If found remove both option and value from argv:
+            if($k)
+            {    unset($GLOBALS['argv'][$k]);
+                unset($GLOBALS['argv'][$k+1]);
+            }
+        }
+    }
+    // Reindex :
+    $GLOBALS['argv']=array_merge($GLOBALS['argv']);
+}
+
+$options=getopt('xu:p:h:');
+shift($options);
+
+if (!isset($options['u']) || !isset($options['p']))
+{
+	print "Username (-u) and password (-p) are required\n";
+	exit(-1);
+}
+if (!isset($options['h']))
+{
+	print "A host (-h) is required\n";
+	exit(-2);
+}
+
+$client=new BeerCrushClient('http://'.$options['h'],$options['u'],$options['p']);
+
+switch ($argv[1])
+{
+	case "newbrewery":
+		array_shift($argv); // Remove $argv[0]
+		array_shift($argv); // Remove $argv[1]
+		$name=join(' ',$argv);
+		$status_code=$client->newBrewery($name,$brewery);
+		if ($status_code==200)
+		{
+			print "Added brewery:".$name."\n";
+		}
+		break;
+	default:
+		print "Invalid command:".$argv[1]."\n";
+		break;
+}
+
+if ($status_code==200)
+{
+	exit(0);
+}
+else
+{
+	fprintf(STDERR,"Failed. Status code=".$status_code."\n");
+	exit($status_code);
+}
+
+?>

@@ -7,7 +7,9 @@ class BreweryDocument extends OAKDocument
 		$brewery=new BreweryDocument();
 		$id=preg_replace('/[^a-zA-Z0-9]+/','-',$name);
 		$id=preg_replace('/--+/','-',$id);
-		$brewery->setID($id);
+		$id=preg_replace('/^-/','',$id);
+		$id=preg_replace('/-$/','',$id);
+		$brewery->setID('brewery:'.$id);
 		return $brewery;
 	}
 	

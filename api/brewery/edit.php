@@ -55,7 +55,7 @@ function oakMain($oak)
 			if ($oak->get_document($brewery_id,&$brewery)!==true)
 				throw new Exception("No existing brewery $brewery_id");
 		}
-		else  // Adding a new brewery
+		else if ($oak->cgi_value_exists('name',$cgi_fields)) // Adding a new brewery
 		{
 			$brewery=BreweryDocument::createBrewery($oak->get_cgi_value('name',$cgi_fields));
 			
@@ -65,6 +65,8 @@ function oakMain($oak)
 				throw new Exception($brewery->getID()." already exists");
 			}
 		}
+		else
+			throw new Exception('Brewery name required to create a brewery');
 
 		// Give it this request's edits
 		$oak->assign_cgi_values(&$brewery,$cgi_fields);

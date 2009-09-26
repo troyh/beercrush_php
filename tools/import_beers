@@ -1,86 +1,6 @@
 #!/usr/bin/php
 <?php
-
-class BeerCrushClient
-{
-	public function __construct($url, $username, $password)
-	{
-		$this->base_url=$url;
-		$this->username=$username;
-		$this->password=$password;
-	}
-	
-	public function login($username,$password)
-	{
-		$this->sendRequest('/api/login',"POST",array("username=" => $username, "password" => $password),$credentials);
-	}
-	
-	public function newBrewery($name)
-	{
-		$this->sendRequest(
-			'/api/brewery/edit',
-			"POST",
-			array(
-				"name=" => $name,
-			),
-			$brewery_doc);
-		
-		return $brewery_doc;
-	}
-	
-	private function sendRequest($url,$method,$data,&$answer)
-	{
-		$login_attempts=0;
-		
-		$url=$this->url.$url; // Prefix with base API URL
-		
-		do
-		{
-			$bRetry=FALSE;
-
-			if ($method=="GET")
-			{
-				$url.='?';
-				foreach ($data as $k=>$v)
-					$url.=$k.'='.urlencode($v);
-			}
-		
-			$ch=curl_init($url);
-			if ($ch===FALSE)
-				return null;
-			
-			curl_setopt($ch,CURLOPT_RETURNTRANSFER,TRUE);
-
-			if ($method=="POST")
-				curl_setopt($ch,CURLOPT_POSTFIELDS,$data);
-		
-			$output=curl_exec($ch);
-			print "OUTPUT:$output\n";
-			$status_code=curl_getinfo($ch,CURLINFO_HTTP_CODE);
-			if ($status_code==200)
-			{
-				$answer=json_decode($output);
-			}
-			else if ($status_code==420)
-			{
-				if ($login_attempts<1)
-				{
-					$bRetry=TRUE;
-					$this->login($this->username,$this->password);
-					$login_attempts++;
-				}
-			}
-			else
-				$answer=null;
-
-			curl_close($ch);
-		}
-		while ($bRetry);
-		
-		return $status_code;
-	}
-	
-};
+require_once('beercrush/BeerCrushClient.php');
 
 function compute_calories($beer)
 {
@@ -135,7 +55,7 @@ while ($line=fgets(STDIN))
 	if (is_null($beer->brewery_id))
 	{
 		print "Need to create a brewery doc for ".$beer->brewery."\n";
-		$brewery_doc=$client->newBrewery($brewery->name);
+		$brewery_doc=$client->newBrewery($beer->brewery);
 		$beer->brewery_id=$brewery_doc->brewery_id;
 	}
 	exit;
