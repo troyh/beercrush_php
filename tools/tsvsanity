@@ -1,0 +1,15 @@
+#!/usr/bin/php
+<?php
+$lineno=0;
+while ($line=fgets(STDIN))
+{
+	$cols=preg_split('/\t/',$line);
+	if ($lineno==0)
+	{
+		$correct_number=count($cols);
+	}
+	++$lineno;
+	if (count($cols)!=$correct_number)
+		print $lineno.":".count($cols)."\n";
+}
+?>

@@ -1,0 +1,180 @@
+#!/usr/bin/php
+<?php
+
+class BeerCrushClient
+{
+	public function __construct($url, $username, $password)
+	{
+		$this->base_url=$url;
+		$this->username=$username;
+		$this->password=$password;
+	}
+	
+	public function login($username,$password)
+	{
+		$this->sendRequest('/api/login',"POST",array("username=" => $username, "password" => $password),$credentials);
+	}
+	
+	public function newBrewery($name)
+	{
+		$this->sendRequest(
+			'/api/brewery/edit',
+			"POST",
+			array(
+				"name=" => $name,
+			),
+			$brewery_doc);
+		
+		return $brewery_doc;
+	}
+	
+	private function sendRequest($url,$method,$data,&$answer)
+	{
+		$login_attempts=0;
+		
+		$url=$this->url.$url; // Prefix with base API URL
+		
+		do
+		{
+			$bRetry=FALSE;
+
+			if ($method=="GET")
+			{
+				$url.='?';
+				foreach ($data as $k=>$v)
+					$url.=$k.'='.urlencode($v);
+			}
+		
+			$ch=curl_init($url);
+			if ($ch===FALSE)
+				return null;
+			
+			curl_setopt($ch,CURLOPT_RETURNTRANSFER,TRUE);
+
+			if ($method=="POST")
+				curl_setopt($ch,CURLOPT_POSTFIELDS,$data);
+		
+			$output=curl_exec($ch);
+			print "OUTPUT:$output\n";
+			$status_code=curl_getinfo($ch,CURLINFO_HTTP_CODE);
+			if ($status_code==200)
+			{
+				$answer=json_decode($output);
+			}
+			else if ($status_code==420)
+			{
+				if ($login_attempts<1)
+				{
+					$bRetry=TRUE;
+					$this->login($this->username,$this->password);
+					$login_attempts++;
+				}
+			}
+			else
+				$answer=null;
+
+			curl_close($ch);
+		}
+		while ($bRetry);
+		
+		return $status_code;
+	}
+	
+};
+
+function compute_calories($beer)
+{
+	
+}
+
+$mappings=array(
+	"beer name" 				=> array( "key" => "name", "massage" => null),
+	// "size"						=> array( "key" => "", "massage" => null),
+	// "style"						=> array( "key" => "", "massage" => null),
+	"description from brewer"	=> array( "key" => "description", "massage" => null),
+	"color"						=> array( "key" => "srm", "massage" => null),
+	"ABV"                       => array( "key" => "abv", "massage" => null),
+	"OG"                        => array( "key" => "og", "massage" => null),
+	"FG"                        => array( "key" => "fg", "massage" => null),
+	"IBU"						=> array( "key" => "ibu", "massage" => null),
+	"availability"              => array( "key" => "availability", "massage" => null),
+	"calories"                  => array( "key" => "calories_per_ml", "massage" => compute_calories),
+	// "calories/serving size"     => array( "key" => "", "massage" => null),
+	"ingredients"               => array( "key" => "ingredients", "massage" => null),
+	"grains"                    => array( "key" => "grains", "massage" => null),
+	"Hops"                      => array( "key" => "hops", "massage" => null),
+	"yeast"                     => array( "key" => "yeast", "massage" => null),
+	"other ingredients"			=> array( "key" => "otherings", "massage" => null),
+);
+
+$api_params=array(
+	"abv"						,
+	"availability"				,
+	"beer_id"					,
+	"description"				,
+	"styles"					,
+	"brewery_id"				,
+	"calories_per_ml"			,
+	"srm"						,
+	"fg"						,
+	"grains"					,
+	"hops"						,
+	"ibu"						,
+	"ingredients"				,
+	"name"						,
+	"og"						,
+	"otherings"					,
+	"yeast"						,
+);
+
+$client=new BeerCrushClient('http://macdev','troyh','blah');
+
+while ($line=fgets(STDIN))
+{
+	$beer=json_decode($line);
+	if (is_null($beer->brewery_id))
+	{
+		print "Need to create a brewery doc for ".$beer->brewery."\n";
+		$brewery_doc=$client->newBrewery($brewery->name);
+		$beer->brewery_id=$brewery_doc->brewery_id;
+	}
+	exit;
+
+	/*
+	Fix up the beer doc, as necessary
+	*/
+	foreach ($mappings as $field_name=>$info)
+	{
+		if (isset($beer->$field_name))
+		{
+			if ($info['massage']) // Call a massage func
+			{
+				$beer->{$info['key']}=call_user_func($info['massage'],$beer);
+			}
+			else
+				$beer->{$info['key']}=$beer->$field_name;
+		}
+	}
+	
+	/*
+	Add the beer
+	*/
+	if (empty($beer->brewery_id))
+	{
+		print "No brewery_id\n";
+	}
+	else
+	{
+		$args=array();
+		foreach ($api_params as $param)
+		{
+			if (!empty($beer->$param))
+				$args[]=$param."=".urlencode($beer->$param);
+		}
+		$body=join('&',$args);
+		print "$body\n";
+	}
+
+}
+
+?>

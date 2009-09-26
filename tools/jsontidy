@@ -1,6 +1,42 @@
 #!/usr/bin/php
 <?php
 $s=file_get_contents("php://stdin");
-print_r(json_decode($s));
+$json=json_decode($s);
+
+function tidyjson($json,$level=0)
+{
+	if (is_object($json))
+	{
+		$props=array();
+		foreach ($json as $k=>$v)
+		{
+			$props[]="\"$k\": ".tidyjson($v,$level+1);
+		}
+		$indent=str_repeat("\t",$level+1);
+		return "{\n$indent".join(",\n$indent",$props)."\n".str_repeat("\t",$level)."}";
+	}
+	else if (is_array($json))
+	{
+		$props=array();
+		foreach ($json as $a)
+		{
+			$props[]=tidyjson($a,$level+1);
+		}
+		$indent=str_repeat("\t",$level+1);
+		return "[\n$indent".join(",\n$indent",$props)."\n".str_repeat("\t",$level)."]";
+	}
+	else if (is_string($json))
+		return "\"".utf8_encode($json)."\"";
+	else if (is_numeric($json))
+		return "$json";
+	else if (is_bool($json))
+		return $json?"true":"false";
+	else if (is_null($json))
+		return "null";
+	return "";
+}
+
+print tidyjson($json);
+
 ?>
 

@@ -1,0 +1,65 @@
+#!/usr/bin/php
+<?php
+
+/*
+ Get the list of known breweries
+*/
+$hostname="macdev";
+$breweries_json=file_get_contents("http://$hostname/json/breweries");
+$breweries=json_decode($breweries_json);
+// var_dump($breweries);
+
+$brewery_list=array();
+$brewery_list_byid=array();
+
+
+foreach ($breweries as $letter=>$array)
+{
+	foreach ($array as $brewery)
+	{
+		// print $brewery->name."\n";
+		if (!isset($brewery_list[$brewery->name]))
+			$brewery_list[$brewery->name]=array();
+		$brewery_list[$brewery->name][]=$brewery->id;
+
+		$brewery_list_byid[$brewery->id]=$brewery->name;
+	}
+}
+
+/*
+	Read stdin (a set of JSON docs for beers) and try to match each brewer to a known brewery
+*/
+while ($json_doc=fgets(STDIN))
+{
+	$beer_doc=json_decode($json_doc);
+	$beer_doc->brewery_id=match_brewer($beer_doc->brewery);
+	// if (is_null($beer_doc->brewery_id))
+	// 	print "No match for ".$beer_doc->brewery."\n";
+	print json_encode($beer_doc)."\n";
+}
+
+function match_brewer($name)
+{
+	global $brewery_list;
+	global $brewery_list_byid;
+	if (isset($brewery_list[$name]))
+	{
+		// print "Matched ".$beer_doc->brewery."\n";
+		return $brewery_list[$name]->id;
+	}
+	else
+	{
+		// Try to match by ID
+		$myid="brewery:".preg_replace('/(^-|-$)/','',preg_replace('/-+/','-',preg_replace('/[^a-zA-Z0-9]/','-',$name)));
+		if (isset($brewery_list_byid[$myid]))
+		{
+			// print "Matched ".$beer_doc->brewery." to ".$brewery_list_byid[$myid]."\n";
+			return $myid;
+		}
+	}
+	
+	// 	print "No match for ".$beer_doc->brewery."\n";
+	return null;
+}
+
+?>

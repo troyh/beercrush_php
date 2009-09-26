@@ -1,0 +1,26 @@
+#!/usr/bin/php
+<?php
+
+$header_line=fgets(STDIN);
+$header_line=trim($header_line);
+
+$columns=preg_split('/\t/',$header_line,null,PREG_SPLIT_NO_EMPTY);
+
+while ($line=fgets(STDIN))
+{
+	$data=new stdClass;
+	$values=preg_split('/\t/',trim($line));
+	
+	$i=0;
+	foreach ($columns as $column)
+	{
+		if (empty($values[$i]))
+			$values[$i]=null;
+		$data->$column=$values[$i++];
+	}
+	
+	print json_encode($data);
+	print "\n";
+}
+
+?>
