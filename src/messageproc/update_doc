@@ -16,10 +16,6 @@ $prog=$oak->get_file_location('BIN_DIR').'/onchange/'.$parts[0];
 
 if (!is_executable($prog))
 {
-	// Silently ignore this
-}
-else if (!is_executable($prog))
-{
 	$oak->log($prog.' is not executable, not running the processor for queue '.$queue->name);
 }
 else
