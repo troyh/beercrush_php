@@ -6,9 +6,9 @@ require_once('beercrush/oak.class.php');
 
 $oak=new OAK();
 
-// error_reporting(E_ALL|E_STRICT);
-if (!$oak->is_debug_on())
-	set_error_handler('OAK_error_handler',E_ALL|($oak->is_debug_on()?E_NOTICE|E_STRICT:0));
+error_reporting(E_ALL|E_STRICT);
+// if (!$oak->is_debug_on())
+set_error_handler('OAK_error_handler',E_ALL|($oak->is_debug_on()?E_NOTICE|E_STRICT:0));
 // register_shutdown_function('OAK_shutdown_function');
 
 try
@@ -34,26 +34,24 @@ try
 }
 catch(Exception $x)
 {
-	header("HTTP/1.0 400 Exception");
+	$status_code=$x->getCode();
+	if ($status_code==0)
+		$status_code=400;
+	header("HTTP/1.0 $status_code Exception");
 	
-	$oak->log('Exception:'.$x->getMessage()."\nStack Trace:\n".$x->getTraceAsString());
-	
-	$xmlwriter=new XMLWriter;
-	$xmlwriter->openMemory();
-	$xmlwriter->startDocument();
-	
-	$xmlwriter->startElement('div');
-	$xmlwriter->writeAttribute('class','exception_msg');
-	$xmlwriter->text($x->getMessage());
+	$oak->log('Exception:'.$x->getMessage()."\nStatus Code:$status_code\nStack Trace:\n".$x->getTraceAsString());
+
+	$exception=array(
+		'exception' => array(
+			'message' => $x->getMessage(),
+		)
+	);
 	
 	if ($oak->is_debug_on())
 	{
 		// Dump call stack
-		$xmlwriter->startElement('div');
-		$xmlwriter->writeAttribute('id','exception_callstack');
-		$xmlwriter->startElement('pre');
-		$xmlwriter->text($x->getTraceAsString());
-	
+		$exception['exception']['callstack']=$x->getTraceAsString();
+
 		// print '<div id="exception_callstack"><pre>'.$x->getTraceAsString().'</pre></div>';
 
 		// $trace=$x->getTrace();
@@ -79,13 +77,12 @@ catch(Exception $x)
 		// }
 	}
 
-	$xmlwriter->endDocument();
-	print $xmlwriter->outputMemory();
+	print json_encode($exception);
 }
 
 function OAK_error_handler($errno,$errstr,$errfile,$errline,$errcontext)
 {
-	header("HTTP/1.0 500 Internal error");
+	header("HTTP/1.0 501 Internal error");
 	
 	print <<<EOF
 <html>
@@ -122,18 +119,24 @@ EOF;
 
 function OAK_shutdown_function()
 {
-	$error=error_get_last();
-	if (!is_null($error))
+	header("HTTP/1.0 500  Internal Error");
+
+	global $oak;
+	if ($oak->is_debug_on())
 	{
-		$error_types=array(
-			'E_ERROR'		  => 'ERROR',
-			'E_CORE_ERROR'    => 'CORE_ERROR',
-			'E_COMPILE_ERROR' => 'COMPILE_ERROR',
-			'E_USER_ERROR'    => 'USER_ERROR',
-		);
-		if (isset($error_types[$error['type']]))
-			print $error_types[$error['type']].':';
-		print $error['message'];
+		$error=error_get_last();
+		if (!is_null($error))
+		{
+			$error_types=array(
+				'E_ERROR'		  => 'ERROR',
+				'E_CORE_ERROR'    => 'CORE_ERROR',
+				'E_COMPILE_ERROR' => 'COMPILE_ERROR',
+				'E_USER_ERROR'    => 'USER_ERROR',
+			);
+			if (isset($error_types[$error['type']]))
+				print $error_types[$error['type']].':';
+			print $error['message'];
+		}
 	}
 }
 

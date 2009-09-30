@@ -35,6 +35,7 @@ case $1 in
 		# TODO: make autocompletenames.txt and latlonpairs.txt in /var/local/BeerCrush/meta
 		# TODO: build fcgi binaries
 		# TODO: Config PHP FastCGI
+		# TODO: turn off PHP's magic quotes
 		;;
 	dbserver)
 		echo "Setting up database server...";

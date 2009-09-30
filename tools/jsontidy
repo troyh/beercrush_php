@@ -26,9 +26,9 @@ function tidyjson($json,$level=0)
 		return "[\n$indent".join(",\n$indent",$props)."\n".str_repeat("\t",$level)."]";
 	}
 	else if (is_string($json))
-		return "\"".utf8_encode($json)."\"";
+		return json_encode($json); // json_encode handles JSON-special characters easily
 	else if (is_numeric($json))
-		return "$json";
+		return $json;
 	else if (is_bool($json))
 		return $json?"true":"false";
 	else if (is_null($json))

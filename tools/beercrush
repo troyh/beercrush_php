@@ -1,6 +1,7 @@
 #!/usr/bin/php
 <?php
 require_once('beercrush/BeerCrushClient.class.php');
+require_once('beercrush/oak.class.php');
 
 // shift function from http://us.php.net/manual/en/function.getopt.php
 function shift($options_array)
@@ -42,6 +43,8 @@ if (!isset($options['h']))
 	exit(-2);
 }
 
+$oak=new OAK;
+
 $client=new BeerCrushClient('http://'.$options['h'],$options['u'],$options['p']);
 
 switch ($argv[1])
@@ -55,6 +58,11 @@ switch ($argv[1])
 		{
 			print "Added brewery:".$name."\n";
 		}
+		break;
+	case "getbeer":
+		$beer_doc=new stdClass;
+		$status_code=$client->getBeer($argv[2],$beer_doc);
+		print $oak->jsontidy($beer_doc)."\n";
 		break;
 	default:
 		print "Invalid command:".$argv[1]."\n";

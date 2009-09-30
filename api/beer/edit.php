@@ -26,22 +26,46 @@ function validate_beer_bjcp_style_id($name,$value,$attribs,$converted_value,$oak
 	return TRUE;
 }
 
+function get_specific_gravity($n)
+{
+	if ($n < 0) // Bad value
+		return null;
+
+	if ((1.0 <= $n) && ($n < 1.1)) // It's a Specific Gravity value
+	{
+		// No change necessary
+		return $n;
+	}
+	else if (1000 < $n) // It's a Specific Gravity value, but without the decimal point (this is common)
+	{
+		return $n/1000; // Correct the casual form to the correct form
+	}
+	else if ($n < 100) // It's a Degrees Plato value
+	{
+		return ($n/(258.6-($n/258.2)*227.1))+1; // From http://plato.montanahomebrewers.org/
+	}
+	
+	// Bad value
+	return null;
+}
+
 $cgi_fields=array(
 	"abv"						=> array(type=>OAK::DATATYPE_FLOAT, min=>0.0, max=>100.0),
 	"availability"				=> array(type=>OAK::DATATYPE_TEXT),
 	"beer_id"					=> array(type=>OAK::DATATYPE_TEXT,flags=>OAK::FIELDFLAG_CGIONLY,minlen=>1),
 	"styles"					=> array(type=>OAK::DATATYPE_TEXT,flags=>OAK::FIELDFLAG_CGIONLY, validatefunc=>validate_beer_bjcp_style_id),
+	"style_text"				=> array(type=>OAK::DATATYPE_TEXT),
 	"brewery_id"				=> array(type=>OAK::DATATYPE_TEXT, validatefunc=>validate_brewery_id ),
 	"calories_per_ml"			=> array(type=>OAK::DATATYPE_INT, min=>0, max=>1000),
 	"srm"						=> array(type=>OAK::DATATYPE_INT, validatefunc=>validate_srm_value),
 	"description"				=> array(type=>OAK::DATATYPE_TEXT),
-	"fg"						=> array(type=>OAK::DATATYPE_FLOAT, min=>1.0, max=>2.0),
+	"fg"						=> array(type=>OAK::DATATYPE_FLOAT),
 	"grains"					=> array(type=>OAK::DATATYPE_TEXT),
 	"hops"						=> array(type=>OAK::DATATYPE_TEXT),
 	"ibu"						=> array(type=>OAK::DATATYPE_INT, min=>0, max=>1000),
 	"ingredients"				=> array(type=>OAK::DATATYPE_TEXT),
 	"name"						=> array(type=>OAK::DATATYPE_TEXT , minlen=>1, maxlen=>200),
-	"og"						=> array(type=>OAK::DATATYPE_FLOAT, min=>1.0, max=>2.0),
+	"og"						=> array(type=>OAK::DATATYPE_FLOAT),
 	"otherings"					=> array(type=>OAK::DATATYPE_TEXT),
 	"yeast"						=> array(type=>OAK::DATATYPE_TEXT),
 );
@@ -75,12 +99,36 @@ function oakMain($oak)
 			// See if this beer already exists
 			if ($oak->get_document($beer->getID(),&$beer)===true)
 			{
-				throw new Exception($beer->getID()." already exists");
+				throw new Exception($beer->getID(),450);
 			}
 		}
 
+		/* 
+		Calculate OG and FG, which are kinda fuzzy. We store Specific Gravity, so we have to convert from Degrees Plato, if necessary
+		*/
+		if ($oak->cgi_value_exists('og',$cgi_fields))
+		{
+			$og=get_specific_gravity($oak->get_cgi_value('og',$cgi_fields));
+			if (is_null($og))
+				throw new Exception("OG value (".$oak->get_cgi_value('og',$cgi_fields).") is invalid");
+			$oak->set_cgi_value('og',$cgi_fields,$og);
+		}
+
+		if ($oak->cgi_value_exists('fg',$cgi_fields))
+		{
+			$fg=get_specific_gravity($oak->get_cgi_value('fg',$cgi_fields));
+			if (is_null($fg))
+				throw new Exception("FG value (".$oak->get_cgi_value('fg',$cgi_fields).") is invalid");
+			$oak->set_cgi_value('fg',$cgi_fields,$fg);
+		}
+		
 		// Give it this request's edits
 		$oak->assign_cgi_values(&$beer,$cgi_fields);
+		
+		$beer->name			=trim(preg_replace('/\s\s+/',' ',$beer->name));
+		$beer->description	=trim(preg_replace('/\s\s+/',' ',$beer->description));
+		$beer->grains		=trim(preg_replace('/\s\s+/',' ',$beer->grains));
+		$beer->yeast		=trim(preg_replace('/\s\s+/',' ',$beer->yeast));
 		
 		// Set styles too
 		if ($oak->cgi_value_exists('styles',$cgi_fields))
@@ -92,7 +140,7 @@ function oakMain($oak)
 		// Store in db
 		if ($oak->put_document($beer->getID(),$beer)!==true)
 		{
-			header("HTTP/1.0 500 Save failed");
+			header("HTTP/1.0 502 Save failed");
 		}
 		else
 		{

@@ -145,14 +145,14 @@ class OAK
 
 	function get_user_id()
 	{
-		if (!strlen($_COOKIE['userid']))
+		if (empty($_COOKIE['userid']))
 			return null; // User is not logged in
 		return $_COOKIE['userid'];
 	}
 
 	function get_user_key()
 	{
-		if (!strlen($_COOKIE['usrkey']))
+		if (empty($_COOKIE['usrkey']))
 			return null; // User is not logged in
 		return $_COOKIE['usrkey'];
 	}
@@ -439,6 +439,26 @@ class OAK
 	function cgi_value_exists($name,$cgi_fields)
 	{
 		return $this->get_cgi_value($name,$cgi_fields)===null?false:true;
+	}
+	
+	function set_cgi_value($name,&$cgi_fields,$value)
+	{
+		if (empty($name))
+			throw new Exception('$name cannot be empty');
+
+		$parts=split(OAK::CGI_NAME_SEP,$name);
+		
+		if ($cgi_fields[$parts[0]]['type']==OAK::DATATYPE_OBJ)
+		{
+			array_shift($parts); // Remove the first part
+			$this->set_cgi_value(implode(OAK::CGI_NAME_SEP,$parts),$cgi_fields[$parts[0]]['properties'],$value);
+		}
+		else if (isset($cgi_fields[$parts[0]]))
+		{
+			$cgi_fields[$parts[0]]['isset']=true;
+			$cgi_fields[$parts[0]]['validated']=true;
+			$cgi_fields[$parts[0]]['converted_value']=$value;
+		}
 	}
 	
 	function get_cgi_value($name,$cgi_fields)
@@ -791,6 +811,39 @@ class OAK
 			throw new Exception('Unknown datatype:'.gettype($jsonobj));
 		}
 
+	}
+	
+	function jsontidy($json,$level=0)
+	{
+		if (is_object($json))
+		{
+			$props=array();
+			foreach ($json as $k=>$v)
+			{
+				$props[]="\"$k\": ".$this->jsontidy($v,$level+1);
+			}
+			$indent=str_repeat("\t",$level+1);
+			return "{\n$indent".join(",\n$indent",$props)."\n".str_repeat("\t",$level)."}";
+		}
+		else if (is_array($json))
+		{
+			$props=array();
+			foreach ($json as $a)
+			{
+				$props[]=$this->jsontidy($a,$level+1);
+			}
+			$indent=str_repeat("\t",$level+1);
+			return "[\n$indent".join(",\n$indent",$props)."\n".str_repeat("\t",$level)."]";
+		}
+		else if (is_string($json))
+			return json_encode($json); // json_encode handles JSON-special characters easily
+		else if (is_numeric($json))
+			return $json;
+		else if (is_bool($json))
+			return $json?"true":"false";
+		else if (is_null($json))
+			return "null";
+		return "";
 	}
 	
 	function get_queue_msg($queue_name)

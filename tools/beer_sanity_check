@@ -1,0 +1,689 @@
+#!/usr/bin/php
+<?php
+$common_styles=array(
+	'abbey ale' 				,
+	'abbey-style blond' 		,
+	'absinth beer' 				,
+	'ale' 						,
+	'alt'						,
+	'amber ale' 				,
+	'amber lager' 				,
+	'american ale' 				,
+	'american amber ale' 		,
+	'american amber lager' 		,
+	'american brown ale' 		,
+	'american ipa' 				,
+	'american mild' 			,
+	'american pale ale' 		,
+	'american sour ale' 		,
+	'american strong ale' 		,
+	'american trippel'			,
+	'american wheat ale' 		,
+	'american wit' 				,
+	'barleywine' 				,
+	'bavarian ale' 				,
+	'bavarian black' 			,
+	'belgian abbey' 			,
+	'belgian ale' 				,
+	'belgian black' 			,
+	'belgian brown ale' 		,
+	'belgian dark strong ale' 	,
+	'belgian dubbel' 			,
+	'belgian golden ale' 		,
+	'belgian ipa' 				,
+	'belgian pale ale' 			,
+	'belgian pale strong ale' 	,
+	'belgian red ale' 			,
+	'belgian sour ale' 			,
+	'belgian stout' 			,
+	'belgian strong ale' 		,
+	'belgian strong dark ale' 	,
+	'belgian style ale' 		,
+	'belgian trippel' 			,
+	'biere de garde'			,
+	'bitter' 					,
+	'black ale'					,
+	'black lager'				,
+	'blonde ale' 				,
+	'bock' 						,
+	'brown ale' 				,
+	'chocolate stout'			,
+	'coffee porter'				,
+	'coffee stout'				,
+	'cream ale'					,
+	'dark ale' 					,
+	'doppelbock' 				,
+	'dry stout' 				,
+	'dunkel weizen' 			,
+	'english ale' 				,
+	'english brown ale' 		,
+	'english pale ale' 			,
+	'esb' 						,
+	'fruit ale' 				,
+	'golden ale' 				,
+	'hefeweizen' 				,
+	'helles' 					,
+	'imperial ipa' 				,
+	'imperial oatmeal stout' 	,
+	'imperial stout' 			,
+	'ipa' 						,
+	'irish ale' 				,
+	'irish stout' 				,
+	'kolsch' 					,
+	'kriek'					,
+	'lager' 					,
+	'lambic' 					,
+	'maibock' 					,
+	'marzen' 					,
+	'mild' 					,
+	'oatmeal stout' 			,
+	'oktoberfest' 				,
+	'pale ale' 					,
+	'pilsner' 					,
+	'porter' 					,
+	'pumpkin ale' 				,
+	'quadrupel ale' 				,
+	'red ale' 					,
+	'russian imperial stout' 	,
+	'saison' 					,
+	'scotch ale' 				,
+	'smoked porter' 			,
+	'steam' 					,
+	'stout' 					,
+	'strong ale' 			,
+	'strong pale ale' 			,
+	'summer ale' 					,
+	'sweet stout' 					,
+	'vegetable beer' 						,
+	'wee heavy'					,
+	'weiss' 					,
+	'wheat wine' 						,
+	'wheat' 					,
+	'wit' 						,
+	'wild ale' 						,
+);
+
+$sloppy_styles=array(
+	'ae' 						=> 'ale',
+	'ale - amber' 				=> 'amber ale',
+	'ale - barley wine style' 	=> 'barleywine',
+	'ale - belgium style' 		=> 'belgian ale',
+	'ale - bitter' 				=> 'bitter',
+	'ale - brown' 				=> 'brown ale',
+	'ale - cream' 				=> 'cream ale',
+	'ale - dark' 				=> 'dark ale',
+	'ale - english' 			=> 'english ale',
+	'ale - irish' 				=> 'irish ale',
+	'ale - pale' 				=> 'pale ale',
+	'ale - red' 				=> 'red ale',
+	'ale - scotch' 				=> 'scotch ale',
+	'ale - stout' 				=> 'stout',
+	'ale - wheat' 				=> 'hefeweizen',
+	'ale - white' 				=> 'wit',
+	'altbier' 					=> 'alt',
+	'amber' 					=> 'amber ale',
+	'american barleywine' 		=> 'barleywine',
+	'american belgian abbey' 	=> 'belgian abbey',
+	'american blonde ale' 		=> 'blonde ale',
+	'american christmas porter' => 'porter',
+	'american hefeweizen' 		=> 'hefeweizen',
+	'american lager' 			=> 'lager',
+	'american mild ale' 		=> 'american mild',
+	'american pilsner' 			=> 'pilsner',
+	'american red ale' 			=> 'red ale',
+	'american porter' 			=> 'porter',
+	'american stout' 			=> 'stout',
+	'american triple' 			=> 'american trippel',
+	'american trippel ale' 		=> 'american trippel',
+	'american unfiltered wheat' => 'hefeweizen',
+	'american wheat ale with fruit' => '',
+	'american wheat with vanilla' => '',
+	'american wheat' 			=> 'hefeweizen',
+	'american white ale' 		=> 'american wit',
+	'apricot ale' 				=> '',
+	'apricot hefeweizen' 		=> '',
+	'baltic porter' 			=> 'porter',
+	'barley wine ale' 			=> 'barleywine',
+	'barley wine' 				=> 'barleywine',
+	'barleywine ale' 			=> 'barleywine',
+	'bavarian oktoberfest' 		=> 'oktoberfest',
+	'bavarian wheat' 			=> 'weiss',
+	'belgian abbey ale' 		=> 'belgian abbey',
+	'belgian dubbel ale' 		=> 'belgian dubbel',
+	'belgian farmhouse ale' 	=> '',
+	'belgian fruit lambic' 		=> 'lambic',
+	'belgian inspired black beer'	=> 'belgian black ale',
+	'belgian kriek' 			=> 'kriek',
+	'belgian lambic' 			=> 'lambic',
+	'belgian quadrupel ale' 	=> 'quadrupel ale',
+	'belgian saison' 			=> 'saison',
+	'belgian sextuple' 			=> '',
+	'belgian style tripel ale' 	=> 'belgian trippel',
+	'belgian tripel' 			=> 'belgian trippel',
+	'belgian triple' 			=> 'belgian trippel',
+	'belgian wheat' 			=> '',
+	'belgian white ale' 		=> 'wit',
+	'belgian white' 			=> 'wit',
+	'belgian wild ale' 			=> '',
+	'belgian wit' 				=> 'wit',
+	'belgian witbier' 			=> 'wit',
+	'belgian' 					=> 'belgian ale',
+	'belgian-inspired strong dark ale' => '',
+	'belgian-inspired strong golden ale' => '',
+	'berliner weiss' 			=> 'weiss',
+	'black ale' 				=> 'black ale',
+	'black braggot' 			=> '',
+	'black ipa' 				=> '',
+	'black lager' 				=> 'black lager',
+	'blond beer' 				=> 'blonde ale',
+	'blonde abbey' 				=> '',
+	'blonde doppelbock' 		=> '',
+	'blonde' 					=> 'blonde ale',
+	'bohemian pilsner' 			=> 'pilsner',
+	'bourbon barrel aged ale' 	=> '',
+	'bourbon barrel-aged imperial stout'=> '',
+	'british ale' 				=> 'english ale',
+	'british pale ale' 			=> 'english pale ale',
+	'brown porter' 				=> '',
+	'buckwheat weiss' 			=> 'weiss',
+	'buckwheat' 				=> 'weiss',
+	'canadian golden ale' 		=> 'golden ale',
+	'cherry fermented ale' 		=> 'fruit ale',
+	'cherry oud bruin' 			=> '',
+	'cherry porter' 			=> '',
+	'chocolate oatmeal dry stout'=>'',
+	'coffee porter' 			=> 'coffee porter',
+	'coffee stout' 				=> 'coffee stout',
+	'copper ale' 				=> '',
+	'czech doppelbock' 			=> '',
+	'czech pilsner' 			=> 'pilsner',
+	'danish farmhouse ale' 		=> '',
+	'dark ale' 					=> '',
+	'dark american lager' 		=> '',
+	'dark belgian ale' 			=> '',
+	'dark czech lager' 			=> '',
+	'dark lager' 				=> '',
+	'dark wheat ale' 			=> '',
+	'dark wheat lager' 			=> '',
+	'dipa' 						=> 'imperial ipa',
+	'dopplebock' 				=> 'doppelbock',
+	'double bock' 				=> 'doppelbock',
+	'double dubbel' 			=> '',
+	'double ipa' 				=> 'imperial ipa',
+	'double pale ale' 			=> '',
+	'double stout' 				=> '',
+	'double wheat' 				=> '',
+	'dubbel' 					=> '',
+	'dunkelweizen' 				=> 'dunkel weizen',
+	'düsseldorf-style altbier.' => 'alt',
+	'english amber/red ale' 	=> '',
+	'english bitter' 			=> 'bitter',
+	'english cider' 			=> '',
+	'english ipa' 				=> '',
+	'english old ale' 			=> '',
+	'english pale ale' 			=> '',
+	'english stout' 			=> '',
+	'english strong ale' 		=> '',
+	'englsih brown ale' 		=> '',
+	'extra pale ale' 			=> '',
+	'extra special bitter' 		=> 'esb',
+	'framboise' 				=> '',
+	'french farmhouse ale' 		=> '',
+	'french stock ale' 			=> '',
+	'fresh hop pale ale' 		=> '',
+	'german ale' 				=> '',
+	'german altbier' 			=> '',
+	'german amber lager' 		=> '',
+	'german hefeweizen' 		=> '',
+	'german kolsch' 			=> '',
+	'german lager' 				=> '',
+	'german maibock' 			=> '',
+	'german marzen' 			=> 'marzen',
+	'german oktoberfest' 		=> 'oktoberfest',
+	'german pilsner' 			=> 'pilsner',
+	'german radler' 			=> '',
+	'german smoked ale' 		=> '',
+	'ginger wit' 				=> '',
+	'golden lager' 				=> '',
+	'golden rye ipa' 			=> '',
+	'hefeweizen with fruit' 	=> '',
+	'hefewwizen' 				=> 'hefeweizen',
+	'helles bock' 				=> '',
+	'helles dopplebock' 		=> '',
+	'helles lager' 				=> 'helles',
+	'herb and spice ale' 		=> '',
+	'holiday ale' 				=> '',
+	'honey ale' 				=> '',
+	'hybrid rye-bock' 			=> '',
+	'imperial barleywine ale' 	=> '',
+	'imperial blended ale' 		=> '',
+	'imperial brown ale' 		=> '',
+	'imperial brown porter' 	=> '',
+	'imperial cherry saison' 	=> '',
+	'imperial coffee stout' 	=> '',
+	'imperial cream ale' 		=> '',
+	'imperial dark saison' 		=> '',
+	'imperial dry hopped red' 	=> '',
+	'imperial english bitter' 	=> '',
+	'imperial english porter' 	=> '',
+	'imperial extra pale ale' 	=> '',
+	'imperial india pale ale' 	=> '',
+	'imperial lager' 			=> '',
+	'imperial oktoberfest lager'=> '',
+	'imperial pale ale' 		=> '',
+	'imperial pilsner' 			=> '',
+	'imperial porter' 			=> '',
+	'imperial pumpkin ale' 		=> '',
+	'imperial red ale' 			=> '',
+	'imperial summer wheat ale' => '',
+	'imperial wheat ale' 		=> '',
+	'india brown ale' 			=> '',
+	'india cream ale' 			=> '',
+	'india pale ale' 			=> 'ipa',
+	'india red ale' 			=> '',
+	'irish ale' 				=> '',
+	'irish red ale' 			=> '',
+	'irish red' 				=> '',
+	'keller beer' 				=> '',
+	'kellerbiers' 				=> '',
+	'kriek' 					=> 'kriek',
+	'lager beer' 				=> 'lager',
+	'light ale' 				=> '',
+	'malt liquor' 				=> '',
+	'maple scotch ale' 			=> '',
+	'maple scotch' 				=> '',
+	'maple smoked porter' 		=> '',
+	'marzen lager' 				=> 'marzen',
+	'milk stout' 				=> '',
+	'munich dark' 				=> '',
+	'munich dunkel' 			=> '',
+	'munich helles' 			=> '',
+	'munich lager' 				=> '',
+	'non-alcoholic' 			=> '',
+	'northwest amber' 			=> '',
+	'northwest pale ale' 		=> '',
+	'nut brown ale' 			=> '',
+	'oak aged ale' 				=> '',
+	'oak aged barleywine' 		=> '',
+	'oak aged english strong ale'=>'',
+	'oak aged scotch ale' 		=> '',
+	'oak aged stout' 			=> '',
+	'oat wine' 					=> '',
+	'oatmeal brown ale' 		=> '',
+	'octoberfest lager' 		=> 'oktoberfest',
+	'octoberfest' 				=> 'oktoberfest',
+	'oktoberfest marzen' 		=> 'oktoberfest',
+	'old ale' 					=> '',
+	'orange blossom honey ale' 	=> '',
+	'pale weisse-bock' 			=> '',
+	'pear cider' 				=> '',
+	'peche' 					=> '',
+	'pilsner-lager' 			=> 'pilsner',
+	'porter and scottish ale' 	=> 'porter',
+	'poter' 					=> 'porter',
+	'premuium ale' 				=> '',
+	'pumpkin beer' 				=> '',
+	'quadrupel' 				=> '',
+	'quadruple ale' 			=> '',
+	'raspberry brown ale' 		=> '',
+	'raspberry poter' 			=> '',
+	'raspberry wheat' 			=> '',
+	'rauchbier' 				=> '',
+	'red ipa' 					=> '',
+	'red lager' 				=> '',
+	'red rye ale' 				=> '',
+	'rice ale' 					=> '',
+	'robust porter' 			=> '',
+	'russian stout' 			=> 'russian imperial stout',
+	'rye ale' 					=> '',
+	'rye lager' 				=> '',
+	'rye munich ale' 			=> '',
+	'rye pale ale' 				=> '',
+	'rye saison' 				=> '',
+	'rye' 						=> '',
+	'sottish ale' 				=> 'scotch ale',
+	'scottish ale' 				=> 'scotch ale',
+	'scottish strong ale' 		=> '',
+	'smoked ale' 				=> '',
+	'smoked beer' 				=> '',
+	'smoked double lager' 		=> '',
+	'smoked lager' 				=> '',
+	'sottish ale' 				=> 'scottish ale',
+	'sour brown ale' 			=> '',
+	'spiced fruit ale' 			=> '',
+	'spiced wheat ale' 			=> '',
+	'stout - amber loager blend'=> '',
+	'stout - chocolate' 		=> 'chocolate stout',
+	'stout - dry (dublin)' 		=> 'dry stout',
+	'stout - oatmeal' 			=> 'oatmeal stout',
+	'strong belgian ale' 		=> '',
+	'strong brown ale' 			=> '',
+	'strong dark ale' 			=> '',
+	'strong english beer' 		=> '',
+	'strong pale' 				=> 'strong pale ale',
+	'traditional bock' 			=> 'bock',
+	'tripel' 					=> 'belgian trippel',
+	'triple ipa' 				=> 'imperial ipa',
+	'trippel ipa' 				=> 'imperial ipa',
+	'unfiltered brown ale' 		=> 'brown ale',
+	'unfiltered imperial ipa' 	=> 'imperial ipa',
+	'unfiltered lager' 			=> 'lager',
+	'unfiltered scottish ale' 	=> 'scotch ale',
+	'urban wheat' 				=> 'hefeweizen',
+	'vienna-style lager' 		=> 'weiss',
+	'wee heavy' 				=> 'wee heavy',
+	'weizen' 					=> 'weiss',
+	'weizenbock' 				=> '',
+	'wheat ale' 				=> 'hefeweizen',
+	'wheat beer' 				=> 'weiss',
+	'wheat lager' 				=> 'weiss',
+	'wheat porter ale' 			=> '',
+	'wheat wine ale'		=> 'wheat wine',
+	'wheat wine-style ale'		=> 'wheat wine',
+	'whisky barrel aged barleywin'=> 'barleywine',
+	'whisky cask aged imperial stout'=> 'imperial stout',
+	'white ale' 				=> 'wit',
+	'wild rice brown ale' 		=> '',
+	'winter ale' 				=> '',
+	'winter warmer' 			=> '',
+	'wit beer' 					=> 'wit',
+	'witbier' 					=> 'wit',
+);
+
+function sanity_style(&$beer)
+{
+	$s=strtolower(trim($beer->style));
+	$s=preg_replace('/\s+/',' ',$s);
+	
+	if (strlen($s)==0)
+		return true;
+	
+	global $common_styles;
+	global $sloppy_styles;
+	if (in_array($s,$common_styles))
+		return true;
+	else if (isset($sloppy_styles[$s]))
+	{
+		unset($beer->style);
+		unset($beer->styles);
+		if (!strlen($sloppy_styles[$s]))
+		{
+			$beer->style_text=$s;
+			return true;
+		}
+		else if (in_array($sloppy_styles[$s],$common_styles))
+		{
+			$beer->style_text=$sloppy_styles[$s];
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function sanity_calories(&$beer)
+{
+	if (is_null($beer->calories) || is_numeric($beer->calories))
+		return true;
+	return false;
+}
+
+function sanity_calories_size(&$beer)
+{
+	$dname="calories/serving size";
+	if (is_null($beer->$dname))
+		return true;
+	$s=trim($beer->$dname);
+	if (preg_match('/^\d+\s*oz$/',$s))
+		return true;
+	return false;
+}
+
+function sanity_name(&$beer)
+{
+	$dname="beer name";
+	if (strlen($beer->$dname)<2)
+		return false;
+	$beer->name=$beer->$dname;
+	unset($beer->$dname);
+	return true;
+}
+
+function sanity_description(&$beer)
+{
+	$dname="description from brewer";
+	if (strlen($beer->$dname)<10)
+		return false;
+	$beer->description=$beer->$dname;
+	unset($beer->$dname);
+	return true;
+}
+
+function sanity_color(&$beer)
+{
+	if (!is_null($beer->color) && !is_numeric($beer->color))
+	{
+		return false;
+		// print $beer->brewery." ".$beer->name." ";
+		// print "Color:".$beer->color."\n";
+	}
+	return true;
+}
+
+function sanity_abv(&$beer)
+{
+	if (is_null($beer->ABV))
+	 	return true;
+	if (is_numeric($beer->ABV))
+		return true;
+
+	// May be in the form "x to y", which is ok
+	if (preg_match('/^\s*((\d+)\.)?(\d+)\s*(to|-)\s*((\d+)\.)?(\d+)\s*$/',$beer->ABV))
+		return true;
+	if (preg_match('/^\s*\d+\+\s*$/',$beer->ABV))
+		return true;
+	return false;
+}
+
+function sanity_og(&$beer)
+{
+	if (!is_null($beer->OG) && !is_numeric($beer->OG))
+	{
+		return false;
+		// print $beer->brewery." ".$beer->name." ";
+		// print "OG:".$beer->OG."\n";
+	}
+	return true;
+}
+
+function sanity_fg(&$beer)
+{
+	if (!is_null($beer->FG) && !is_numeric($beer->FG))
+	{
+		return false;
+		// print $beer->brewery." ".$beer->name." ";
+		// print "FG:".$beer->FG."\n";
+	}
+	return true;
+}
+
+function sanity_ibu(&$beer)
+{
+	if (is_null($beer->IBU))
+		return true;
+	if (is_numeric($beer->IBU))
+		return true;
+
+	// May be in the form "x to y", which is ok
+	if (preg_match('/^\s*(\d+)\s*(to|-)\s*(\d+)\s*$/',$beer->IBU))
+		return true;
+	if (preg_match('/^\s*\d+\+\s*$/',$beer->IBU))
+		return true;
+		
+	return true;
+}
+
+function sanity_availability(&$beer)
+{
+	if (!is_string($beer->availability))
+		return false;
+	$s=strtolower(trim($beer->availability));
+	switch ($s)
+	{
+		case 'limited':
+		case 'limit':
+		case 'limted':
+		case 'lim':
+			$beer->availability='limited';
+			return true;
+			break;
+		case 'spring/summer':
+			$beer->availability='spring/summer';
+			return true;
+			break;
+		case 'spring':
+		case 'sprng':
+			$beer->availability='spring';
+			return true;
+			break;
+		case 'summer':
+		case 'sumer':
+			$beer->availability='summer';
+			return true;
+			break;
+		case 'fall':
+		case 'falll':
+			$beer->availability='fall';
+			return true;
+			break;
+		case 'fall/winter':
+			$beer->availability='fall/winter';
+			return true;
+			break;
+		case 'winter':
+			$beer->availability='winter';
+			return true;
+			break;
+		case 'seasonal':
+			$beer->availability='seasonal';
+			return true;
+			break;
+		case 'year-round':
+		case 'year round':
+			$beer->availability='year-round';
+			return true;
+			break;
+		case 'retired':
+			return true;
+			break;
+	}
+	
+	return false;
+}
+
+$mappings=array(
+	"beer name" 				=> array( "key" => "name", 			"sanity" => sanity_name, "massage" => null),
+	// "size"						=> array( "key" => "", "massage" => null),
+	"style"						=> array( "key" => null, 		"sanity" => sanity_style, "massage" => null),
+	"description from brewer"	=> array( "key" => "description", 	"sanity" => sanity_description, "massage" => null),
+	"color"						=> array( "key" => "srm", 			"sanity" => sanity_color),
+	"ABV"                       => array( "key" => "abv", 			"sanity" => sanity_abv),
+	"OG"                        => array( "key" => "og", 			"sanity" => sanity_og),
+	"FG"                        => array( "key" => "fg", 			"sanity" => sanity_fg),
+	"IBU"						=> array( "key" => "ibu", 			"sanity" => sanity_ibu),
+	"availability"              => array( "key" => "availability",  "sanity" => sanity_availability,"massage" => null),
+	"calories"                  => array( "key" => "calories_per_ml", "sanity" => sanity_calories, 	"massage" => null),
+	"calories/serving size"     => array( "key" => null, 			"sanity" => sanity_calories_size, "massage" => null),
+	"ingredients"               => array( "key" => "ingredients", 	"sanity" => null, "massage" => null),
+	"grains"                    => array( "key" => "grains", 		"sanity" => null, "massage" => null),
+	"Hops"                      => array( "key" => "hops", 			"sanity" => null, "massage" => null),
+	"yeast"                     => array( "key" => "yeast", 		"sanity" => null, "massage" => null),
+	"other ingredients"			=> array( "key" => "otherings", 	"sanity" => null, "massage" => null),
+);
+
+
+
+foreach (new DirectoryIterator('files/') as $file)
+{
+	if ($file->isFile())
+	{
+		$beer=json_decode(file_get_contents($file->getPathname()));
+		if (is_null($beer))
+		{
+			print "Invalid JSON:".$file->getPathname()."\n";
+		}
+		else if (is_null($beer->brewery_id))
+		{
+			print "Need to create a brewery doc for ".$beer->brewery."\n";
+		}
+		else
+		{
+			$bInsane=false;
+			
+			/*
+				Fix up the beer doc, as necessary
+			*/
+			foreach ($mappings as $field_name=>$info)
+			{
+				if (isset($beer->$field_name))
+				{
+					if ($info['sanity'] && call_user_func($info['sanity'],$beer)===false)
+					{
+						print $file->getPathname()." failed sanity test: ".$field_name.'='.$beer->$field_name."\n";
+						$bInsane=true;
+					}
+					else if (!is_null($info['key']))
+					{
+						if ($info['massage']) // Call a massage func
+							$beer->{$info['key']}=call_user_func($info['massage'],$beer);
+					}
+				}
+			}
+			
+			if ($bInsane===false)
+			{
+				/*
+					compute the calories_per_ml
+				*/
+				if (!is_null($beer->calories))
+				{
+					$t="calories/serving size";
+					if (preg_match('/^(\d+)\s*oz$/',$beer->$t,$matches))
+					{ 
+						// convert fl. oz. to ml (1 fl.oz = 0.02957353 liters = 29.57353 ml)
+						$calories_per_ml=$beer->calories / ($matches[1] * 29.57353);
+						$beer->calories_per_ml=$calories_per_ml;
+					}
+					unset($beer->calories);
+					unset($beer->$t);
+				}
+				
+				/*
+					Remove null fields
+				*/
+				foreach ($beer as $k=>$v)
+				{
+					if (is_null($v))
+						unset($beer->$k);
+				}
+				
+				
+				file_put_contents('sane_docs/'.$file->getFilename(),json_encode($beer));
+
+				// /*
+				// Add the beer
+				// */
+				// $args=array();
+				// foreach ($api_params as $param)
+				// {
+				// 	if (!empty($beer->$param))
+				// 		$args[]=$param."=".urlencode($beer->$param);
+				// }
+				// $body=join('&',$args);
+				// print "$body\n";
+			}
+		}
+	}
+}
+
+?>
