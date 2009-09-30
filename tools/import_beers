@@ -1,0 +1,101 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/BeerCrushClient.class.php');
+
+function successful_import($fname,$new_beer_doc)
+{
+	// Move the file to the imported dir
+	rename($fname,'imported/'.basename($fname));
+
+	file_put_contents('new/'.basename($fname),json_encode($new_beer_doc));
+}
+
+function import($client,$fname)
+{
+	print "Doc: $fname ";
+	$beer=json_decode(file_get_contents($fname));
+	if (is_null($beer))
+	{
+		print "Invalid doc\n";
+	}
+	else
+	{
+		// For ABV and IBU, if it's a range, take the average of the 2 values
+		if (preg_match('/(\d+)\s*(to|-)\s*(\d+)/',$beer->ABV,$matches))
+		{
+			$beer->ABV=($matches[1]+$matches[3])/2;
+		}
+		if (preg_match('/(\d+)\s*(to|-)\s*(\d+)/',$beer->IBU,$matches))
+		{
+			$beer->IBU=($matches[1]+$matches[3])/2;
+		}
+		if (preg_match('/(\d+)\+/',$beer->IBU,$matches))
+		{
+			$beer->IBU=$matches[1];
+		}
+		
+		$status_code=$client->addBeer($beer,$new_beer_doc);
+
+		if ($status_code==200)
+		{
+			successful_import($fname,$new_beer_doc);
+			print "Added";
+		}
+		else if ($status_code==450) // Duplicate beer
+		{
+			$existing_beer_id=$new_beer_doc->exception->message;
+
+			// Try an edit instead
+			$status_code=$client->editBeer($existing_beer_id,$beer,$new_beer_doc);
+			if ($status_code==200)
+			{
+				successful_import($fname,$new_beer_doc);
+				print "Updated";
+			}
+			else
+			{
+				// Compare this to the existing one
+				$existing_beer=new stdClass;
+				$status_code=$client->getBeer($existing_beer_id,$existing_beer);
+				if ($status_code==200)
+				{
+					print "Existing beer:\n";
+					print_r($existing_beer);
+					print "\n\nYour beer:\n";
+					print_r($beer);
+				}
+			}
+		}
+		else
+		{
+			print "Failed: $status_code\n";
+			if (isset($new_beer_doc->exception))
+				print "Exception: ".$new_beer_doc->exception->message;
+			else
+				print $new_beer_doc;
+		}
+	}
+	
+	print "\n";
+	
+}
+
+$client=new BeerCrushClient('macdev','troyh','blah');
+// $client->debug=true;
+
+if (empty($argv[1]))
+{
+	foreach (new DirectoryIterator('sane_docs/') as $doc)
+	{
+		if ($doc->isFile())
+		{
+			import($client,$doc->getPathname());
+		}
+	}
+}
+else
+{
+	import($client,$argv[1]);
+}
+
+?>
