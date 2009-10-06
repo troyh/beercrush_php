@@ -9,7 +9,9 @@ $oak=new OAK;
 $list=new stdClass;
 $oak->get_view('beer/made_by?key=%22'.$brewery_id.'%22',$list);
 
-$beerlist=array();
+$beerlist=array(
+	'beers' => array(),
+);
 $attributes='@attributes';
 
 foreach ($list->rows as $beer)
@@ -25,7 +27,7 @@ foreach ($list->rows as $beer)
 	$beer->name=$beer_doc->name;
 	$beer->description=$beer_doc->description;
 	
-	array_push($beerlist,$beer);
+	array_push($beerlist['beers'],$beer);
 }
 
 print json_encode($beerlist);

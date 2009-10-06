@@ -148,7 +148,7 @@ function write_reviews_doc($doc_url,$directory,$basefilename,$chunk_size=20)
 					}
 				}
 				
-				array_push($output['reviews'],$review);
+				array_push($output['reviews'],$review->value);
 			}
 
 			$filename="$directory/$basefilename.$chunk.json";
