@@ -2,62 +2,119 @@
 require_once 'beercrush/oak.class.php';
 
 /*
-	Take userid and password CGI vars and validate them against the user db.
+	Take email and password CGI vars and validate them against the user db.
 */
 
-$xmlwriter=new XMLWriter;
-$xmlwriter->openMemory();
-$xmlwriter->startDocument();
+function login_failure($status_code,$reason='')
+{
+	$msg=array(
+		'success' => false,
+		'reason' => $reason,
+	);
+	
+	header("HTTP/1.0 $status_code $reason");
+	header("Content-Type: application/javascript");
+	print json_encode($msg);
+}
 
-$oak=new OAK();
-$user_key="";
+
+
+$email=null;
+$password=null;
 
 // TODO: use OAK's get_cgi_value() instead of $_GET/$_POST directly
-if (empty($_GET['userid']))
-	$userid=$_POST['userid'];
+if (empty($_GET['email']))
+	$email=$_POST['email'];
 else
-	$userid=$_GET['userid'];
+	$email=$_GET['email'];
 
 if (empty($_GET['password']))
 	$password=$_POST['password'];
 else
 	$password=$_GET['password'];
 	
-if ($oak->login($userid,$password,$user_key)!==true)
+if (is_null($email) || is_null($password))
 {
-	/*
-		Login failed
-	*/
-	header("HTTP/1.0 403 Login failed");
-
-	$oak->logout(); // Clears login cookies
-
-	$xmlwriter->startElement('login');
-	$xmlwriter->writeAttribute('ok','no');
-	$xmlwriter->writeElement('reason','Incorrect userid and/or password');
-	$xmlwriter->endElement();
-
-	$oak->log('failed login attempt:'.$userid);
+	login_failure(400,'email and password are required'); // Create failed
 }
 else
 {
-	/*
-		Indicate success.
-	*/
-	header("HTTP/1.0 200 Login OK");
+	$oak=new OAK();
+	$results=new stdClass;
+	if ($oak->get_view('user/email?key=%22'.urlencode($email).'%22',&$results)===false)
+	{
+		login_failure(404,'email does not exist'); // Create failed
+	}
+	else
+	{
+		if (count($results->rows)>1)
+			$oak->log(count($results->rows).' accounts with email address '.$email);
+			
+		/*
+			Find the user doc for this email/password combo.
+			
+			In the event we have more than one user doc with the specified email address,
+			we'll pick one where the password matches and use it.
+
+			TODO: build a periodic scanner that removes such duplicates
+			
+		*/
+
+		$docid=null;
+		foreach ($results->rows as $row)
+		{
+			if ($row->key===$email && $row->value===$password)
+			{
+				$docid=$row->id;
+				break;
+			}
+		}
+		
+		$user_doc=new OAKDocument('');
 	
-	$xmlwriter->startElement('login');
-	$xmlwriter->writeAttribute('ok','yes');
-	$xmlwriter->writeElement('userid',$userid);
-	$xmlwriter->writeElement('usrkey',$user_key);
-	$xmlwriter->endElement();
-	
-	$oak->log($userid.' logged in');
+		if (is_null($docid))
+		{
+			/*
+				Login failed
+			*/
+			login_failure(401,'Login failed');
+			$oak->log('failed login attempt:'.$email);
+		}
+		else if ($oak->get_document($docid,&$user_doc)!==true)
+		{
+			login_failure(500,'Internal error');
+		}
+		else
+		{
+			// Create another secret
+			$user_doc->secret=rand();
+		
+			if ($oak->put_document($docid,$user_doc)!==true)
+			{
+				login_failure(500,'Internal error');
+			}
+			else
+			{
+				// Make and return userkey
+				$usrkey=md5($user_doc->userid.$user_doc->secret.$_SERVER['REMOTE_ADDR']);
+
+				/*
+					Indicate success.
+				*/
+				$oak->log('Login:'.$userid);
+
+				header("HTTP/1.0 200 OK");
+				header("Content-Type: application/javascript");
+			
+				$answer=array(
+					'userid'=>$user_doc->userid,
+					'usrkey'=>$usrkey,
+				);
+				print json_encode($answer);
+			
+			}
+		}
+	}
 }
-
-$xmlwriter->endDocument();
-
-header("Content-Type: application/xml");
-print $xmlwriter->outputMemory();
 
 ?>

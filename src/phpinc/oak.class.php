@@ -125,36 +125,31 @@ class OAK
 	/*
 	 * User Credentials Functions
 	 */
-	
-	function login_create($userid,$password)
+	public function create_uuid()
 	{
-		$user_doc=new stdClass;
-		if ($this->get_document('user:'.$userid,$user_doc)===true)
-			return false; // User account already exists
-
-		$user_doc->userid=$userid;
-		$user_doc->password=$password;
-		$user_doc->secret=rand();
-		$user_doc->type='user';
-		
-		if ($this->put_document('user:'.$userid,$user_doc)!==true)
-			return false; // Failed to store document (internal error)
-			
-		return true; // Login created
+		uuid_create(&$uuid);
+		uuid_make($uuid,UUID_MAKE_V1);
+		uuid_export($uuid,UUID_FMT_STR,&$uuid_string);
+		$uuid_string=trim($uuid_string); // Remove the trailing null-byte (why is it added?!)
+		return $uuid_string;
 	}
 
 	function get_user_id()
 	{
-		if (empty($_COOKIE['userid']))
-			return null; // User is not logged in
-		return $_COOKIE['userid'];
+		if (!empty($_GET['userid']))
+			return $_GET['userid'];
+		if (!empty($_POST['userid']))
+			return $_POST['userid'];
+		return null;
 	}
 
 	function get_user_key()
 	{
-		if (empty($_COOKIE['usrkey']))
-			return null; // User is not logged in
-		return $_COOKIE['usrkey'];
+		if (!empty($_GET['usrkey']))
+			return $_GET['usrkey'];
+		if (!empty($_POST['usrkey']))
+			return $_POST['usrkey'];
+		return null;
 	}
 	
 	function is_debug_on()
@@ -172,55 +167,13 @@ class OAK
 	public function request_login()
 	{
 		header("HTTP/1.0 420 Login required");
+		header("Content-Type: text/plain");
 		print "Login required\n";
-	}
-	
-	function login($userid,$password,&$usrkey)
-	{
-		$user_doc=new stdClass;
-		if ($this->get_document('user:'.$userid,$user_doc)!==true)
-		{
-			header("HTTP/1.0 201 Login failed");
-			return false;
-		}
-
-		// Verify password is correct
-		if ($user_doc->password!==$password)
-		{
-			header("HTTP/1.0 201 Login failed");
-			return false;
-		}
-		
-		// Create another secret
-		$user_doc->secret=rand();
-		if ($this->put_document('user:'.$userid,$user_doc)!==true)
-		{
-			header("HTTP/1.0 201 Internal error");
-			return false;
-		}
-		
-		// Make and return userkey
-		$usrkey=md5($userid.$user_doc->secret.$_SERVER['REMOTE_ADDR']);
-
-		header("HTTP/1.0 200 Login successful");
-
-		if (strlen($this->config->cookies->domain))
-		{
-			setcookie('userid',$userid,time()+$this->config->cookies->lifetime,'/',$this->config->cookies->domain);
-			setcookie('usrkey',$usrkey,time()+$this->config->cookies->lifetime,'/',$this->config->cookies->domain);
-		}
-		else
-		{
-			setcookie('userid',$userid,time()+$this->config->cookies->lifetime,'/');
-			setcookie('usrkey',$usrkey,time()+$this->config->cookies->lifetime,'/');
-		}
-
-		return true;
 	}
 
 	function login_is_trusted()
 	{
-		$user_doc=new stdClass;
+		$user_doc=new OAKDocument('');
 		if ($this->get_document('user:'.$this->get_user_id(),$user_doc)!==true)
 			return false;
 		
@@ -229,30 +182,6 @@ class OAK
 			return false;
 			
 		return true;
-	}
-	
-	function logout()
-	{
-		if (strlen($this->config->cookies->domain))
-		{
-			setcookie('userid','',time()-86400,'/',$this->config->cookies->domain);
-			setcookie('usrkey','',time()-86400,'/',$this->config->cookies->domain);
-		}
-		else
-		{
-			setcookie('userid','',time()-86400,'/');
-			setcookie('usrkey','',time()-86400,'/');
-		}
-	}
-
-
-	/*
-	 * User Credentials Functions
-	 */
-	
-	function get_database_name()
-	{
-		return $this->config->couchdb->database;
 	}
 	
 	/*
@@ -879,6 +808,11 @@ class OAK
 	public function get_config_info()
 	{
 		return $this->config;
+	}
+	
+	function get_database_name()
+	{
+		return $this->config->couchdb->database;
 	}
 	
 	public function make_image_size($original,$size)

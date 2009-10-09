@@ -1,79 +1,97 @@
 <?php
 require_once 'beercrush/oak.class.php';
 
-function login_create_failure($reason='')
+$oak=new OAK();
+
+function login_create_failure($status_code,$reason='')
 {
 	$msg=array(
 		'success' => false,
 		'reason' => $reason,
 	);
 	
+	header("HTTP/1.0 $status_code $reason");
 	header("Content-Type: application/javascript");
 	print json_encode($msg);
 }
 
+function email_exists($email)
+{
+	global $oak;
+	$results=new stdClass;
+	if ($oak->get_view('user/email?key=%22'.urlencode($email).'%22',&$results)==false)
+		return false;
+
+	if (count($results->rows)>1)
+		$oak->log(count($results->rows).' accounts with email address '.$email);
+		
+	return count($results->rows)?true:false;
+}
+
 
 /*
-	Take userid and password CGI vars and create a login
+	Take email and password CGI vars and create a login
 */
 
-$oak=new OAK();
 
-$userid=null;
+$email=null;
 $password=null;
 
-if (empty($_POST['userid']) || empty($_POST['password']))
+if (empty($_POST['email']) || empty($_POST['password']))
 {
-	if (empty($_GET['userid']) || empty($_GET['password']))
+	if (empty($_GET['email']) || empty($_GET['password']))
 	{
 	}
 	else
 	{
-		$userid=$_GET['userid'];
+		$email=$_GET['email'];
 		$password=$_GET['password'];
 	}
 }
 else
 {
-	$userid=$_POST['userid'];
+	$email=$_POST['email'];
 	$password=$_POST['password'];
 }
 
-if (is_null($userid) || is_null($password))
+if (is_null($email) || is_null($password))
 {
-	header("HTTP/1.0 420 userid and password are required");
-	$oak->logout(); // Clears login cookies
-	login_create_failure('userid and password are required'); // Create failed
+	login_create_failure(400,'email and password are required'); // Create failed
 }
-else if ($oak->login_create($userid,$password)!==true)
+else if (email_exists($email))
 {
-	header("HTTP/1.0 520 Userid already exists");
-	$oak->logout(); // Clears login cookies
-	login_create_failure('userid already exists'); // Create failed
+	login_create_failure(409,'email already exists'); // Create failed
 }
 else
 {
-	$user_key="";
-	if ($oak->login($userid,$password,$user_key)!==true)
-	{
-		/* 
-			Silently ignore this. The account was created, which is the job of this request, they 
-			just aren't logged in automatically.
-		*/
-	}
-
-	/*
-		Indicate success. Don't log the user in automatically, though. They must issue a separate login.
-	*/
-	header("Content-Type: application/javascript");
-
-	$reply=array(
-		'success' => true,
-		'userid' => $userid,
-		'usrkey' => $user_key,
-	);
+	$userid=$oak->create_uuid();
 	
-	print json_encode($reply);
+	$user_doc=new OAKDocument('user');
+
+	$user_doc->type='user';
+	$user_doc->userid=$userid;
+	$user_doc->email=$email;
+	$user_doc->password=$password;
+
+	if ($oak->put_document('user:'.$userid,$user_doc)!==true)
+	{
+		login_create_failure(500,'Account creation failed'); // Create failed
+	}
+	else
+	{
+		/*
+			Indicate success. Don't log the user in automatically, though. They must issue a separate login.
+		*/
+		header("HTTP/1.0 200 Login successful");
+		header("Content-Type: application/javascript");
+
+		$reply=array(
+			'success' => true,
+			'userid' => $userid,
+		);
+	
+		print json_encode($reply);
+	}
 }
 
 ?>
