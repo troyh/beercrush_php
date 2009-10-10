@@ -166,8 +166,9 @@ class OAK
 	
 	public function request_login()
 	{
-		header("HTTP/1.0 420 Login required");
-		header("Content-Type: text/plain");
+		// NOTE: a 401 return status screws up the iPhone's NSURLConnection class
+		header("HTTP/1.0 403 Login required");
+		// header("Content-Type: text/plain");
 		print "Login required\n";
 	}
 
