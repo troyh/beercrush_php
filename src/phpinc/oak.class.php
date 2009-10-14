@@ -572,6 +572,14 @@ class OAK
 		$this->json2xml($copyobj,$xmlwriter);
 	}
 	
+	function write_document_json($obj)
+	{
+		$copyobj=$obj;
+		unset($copyobj->_id);
+		unset($copyobj->_rev);
+		print json_encode($copyobj);
+	}
+	
 	public function write_document_to_xmlfile($doc,$filename)
 	{
 		if (is_string($doc)) // Assume it's an ID string

@@ -99,13 +99,8 @@ function oakMain($oak)
 		// print json_encode($wishlist);exit;
 
 		$oak->put_document($wishlist->getID(),$wishlist);
-		
-		$xmlwriter=new XMLWriter;
-		$xmlwriter->openMemory();
-		$xmlwriter->startDocument();
-		$oak->json2xml($wishlist,$xmlwriter);
-		$xmlwriter->endDocument();
-		print $xmlwriter->outputMemory();
+
+		$oak->write_document_json($wishlist);
 	}
 }
 

@@ -37,7 +37,7 @@ function oakMain($oak)
 		else
 		{
 			header("HTTP/1.0 200 OK");
-			print json_encode($review);
+			$oak->write_document_json($review);
 		}
 	}
 
