@@ -19,14 +19,14 @@ function logout_failure($status_code,$reason='')
 $oak=new OAK();
  if ($oak->login_is_trusted()==false)
 {
-	logout_failure(401,'Unauthorized');
+	logout_failure(403,'Unauthorized');
 }
 else
 {
 	$user_doc=new OAKDocument('');
 	if ($oak->get_document('user:'.$oak->get_user_id(),&$user_doc)!==true)
 	{
-		logout_failure(401,'Unauthorized');
+		logout_failure(403,'Unauthorized');
 	}
 	else
 	{

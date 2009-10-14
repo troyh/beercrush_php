@@ -77,7 +77,7 @@ else
 			/*
 				Login failed
 			*/
-			login_failure(401,'Login failed');
+			login_failure(403,'Login failed');
 			$oak->log('failed login attempt:'.$email);
 		}
 		else if ($oak->get_document($docid,&$user_doc)!==true)
