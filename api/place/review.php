@@ -12,7 +12,7 @@ function oakMain($oak)
 	
 	if ($oak->login_is_trusted()!==true) // If the user is not logged in or we can't trust the login
 	{
-		header("HTTP/1.0 401 Login required");
+		$oak->request_login();
 	}
 	else
 	{
@@ -36,14 +36,8 @@ function oakMain($oak)
 		}
 		else
 		{
-			$xmlwriter=new XMLWriter;
-			$xmlwriter->openMemory();
-			$xmlwriter->startDocument();
-			
-			$oak->write_document($review,$xmlwriter);
-			
-			$xmlwriter->endDocument();
-			print $xmlwriter->outputMemory();
+			header("HTTP/1.0 200 OK");
+			print json_encode($review);
 		}
 	}
 

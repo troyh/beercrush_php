@@ -39,7 +39,7 @@ class OAKDocument
 			// break;
 		}
 	}
-	function __get($name)   { return $this->$name; }
+	function __get($name)   { return isset($this->$name)?$this->$name:null; }
 	function __isset($name) { return isset($this->$name); }
 	function __unset($name) { unset($this->$name); }
 	
