@@ -1,0 +1,107 @@
+#!/usr/bin/php
+<?php
+
+$xml=simplexml_load_file("php://stdin");
+
+$datasource=$xml->xpath('/sf:tabular-model/sf:grid/sf:datasource');
+$cells=$datasource[0]->xpath('sf:t|sf:g|sf:o|sf:n');
+
+$row_refs=$xml->xpath('/sf:tabular-model/sf:grid/sf:rows/sf:grid-row');
+
+$column_names=array();
+
+for ($r=0;$r<count($row_refs);++$r)
+{
+	$attribs=$row_refs[$r]->attributes('http://developer.apple.com/namespaces/sf');
+	$nc=$attribs['nc'];
+	// print $nc." columns\n";
+	
+	$cols=array_splice($cells,0,$nc);
+	if ($r==0)
+	{
+		for ($c=0;$c<count($cols);++$c)
+		{
+			$column_names[]=get_element_text($cols[$c]);
+		}
+		continue;
+	}
+	
+	$data=array();
+	for ($c=0;$c<count($cols);++$c)
+	{
+		$txt=get_element_text($cols[$c]);
+		if (empty($column_names[$c]))
+			$column_names[$c]="column".($c+1);
+		$data[$column_names[$c]]=$txt;
+	}
+	print json_encode($data)."\n";
+
+}
+
+function get_element_text($col)
+{
+	switch ($col->getName())
+	{
+		case 't':
+			$kids=$col->children('http://developer.apple.com/namespaces/sf');
+			$s=$kids[0]->attributes('http://developer.apple.com/namespaces/sfa');
+			if (!empty($s->s[0]))
+			{
+				$txt=(string)($s->s[0]);
+			}
+			else
+			{
+				$kids2=$kids->children('http://developer.apple.com/namespaces/sf');
+				foreach ($kids2 as $k)
+				{
+					switch ($k->getName())
+					{
+						case 'sn':
+							$txt=(string)$k;
+							break;
+						case 'so':
+							$txt.=get_element_text($k);
+							break;
+						default:
+							break;
+					}
+				}
+			}
+			break;
+		case 'g':
+			$txt="";
+			break;
+		case 'o':
+			$txt="";
+			break;
+		case 'n':
+		{
+			$a=$col->attributes('http://developer.apple.com/namespaces/sf');
+			$txt=(string)$a['v'][0];
+			break;
+
+		}
+		case 'so':
+		case 'text-body':
+		{
+			$sokids=$col->children('http://developer.apple.com/namespaces/sf');
+			foreach ($sokids as $sokid)
+			{
+				$txt.=get_element_text($sokid);
+			}
+			break;
+		}
+		case 'p':
+		{
+			$txt=(string)$col;
+			break;
+		}
+		default:
+		{
+			$txt='UNKNOWN TAG:'.$col->getName();
+		}
+			break;
+	}
+	return $txt;
+}
+?>
