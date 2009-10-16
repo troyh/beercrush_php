@@ -1,0 +1,25 @@
+<!--#include virtual="/header.html" -->
+
+<a id="brewery_link" href="/brewery/"></a>
+<h2 id="beer_title"></h2>
+
+<div id="description"></div>
+
+<script type="text/javascript">
+
+function BeerCrushMain()
+{
+	$.getJSON("/json/beer/"+getUrlVars()["id"],null,function(data,textStatus) {
+		$('#beer_title').text(data.name);
+		$('#description').text(data.description);
+	});
+	var brewery_id=getUrlVars()['id'].replace(/\/.*$/,'');
+	$.getJSON("/json/brewery/"+brewery_id,null,function(data,textStatus) {
+		$('#brewery_link').attr('href','/brewery/brewery.html?id='+brewery_id);
+		$('#brewery_link').text(data.name);
+	})
+}
+
+</script>
+
+<!--#include virtual="/footer.html" -->

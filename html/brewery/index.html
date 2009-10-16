@@ -1,0 +1,31 @@
+<!--#include virtual="/header.html" -->
+
+<h1>Breweries</h1>
+
+<div id="letters">
+</div>
+	
+<div id="brewery_list">
+</div>
+
+<script type="text/javascript">
+
+function BeerCrushMain()
+{
+	$.getJSON("/json/breweries",null,function(data,textStatus) {
+		for (var letter in data)
+		{
+			$("#letters").append("<a href=\"/brewery/?letter="+letter+"\">"+letter+"</a>");
+		}
+		
+		jQuery.each(data[getUrlVars()['letter']],function(k,v) {
+			$("#brewery_list").append("<div><a href=\"/"+v.id.replace(/:/,'/brewery.html?id=')+"\">"+v.name+"</a></div>");
+		})
+
+		
+	});
+}
+
+</script>
+
+<!--#include virtual="/footer.html" -->
