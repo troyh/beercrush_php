@@ -18,20 +18,7 @@ class OAKDocument
 		case "timestamp":
 			$this->meta->$name;
 			break;
-		case "_id":
-		case "_rev":
-			$attributes="@attributes";
-			if (isset($this->$attributes))
-				$attribs=$this->$attributes;
-			else
-				$attribs=new stdClass;
-
-			$modified_name=substr($name,1); // remove underscore
-			$attribs->$modified_name=$val;
-			$this->$attributes=$attribs;
-			// Fall through and assign it normally too
 		case "type":
-		case "@attributes":
 		default:
 			$this->$name=$val; 
 			break;
@@ -59,13 +46,6 @@ class OAKDocument
 		return $this->_id; 
 	}
 	
-	public function getAttribute($attr_name)
-	{
-		if (empty($attr_name))
-			throw new Exception('Attribute name is empty');
-		$attribs="@attributes";
-		return $this->$attribs->$attr_name;
-	}
 };
 
 class OAK
@@ -83,6 +63,7 @@ class OAK
 	const DATATYPE_OBJ=6;
 	const DATATYPE_URI=7;
 	const DATATYPE_PHONE=8;
+	const DATATYPE_ADDRESS_STATE=9;
 	
 	// Priorities for log()
 	const LOGPRI_INFO=LOG_INFO;
@@ -308,11 +289,99 @@ class OAK
 				$attribs['converted_value']=$value;
 				break;
 			case OAK::DATATYPE_PHONE:
-				if (empty($value) || preg_match('/[^A-Z0-9\(\)\s-]/',$value))
+				if (empty($value))
+				{
+					if ($attribs['minlen']>0)
+						return false;
+				}
+				else if (preg_match('/[^A-Z0-9\(\)\s-]/',$value))
 					return false;
 					
 				$attribs['converted_value']=(string)preg_replace('/\s+/','',$value); // remove multiple spaces
 				break;
+			case OAK::DATATYPE_ADDRESS_STATE:
+			{
+				// From http://www.usps.com/ncsc/lookups/usps_abbreviations.html
+				$state_abbreviations=array(
+					"ALABAMA"							=> 'AL',
+					"ALASKA"							=> 'AK',
+					"AMERICAN SAMOA"					=> 'AS',
+					"ARIZONA"							=> 'AZ',
+					"ARKANSAS"							=> 'AR',
+					"CALIFORNIA"						=> 'CA',
+					"COLORADO"							=> 'CO',
+					"CONNECTICUT"						=> 'CT',
+					"DELAWARE"							=> 'DE',
+					"DISTRICT OF COLUMBIA"				=> 'DC',
+					"FEDERATED STATES OF MICRONESIA"	=> 'FM',
+					"FLORIDA"							=> 'FL',
+					"GEORGIA"							=> 'GA',
+					"GUAM"								=> 'GU',
+					"HAWAII"							=> 'HI',
+					"IDAHO"								=> 'ID',
+					"ILLINOIS"							=> 'IL',
+					"INDIANA"							=> 'IN',
+					"IOWA"								=> 'IA',
+					"KANSAS"							=> 'KS',
+					"KENTUCKY"							=> 'KY',
+					"LOUISIANA"							=> 'LA',
+					"MAINE"								=> 'ME',
+					"MARSHALL ISLANDS"					=> 'MH',
+					"MARYLAND"							=> 'MD',
+					"MASSACHUSETTS"						=> 'MA',
+					"MICHIGAN"							=> 'MI',
+					"MINNESOTA"							=> 'MN',
+					"MISSISSIPPI"						=> 'MS',
+					"MISSOURI"							=> 'MO',
+					"MONTANA"							=> 'MT',
+					"NEBRASKA"							=> 'NE',
+					"NEVADA"							=> 'NV',
+					"NEW HAMPSHIRE"						=> 'NH',
+					"NEW JERSEY"						=> 'NJ',
+					"NEW MEXICO"						=> 'NM',
+					"NEW YORK"							=> 'NY',
+					"NORTH CAROLINA"					=> 'NC',
+					"NORTH DAKOTA"						=> 'ND',
+					"NORTHERN MARIANA ISLANDS"			=> 'MP',
+					"OHIO"								=> 'OH',
+					"OKLAHOMA"							=> 'OK',
+					"OREGON"							=> 'OR',
+					"PALAU"								=> 'PW',
+					"PENNSYLVANIA"						=> 'PA',
+					"PUERTO RICO"						=> 'PR',
+					"RHODE ISLAND"						=> 'RI',
+					"SOUTH CAROLINA"					=> 'SC',
+					"SOUTH DAKOTA"						=> 'SD',
+					"TENNESSEE"							=> 'TN',
+					"TEXAS"								=> 'TX',
+					"UTAH"								=> 'UT',
+					"VERMONT"							=> 'VT',
+					"VIRGIN ISLANDS"					=> 'VI',
+					"VIRGINIA"							=> 'VA',
+					"WASHINGTON"						=> 'WA',
+					"WEST VIRGINIA"						=> 'WV',
+					"WISCONSIN"							=> 'WI',
+					"WYOMING"							=> 'WY',
+				);                                              
+				
+				$state_codes=array(
+					'AL','AK','AS','AZ','AR','CA','CO','CT','DE','DC','FM','FL','GA',
+					'GU','HI','ID','IL','IN','IA','KS','KY','LA','ME','MH','MD','MA',
+					'MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND',
+					'MP','OH','OK','OR','PW','PA','PR','RI','SC','SD','TN','TX','UT',
+					'VT','VI','VA','WA','WV','WI','WY'
+				);
+
+				$value=strtoupper($value);
+				if (in_array($value,$state_codes))
+					$attribs['converted_value']=$value;
+				else if (isset($state_abbreviations[$value]))
+					$attribs['converted_value']=(string)$state_abbreviations[$value];
+				else
+					return false;
+					
+				break;
+			}
 			default:
 				throw new Exception("Unknown OAK datatype:".$attribs['type']);
 		}
@@ -380,8 +449,9 @@ class OAK
 		
 		if ($cgi_fields[$parts[0]]['type']==OAK::DATATYPE_OBJ)
 		{
+			$k=$parts[0];
 			array_shift($parts); // Remove the first part
-			$this->set_cgi_value(implode(OAK::CGI_NAME_SEP,$parts),$cgi_fields[$parts[0]]['properties'],$value);
+			$this->set_cgi_value(implode(OAK::CGI_NAME_SEP,$parts),$cgi_fields[$k]['properties'],$value);
 		}
 		else if (isset($cgi_fields[$parts[0]]))
 		{
@@ -400,8 +470,9 @@ class OAK
 		
 		if ($cgi_fields[$parts[0]]['type']==OAK::DATATYPE_OBJ)
 		{
+			$k=$parts[0];
 			array_shift($parts); // Remove the first part
-			return $this->get_cgi_value(implode(OAK::CGI_NAME_SEP,$parts),$cgi_fields[$parts[0]]['properties']);
+			return $this->get_cgi_value(implode(OAK::CGI_NAME_SEP,$parts),$cgi_fields[$k]['properties']);
 		}
 
 		if (isset($cgi_fields[$parts[0]]) && $cgi_fields[$parts[0]]['isset']===true && $cgi_fields[$parts[0]]['validated']===true)
