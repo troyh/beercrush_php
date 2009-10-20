@@ -14,16 +14,16 @@ $cgi_fields=array(
 	"name"						=> array(type=>OAK::DATATYPE_TEXT , minlen=>1, maxlen=>200),
 	"description"				=> array(type=>OAK::DATATYPE_TEXT),
 	"address" => array(type=>OAK::DATATYPE_OBJ, properties => array(
-		"street"					=> array(type=>OAK::DATATYPE_TEXT , minlen=>1, maxlen=>200),
-		"city"						=> array(type=>OAK::DATATYPE_TEXT , minlen=>1, maxlen=>200),
-		"state"						=> array(type=>OAK::DATATYPE_TEXT , minlen=>2, maxlen=>2),
-		"zip"						=> array(type=>OAK::DATATYPE_TEXT , minlen=>5, maxlen=>10),
-		"country"					=> array(type=>OAK::DATATYPE_TEXT , minlen=>2, maxlen=>100),
+		"street"					=> array(type=>OAK::DATATYPE_TEXT , minlen=>0, maxlen=>200),
+		"city"						=> array(type=>OAK::DATATYPE_TEXT , minlen=>0, maxlen=>200),
+		"state"						=> array(type=>OAK::DATATYPE_TEXT , minlen=>0),
+		"zip"						=> array(type=>OAK::DATATYPE_TEXT , minlen=>0, maxlen=>10),
+		"country"					=> array(type=>OAK::DATATYPE_TEXT , minlen=>0, maxlen=>100),
 		"latitude"					=> array(type=>OAK::DATATYPE_FLOAT, min=>-180.0, max=>180),
 		"longitude"					=> array(type=>OAK::DATATYPE_FLOAT, min=>-180.0, max=>180),
 	)),
 	"established"	=> array(type=>OAK::DATATYPE_INT, min=>1500, max=>(int)date('Y')),
-	"phone"		   	=> array(type=>OAK::DATATYPE_PHONE),
+	"phone"		   	=> array(type=>OAK::DATATYPE_PHONE, minlen=>0),
 	"uri" 			=> array(type=>OAK::DATATYPE_URI),
 	"togo" => array(type=>OAK::DATATYPE_OBJ, properties => array(
 		"bottles" 	=> array(type=>OAK::DATATYPE_BOOL),
@@ -62,7 +62,9 @@ function oakMain($oak)
 			// See if this brewery already exists
 			if ($oak->get_document($brewery->getID(),&$brewery)===true)
 			{
-				throw new Exception($brewery->getID()." already exists");
+				header("HTTP/1.0 409 Duplicate brewery name");
+				print json_encode($brewery);
+				exit;
 			}
 		}
 		else
