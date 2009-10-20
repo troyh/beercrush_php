@@ -1,0 +1,119 @@
+#!/usr/bin/php
+<?php
+
+require_once('beercrush/BeerCrushClient.class.php');
+
+$bc=new BeerCrushClient('http://macdev','troy.hakala@gmail.com','blah');
+
+$line=0;
+while ($txt=fgets(STDIN))
+{
+	++$line;
+	
+	$doc=json_decode($txt);
+	
+	$place=new stdClass;
+
+	foreach ($doc as $k=>$v)
+	{
+		switch ($k)
+		{
+		case 'name':
+			$place->name=$v;
+			break;
+		case 'type':
+			$place->placetype=$v;
+			break;
+		case 'address':
+			$place->address->street=$v;
+			break;
+		case 'city':
+			$place->address->city=$v;
+			break;
+		case 'state':
+			$place->address->state=$v;
+			break;
+		case 'zip':
+			$place->address->zip=$v;
+			break;
+		case 'country':
+			$place->address->country=$v;
+			break;
+		case 'phone':
+			$place->phone=$v;
+			break;
+		case 'website':
+			$place->uri=$v;
+			break;
+		case 'description':
+			$place->description=$v;
+			break;
+		case 'bottles':
+		case 'growlers':
+		case 'kegs':
+			$place->togo->$k=(strtolower($v)=='yes')?true:false;
+			break;
+		case 'tastings':
+			$place->hours->tasting=$v;
+			break;
+		case 'tour':
+			$place->hours->tour=$v;
+			break;
+		case 'hours':
+			$place->hours->open=$v;
+			break;
+		case 'outdoor':
+			$place->restaurant->outdoor_seating=(strtolower($v)=='yes')?true:false;
+			break;
+		case 'price':
+			if (!empty($v))
+				$place->price=$v;
+			break;
+		case 'kid-friendly':
+			$place->kid_friendy=(strtolower($v)=='yes')?true:false;
+			break;
+		case 'wi-fi':
+			$place->wifi=(strtolower($v)=='yes')?true:false;
+			break;
+		default:
+			if (!empty($v))
+				print "Dropping field:$k=$v (".$doc->name.")\n";
+			break;
+		}
+	}
+
+	// print $doc->name.' ';
+	// print $doc->type."\n";
+	// print $place->name."\n";
+	// print $place->placetype."\n";
+	// print $place->address->street."\n";
+	// print $place->address->city."\n";
+	// print $place->address->state."\n";
+	// print $place->address->zip."\n";
+	// print $place->address->country."\n";
+	// print $place->phone."\n";
+	// print $place->uri."\n";
+	// print $place->description."\n";
+	// print $place->price."\n";
+	// if (isset($place->togo->bottles)) print $place->name.' '.($place->togo->bottles?'true':'false')."\n";
+	// if (isset($place->togo->kegs)) print ($place->togo->kegs?'true':'false')."\n";
+	// if (isset($place->togo->growlers)) print $place->name.' '.($place->togo->growlers?'true':'false')."\n";
+	// if (!empty($place->hours->tasting)) print $place->name.' '.$place->hours->tasting."\n";
+	// if (!empty($place->hours->tour)) print $place->name.' '.$place->hours->tour."\n";
+	// if (!empty($place->hours->open)) print $place->name.' '.$place->hours->open."\n";
+	
+	$status_code=$bc->newPlace($place,$newDoc);
+	if ($status_code!=200)
+	{
+		print "Failed ($status_code) to add: ".$doc->name." (line $line)\n";
+		print_r($newDoc);
+	}
+	else
+	{
+		// print $newDoc->name.' '.$newDoc->_id."\n";
+		// print_r($newDoc);
+	}
+}
+
+
+?>

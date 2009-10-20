@@ -1,0 +1,78 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/BeerCrushClient.class.php');
+
+function make_uuid()
+{
+	uuid_create(&$uuid);
+	uuid_make($uuid,UUID_MAKE_V1);
+	uuid_export($uuid,UUID_FMT_STR,&$uuid_string);
+	$uuid_string=trim($uuid_string); // Remove the trailing null-byte (why is it added?!)
+	return $uuid_string;
+}
+
+$bc=new BeerCrushClient('http://macdev','troy.hakala@gmail.com','blah');
+
+$line=0;
+
+while ($json=fgets(STDIN))
+{
+	$doc=json_decode($json);
+	++$line;
+	if ($doc==null)
+		print "Bad JSON:$line\n";
+	else
+	{
+		$status_code=$bc->newBrewery($doc->name,&$newBrewery);
+		// if ($status_code==409)
+		// {
+		// 	// Dupe, retry with a unique name
+		// 	$doc->name=$doc->name.' ['.make_uuid().']';
+		// 	$status_code=$bc->newBrewery($doc->name,&$newBrewery);
+		// }
+		
+		if ($status_code!=200 && $status_code!=409)
+		{
+			print "Failed ($status_code) to create new brewery: ".$doc->name."\n";
+		}
+		else
+		{
+			if (empty($doc->country))
+				$doc->country="US"; // Assume US
+				
+			$newBrewery->address->street=$doc->address;
+			$newBrewery->address->city=$doc->city;
+			$newBrewery->address->state=$doc->state;
+			$newBrewery->address->zip=$doc->zip;
+			$newBrewery->address->country=$doc->country;
+
+			$newBrewery->description=$doc->description;
+			$newBrewery->phone=$doc->phone;
+			$newBrewery->uri=$doc->website;
+			
+			$newBrewery->hours=$doc->hours;
+			$newBrewery->tasting=$doc->tasting;
+			$newBrewery->tourinfo=$doc->tour;
+			$newBrewery->togo->bottles=$doc->bottles;
+			$newBrewery->togo->growlers=$doc->growlers;
+			$newBrewery->togo->kegs=$doc->kegs;
+			
+			// print_r($newBrewery);
+			
+			$status_code=$bc->editBrewery($newBrewery->_id,$newBrewery,&$newNewBrewery);
+			if ($status_code!=200)
+			{
+				print "Failed ($status_code) to edit $line-th brewery: ".$newBrewery->_id."\n";
+				// print_r($newNewBrewery);
+			}
+			else
+			{
+				// print "Added ".$newNewBrewery->_id."\n";
+			}
+		}
+		
+
+	}
+}
+
+?>
