@@ -1,3 +1,16 @@
+/*
+Beer Crush color scheme:
+
+brown:		c49a6c
+white:		ffffff
+light red:	ee3124
+dark red:	6f0014
+light blue:	38bdec
+dark blue:	137aa1
+black:		000000
+
+*/
+
 ol#navmenu {
 	display:inline;
 	font-size:17pt;
@@ -24,7 +37,7 @@ ol#navmenu {
 #searchform {
 	position:absolute;
 	left:350px;
-	top:120px;
+	top:100px;
 }
 
 body {
