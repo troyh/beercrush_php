@@ -27,12 +27,26 @@ for ($r=0;$r<count($row_refs);++$r)
 	}
 	
 	$data=array();
-	for ($c=0;$c<count($cols);++$c)
+	for ($c=0,$n=0;$c<count($cols);++$c,++$n)
 	{
 		$txt=get_element_text($cols[$c]);
+		
 		if (empty($column_names[$c]))
 			$column_names[$c]="column".($c+1);
-		$data[$column_names[$c]]=$txt;
+			
+		// Adjust the column when a g tag has a ct attribute (why is Numbers so odd?)
+		$attribs=$cols[$c]->attributes('http://developer.apple.com/namespaces/sf');
+		if ($cols[$c]->getName()=='g' && isset($attribs['ct']))
+		{
+			$n+=$attribs['ct']-1;
+		}
+		if ($c && $cols[$c]->getName()=='t' && isset($attribs['ct']))
+		{
+			// print $cols[$c]->getName()." attributes:";print_r($attribs);print "\n";
+			$n+=$attribs['ct']-1;
+		}
+		
+		$data[$column_names[$n]]=$txt;
 	}
 	print json_encode($data)."\n";
 
