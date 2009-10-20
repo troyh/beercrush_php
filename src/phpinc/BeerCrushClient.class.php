@@ -4,16 +4,17 @@ class BeerCrushClient
 {
 	public $debug=false;
 	
-	public function __construct($url, $username, $password)
+	public function __construct($url, $email, $password)
 	{
 		$this->base_url=$url;
-		$this->username=$username;
+		$this->email=$email;
 		$this->password=$password;
 	}
 	
-	public function login($username,$password)
+	public function login($email,$password)
 	{
-		$status_code=$this->sendRequest('/api/login',"POST",array("userid" => $username, "password" => $password),$credentials);
+		$status_code=$this->sendRequest('/api/login',"POST",array("email" => $email, "password" => $password),$credentials);
+		$this->credentials=$credentials;
 		return $status_code;
 	}
 	
@@ -26,7 +27,38 @@ class BeerCrushClient
 				"name" => $name,
 			),
 			$brewery_doc);
+			
+		return $status_code;
+	}
+	
+	public function editBrewery($id,$doc,&$brewery_doc)
+	{
+		$data=array();
+		$this->flatten_document($doc,$data);
 		
+		$data['brewery_id']=$id;
+		// print_r($data);exit;
+		
+		$status_code=$this->sendRequest(
+			'/api/brewery/edit',
+			"POST",
+			$data,
+			$brewery_doc);
+		
+		return $status_code;
+	}
+	
+	public function newPlace($doc,&$place_doc)
+	{
+		$data=array();
+		$this->flatten_document($doc,$data);
+
+		$status_code=$this->sendRequest(
+			'/api/place/edit',
+			"POST",
+			$data,
+			$place_doc);
+			
 		return $status_code;
 	}
 	
@@ -102,7 +134,14 @@ class BeerCrushClient
 			$ch=curl_init($url);
 			if ($ch===FALSE)
 				throw new Exception('curl_init failed');
-			
+
+			// Always add userid & usrkey
+			if (isset($this->credentials->userid) && isset($this->credentials->usrkey))
+			{
+				$data['userid']=$this->credentials->userid;
+				$data['usrkey']=$this->credentials->usrkey;
+			}
+
 			if ($method=="GET")
 			{
 				if (!is_null($data))
@@ -119,10 +158,12 @@ class BeerCrushClient
 			{
 				curl_setopt($ch,CURLOPT_POSTFIELDS,$data);
 			}
+			
+			// print "POST data:";print_r($data);
 		
 			curl_setopt($ch,CURLOPT_RETURNTRANSFER,TRUE);
-			curl_setopt($ch,CURLOPT_COOKIEJAR,getenv('HOME')."/BeerCrush.cookies");
-			curl_setopt($ch,CURLOPT_COOKIEFILE,getenv('HOME')."/BeerCrush.cookies");
+			// curl_setopt($ch,CURLOPT_COOKIEJAR,getenv('HOME')."/BeerCrush.cookies");
+			// curl_setopt($ch,CURLOPT_COOKIEFILE,getenv('HOME')."/BeerCrush.cookies");
 			
 			if ($this->debug)
 				curl_setopt($ch,CURLOPT_VERBOSE,TRUE);
@@ -134,13 +175,13 @@ class BeerCrushClient
 			{
 				$answer=json_decode($output);
 			}
-			else if ($status_code==420)
+			else if ($status_code==403)
 			{
 				if ($login_attempts<1)
 				{
 					$login_attempts++;
-					$status_code=$this->login($this->username,$this->password);
-					if ($status_code==200)
+					$login_status_code=$this->login($this->email,$this->password);
+					if ($login_status_code==200)
 					{
 						$bRetry=TRUE;
 					}
@@ -154,6 +195,28 @@ class BeerCrushClient
 		while ($bRetry);
 		
 		return $status_code;
+	}
+
+	private function flatten_document($doc,&$data,$prefix=null)
+	{
+		foreach ($doc as $k=>$v)
+		{
+			if (is_array($v) || is_object($v))
+			{
+				$this->flatten_document($v,$data,$k);
+			}
+			else if (is_scalar($v))
+			{
+				if (is_null($prefix))
+					$data[$k]=$v;
+				else
+					$data["$prefix:$k"]=$v;
+			}
+			else
+			{
+				throw new Exception('Unsupported data type: '.gettype($v));
+			}
+		}
 	}
 	
 };
