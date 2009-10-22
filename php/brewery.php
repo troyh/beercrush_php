@@ -1,9 +1,10 @@
 <?php
-	
-	$doc=file_get_contents("http://localhost/json/brewery/".$_GET['id']);
+	header('Content-type: text/html; charset=utf-8');
+
+	$doc=file_get_contents("http://localhost/api/brewery/".$_GET['id']);
 	$brewerydoc=json_decode($doc);
 
-	$doc=@file_get_contents("http://localhost/json/brewery/".$_GET['id']."/beerlist");
+	$doc=@file_get_contents("http://localhost/api/brewery/".$_GET['id']."/beerlist");
 	$beerlistdoc=json_decode($doc);
 	if ($beerlistdoc==null)
 	{
@@ -29,7 +30,7 @@
 <h3>Beers</h3>
 <div id="beerlist">
 <?php foreach ($beerlistdoc->beers as $beer){ ?>
-	<div><a href="/<?=str_replace(':','/',$beer->$attributes->id)?>"><?=$beer->name?></a></div>
+	<div><a href="/<?=str_replace(':','/',$beer->id)?>"><?=$beer->name?></a></div>
 <?php } ?>
 </div>
 	

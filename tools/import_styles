@@ -1,0 +1,61 @@
+#!/usr/bin/php
+<?php
+
+function makeid($s)
+{
+	$s=strtolower($s);
+	$s=preg_replace('/[^a-z0-9]+/i','-',$s);
+	$s=preg_replace('/-+/','-',$s);
+	$s=preg_replace('/^-+/','',$s);
+	$s=preg_replace('/-+$/','',$s);
+	return $s;
+}
+
+function makestyleobj($obj)
+{
+	return array(
+		'id' => makeid($obj->styles),
+		'name' => $obj->styles,
+		'OGlo' => (float)$obj->{'OG Low'},
+		'OGhi' => (float)$obj->{'OG High'},
+		'FGlo' => (float)$obj->{'FG Low'},
+		'FGhi' => (float)$obj->{'FG High'},
+		'IBUlo' => (int)$obj->{'IBUs low'},
+		'IBUhi' => (int)$obj->{'IBUs high'},
+		'SRMlo' => (int)$obj->{'color low'},
+		'SRMhi' => (int)$obj->{'color high'},
+		'ABVlo' => (float)$obj->{'alcohol % low'},
+		'ABVhi' => (float)$obj->{'alcohol  % high'},
+		'type' => $obj->type,
+		'origin' => $obj->orgin,
+		'from' => $obj->From,
+	);
+}
+
+$styles=new stdClass;
+$styles->styles=array();
+
+while ($txt=fgets(STDIN))
+{
+	$styledoc=json_decode($txt);
+	
+	$idx=$styledoc->CatNum;
+	if (count($styles->styles) < $idx)
+	{
+		$current_root_category=new stdClass;
+		$current_root_category->id=makeid($styledoc->{'Category Name'});
+		$current_root_category->name=$styledoc->{'Category Name'};
+		
+		$styles->styles[]=$current_root_category;
+	}
+
+	if (!isset($current_root_category->styles))
+		$current_root_category->styles=array();
+		
+	$styleobj=makestyleobj($styledoc);
+	$current_root_category->styles[]=$styleobj;
+}
+
+print json_encode($styles);
+
+?>

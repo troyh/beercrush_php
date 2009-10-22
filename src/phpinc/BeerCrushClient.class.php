@@ -62,41 +62,18 @@ class BeerCrushClient
 		return $status_code;
 	}
 	
-	public function addBeer($beer_doc,&$new_beer_doc)
+	public function newBeer($beer_doc,&$new_beer_doc)
 	{
 		return $this->editBeer(null,$beer_doc,$new_beer_doc);
 	}
 	
 	public function editBeer($beer_id,$beer_doc,&$new_beer_doc)
 	{
-		$fields=array(
-			"abv"				=> 'ABV',
-			"availability"		=> 'availability',
-			"brewery_id"		=> 'brewery_id',
-			"calories_per_ml"	=> 'calories_per_ml',
-			"description"		=> 'description',
-			"fg"				=> 'FG',
-			"grains"			=> 'grains',
-			"hops"				=> 'hops',
-			"ibu"				=> 'IBU',
-			"ingredients"		=> 'ingredients',
-			"name"				=> 'name',
-			"og"				=> 'OG',
-			"otherings"			=> 'otherings',
-			"srm"				=> 'color',
-			"style_text"		=> 'style_text',
-			"yeast"				=> 'yeast',
-		);
-
 		$data=array();
-		foreach ($fields as $k=>$f)
-		{
-			if (!is_null($beer_doc->$f))
-				$data[$k]=$beer_doc->$f;
-		}
+		$this->flatten_document($beer_doc,$data);
 		
 		if (!is_null($beer_id))
-			$data['beer_id']=$beer_id;
+			$beer->beer_id=$beer_id;
 
 		$status_code=$this->sendRequest(
 			'/api/beer/edit',
@@ -171,6 +148,8 @@ class BeerCrushClient
 			$output=curl_exec($ch);
 			$status_code=curl_getinfo($ch,CURLINFO_HTTP_CODE);
 
+			// print "OUTPUT:$output\n";
+			
 			if ($status_code==200)
 			{
 				$answer=json_decode($output);

@@ -1,4 +1,5 @@
 <?php 
+	header('Content-type: text/html; charset=utf-8');
 
 	$places=json_decode(file_get_contents("http://localhost/api/places"));
 	

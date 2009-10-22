@@ -22,6 +22,10 @@ print file_get_contents("../html/header.html");
 
 <div><?=$place->description?></div>
 
+<h2>Beers</h2>
+<div id="beerlist">
+</div>
+
 <?
 print file_get_contents("../html/footer.html");
 ?>

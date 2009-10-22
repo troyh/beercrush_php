@@ -1,17 +1,17 @@
 <?php
-	print file_get_contents("../html/header.html");
+	header('Content-type: text/html; charset=utf-8');
 	
-	$doc=file_get_contents("http://localhost/json/beer/".str_replace(':','/',$_GET['id']));
+	$doc=file_get_contents("http://localhost/api/beer/".str_replace(':','/',$_GET['id']));
 	$beerdoc=json_decode($doc);
 
 	$brewery_id=preg_replace('/:[^:]*$/','',$_GET['id']);
-	$doc=file_get_contents("http://localhost/json/brewery/".$brewery_id);
+	$doc=file_get_contents("http://localhost/api/brewery/".$brewery_id);
 	$brewerydoc=json_decode($doc);
-	
-	$attributes='@attributes';
+	// print_r($brewerydoc);exit;
+	print file_get_contents("../html/header.html");
 ?>
 
-<a id="brewery_link" href="/brewery/<?=preg_replace('/^.*:/','',$brewerydoc->$attributes->id)?>"><?=$brewerydoc->name?></a>
+<a id="brewery_link" href="/brewery/<?=preg_replace('/^.*:/','',$brewerydoc->{'@attributes'}->id)?>"><?=$brewerydoc->name?></a>
 <h2 id="beer_title"><?=$beerdoc->name?></h2>
 
 <div id="description"><?=$beerdoc->description?></div>

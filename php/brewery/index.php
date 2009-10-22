@@ -1,6 +1,7 @@
 <?php 
+	header('Content-type: text/html; charset=utf-8');
 
-	$breweries=json_decode(file_get_contents("http://localhost/json/breweries"));
+	$breweries=json_decode(file_get_contents("http://localhost/api/breweries"));
 	
 	if (empty($_GET['letter']))
 		$page='#';

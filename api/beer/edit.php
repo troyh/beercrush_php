@@ -3,6 +3,9 @@ require_once 'beercrush/oak.class.php';
 
 function validate_brewery_id($name,$value,$attribs,$converted_value,$oak)
 {
+	if (empty($converted_value))
+		return false;
+		
 	// The brewery_id must already exist
 	$brewery_doc=new stdClass;
 	// If there's a doc for it, it's valid
@@ -11,7 +14,7 @@ function validate_brewery_id($name,$value,$attribs,$converted_value,$oak)
 
 function valid_srm_value($name,$value,$attribs,$converted_value,$oak)
 {
-	return (in_array($converted_value,array(2,3,4,6,9,12,15,18,21,24,30,40)));
+	return ctype_digit($converted_value);
 }
 
 function validate_beer_bjcp_style_id($name,$value,$attribs,$converted_value,$oak)
@@ -56,7 +59,7 @@ $cgi_fields=array(
 	"styles"					=> array(type=>OAK::DATATYPE_TEXT,flags=>OAK::FIELDFLAG_CGIONLY, validatefunc=>validate_beer_bjcp_style_id),
 	"style_text"				=> array(type=>OAK::DATATYPE_TEXT),
 	"brewery_id"				=> array(type=>OAK::DATATYPE_TEXT, validatefunc=>validate_brewery_id ),
-	"calories_per_ml"			=> array(type=>OAK::DATATYPE_INT, min=>0, max=>1000),
+	"calories_per_ml"			=> array(type=>OAK::DATATYPE_FLOAT, min=>0.0, max=>1000.0),
 	"srm"						=> array(type=>OAK::DATATYPE_INT, validatefunc=>validate_srm_value),
 	"description"				=> array(type=>OAK::DATATYPE_TEXT),
 	"fg"						=> array(type=>OAK::DATATYPE_FLOAT),
@@ -83,7 +86,7 @@ function oakMain($oak)
 	{
 		global $cgi_fields;
 		
-		$beer=new Beer;
+		$beer=new OAKDocument('beer');
 
 		if ($oak->cgi_value_exists('beer_id',$cgi_fields)) // Editing existing beer
 		{
@@ -94,12 +97,30 @@ function oakMain($oak)
 		}
 		else  // Adding a new beer
 		{
-			$beer=Beer::createBeer($oak->get_cgi_value('brewery_id',$cgi_fields),$oak->get_cgi_value('name',$cgi_fields));
+			$brewery_id=$oak->get_cgi_value('brewery_id',$cgi_fields);
+			if (empty($brewery_id))
+			{
+				header('HTTP/1.0 400 Missing brewery_id');
+				exit;
+			}
 			
+			// Create an ID based on brewery_id and name
+			$id=preg_replace('/[^a-zA-Z0-9]+/','-',$oak->get_cgi_value('name',$cgi_fields));
+			$id=preg_replace('/-+/','-',$id); // Condense multiple hyphens
+			$id=preg_replace('/^-+/','',$id); // Remove hyphens from start
+			$id=preg_replace('/-+$/','',$id); // Remove hyphens from end
+
+			// Strip off the 'brewery:' part of the brewery_id
+
+			if (substr($brewery_id,0,8)==='brewery:')
+				$brewery_id=substr($brewery_id,8);
+			$beer->setID('beer:'.$brewery_id.':'.$id);
+
 			// See if this beer already exists
 			if ($oak->get_document($beer->getID(),&$beer)===true)
 			{
-				throw new Exception($beer->getID(),450);
+				header('HTTP/1.0 409 Duplicate');
+				exit;
 			}
 		}
 
@@ -140,7 +161,7 @@ function oakMain($oak)
 		// Store in db
 		if ($oak->put_document($beer->getID(),$beer)!==true)
 		{
-			header("HTTP/1.0 502 Save failed");
+			header("HTTP/1.0 500 Save failed");
 		}
 		else
 		{

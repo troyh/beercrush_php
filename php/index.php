@@ -1,0 +1,14 @@
+<?php
+	header('Content-type: text/html; charset=utf-8');
+?>
+<html>
+<head>
+	<title>Beer Crush</title>
+	<link href="/css/BeerCrush.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+	<img src="/img/Logo.jpg">
+	<div id="page_content">
+
+<!--#include virtual="/footer.html" -->
+
