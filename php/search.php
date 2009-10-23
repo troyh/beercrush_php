@@ -8,15 +8,29 @@ function my_var_dump($data)
 	print "</pre>";
 }
 
+header('Content-type: text/html; charset=utf-8');
 print file_get_contents("../html/header.html");
 
+switch ($_GET['dt'])
+{
+case 'beers':
+	$doctypes=array('beer','brewery');
+	break;
+case 'place':
+	$doctypes=array('place');
+	break;
+default:
+	$doctypes=null;
+	break;
+}
+
 $oak=new OAK;
-$results=$oak->query($_GET['q']);
-// my_var_dump($results);
+$results=$oak->query($_GET['q'],true,$doctypes);
+// my_var_dump($results);exit;
 ?>
 
 <div id="searchresults">
-<h3>Results</h3>
+<h3><?=$results->response->numFound?> Results</h3>
 <?php foreach ($results->response->docs as $doc) { ?>
 	<div>
 		<a href="/<?=str_replace(':','/',$doc->id)?>"><?=$doc->name?></a>
