@@ -9,6 +9,17 @@ $msg=file_get_contents('php://stdin');
 $obj=json_decode($msg);
 $oak->log('user_id='.$obj->user_id.' docid='.$obj->docid.' old_rev='.$obj->old_rev.' new_rev='.$obj->new_rev);
 
+// Always invoke solr-index to update the search engine index for this document
+$prog=$oak->get_file_location('BIN_DIR').'/onchange/solr-index';
+$oak->log('Running: '.escapeshellcmd($prog).' '.escapeshellarg($obj->docid));
+exec(escapeshellcmd($prog).' '.escapeshellarg($obj->docid),$output,$return_var);
+if ($return_var)
+{
+	$oak->log('Failed: '.escapeshellcmd($prog).' '.escapeshellarg($obj->docid));
+}
+else
+	$oak->log('Succeeded: '.escapeshellcmd($prog).' '.escapeshellarg($obj->docid));
+
 // Determine the doc type and call the appropriate script
 $parts=split(':',$obj->docid);
 // Find the script for this onchange
