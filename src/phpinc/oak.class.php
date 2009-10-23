@@ -948,16 +948,43 @@ class OAK
 		// TODO: broadcast the message via the Spread Toolkit (or something similar)
 	}
 	
-	public function query($query_string,$return_json=TRUE)
+	public function query($query_string,$return_json=TRUE,$doctypes=null)
 	{
+		$fq_param='';
+		if (!is_null($doctypes))
+		{
+			if (!is_array($doctypes))
+				$doctypes=array($doctypes);
+				
+			$fq_param='fq='.urlencode('doctype:'.join(' or doctype:',$doctypes)).'&';
+		}
 		// Pick a node
 		$node=$this->config->solr->nodes[rand()%count($this->config->solr->nodes)];
-		$url='http://'.$node.$this->config->solr->url.'/select/?wt=json&rows=20&qt=dismax&mm=1&q='.urlencode($query_string);
+		$url='http://'.$node.$this->config->solr->url.'/select/?'.$fq_param.'wt=json&rows=20&qt=dismax&mm=1&q='.urlencode($query_string);
 		$results=file_get_contents($url);
 		if ($return_json)
 			return json_decode($results);
 		return $results;
 	}
+
+	public function solr_post($url,$xmldoc)
+	{
+		$ch=curl_init('http://'.$this->config->solr->nodes[0].$this->config->solr->url.$url);
+		if ($ch===FALSE)
+			throw new Exception('curl_init failed');
+
+		curl_setopt($ch,CURLOPT_HTTPHEADER,array(
+			'Content-Type: text/xml; charset=utf-8'
+		));
+		curl_setopt($ch,CURLOPT_POSTFIELDS,$xmldoc);
+		curl_setopt($ch,CURLOPT_RETURNTRANSFER,TRUE);
+		// curl_setopt($ch,CURLOPT_VERBOSE,TRUE);
+
+		$output=curl_exec($ch);
+		$status_code=curl_getinfo($ch,CURLINFO_HTTP_CODE);
+		return $status_code;
+	}
+
 	
 };
 
