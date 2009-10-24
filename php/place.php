@@ -6,6 +6,7 @@ $place=new stdClass;
 $oak->get_document('place:'.$_GET['id'],$place);
 // var_dump($place);exit;
 
+header('Content-Type: text/html; charset=utf-8');
 print file_get_contents("../html/header.html");
 ?>
 
