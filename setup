@@ -46,7 +46,8 @@ case $1 in
 		# TODO: update design docs from src/db/designdocs.json
 		;;
 	solrserver)
-		# TODO: install Solr
+		sudo apt-get install solr-tomcat6 tomcat6-admin
+		# TODO: verify /etc/tomcat6/tomcat-users.xml is correct
 		;;
 	memcacheqserver)
 		echo "Setting up memcacheq server...";
