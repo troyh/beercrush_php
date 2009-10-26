@@ -9,8 +9,7 @@ if (empty($_GET['letter']))
 else
 	$page=$_GET['letter'];
 
-header('Content-type: text/html; charset=utf-8');
-print file_get_contents("../../html/header.html");
+include('../header.php');
 ?>
 
 <h1>Breweries</h1>
@@ -48,5 +47,5 @@ function BeerCrushMain()
 </script>
 
 <?php 
-	print file_get_contents("../../html/footer.html");
+include('../footer.php');
 ?>
