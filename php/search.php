@@ -8,8 +8,7 @@ function my_var_dump($data)
 	print "</pre>";
 }
 
-header('Content-type: text/html; charset=utf-8');
-print file_get_contents("../html/header.html");
+include("header.php");
 
 switch ($_GET['dt'])
 {
@@ -39,5 +38,5 @@ $results=$oak->query($_GET['q'],true,$doctypes);
 </div>
 
 <?php
-print file_get_contents("../html/footer.html");
+include("footer.php");
 ?>

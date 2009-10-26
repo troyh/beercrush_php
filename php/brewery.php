@@ -1,20 +1,22 @@
 <?php
-	header('Content-type: text/html; charset=utf-8');
+require_once('beercrush/oak.class.php');
 
-	$doc=file_get_contents("http://localhost/api/brewery/".$_GET['id']);
-	$brewerydoc=json_decode($doc);
+$oak=new OAK;
 
-	$doc=@file_get_contents("http://localhost/api/brewery/".$_GET['id']."/beerlist");
-	$beerlistdoc=json_decode($doc);
-	if ($beerlistdoc==null)
-	{
-		$beerlistdoc->beers=array();
-	}
-	
-	$attributes='@attributes';
-	// var_dump($beerlistdoc);exit;
+$doc=file_get_contents($oak->get_config_info()->api->base_uri."/brewery/".$_GET['id']);
+$brewerydoc=json_decode($doc);
 
-	print file_get_contents("../html/header.html");
+$doc=@file_get_contents($oak->get_config_info()->api->base_uri."/brewery/".$_GET['id']."/beerlist");
+$beerlistdoc=json_decode($doc);
+if ($beerlistdoc==null)
+{
+	$beerlistdoc->beers=array();
+}
+
+$attributes='@attributes';
+// var_dump($beerlistdoc);exit;
+
+include("header.php");
 ?>
 
 <h1 id="brewery_title"><?=$brewerydoc->name?></h1>
@@ -58,5 +60,6 @@ function BeerCrushMain()
 </script>
 
 
-
-<?php print file_get_contents("../html/footer.html"); ?>
+<?php
+	include("footer.php");
+?>

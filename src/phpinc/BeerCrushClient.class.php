@@ -4,7 +4,7 @@ class BeerCrushClient
 {
 	public $debug=false;
 	
-	public function __construct($url, $email, $password)
+	public function __construct($url, $email=null, $password=null)
 	{
 		$this->base_url=$url;
 		$this->email=$email;

@@ -1,3 +1,6 @@
+<?php
+header('Content-Type: text/html; charset=utf-8'); 
+?>
 <html>
 <head>
 	<title>Beer Crush</title>
@@ -38,3 +41,4 @@
 		</form>
 	</div>
 	<div id="page_content">
+	

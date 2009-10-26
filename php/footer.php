@@ -1,11 +1,4 @@
-<html>
-<head>
-	<title>Beer Crush</title>
-	<link href="/css/BeerCrush.css" rel="stylesheet" type="text/css" />
-</head>
-<body>
-	<img src="/img/Logo.jpg">
-
+	</div>
 	<div id="footer">
 		&copy; 2009 Beer Crush
 	</div>

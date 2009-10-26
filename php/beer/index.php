@@ -1,13 +1,16 @@
 <?php
-	$beers=json_decode(file_get_contents("http://localhost/api/beers"));
-	
-	if (empty($_GET['letter']))
-		$page='#';
-	else
-		$page=$_GET['letter'];
+require_once('beercrush/oak.class.php');
 
-	header('Content-type: text/html; charset=utf-8');
-	print file_get_contents("../../html/header.html");
+$oak=new OAK;
+$beers=json_decode(file_get_contents($oak->get_config_info()->api->base_uri."/beers"));
+	
+if (empty($_GET['letter']))
+	$page='#';
+else
+	$page=$_GET['letter'];
+
+header('Content-type: text/html; charset=utf-8');
+print file_get_contents("../../html/header.html");
 ?>
 
 <h1>Beers</h1>
