@@ -2,122 +2,86 @@
     "colors":
     [
         {
-            "@attributes":
-            {
-                "srm":"2",
-                "srmmin":"0",
-                "srmmax":"2.4",
-				"rgb": [255, 249, 180]
-            },
+              "srm":"2",
+              "srmmin":"0",
+              "srmmax":"2.4",
+			"rgb": [255, 249, 180],
             "name":"Pale Straw"
         },
         {
-            "@attributes":
-            {
                 "srm":"3",
                 "srmmin":"2.5",
                 "srmmax":"3.4",
-				"rgb": [255, 216, 120]
-            },
+				"rgb": [255, 216, 120],
             "name":"Straw"
         },
         {
-            "@attributes":
-            {
                 "srm":"4",
                 "srmmin":"3.4",
                 "srmmax":"4.9",
-				"rgb": [255, 191, 66]
-            },
+				"rgb": [255, 191, 66],
             "name":"Pale Gold"
         },
         {
-            "@attributes":
-            {
                 "srm":"6",
                 "srmmin":"5",
                 "srmmax":"7.4",
-				"rgb": [248, 166, 0]
-            },
+				"rgb": [248, 166, 0],
             "name":"Deep Gold"
         },
         {
-            "@attributes":
-            {
                 "srm":"9",
                 "srmmin":"7.5",
                 "srmmax":"10.4",
-				"rgb": [229, 133, 0]
-            },
+				"rgb": [229, 133, 0],
             "name":"Pale Amber"
         },
         {
-            "@attributes":
-            {
                 "srm":"12",
                 "srmmin":"10.5",
                 "srmmax":"13.4",
-				"rgb": [207, 105, 0]
-            },
+				"rgb": [207, 105, 0],
             "name":"Medium Amber"
         },
         {
-            "@attributes":
-            {
                 "srm":"15",
                 "srmmin":"13.5",
                 "srmmax":"16.4",
-				"rgb": [187, 81, 0]
-            },
+				"rgb": [187, 81, 0],
             "name":"Deep Amber"
         },
         {
-            "@attributes":
-            {
                 "srm":"18",
                 "srmmin":"16.5",
                 "srmmax":"19.4",
-				"rgb": [166, 62, 10]
-            },
+				"rgb": [166, 62, 10],
             "name":"Amber Brown"
         },
         {
-            "@attributes":
-            {
                 "srm":"21",
                 "srmmin":"19.5",
                 "srmmax":"22.9",
-				"rgb": [100, 52, 10]
-            },
+				"rgb": [100, 52, 10],
             "name":"Brown"
         },
         {
-            "@attributes":
-            {
                 "srm":"24",
                 "srmmin":"23",
                 "srmmax":"26.9",
-				"rgb": [78, 11, 10]
-            },
+				"rgb": [78, 11, 10],
             "name":"Ruby Brown"
         },
         {
-            "@attributes":
-            {
                 "srm":"30",
                 "srmmin":"27",
                 "srmmax":"34.9",
-				"rgb": [54, 8, 10]
-            },
+				"rgb": [54, 8, 10],
             "name":"Deep Brown"
         },
         {
-            "@attributes":
-            {
                 "srm":"40",
                 "srmmin":"35",
-				"rgb": [15, 11, 10]
-            },
+				"rgb": [15, 11, 10],
             "name":"Black"
         }
     ]
