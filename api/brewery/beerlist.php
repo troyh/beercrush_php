@@ -15,12 +15,13 @@ foreach ($viewdoc->rows as $row)
 	$beerdoc=new OAKDocument('');
 	$oak->get_document($row->id,$beerdoc);
 	$beerlist['beers'][]=array(
-		'id' => $beerdoc->getID(),
+		'beer_id' => $beerdoc->getID(),
 		'name' => $beerdoc->name,
 		'description' => $beerdoc->description,
 	);
 }
 
+header('Content-Type: text/javascript; charset=utf-8');
 print json_encode($beerlist);
 
 ?>

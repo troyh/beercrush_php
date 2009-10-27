@@ -135,7 +135,7 @@ class OAK
 	
 	function is_debug_on()
 	{
-		return $this->config->debug==="yes";
+		return isset($this->config->debug) && $this->config->debug==="yes";
 	}
 	
 	public function get_file_location($value)
