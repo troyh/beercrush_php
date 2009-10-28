@@ -14,7 +14,11 @@ function oakMain($oak)
 		$doctypes=null;
 		if ($oak->cgi_value_exists('dataset',$cgi_fields))
 		{
-			$doctypes=preg_split('/\s+/',$oak->get_cgi_value('dataset',$cgi_fields));
+			$dataset=$oak->get_cgi_value('dataset',$cgi_fields);
+			if (!empty($dataset))
+			{
+				$doctypes=preg_split('/\s+/',$dataset);
+			}
 		}
 		$results=$oak->query($oak->get_cgi_value('q',$cgi_fields),false,$doctypes);
 		
