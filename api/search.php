@@ -20,10 +20,25 @@ function oakMain($oak)
 				$doctypes=preg_split('/\s+/',$dataset);
 			}
 		}
-		$results=$oak->query($oak->get_cgi_value('q',$cgi_fields),false,$doctypes);
+		$results=$oak->query($oak->get_cgi_value('q',$cgi_fields),true,$doctypes);
+		// Add in brewery info for beers
+		foreach ($results->response->docs as &$doc)
+		{
+			if (substr($doc->id,0,5)=='beer:')
+			{
+				list($type,$brewery_id,$beer_id)=explode(':',$doc->id);
+				$brewery_doc=new OAKDocument('');
+				if ($oak->get_document('brewery:'.$brewery_id,&$brewery_doc)===true)
+				{
+					$doc->brewery=new stdClass;
+					$doc->brewery->name=$brewery_doc->name;
+					$doc->brewery->id=$brewery_doc->_id;
+				}
+			}
+		}
 		
-		header("Content-Type: application/javascript");
-		print $results;
+		header("Content-Type: application/javascript; charset=utf-8");
+		print json_encode($results);
 	}
 }
 
