@@ -22,6 +22,11 @@ include("header.php");
 
 <div><?=$place->description?></div>
 
+<h2>Details</h2>
+<div>Kid-Friendly: <?php echo isset($place->kid_friendly)?($place->kid_friendly?'Yes':'No'):'Unknown'; ?></div>
+<div>Outdoor seating: <?php echo isset($place->restaurant->outdoor_seating)?($place->restaurant->outdoor_seating?'Yes':'No'):'Unknown'; ?></div>
+<div>Wi-Fi: <?php echo isset($place->wifi)?($place->wifi?'Yes':'No'):'Unknown'; ?></div>
+
 <h2>Beers</h2>
 <div id="beerlist">
 </div>
