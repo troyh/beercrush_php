@@ -69,26 +69,25 @@ function oakMain($oak)
 			{
 				for ($i=0,$j=count($menu->items);$i<$j;++$i)
 				{
-					if ($menu->items[$i]['@attributes']['id']==$id)
+					if ($menu->items[$i]['id']==$id)
 						unset($menu->items[$i]);
 				}
 			}
 
-			$attribs='@attributes';
 			foreach ($adds as $id)
 			{
 				// Does it already exist?
 				$item=null;
 				for ($i=0,$j=count($menu->items);$i<$j;++$i)
 				{
-					if ($menu->items[$i]->$attribs->id==$id)
+					if ($menu->items[$i]->id==$id)
 						$item=$i;
 				}
 				if (is_null($item))
 					$item=count($menu->items); // Add to end
 
 				$parts=split(':',$id);
-				$menu->items[$item]->$attribs=array(
+				$menu->items[$item]=array(
 					'type' => $parts[0],
 					'id'=>$id,
 					'ontap'=>true,
