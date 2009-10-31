@@ -17,15 +17,9 @@ function valid_srm_value($name,$value,$attribs,$converted_value,$oak)
 	return ctype_digit($converted_value);
 }
 
-function validate_beer_bjcp_style_id($name,$value,$attribs,$converted_value,$oak)
+function validate_beer_style_id($name,$value,$attribs,$converted_value,$oak)
 {
 	// TODO: validate it for real against the true list of styles
-	$styles=preg_split('/s+/',$converted_value);
-	foreach ($styles as $style)
-	{
-	 	if (preg_match('/\d{1,2}[A-F]/',$style) == FALSE)
-			return FALSE;
-	}
 	return TRUE;
 }
 
@@ -56,8 +50,8 @@ $cgi_fields=array(
 	"abv"						=> array(type=>OAK::DATATYPE_FLOAT, min=>0.0, max=>100.0),
 	"availability"				=> array(type=>OAK::DATATYPE_TEXT),
 	"beer_id"					=> array(type=>OAK::DATATYPE_TEXT,flags=>OAK::FIELDFLAG_CGIONLY,minlen=>1),
-	"styles"					=> array(type=>OAK::DATATYPE_TEXT,flags=>OAK::FIELDFLAG_CGIONLY, validatefunc=>validate_beer_bjcp_style_id),
-	"style_text"				=> array(type=>OAK::DATATYPE_TEXT),
+	"styles"					=> array(type=>OAK::DATATYPE_TEXT,flags=>OAK::FIELDFLAG_CGIONLY, validatefunc=>validate_beer_style_id),
+	"style_text"				=> array(type=>OAK::DATATYPE_TEXT,flags=>OAK::FIELDFLAG_CGIONLY),
 	"brewery_id"				=> array(type=>OAK::DATATYPE_TEXT, validatefunc=>validate_brewery_id ),
 	"calories_per_ml"			=> array(type=>OAK::DATATYPE_FLOAT, min=>0.0, max=>1000.0),
 	"srm"						=> array(type=>OAK::DATATYPE_INT, validatefunc=>validate_srm_value),
