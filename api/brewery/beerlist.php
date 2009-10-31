@@ -3,7 +3,7 @@ require_once('beercrush/oak.class.php');
 
 $oak=new OAK;
 $viewdoc=new stdClass;
-$viewurl='beer/made_by?key=%22brewery:'.str_replace('/',':',$_GET['id']).'%22';
+$viewurl='beer/made_by?key=%22'.$_GET['brewery_id'].'%22';
 $oak->get_view($viewurl,$viewdoc);
 
 $beerlist=array(
