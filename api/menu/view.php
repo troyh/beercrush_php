@@ -12,6 +12,33 @@ else
 {
 	unset($menu->_id);
 	unset($menu->_rev);
+	
+	// Add in basic beer & brewery info to the list
+	foreach ($menu->items as &$item)
+	{
+		$itemdoc=new OAKDocument('');
+		if ($oak->get_document($item->id,$itemdoc)===true)
+		{
+			switch ($item->type)
+			{
+			case 'beer':
+				$item->name=$itemdoc->name;
+
+				$brewerydoc=new OAKDocument('');
+				if ($oak->get_document($itemdoc->brewery_id,$brewerydoc)===true)
+				{
+					$item->brewery=array(
+						'id' => $brewerydoc->getID(),
+						'name' => $brewerydoc->name,
+					);
+				}
+				break;
+			default:
+				// Support other items besides beers?
+				break;
+			}
+		}
+	}
 	header('Content-Type: text/javascript; charset=utf-8');
 	print json_encode($menu);
 }
