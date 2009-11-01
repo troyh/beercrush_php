@@ -3,10 +3,10 @@ require_once('beercrush/oak.class.php');
 
 $oak=new OAK;
 
-$doc=file_get_contents($oak->get_config_info()->api->base_uri."/brewery/".$_GET['id']);
+$doc=file_get_contents($oak->get_config_info()->api->base_uri."/brewery/view?brewery_id=brewery:".$_GET['id']);
 $brewerydoc=json_decode($doc);
 
-$doc=@file_get_contents($oak->get_config_info()->api->base_uri."/brewery/".$_GET['id']."/beerlist");
+$doc=@file_get_contents($oak->get_config_info()->api->base_uri."/brewery/beerlist?brewery_id=brewery:".$_GET['id']);
 $beerlistdoc=json_decode($doc);
 if ($beerlistdoc==null)
 {
@@ -32,7 +32,7 @@ include("header.php");
 <h3>Beers</h3>
 <div id="beerlist">
 <?php foreach ($beerlistdoc->beers as $beer){ ?>
-	<div><a href="/<?=str_replace(':','/',$beer->id)?>"><?=$beer->name?></a></div>
+	<div><a href="/<?=str_replace(':','/',$beer->beer_id)?>"><?=$beer->name?></a></div>
 <?php } ?>
 </div>
 	
