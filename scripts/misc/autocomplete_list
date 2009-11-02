@@ -3,29 +3,35 @@
 require_once 'beercrush/oak.class.php';
 
 $list=array();
-
 $oak=new OAK;
 
-$brewery_list=new OAKDocument('');
-$oak->get_view("brewery/all",$brewery_list);
-foreach ($brewery_list->rows as $row)
+$brewery_list=json_decode(file_get_contents($oak->get_config_info()->api->base_uri.'/breweries'));
+foreach ($brewery_list as $letter=>$breweries)
 {
-	$list[]=array('name' => $row->key, 'id' => $row->id);
+	foreach ($breweries as $brewery)
+	{
+		$list[]=array('name' => $oak->remove_diacritics($brewery->name), 'id' => $brewery->id);
+	}
 }
 
-$beer_list=new OAKDocument('');
-$oak->get_view("beer/all",$beer_list);
-foreach ($beer_list->rows as $row)
+$beer_list=json_decode(file_get_contents($oak->get_config_info()->api->base_uri.'/beers'));
+foreach ($beer_list as $letter=>$beers)
 {
-	$list[]=array('name' => $row->key, 'id' => $row->id);
+	foreach ($beers as $beer)
+	{
+		$list[]=array('name' => $oak->remove_diacritics($beer->name), 'id' => $beer->id);
+	}
 }
 
-$place_list=new OAKDocument('');
-$oak->get_view("place/all",$place_list);
-foreach ($place_list->rows as $row)
+$place_list=json_decode(file_get_contents($oak->get_config_info()->api->base_uri.'/places'));
+foreach ($place_list as $letter=>$places)
 {
-	$list[]=array('name' => $row->key, 'id' => $row->id);
+	foreach ($places as $place)
+	{
+		$list[]=array('name' => $oak->remove_diacritics($place->name), 'id' => $place->id);
+	}
 }
+
 // var_dump($list);exit;
 if (uasort($list,'cmp_function'))
 {
