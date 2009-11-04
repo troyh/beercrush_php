@@ -7,13 +7,16 @@ OBJ_DIR=/tmp
 vpath %.cc $(SRC_DIR)
 vpath %.fcgi /var/www/beer/api
 
-FCGI_PROGS=autocomplete.fcgi createlogin.fcgi login.fcgi logout.fcgi post.fcgi nearby.fcgi
+FCGI_PROGS=autocomplete.fcgi nearby.fcgi nearby_beer.fcgi
 ALL: $(FCGI_PROGS)
 
 autocomplete.fcgi: $(OBJ_DIR)/autocomplete.o
 	g++ $^ -lfcgi -lcgic_fcgi -o $(WWWDOCROOT)$(WWWRELPATH)$@
 
 nearby.fcgi: $(OBJ_DIR)/nearby.o
+	$(CXX) $^ -lfcgi -lcgic_fcgi -o $(WWWDOCROOT)$(WWWRELPATH)$@
+
+nearby_beer.fcgi: $(OBJ_DIR)/nearby_beer.o
 	$(CXX) $^ -lfcgi -lcgic_fcgi -o $(WWWDOCROOT)$(WWWRELPATH)$@
 	
 edit.fcgi: $(OBJ_DIR)/edit.o $(OBJ_DIR)/beercrush.o
@@ -23,6 +26,9 @@ $(OBJ_DIR)/autocomplete.o: $(SRC_DIR)/autocomplete.cc
 	$(CXX) -c -o $@ $^
 
 $(OBJ_DIR)/nearby.o: $(SRC_DIR)/nearby.cc
+	$(CXX) -c -o $@ $^
+
+$(OBJ_DIR)/nearby_beer.o: $(SRC_DIR)/nearby_beer.cc
 	$(CXX) -c -o $@ $^
 
 $(OBJ_DIR)/edit.o: $(SRC_DIR)/edit.cc

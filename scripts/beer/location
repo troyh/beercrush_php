@@ -1,0 +1,45 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+$oak=new OAK;
+$view=new stdClass;
+if ($oak->get_view('menu/all',$view)===FALSE)
+{
+	print "Unable to get view\n";
+}
+else
+{
+	foreach ($view->rows as $row)
+	{
+		$menu=new OAKDocument('');
+		if ($oak->get_document($row->id,$menu)===FALSE)
+		{
+			// print "Unable to get menu document\n";
+		}
+		else
+		{
+			// Get the GPS coordinates of the place
+			$place_id=substr($menu->getID(),5);
+			$place=new OAKDocument('');
+			if ($oak->get_document($place_id,$place)===FALSE)
+			{
+				// print "Unable to get place document {$place_id}\n";
+			}
+			else
+			{
+				// Get the beers on their menu
+				foreach ($menu->items as $item)
+				{
+					if ($item->type=='beer')
+					{
+						print "{$place->address->latitude} {$place->address->longitude} {$place->getID()} {$item->id}\n";
+					}
+				}
+			}
+		}
+	}
+}
+
+
+?>
