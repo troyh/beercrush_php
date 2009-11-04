@@ -30,7 +30,7 @@ if (uasort($rows,'compare_lat'))
 {
 	foreach ($rows as $row)
 	{
-		print $row->value->lat.' '.$row->value->lon.' '.$row->id.' '.utf8_encode(htmlspecialchars($row->key))."\n";
+		print $row->value->lat.' '.$row->value->lon.' '.$row->id.' '.json_encode(utf8_encode($row->key))."\n";
 	}
 }
 
