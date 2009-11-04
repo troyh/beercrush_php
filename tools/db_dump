@@ -1,0 +1,58 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+if (empty($argv[1]))
+{
+	print "Usage: ".$argv[0]." <directory>\n";
+	exit;
+}
+
+$dirname=$argv[1];
+if (!is_dir($dirname))
+{
+	print $dirname." does not exist\n";
+	exit;
+}
+
+$oak=new OAK;
+
+$view=new stdClass;
+if ($oak->get_document('_all_docs',$view)!==TRUE)
+{
+}
+else
+{
+	$couchdb_nodes=$oak->get_config_info()->couchdb->nodes;
+	$dbname=$oak->get_config_info()->couchdb->database;
+	
+	foreach ($view->rows as $row)
+	{
+		// print $row->id."\n";
+		$ch=curl_init('http://'.$couchdb_nodes[rand()%count($couchdb_nodes)].'/'.$dbname.'/'.$row->id);
+		if ($ch===FALSE)
+		{
+			print "Failed to get ".$row->id."\n";
+		}
+		else
+		{
+			curl_setopt($ch,CURLOPT_RETURNTRANSFER,TRUE);
+			
+			$answer=curl_exec($ch);
+			$fp=@fopen($dirname.'/'.$row->id,'w');
+			if (!$fp)
+			{
+				print "Unable to open ".$dirname.'/'.$row->id."\n";
+			}
+			else
+			{
+				fwrite($fp,$answer);
+				fclose($fp);
+			}
+			
+			curl_close($ch);
+		}
+	}
+}
+
+?>

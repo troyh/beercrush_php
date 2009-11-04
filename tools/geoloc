@@ -1,0 +1,85 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+if (empty($argv[1]))
+{
+	print "Usage: ".$argv[0]." <document_id>\n";
+}
+else
+{
+	$oak=new OAK;
+	$doc=new OAKDocument('');
+	if ($oak->get_document($argv[1],$doc)!==TRUE)
+	{
+	}
+	else
+	{
+		$street=urlencode(trim($doc->address->street));
+		$city=urlencode(trim($doc->address->city));
+		$state=urlencode(trim($doc->address->state));
+	
+		if (empty($city) || empty($state))
+		{
+		}
+		else
+		{
+			$ch=curl_init("http://local.yahooapis.com/MapsService/V1/geocode?appid=".$oak->get_config_info()->webservices->Yahoo->appid."&street=$street&city=$city&state=$state");
+			if ($ch===FALSE)
+			{
+			}
+			else
+			{
+				curl_setopt($ch,CURLOPT_RETURNTRANSFER,TRUE);
+
+				// $result='<ResultSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:yahoo:maps" xsi:schemaLocation="urn:yahoo:maps http://api.local.yahoo.com/MapsService/V1/GeocodeResponse.xsd"><Result precision="address"><Latitude>47.500612</Latitude><Longitude>-122.459979</Longitude><Address>11730 99th Ave SW</Address><City>Vashon</City><State>WA</State><Zip>98070-3232</Zip><Country>US</Country></Result></ResultSet>';
+				$result=curl_exec($ch);
+				if ($result===FALSE)
+				{
+				}
+				else
+				{
+					/* 
+					Sample answer doc:
+
+					<ResultSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+					xmlns="urn:yahoo:maps"
+					xsi:schemaLocation="urn:yahoo:maps http://api.local.yahoo.com/MapsService/V1/GeocodeResponse.xsd">
+					  <Result precision="address">
+					    <Latitude>83.48204</Latitude>
+					    <Longitude>-109.849382</Longitude>
+					    <Address>123 Main Street</Address>
+					    <City>Anytown</City>
+					    <State>AA</State>
+					    <Zip>12345-6789</Zip>
+					    <Country>US</Country>
+					  </Result>
+					</ResultSet>
+
+					*/
+					// print_r($result);
+
+					$xml=simplexml_load_string($result);
+			
+					$doc->address->latitude=(float)$xml->Result->Latitude;
+					$doc->address->longitude=(float)$xml->Result->Longitude;
+			
+					if (empty($doc->address->country))
+						$doc->address->country=(string)$xml->Result->Country;
+			
+					if (empty($doc->address->zip) || (strlen($doc->address->zip) < strlen($xml->Result->Zip)))
+						$doc->address->zip=(string)$xml->Result->Zip;
+				
+					// var_dump($doc);
+					if ($oak->put_document($doc->getID(),$doc)!==TRUE)
+					{
+					}
+				}
+
+				curl_close($ch);
+			}
+		}
+	}
+}
+
+?>

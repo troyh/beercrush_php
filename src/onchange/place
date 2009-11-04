@@ -1,37 +1,47 @@
-#!/bin/sh
-. /etc/BeerCrush/BeerCrush.conf
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
 
-function process () {
-	TYPE=`echo $1|cut -d ':' -f 1`;
-	if [ "$TYPE" != "place" ]; then
-		exit;
-	fi
+function process_place($place_id)
+{
+	global $oak;
 	
-	PLACE=`echo $1|cut -d ':' -f 2`;
-
-	# Update place XML doc
-	$APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/json2xml > $WWW_DIR/xml/place/$PLACE.xml
-	# TODO: handle failure to create the file and log it
-	echo xml/place/$PLACE.xml
-
-	# Update place JSON doc
-	$APP_DIR/tools/getdoc "$1" > $WWW_DIR/json/place/$PLACE.json
-	echo json/place/$PLACE.json
-
-	# Update place page
-	# cat $WWW_DIR/xml/place/$PLACE.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/place/place.xsl > $WWW_DIR/html/$FILENAME.html
-	# TODO: handle failure to create the file and log it
-	# echo html/place/$PLACE.html
+	$doc=new OAKDocument('');
+	if ($oak->get_document($place_id,$doc)!==TRUE)
+	{
+	}
+	else
+	{
+		// If it doesn't have GPS coordinates...
+		if (empty($doc->address->latitude) || empty($doc->address->longitude))
+		{
+			// Run geoloc to get the GPS coordinates
+			exec($oak->get_file_location('APP_DIR').'/tools/geoloc '.$place_id);
+		}
+	}
 }
 
-# echo "$1 changed";
-if [ -z "$1" ]; then
-	# *All* place docs changed!
-	$APP_DIR/tools/getview "place/all" | $APP_DIR/tools/json2xml  | xmlstarlet sel -t -m "/doc/rows/item" -v id -n | sed -e '/^$/d' |
-	while read PLACE_ID; do
-		process $PLACE_ID;
-	done
-else
-	process $1;
-fi
+$oak=new OAK;
 
+if (empty($argv[1]))
+{
+	$places=new stdClass;
+	if ($oak->get_view('place/all',$places)!==TRUE)
+	{
+		
+	}
+	else
+	{
+		foreach ($places->rows as $row)
+		{
+			print $row->id."\n";
+			process_place($row->id);
+		}
+	}
+}
+else
+{
+	process_place($argv[1]);
+}
+
+?>

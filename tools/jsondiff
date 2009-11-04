@@ -1,13 +1,7 @@
 #!/usr/bin/php
 <?php
 
-$a=json_decode(file_get_contents($argv[1]));
-$b=json_decode(file_get_contents($argv[2]));
-
-// var_dump($a);
-// var_dump($b);
-
-function diff($a,$b,$prefix='')
+function diff($a,$b,$prefix,&$changes)
 {
 	if (gettype($a)!=gettype($b))
 	{
@@ -16,7 +10,14 @@ function diff($a,$b,$prefix='')
 	else if (is_scalar($a) && is_scalar($b))
 	{
 		if ($a!=$b)
-			print "$prefix\t\t$a\t$b\n";
+		{
+			$changes=array(
+				'old' => $a,
+				'new' => $b
+			);
+			print "-\"$prefix\": $a\n";
+			print "+\"$prefix\": $b\n";
+		}
 	}
 	else if (is_object($a))
 	{
@@ -32,30 +33,51 @@ function diff($a,$b,$prefix='')
 				$all_keys[]=$k;
 		}
 
+		if (!empty($prefix))
+			$prefix.='.';
+
 		foreach ($all_keys as $k)
 		{
-			if (!empty($prefix))
-				$prefix.='->';
 			if (!isset($b->$k))
 			{
-				print "$prefix$k\t\t{$a->$k}\t\n";
+				$changes[$k]=array(
+					'old' => $a->$k
+				);
+				// print "$prefix$k\t\t{$a->$k}\t\n";
+				print "-\"$prefix$k\": ";print json_encode($a->$k);print "\n";
 			}
 			else if (!isset($a->$k))
 			{
-				print "$prefix$k\t\t\t";print json_encode($b->$k);print "\n";
+				$changes[$k]=array(
+					'new' => $b->$k
+				);
+				print "+\"$prefix$k\": ";print json_encode($b->$k);print "\n";
 			}
 			else if ($a->$k!==$b->$k)
 			{
-				diff($a->$k,$b->$k,$prefix.$k);
+				diff($a->$k,$b->$k,$prefix.$k,$changes[$k]);
 			}
 		}
 	}
 }
 
-if ($a!==$b)
+$filea=file_get_contents($argv[1]);
+$fileb=file_get_contents($argv[2]);
+
+if ($filea!==$fileb)
 {
-	print "\t\tOld\tNew\n";
-	diff($a,$b);
+	$a=json_decode($filea);
+	$b=json_decode($fileb);
+	unset($a->_rev);
+	unset($a->meta->mtime);
+	unset($b->_rev);
+	unset($b->meta->mtime);
+
+	print "--- {$argv[1]}\n+++ {$argv[2]}\n\n";
+	$changes=array();
+	diff($a,$b,'',$changes);
+	print "\n";
+	// print json_encode($changes);
 }
 
 ?>
