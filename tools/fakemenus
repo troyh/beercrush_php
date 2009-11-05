@@ -1,0 +1,58 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+
+$oak=new OAK;
+
+$beerdirectory=json_decode(file_get_contents($oak->get_config_info()->api->base_uri.'/beers'));
+$placedirectory=json_decode(file_get_contents($oak->get_config_info()->api->base_uri.'/places'));
+
+$allbeers=array();
+foreach ($beerdirectory as $letter=>$beers)
+{
+	foreach ($beers as $beer)
+		$allbeers[]=$beer;
+}
+
+$allplaces=array();
+foreach ($placedirectory as $letter=>$places)
+{
+	foreach ($places as $place)
+		$allplaces[]=$place;
+}
+
+// print_r($allbeers);
+// print_r($allplaces);
+
+/*
+	For each place, randomly select 10 beers to put on the menu
+*/
+
+foreach ($allplaces as $place)
+{
+	$menu=new OAKDocument('menu');
+	$menu->items=array();
+
+	for ($i=0;$i<10;++$i)
+	{
+		$n=rand(0,count($allbeers));
+		$menu->items[]=array(
+			'fake' => TRUE,
+			'type' => 'beer',
+			'id' => $allbeers[$n]->id,
+			'ontap' => rand()%2?TRUE:FALSE,
+			'inbottle' => rand()%2?TRUE:FALSE,
+			'oncask' => rand()%2?TRUE:FALSE,
+			'price' => rand(0.10,10),
+		);
+	}
+
+	// print $place->id.": ";print_r($menu);print "\n";
+	if ($oak->put_document('menu:'.$place->id,$menu)===FALSE)
+	{
+		print "Failed to make menu for ".$place->id."\n";
+	}
+
+}
+
+?>

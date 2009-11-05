@@ -125,10 +125,12 @@ int cgiMain()
 	char latstr[32];
 	char lonstr[32];
 	char withinstr[32];
+	char beer_id[128]=""; // This is optional, default to empty string
 	
 	cgiFormString((char*)"lat",latstr,sizeof(latstr));
 	cgiFormString((char*)"lon",lonstr,sizeof(lonstr));
 	cgiFormString((char*)"within",withinstr,sizeof(withinstr));
+	cgiFormString((char*)"beer_id",beer_id,sizeof(beer_id));
 
 	double lat=strtod(latstr,NULL);
 	double lon=strtod(lonstr,NULL);
@@ -165,11 +167,18 @@ int cgiMain()
 		// Find each longitude value that is between lon_min & lon_max
 		if (lon_min <= latlonpairs[i].lon && latlonpairs[i].lon <= lon_max)
 		{
-			++count;
+			if (beer_id[0]=='\0' || !strcmp(beer_id,latlonpairs[i].beer_id))
+			{
+				++count;
+			}
 		}
 	}
 	
-	FCGI_printf("{ \"count\": %d, \"places\": [",count);
+	if (beer_id[0]) // If filtering by a beer_id
+		FCGI_printf("{ \"count\": %d, \"places\": [",count);
+	else
+		FCGI_printf("{ \"count\": %d, \"beers\": [",count);
+		
 	if (count)
 	{
 		// Repeat to output the JSON doc
@@ -179,13 +188,16 @@ int cgiMain()
 			// FCGI_printf("Potential loc:%f,%f\n",latlonpairs[i].lat,latlonpairs[i].lon);
 			if (lon_min <= latlonpairs[i].lon && latlonpairs[i].lon <= lon_max)
 			{
-				// Found one!
-				FCGI_printf("{ \"beer_id\": \"%s\", \"latitude\": %f, \"longitude\": %f, \"place_id\": \"%s\" }",
-					latlonpairs[i].beer_id,
-					latlonpairs[i].lat,
-					latlonpairs[i].lon,
-					latlonpairs[i].place_id
-				);
+				if (beer_id[0]=='\0' || !strcmp(beer_id,latlonpairs[i].beer_id))
+				{
+					// Found one!
+					FCGI_printf("{ \"beer_id\": \"%s\", \"lat\": %f, \"lon\": %f, \"place_id\": \"%s\" }",
+						latlonpairs[i].beer_id,
+						latlonpairs[i].lat,
+						latlonpairs[i].lon,
+						latlonpairs[i].place_id
+					);
+				}
 			}
 		}
 	}
