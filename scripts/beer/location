@@ -39,6 +39,7 @@ else
 							'lat' => $place->address->latitude,
 							'lon' => $place->address->longitude,
 							'place_id' => $place->getID(),
+							'name' => $place->name,
 							'beer_id' => $item->id,
 						);
 					}
@@ -55,7 +56,7 @@ if (uasort($dataitems,'compare_lat'))
 	// print_r($dataitems);exit;
 	foreach ($dataitems as $dataitem)
 	{
-		print $dataitem['lat'].' '.$dataitem['lon'].' '.$dataitem['place_id'].' '.$dataitem['beer_id']."\n";
+		print $dataitem['lat'].' '.$dataitem['lon'].' '.$dataitem['place_id'].' '.$dataitem['beer_id'].' '.json_encode(utf8_encode($dataitem['name']))."\n";
 	}
 }
 

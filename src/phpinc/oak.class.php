@@ -961,7 +961,7 @@ class OAK
 		// Pick a node
 		$node=$this->config->solr->nodes[rand()%count($this->config->solr->nodes)];
 		$url='http://'.$node.$this->config->solr->url.'/select/?'.$fq_param.'wt=json&rows=20&qt=dismax&mm=1&q='.urlencode($query_string);
-		$results=file_get_contents($url);
+		$results=@file_get_contents($url);
 		if ($return_json)
 			return json_decode($results);
 		return $results;

@@ -17,6 +17,7 @@ struct LATLONPAIR
 	double lon;
 	char place_id[MAX_PLACE_ID_LEN];
 	char* beer_id;
+	char* name;
 };
 
 LATLONPAIR* latlonpairs=0;
@@ -59,6 +60,7 @@ extern "C" void cgiInit()
 				if (f.good())
 				{
 					char* p=buf;
+					
 					latlonpairs[n].lat=strtod(p,NULL);
 					p=strchr(p,' ');
 					if (p)
@@ -78,6 +80,14 @@ extern "C" void cgiInit()
 								*p='\0'; // null-terminate id
 								for (++p;isspace(*p) && *p;++p) {}
 								latlonpairs[n].beer_id=p;
+
+								p=strchr(p,' '); // Skip to place name
+								if (p)
+								{
+									*p='\0'; // null-terminate id
+									for (++p;isspace(*p) && *p;++p) {}
+									latlonpairs[n].name=p;
+								}
 							}
 							else
 							{
@@ -191,11 +201,12 @@ int cgiMain()
 				if (beer_id[0]=='\0' || !strcmp(beer_id,latlonpairs[i].beer_id))
 				{
 					// Found one!
-					FCGI_printf("{ \"beer_id\": \"%s\", \"lat\": %f, \"lon\": %f, \"place_id\": \"%s\" }",
+					FCGI_printf("{ \"beer_id\": \"%s\", \"lat\": %f, \"lon\": %f, \"place_id\": \"%s\", \"name\": %s }",
 						latlonpairs[i].beer_id,
 						latlonpairs[i].lat,
 						latlonpairs[i].lon,
-						latlonpairs[i].place_id
+						latlonpairs[i].place_id,
+						latlonpairs[i].name
 					);
 				}
 			}

@@ -180,7 +180,7 @@ int cgiMain()
 			if (lon_min <= latlonpairs[i].lon && latlonpairs[i].lon <= lon_max)
 			{
 				// Found one!
-				FCGI_printf("{ \"id\": \"%s\", \"latitude\": %f, \"longitude\": %f, \"name\": %s }",
+				FCGI_printf("{ \"id\": \"%s\", \"lat\": %f, \"lon\": %f, \"name\": %s }",
 					latlonpairs[i].place_id,
 					latlonpairs[i].lat,
 					latlonpairs[i].lon,
