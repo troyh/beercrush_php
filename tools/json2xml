@@ -13,7 +13,7 @@ $writer->startDocument();
 $string=file_get_contents("php://stdin");
 $json=json_decode($string);
 
-$oak=new OAK('/etc/BeerCrush/json.conf');
+$oak=new OAK;
 $oak->json2xml($json,$writer);
 
 $writer->endDocument();
