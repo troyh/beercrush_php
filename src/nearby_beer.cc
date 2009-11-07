@@ -191,6 +191,8 @@ int cgiMain()
 		
 	if (count)
 	{
+		bool bFirst=true;
+		
 		// Repeat to output the JSON doc
 		for(size_t i = min_idx; i < max_idx; ++i)
 		{
@@ -201,13 +203,15 @@ int cgiMain()
 				if (beer_id[0]=='\0' || !strcmp(beer_id,latlonpairs[i].beer_id))
 				{
 					// Found one!
-					FCGI_printf("{ \"beer_id\": \"%s\", \"lat\": %f, \"lon\": %f, \"place_id\": \"%s\", \"name\": %s }",
+					FCGI_printf("%c{ \"beer_id\": \"%s\", \"lat\": %f, \"lon\": %f, \"place_id\": \"%s\", \"name\": %s }",
+						(bFirst?' ':','),
 						latlonpairs[i].beer_id,
 						latlonpairs[i].lat,
 						latlonpairs[i].lon,
 						latlonpairs[i].place_id,
 						latlonpairs[i].name
 					);
+					bFirst=false;
 				}
 			}
 		}

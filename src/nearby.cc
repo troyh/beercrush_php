@@ -172,6 +172,8 @@ int cgiMain()
 	FCGI_printf("{ \"count\": %d, \"places\": [",count);
 	if (count)
 	{
+		bool bFirst=true;
+		
 		// Repeat to output the XML doc
 		for(size_t i = min_idx; i < max_idx; ++i)
 		{
@@ -180,12 +182,14 @@ int cgiMain()
 			if (lon_min <= latlonpairs[i].lon && latlonpairs[i].lon <= lon_max)
 			{
 				// Found one!
-				FCGI_printf("{ \"id\": \"%s\", \"lat\": %f, \"lon\": %f, \"name\": %s }",
+				FCGI_printf("%c{ \"id\": \"%s\", \"lat\": %f, \"lon\": %f, \"name\": %s }",
+					(bFirst?' ':','),
 					latlonpairs[i].place_id,
 					latlonpairs[i].lat,
 					latlonpairs[i].lon,
 					latlonpairs[i].name
 				);
+				bFirst=false;
 			}
 		}
 	}
