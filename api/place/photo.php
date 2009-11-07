@@ -9,11 +9,7 @@ function oakMain($oak)
 {
 	global $cgi_fields;
 
-	if ($oak->login_is_trusted()!==true) // If the user is not logged in or we can't trust the login
-	{
-		$oak->request_login();
-	}
-	else if ($_FILES['photo']['size']==0)
+	if ($_FILES['photo']['size']==0)
 	{
 		header("HTTP/1.0 500 Zero-length photo upload");
 	}
