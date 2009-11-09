@@ -1,0 +1,15 @@
+#!/bin/bash
+TOOLSDIR=`dirname $0`;
+
+diff --recursive --brief $1 $2 | sort | while read LINE; do
+	if [[ "$LINE" =~ ^Only[[:space:]]+in[[:space:]]+($1|$2):[[:space:]]*(.+)$ ]]; then
+		FILE=${BASH_REMATCH[2]};
+		if [ ${BASH_REMATCH[1]} == $1 ]; then
+			echo "Deleted document: $FILE";
+		else
+			echo "New document: $FILE";
+		fi
+	elif [[ "$LINE" =~ ^Files[[:space:]]+(.+)[[:space:]]+and[[:space:]]+(.+)[[:space:]]+differ$ ]]; then
+		$TOOLSDIR/jsondiff ${BASH_REMATCH[1]} ${BASH_REMATCH[2]};
+	fi
+done
