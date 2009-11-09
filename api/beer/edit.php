@@ -23,6 +23,13 @@ function validate_beer_style_id($name,$value,$attribs,$converted_value,$oak)
 	return TRUE;
 }
 
+function validate_beer_name($name,$value,$attribs,$converted_value,$oak)
+{
+	if (empty(trim($converted_value)))
+		return FALSE;
+	return TRUE;
+}
+
 function get_specific_gravity($n)
 {
 	if ($n < 0) // Bad value
@@ -46,6 +53,7 @@ function get_specific_gravity($n)
 	return null;
 }
 
+
 $cgi_fields=array(
 	"abv"						=> array(type=>OAK::DATATYPE_FLOAT, min=>0.0, max=>100.0),
 	"availability"				=> array(type=>OAK::DATATYPE_TEXT),
@@ -61,7 +69,7 @@ $cgi_fields=array(
 	"hops"						=> array(type=>OAK::DATATYPE_TEXT),
 	"ibu"						=> array(type=>OAK::DATATYPE_INT, min=>0, max=>1000),
 	"ingredients"				=> array(type=>OAK::DATATYPE_TEXT),
-	"name"						=> array(type=>OAK::DATATYPE_TEXT , minlen=>1, maxlen=>200),
+	"name"						=> array(type=>OAK::DATATYPE_TEXT , minlen=>1, maxlen=>200, validatefunc=>validate_beer_name),
 	"og"						=> array(type=>OAK::DATATYPE_FLOAT),
 	"otherings"					=> array(type=>OAK::DATATYPE_TEXT),
 	"yeast"						=> array(type=>OAK::DATATYPE_TEXT),
@@ -95,6 +103,12 @@ function oakMain($oak)
 			if (empty($brewery_id))
 			{
 				header('HTTP/1.0 400 Missing brewery_id');
+				exit;
+			}
+
+			if ($oak->cgi_value_exists('name',$cgi_fields)==FALSE)
+			{
+				header('HTTP/1.0 400 Missing name');
 				exit;
 			}
 			
@@ -151,7 +165,7 @@ function oakMain($oak)
 			// Could be more than one...
 			$beer->styles=preg_split('/\s+/',$oak->get_cgi_value('styles',$cgi_fields));
 		}
-	
+		
 		// Store in db
 		if ($oak->put_document($beer->getID(),$beer)!==true)
 		{
