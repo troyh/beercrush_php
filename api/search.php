@@ -11,16 +11,52 @@ function oakMain($oak)
 	global $cgi_fields;
 	if ($oak->cgi_value_exists('q',$cgi_fields))
 	{
-		$doctypes=null;
+		$params=array(
+			'fq' => '',
+			'fl' => array('id,name,score'),
+			'wt' => 'json',
+			'rows' => 20,
+			'qt' => 'dismax',
+			'q' => urlencode($oak->get_cgi_value('q',$cgi_fields))
+		);
+		
 		if ($oak->cgi_value_exists('dataset',$cgi_fields))
 		{
 			$dataset=$oak->get_cgi_value('dataset',$cgi_fields);
 			if (!empty($dataset))
 			{
 				$doctypes=preg_split('/\s+/',$dataset);
+				$params['fq']=urlencode('doctype:'.join(' or doctype:',$doctypes));
+				
+				if (in_array('place',$doctypes))
+				{
+					$params['fl'][]='placetype';
+				}
 			}
 		}
-		$results=$oak->query($oak->get_cgi_value('q',$cgi_fields),true,$doctypes);
+		
+		$params['fl']=join(',',$params['fl']);
+
+		// Pick a node
+		$node=$oak->get_config_info()->solr->nodes[rand()%count($oak->get_config_info()->solr->nodes)];
+		$url='http://'.$node.$oak->get_config_info()->solr->url.'/select/?';
+		
+		// Construct Solr query URL
+		foreach ($params as $k=>$v)
+		{
+			$url.=$k.'='.$v.'&';
+		}
+		// print "Solr URL:$url";
+
+		$ch=curl_init($url);
+		curl_setopt($ch,CURLOPT_RETURNTRANSFER,TRUE);
+		$results=json_decode(curl_exec($ch));
+		if (is_null($results))
+		{
+			header('HTTP/1.0 500 Internal error');
+			exit;
+		}
+
 		// Add in brewery info for beers
 		foreach ($results->response->docs as &$doc)
 		{
