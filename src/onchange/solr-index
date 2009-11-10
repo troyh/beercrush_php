@@ -148,6 +148,7 @@ function place_doc($place)
 
 	writeTextValue('id',$place->getID());
 	writeTextValue('doctype',$place->type);
+	writeTextValue('placetype',$place->placetype);
 	writeTextValue('name',$place->name);
 	writeTextValue('description',$place->description);
 	writeTextValue('address_street',$place->address->street);
