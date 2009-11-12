@@ -45,32 +45,35 @@ function oakMain($oak)
 				// Do nothing, we don't care if it already exists or not.
 			}
 		}
+		
+		if (!isset($menu->items))
+			$menu->items=array();
 
 		// Make any changes requested
 		$adds=array();
 		if ($oak->cgi_value_exists('add_item',$cgi_fields))
 		{
-			$adds=preg_split('/\s+/',$oak->get_cgi_value('add_item',$cgi_fields));
+			$adds=preg_split('/\s+/',trim($oak->get_cgi_value('add_item',$cgi_fields)),-1,PREG_SPLIT_NO_EMPTY);
 		}
 
 		$dels=array();
 		if ($oak->cgi_value_exists('del_item',$cgi_fields))
 		{
-			$dels=preg_split('/\s+/',$oak->get_cgi_value('del_item',$cgi_fields));
+			$dels=preg_split('/\s+/',trim($oak->get_cgi_value('del_item',$cgi_fields)),-1,PREG_SPLIT_NO_EMPTY);
 		}
 
 		if (count($adds) || count($dels))
 		{
-			if (!isset($menu->items))
-				$menu->items=array();
-
 			// Make the requested changes
 			foreach ($dels as $id)
 			{
 				for ($i=0,$j=count($menu->items);$i<$j;++$i)
 				{
-					if ($menu->items[$i]['id']==$id)
-						unset($menu->items[$i]);
+					if ($menu->items[$i]->id==$id)
+					{
+						array_splice($menu->items,$i,1);
+						break;
+					}
 				}
 			}
 
@@ -87,28 +90,63 @@ function oakMain($oak)
 					$item=count($menu->items); // Add to end
 
 				$parts=split(':',$id);
-				$menu->items[$item]=array(
-					'type' => $parts[0],
-					'id'=>$id,
-					'ontap'=>true,
-					'inbottle'=>false,
-					'oncask'=>false,
-					'price'=>0
-				);
+
+				$menu->items[$item]=new stdClass;
+				$menu->items[$item]->type=$parts[0];
+				$menu->items[$item]->id=$id;
+				$menu->items[$item]->ontap=true;
+				$menu->items[$item]->inbottle=false;
+				$menu->items[$item]->oncask=false;
+				$menu->items[$item]->price=0;
 			}
 			
 			// Store in db
 			if ($oak->put_document($menu->getID(),$menu)!==true)
 			{
 				header("HTTP/1.0 500 Save failed");
+				exit;
 			}
-			else
+
+			$oak->log('Edited:'.$menu->getID());
+		}
+
+		/*
+		This block should be identical to that in menu/view.php and kept in-sync!!!
+		*/
+		unset($menu->_id);
+		unset($menu->_rev);
+	
+		foreach ($menu->items as &$item)
+		{
+			if (!empty($item->id))
 			{
-				$oak->log('Edited:'.$menu->getID());
-				
-				print json_encode($menu);
+				$itemdoc=new OAKDocument('');
+				if ($oak->get_document($item->id,$itemdoc)===true)
+				{
+					switch ($item->type)
+					{
+					case 'beer':
+						$item->name=$itemdoc->name;
+
+						$brewerydoc=new OAKDocument('');
+						if ($oak->get_document($itemdoc->brewery_id,$brewerydoc)===true)
+						{
+							$item->brewery=array(
+								'id' => $brewerydoc->getID(),
+								'name' => $brewerydoc->name,
+							);
+						}
+						break;
+					default:
+						// Support other items besides beers?
+						break;
+					}
+				}
 			}
 		}
+		
+		header('Content-Type: application/json; charset=utf-8');
+		print json_encode($menu);
 	}
 }
 

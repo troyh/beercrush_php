@@ -10,36 +10,42 @@ if ($oak->get_document('menu:'.$_GET['place_id'],$menu)!==true)
 }
 else
 {
+	/*
+	This block should be identical to that in menu/edit.php and kept in-sync!!!
+	*/
 	unset($menu->_id);
 	unset($menu->_rev);
 	
 	// Add in basic beer & brewery info to the list
 	foreach ($menu->items as &$item)
 	{
-		$itemdoc=new OAKDocument('');
-		if ($oak->get_document($item->id,$itemdoc)===true)
+		if (!empty($item->id))
 		{
-			switch ($item->type)
+			$itemdoc=new OAKDocument('');
+			if ($oak->get_document($item->id,$itemdoc)===true)
 			{
-			case 'beer':
-				$item->name=$itemdoc->name;
-
-				$brewerydoc=new OAKDocument('');
-				if ($oak->get_document($itemdoc->brewery_id,$brewerydoc)===true)
+				switch ($item->type)
 				{
-					$item->brewery=array(
-						'id' => $brewerydoc->getID(),
-						'name' => $brewerydoc->name,
-					);
+				case 'beer':
+					$item->name=$itemdoc->name;
+
+					$brewerydoc=new OAKDocument('');
+					if ($oak->get_document($itemdoc->brewery_id,$brewerydoc)===true)
+					{
+						$item->brewery=array(
+							'id' => $brewerydoc->getID(),
+							'name' => $brewerydoc->name,
+						);
+					}
+					break;
+				default:
+					// Support other items besides beers?
+					break;
 				}
-				break;
-			default:
-				// Support other items besides beers?
-				break;
 			}
 		}
 	}
-	header('Content-Type: text/javascript; charset=utf-8');
+	header('Content-Type: application/json; charset=utf-8');
 	print json_encode($menu);
 }
 
