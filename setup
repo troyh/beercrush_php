@@ -5,11 +5,14 @@ if [ -z $1 ]; then
 	exit;
 fi
 
-function copy_files () {
-	if [ ! -L $2 ]; then
-		rsync --recursive $1 $2
+
+function APT_INSTALL()
+{
+	if ! dpkg-query --status $1 &> /dev/null ; then 
+		sudo apt-get install $1
 	fi
 }
+
 
 BEERCRUSH_WWW_DIR="/var/www/BeerCrush/"
 BEERCRUSH_ETC_DIR="/etc/BeerCrush/"
@@ -20,33 +23,23 @@ BEERCRUSH_LOCALDATA_DIR="/var/local/BeerCrush/"
 #
 # Common setup tasks
 #
-sudo apt-get install rsync
+APT_INSTALL rsync
 
 #
 # Node-dependent setup tasks
 #
 case $1 in
-	webserver)
-		echo "Setting up web server...";
-		# TODO: copy files from build server to here
-		# TODO: configure syslog.conf for OAK logging
-		# TODO: config logrotate for /var/log/oak.log
-		# TODO: install and setup PHP's APC (opcode cache)
-		# TODO: make autocompletenames.txt and latlonpairs.txt in /var/local/BeerCrush/meta
-		# TODO: build fcgi binaries
-		# TODO: Config PHP FastCGI
-		# TODO: turn off PHP's magic quotes
-		# TODO: install php5-uuid
-		;;
 	dbserver)
 		echo "Setting up database server...";
-		sudo apt-get install couchdb
+		APT_INSTALL couchdb
 		# TODO: get db to here in /var/lib/couchdb
 		# TODO: setup replication between this server and another
 		# TODO: update design docs from src/db/designdocs.json
 		;;
 	solrserver)
-		sudo apt-get install solr-tomcat6 tomcat6-admin
+		for PKG in solr-tomcat6 tomcat6-admin; do
+			APT_INSTALL $PKG
+		done
 		# TODO: verify /etc/tomcat6/tomcat-users.xml is correct
 		;;
 	memcacheqserver)
@@ -63,7 +56,15 @@ case $1 in
 	buildserver)
 		echo "Setting up build server...";
 		
-		sudo apt-get install apache2 php5 php5-cli php5-dev php5-curl php5-imagick spread libspread1-dev libfcgi-dev xmlstarlet
+		# Run this script again to setup as a webserver (a buildserver is also a webserver)
+		$0 webserver
+		;;
+	webserver)
+		echo "Setting up web server...";
+
+		for PKG in apache2 php5 php5-cli php5-dev php5-curl php5-imagick spread libspread1-dev libfcgi-dev xmlstarlet subversion; do
+			APT_INSTALL $PKG
+		done
 		
 		if [ ! -d $BEERCRUSH_SOURCE_DIR ]; then
 			# Get code from Subversion
@@ -73,27 +74,25 @@ case $1 in
 			svn update $BEERCRUSH_SOURCE_DIR
 		fi
 		
-		if [ ! -d $BEERCRUSH_WWW_DIR ]; then
-			mkdir $BEERCRUSH_WWW_DIR;
-		fi
+		# TODO: copy files from build server to here
+		# TODO: configure syslog.conf for OAK logging
+		# TODO: config logrotate for /var/log/oak.log
+		# TODO: install and setup PHP's APC (opcode cache)
+		# TODO: make autocompletenames.txt and latlonpairs.txt in /var/local/BeerCrush/meta
+		# TODO: build fcgi binaries
+		# TODO: Config PHP FastCGI
+		# TODO: turn off PHP's magic quotes
+		# TODO: install php5-uuid
+
+		for DIR in $BEERCRUSH_WWW_DIR $BEERCRUSH_ETC_DIR $BEERCRUSH_LOCALDATA_DIR $BEERCRUSH_PHPINC_DIR /var/run/BeerCrush $BEERCRUSH_WWW_DIR/uploads; do
+			mkdir -p $DIR;
+		done
 		
-		if [ ! -d $BEERCRUSH_ETC_DIR ]; then
-			mkdir $BEERCRUSH_ETC_DIR;
-		fi
-		
-		if [ ! -f $BEERCRUSH_ETC_DIR/json.conf ]; then
-			echo "$BEERCRUSH_ETC_DIR doesn't exist";
+		if [ ! -f $BEERCRUSH_ETC_DIR/webapp.conf ]; then
+			echo "$BEERCRUSH_ETC_DIR/webapp.conf doesn't exist";
 			exit;
 		fi
-		
-		if [ ! -d $BEERCRUSH_LOCALDATA_DIR ]; then
-			mkdir $BEERCRUSH_LOCALDATA_DIR;
-		fi
-		
-		if [ ! -d /var/run/BeerCrush ]; then
-			mkdir /var/run/BeerCrush;
-		fi
-		
+
 		# TODO: verify that the OAK.conf file is correct
 		
 		# TODO: make this work:
@@ -109,39 +108,12 @@ case $1 in
 		# TODO: make sure permissions are correct for $BEERCRUSH_WWW_DIR and subdirs (beercrush group?)
 		
 		# Copy some files from the source tree
-		copy_files $BEERCRUSH_SOURCE_DIR/api/ $BEERCRUSH_WWW_DIR/api/
-		copy_files $BEERCRUSH_SOURCE_DIR/css/ $BEERCRUSH_WWW_DIR/css/
-		copy_files $BEERCRUSH_SOURCE_DIR/img/ $BEERCRUSH_WWW_DIR/img/
-		copy_files $BEERCRUSH_SOURCE_DIR/js/  $BEERCRUSH_WWW_DIR/js/ 
-		
-		cp $BEERCRUSH_SOURCE_DIR/src/db/flavors.json $BEERCRUSH_WWW_DIR/json/flavors.json
-		cp $BEERCRUSH_SOURCE_DIR/src/db/beercolors.json $BEERCRUSH_WWW_DIR/json/beercolors.json
-		cp $BEERCRUSH_SOURCE_DIR/src/db/styles.json $BEERCRUSH_WWW_DIR/json/styles.json
-		cp $BEERCRUSH_SOURCE_DIR/src/db/restaurantcategories.json $BEERCRUSH_WWW_DIR/json/restaurantcategories.json
-		cp $BEERCRUSH_SOURCE_DIR/src/db/storestyles.json $BEERCRUSH_WWW_DIR/json/storestyles.json
-		
-		if [ ! -d $BEERCRUSH_PHPINC_DIR ]; then
-			mkdir $BEERCRUSH_PHPINC_DIR;
-		fi
-		copy_files $BEERCRUSH_SOURCE_DIR/src/phpinc/  $BEERCRUSH_PHPINC_DIR
-		
-		# TODO: kill update_doc, if running, and start new process
+		for D in api css img js html php; do 
+			sudo rsync --recursive --delete $D/ $BEERCRUSH_WWW_DIR/$D/; 
+		done
+		sudo rsync --recursive --delete src/phpinc/ $BEERCRUSH_PHPINC_DIR/
 
-		# Make doc directory tree
-		mkdir -p \
-			$BEERCRUSH_WWW_DIR/uploads \
-			$BEERCRUSH_WWW_DIR/html \
-			$BEERCRUSH_WWW_DIR/html/brewery \
-			$BEERCRUSH_WWW_DIR/html/place \
-			$BEERCRUSH_WWW_DIR/html/beer \
-			$BEERCRUSH_WWW_DIR/html/review/place \
-			$BEERCRUSH_WWW_DIR/html/review/beer \
-			$BEERCRUSH_WWW_DIR/json/brewery \
-			$BEERCRUSH_WWW_DIR/json/place \
-			$BEERCRUSH_WWW_DIR/json/beer \
-			$BEERCRUSH_WWW_DIR/json/review/place \
-			$BEERCRUSH_WWW_DIR/json/review/beer \
-			$BEERCRUSH_WWW_DIR/json/photoset
+		# TODO: kill update_doc, if running, and start new process
 
 		if [ ! -f /etc/apache2/sites-enabled/BeerCrush ]; then
 			echo "You must create /etc/apache2/sites-available/BeerCrush and then do a2ensite BeerCrush";
