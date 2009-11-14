@@ -4,6 +4,7 @@ require_once('beercrush/oak.class.php');
 $cgi_fields=array(
 	"q"	=> array(type=>OAK::DATATYPE_TEXT),
 	"dataset"	=> array(type=>OAK::DATATYPE_TEXT),
+	"start"	=> array(type=>OAK::DATATYPE_INT, min => 0),
 );
 
 function oakMain($oak)
@@ -17,7 +18,8 @@ function oakMain($oak)
 			'wt' => 'json',
 			'rows' => 20,
 			'qt' => 'dismax',
-			'q' => urlencode($oak->get_cgi_value('q',$cgi_fields))
+			'q' => urlencode($oak->get_cgi_value('q',$cgi_fields)),
+			'start' => 0,
 		);
 		
 		if ($oak->cgi_value_exists('dataset',$cgi_fields))
@@ -31,8 +33,15 @@ function oakMain($oak)
 				if (in_array('place',$doctypes))
 				{
 					$params['fl'][]='placetype';
+					$params['fl'][]='address_city';
+					$params['fl'][]='address_state';
 				}
 			}
+		}
+
+		if ($oak->cgi_value_exists('start',$cgi_fields))
+		{
+			$params['start']=$oak->get_cgi_value('start',$cgi_fields);
 		}
 		
 		$params['fl']=join(',',$params['fl']);
@@ -73,7 +82,7 @@ function oakMain($oak)
 			}
 		}
 		
-		header("Content-Type: application/javascript; charset=utf-8");
+		header("Content-Type: application/json; charset=utf-8");
 		print json_encode($results);
 	}
 }

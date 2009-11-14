@@ -25,7 +25,8 @@ function validate_beer_style_id($name,$value,$attribs,$converted_value,$oak)
 
 function validate_beer_name($name,$value,$attribs,$converted_value,$oak)
 {
-	if (empty(trim($converted_value)))
+	$converted_value=trim($converted_value);
+	if (empty($converted_value))
 		return FALSE;
 	return TRUE;
 }
