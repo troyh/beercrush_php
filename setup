@@ -17,7 +17,7 @@ function APT_INSTALL()
 BEERCRUSH_WWW_DIR="/var/www/BeerCrush/"
 BEERCRUSH_ETC_DIR="/etc/BeerCrush/"
 BEERCRUSH_PHPINC_DIR="/usr/share/php/beercrush/"
-BEERCRUSH_SOURCE_DIR="~/beercrush/"
+BEERCRUSH_SOURCE_DIR="$HOME/beercrush/"
 BEERCRUSH_LOCALDATA_DIR="/var/local/BeerCrush/"
 
 #
