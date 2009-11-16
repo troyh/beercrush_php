@@ -24,8 +24,8 @@ const char* const dataFilename="/var/local/BeerCrush/meta/autocomplete_names.tsv
 
 // Searchable data structures
 const char** searchable_names=NULL;
-typedef enum { UNKNOWN=0, BEER=1, BREWERY=2, PLACE=4, STYLE=128 } TYPES;
-TYPES *searchable_types=NULL;
+// typedef enum { UNKNOWN=0, BEER=1, BREWERY=2, PLACE=4, STYLE=128 } TYPES;
+// TYPES *searchable_types=NULL;
 size_t searchable_names_count=0;
 
 const char* beer_styles[]=
@@ -135,11 +135,10 @@ const char* beer_styles[]=
 	"Wood-Aged Beer",
 };
 
-bool readFile(const char* fname, size_t* count, const char*** names, TYPES** types)
+bool readFile(const char* fname, size_t* count, const char*** names)
 {
 	char* buf=0;
 	const char** list=0;
-	TYPES* list_types=0;
 	size_t entries=0;
 	
 	struct stat statbuf;
@@ -172,7 +171,6 @@ bool readFile(const char* fname, size_t* count, const char*** names, TYPES** typ
 		if (entries)
 		{
 			list=new const char*[entries];
-			list_types=new TYPES[entries];
 			
 			char* p=buf;
 			for(size_t i = 0; i < entries; ++i)
@@ -181,25 +179,6 @@ bool readFile(const char* fname, size_t* count, const char*** names, TYPES** typ
 				for (p+=strlen(p)+1;*p=='\0';++p)
 				{ // Skip to next line, just in case there's multiple null-terminators at the end
 				}
-				
-				// Replace the tab with a null-terminator too
-				char* t=strchr(list[i],'\t');
-				if (t)
-				{
-					*t='\0';
-					if (!strncmp(t+1,"beer:",5))
-						list_types[i]=BEER;
-					else if (!strncmp(t+1,"brewery:",8))
-						list_types[i]=BREWERY;
-					else if (!strncmp(t+1,"place:",6))
-						list_types[i]=PLACE;
-					else
-						list_types[i]=UNKNOWN;
-				}
-				else
-				{
-					// TODO: this shouldn't happen
-				}
 			}
 		}
 	}
@@ -207,7 +186,6 @@ bool readFile(const char* fname, size_t* count, const char*** names, TYPES** typ
 	*count=entries;
 
 	*names=list;
-	*types=list_types;
 }
 
 
@@ -224,20 +202,18 @@ extern "C" void cgiInit()
 	// fname[sizeof(fname)-1]='\0';
 	
 	/* Load brewery list into memory, it *must* be sorted */
-	readFile(dataFilename,&searchable_names_count,&searchable_names,&searchable_types);
+	readFile(dataFilename,&searchable_names_count,&searchable_names);
 }
 
 extern "C" void cgiUninit() 
 {
 	if (searchable_names)
 		free(searchable_names);
-	if (searchable_types)
-		free(searchable_types);
 
 	/* TODO: Free style list from memory */
 }
 
-void autocomplete(const char* query,size_t query_len,const char** list,size_t count, bool bXMLOutput,int requested_types)
+void autocomplete(const char* query,size_t query_len,const char** list,size_t count, bool bXMLOutput)
 {
 	if (count==0)
 		return;
@@ -274,21 +250,16 @@ void autocomplete(const char* query,size_t query_len,const char** list,size_t co
 				++mid;
 				if (strncasecmp(query,list[mid-1],query_len)==0)
 				{
-					// See if it's the correct type we want
-					if ((requested_types==0) || (searchable_types[mid-1] & requested_types))
+					if (bXMLOutput)
 					{
-						if (bXMLOutput)
-						{
-							// TODO: use libxml2 to take care of XML entities
-							FCGI_printf("<result>");
-							FCGI_printf("<text>%s</text>",list[mid-1]);
-							FCGI_printf("<id>%s</id>",list[mid-1]+strlen(list[mid-1])+1);
-							FCGI_printf("</result>");
-						}
-						else
-						{
-							FCGI_printf("%s\t%s\n",list[mid-1],list[mid-1]+strlen(list[mid-1])+1);
-						}
+						// TODO: use libxml2 to take care of XML entities
+						FCGI_printf("<result>");
+						FCGI_printf("<text>%s</text>",list[mid-1]);
+						FCGI_printf("</result>");
+					}
+					else
+					{
+						FCGI_printf("%s\n",list[mid-1]);
 					}
 				}
 				else
@@ -329,27 +300,13 @@ int cgiMain()
 
 	size_t query_len=strlen(query);
 
-	int dataset_mask=UNKNOWN;
-	if (!strlen(dataset))
-		dataset_mask=BEER|BREWERY|PLACE;
-	else if (!strcasecmp(dataset,"beersandbreweries"))
-		dataset_mask=BEER|BREWERY;
-	else if (!strcasecmp(dataset,"beers"))
-		dataset_mask=BEER;
-	else if (!strcasecmp(dataset,"places"))
-		dataset_mask=PLACE;
-	else if (!strcasecmp(dataset,"bjcp_style"))
-		dataset_mask=STYLE;
-	else
-		dataset_mask=BEER|BREWERY|PLACE;
-
-	if (dataset_mask==STYLE)
+	if (!strcasecmp(dataset,"bjcp_style"))
 	{
-		autocomplete(query,query_len,beer_styles,sizeof(beer_styles)/sizeof(beer_styles[0]),bXMLOutput,0);
+		autocomplete(query,query_len,beer_styles,sizeof(beer_styles)/sizeof(beer_styles[0]),bXMLOutput);
 	}
 	else
 	{
-		autocomplete(query,query_len,searchable_names,searchable_names_count,bXMLOutput,dataset_mask);
+		autocomplete(query,query_len,searchable_names,searchable_names_count,bXMLOutput);
 	}
 	
 	if (bXMLOutput)

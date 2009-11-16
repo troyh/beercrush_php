@@ -10,7 +10,7 @@ foreach ($brewery_list as $letter=>$breweries)
 {
 	foreach ($breweries as $brewery)
 	{
-		$list[]=array('name' => $oak->remove_diacritics($brewery->name), 'id' => $brewery->id);
+		$list[]=$oak->remove_diacritics($brewery->name);
 	}
 }
 
@@ -19,7 +19,7 @@ foreach ($beer_list as $letter=>$beers)
 {
 	foreach ($beers as $beer)
 	{
-		$list[]=array('name' => $oak->remove_diacritics($beer->name), 'id' => $beer->id);
+		$list[]=$oak->remove_diacritics($beer->name);
 	}
 }
 
@@ -28,22 +28,23 @@ foreach ($place_list as $letter=>$places)
 {
 	foreach ($places as $place)
 	{
-		$list[]=array('name' => $oak->remove_diacritics($place->name), 'id' => $place->id);
+		$list[]=$oak->remove_diacritics($place->name);
 	}
 }
 
 // var_dump($list);exit;
-if (uasort($list,'cmp_function'))
+uasort($list,'cmp_function');
+$list=array_unique($list);
+
+foreach ($list as $item)
 {
-	foreach ($list as $item)
-	{
-		print $item['name']."\t".$item['id']."\n";
-	}
+	print $item."\n";
 }
+
 
 function cmp_function($a,$b)
 {
-	return strcasecmp($a['name'],$b['name']);
+	return strcasecmp($a,$b);
 }
 
 ?>
