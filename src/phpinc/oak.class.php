@@ -155,6 +155,7 @@ class OAK
 
 	function login_is_trusted()
 	{
+		// TODO: use memcached or something quick so that we don't have to use couchdb on *every* authenticated request!
 		$user_doc=new OAKDocument('');
 		if ($this->get_document('user:'.$this->get_user_id(),$user_doc)!==true)
 			return false;
