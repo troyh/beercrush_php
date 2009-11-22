@@ -1,10 +1,16 @@
 #!/bin/bash
 
 if [ -z $1 ]; then
-	echo "Usage: $0 <webserver|dbserver|memcacheqserver|buildserver>"
+	echo "Usage: $0 <appserver|proxyserver|dbserver|memcacheqserver|buildserver>"
 	exit;
 fi
 
+function APT_INSTALL_MULTI()
+{
+	for PKG in $*; do
+		APT_INSTALL $PKG
+	done
+}
 
 function APT_INSTALL()
 {
@@ -32,22 +38,30 @@ case $1 in
 	dbserver)
 		echo "Setting up database server...";
 		APT_INSTALL couchdb
+		# TODO: make sure bind_address is set to 0.0.0.0 in /etc/couchdb/local.ini
 		# TODO: get db to here in /var/lib/couchdb
 		# TODO: setup replication between this server and another
 		# TODO: update design docs from src/db/designdocs.json
 		;;
 	solrserver)
-		for PKG in solr-tomcat6 tomcat6-admin; do
-			APT_INSTALL $PKG
-		done
+		APT_INSTALL_MULTI solr-tomcat6 tomcat6-admin
 		# TODO: verify /etc/tomcat6/tomcat-users.xml is correct
+		# TODO: copy the BeerCrush conf/solr/schema.xml to /etc/solr/conf/schema.xml
+		# TODO: copy the BeerCrush conf/solr/solrconfig.xml to /etc/solr/conf/solrconfig.xml
 		;;
 	memcacheqserver)
 		echo "Setting up memcacheq server...";
 		# See http://memcachedb.org/memcacheq/INSTALL.html
-		# TODO: install Berkeley DB 4.7 or later (required by MemcacheQ)
-		# TODO: install libevent1.4.x or later (required by MemcacheQ)
-		# TODO: install MemcacheQ
+		APT_INSTALL_MULTI libdb4.8 libdb4.8-dev libevent-1.4-2 libevent-dev
+		
+		# Install MemcacheQ:
+		curl http://troyandgay.com/memcacheq_0.1.1-1_i386.deb > $HOME/memcacheq_0.1.1-1_i386.deb
+		dpkg -i $HOME/memcacheq_0.1.1-1_i386.deb
+		# 	curl --silent http://memcacheq.googlecode.com/files/memcacheq-0.1.1.tar.gz > $HOME/memcacheq-0.1.1.tar.gz
+		# 	cd $HOME; tar xvzf memcacheq-0.1.1.tar.gz; cd memcacheq-0.1.1
+		#	./configure --enable-threads
+		#	make
+		#	sudo make install
 		
 		# Make sure memcacheq is running
 		# If not, start memcacheq:
@@ -59,12 +73,10 @@ case $1 in
 		# Run this script again to setup as a webserver (a buildserver is also a webserver)
 		$0 webserver
 		;;
-	webserver)
+	appserver)
 		echo "Setting up web server...";
 
-		for PKG in apache2 php5 php5-cli php5-dev php5-curl php5-imagick spread libspread1-dev libfcgi-dev xmlstarlet subversion; do
-			APT_INSTALL $PKG
-		done
+		APT_INSTALL_MULTI apache2 php5 php5-cli php5-dev php5-curl php5-imagick php5-uuid php5-memcached php-apc spread libspread1-dev libfcgi-dev xmlstarlet subversion
 		
 		if [ ! -d $BEERCRUSH_SOURCE_DIR ]; then
 			# Get code from Subversion
@@ -82,7 +94,7 @@ case $1 in
 		# TODO: build fcgi binaries
 		# TODO: Config PHP FastCGI
 		# TODO: turn off PHP's magic quotes
-		# TODO: install php5-uuid
+		# TODO: make sure PHP's include_path is correct and uncommented in php.ini
 
 		for DIR in $BEERCRUSH_WWW_DIR $BEERCRUSH_ETC_DIR $BEERCRUSH_LOCALDATA_DIR $BEERCRUSH_PHPINC_DIR /var/run/BeerCrush $BEERCRUSH_WWW_DIR/uploads; do
 			mkdir -p $DIR;
@@ -103,8 +115,6 @@ case $1 in
 		
 		# TODO: install libmemcached 0.28+
 		# TODO: pecl install memcached
-		# TODO: configure syslog.conf for OAK logging
-		# TODO: config logrotate for /var/log/oak.log
 		# TODO: make sure permissions are correct for $BEERCRUSH_WWW_DIR and subdirs (beercrush group?)
 		
 		# Copy some files from the source tree
@@ -120,11 +130,11 @@ case $1 in
 			exit;
 		fi
 		
-		if [ ! -f /etc/BeerCrush/OAK.conf ]; then
-			echo "You must create /etc/BeerCrush/OAK.conf";
-			exit;
-		fi
+		;;
+	proxyserver)
+		echo "Setting up reverse proxy server...";
 		
+		APT_INSTALL_MULTI nginx
 		
 		;;
 esac
