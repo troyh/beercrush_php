@@ -123,14 +123,14 @@ function loadDataFile($fname, &$names, &$types)
 			$line=fgets($fp);
 			if (!feof($fp))
 			{
-				list($txt,$id)=preg_split('/\t/',$line);
-				$names[]=$txt;
-				if (!strncasecmp($id,'beer:',5))
-					$types[]=BEER;
-				else if (!strncasecmp($id,'brewery:',8))
-					$types[]=BREWERY;
-				else if (!strncasecmp($id,'place:',6))
-					$types[]=PLACE;
+				// list($txt,$id)=preg_split('/\t/',$line);
+				$names[]=trim($line);
+				// if (!strncasecmp($id,'beer:',5))
+				// 	$types[]=BEER;
+				// else if (!strncasecmp($id,'brewery:',8))
+				// 	$types[]=BREWERY;
+				// else if (!strncasecmp($id,'place:',6))
+				// 	$types[]=PLACE;
 			}
 		}
 		
@@ -175,11 +175,12 @@ function autocomplete($query,$list,$searchable_types,$requested_types)
 				++$mid;
 				if (strncasecmp($query,$list[$mid-1],strlen($query))==0)
 				{
+					print $list[$mid-1]."\n";
 					// See if it's the correct type we want
-					if (($requested_types==0) || ($searchable_types[$mid-1] & $requested_types))
-					{
-						print $list[$mid-1]."\t\n";
-					}
+					// if (($requested_types==0) || ($searchable_types[$mid-1] & $requested_types))
+					// {
+					// 	print $list[$mid-1]."\t\n";
+					// }
 				}
 				else
 					break;
@@ -244,7 +245,7 @@ else
 }
 
 header("Content-Type: text/plain");
-
+// var_dump($shared_data);exit;
 $dataset_mask=UNKNOWN;
 if (!strlen($_GET['dataset']))
 	$dataset_mask=BEER|BREWERY|PLACE;
