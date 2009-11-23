@@ -1,7 +1,7 @@
-#include <fcgi_stdio.h>
+#include <fcgiapp.h>
 extern "C"
 {
-#include <cgic.h>
+#include "external/cgic/cgic.h"
 }
 #include <stdlib.h>
 #include <math.h>
@@ -24,7 +24,7 @@ size_t latlonpairs_count=0;
 
 using namespace std;
 
-extern "C" void cgiInit() 
+extern "C" void fcgiInit() 
 {
 	// Init list of latitude/longitude pairs values, sorted by latitude
 	// TODO: use shared memory so all processes don't duplicate the data
@@ -95,7 +95,7 @@ extern "C" void cgiInit()
 	}
 }
 
-extern "C" void cgiUninit() 
+extern "C" void fcgiUninit() 
 {
 	// Free list of lat/lon pairs
 	if (latlonpairs)
@@ -120,7 +120,7 @@ size_t binary_search(double lat)
 }
 
 
-int cgiMain()
+extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_ParamArray envp)
 {
 	char latstr[32];
 	char lonstr[32];
@@ -169,7 +169,7 @@ int cgiMain()
 		}
 	}
 
-	FCGI_printf("{ \"count\": %d, \"places\": [",count);
+	FCGX_FPrintF(out,"{ \"count\": %d, \"places\": [",count);
 	if (count)
 	{
 		bool bFirst=true;
@@ -182,7 +182,7 @@ int cgiMain()
 			if (lon_min <= latlonpairs[i].lon && latlonpairs[i].lon <= lon_max)
 			{
 				// Found one!
-				FCGI_printf("%c{ \"id\": \"%s\", \"lat\": %f, \"lon\": %f, \"name\": %s }",
+				FCGX_FPrintF(out,"%c{ \"id\": \"%s\", \"lat\": %f, \"lon\": %f, \"name\": %s }",
 					(bFirst?' ':','),
 					latlonpairs[i].place_id,
 					latlonpairs[i].lat,
@@ -193,7 +193,7 @@ int cgiMain()
 			}
 		}
 	}
-	FCGI_printf("]}\n");
+	FCGX_FPrintF(out,"]}\n");
 
 	return 0;
 }

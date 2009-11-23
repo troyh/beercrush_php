@@ -1,10 +1,10 @@
-#define NO_FCGI_DEFINES
-#include <fcgi_stdio.h>
+#include <fcgiapp.h>
 
 extern "C"
 {
-#include <cgic.h>
+#include "external/cgic/cgic.h"
 }
+
 
 #include <map>
 #include <string>
@@ -15,6 +15,9 @@ extern "C"
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fstream>
+
+
+
 
 // #include <boost/filesystem.hpp>
 
@@ -189,7 +192,7 @@ bool readFile(const char* fname, size_t* count, const char*** names)
 }
 
 
-extern "C" void cgiInit() 
+extern "C" void fcgiInit() 
 {
 	// TODO: make it read from the config file and load the data straight from couchdb so the file location is not hardcoded
 	// // Read the conf file
@@ -205,7 +208,7 @@ extern "C" void cgiInit()
 	readFile(dataFilename,&searchable_names_count,&searchable_names);
 }
 
-extern "C" void cgiUninit() 
+extern "C" void fcgiUninit() 
 {
 	if (searchable_names)
 		free(searchable_names);
@@ -213,7 +216,7 @@ extern "C" void cgiUninit()
 	/* TODO: Free style list from memory */
 }
 
-void autocomplete(const char* query,size_t query_len,const char** list,size_t count, bool bXMLOutput)
+void autocomplete(FCGX_Stream* out, const char* query,size_t query_len,const char** list,size_t count, bool bXMLOutput)
 {
 	if (count==0)
 		return;
@@ -253,13 +256,13 @@ void autocomplete(const char* query,size_t query_len,const char** list,size_t co
 					if (bXMLOutput)
 					{
 						// TODO: use libxml2 to take care of XML entities
-						FCGI_printf("<result>");
-						FCGI_printf("<text>%s</text>",list[mid-1]);
-						FCGI_printf("</result>");
+						FCGX_FPrintF(out,"<result>");
+						FCGX_FPrintF(out,"<text>%s</text>",list[mid-1]);
+						FCGX_FPrintF(out,"</result>");
 					}
 					else
 					{
-						FCGI_printf("%s\n",list[mid-1]);
+						FCGX_FPrintF(out,"%s\n",list[mid-1]);
 					}
 				}
 				else
@@ -271,47 +274,47 @@ void autocomplete(const char* query,size_t query_len,const char** list,size_t co
 	}
 }
 
-int cgiMain()
+extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_ParamArray envp)
 {
 	// See if we should refresh the data (older than 1 hour)
 	// readFile(dataFilename,&searchable_names_count,&searchable_names,&searchable_types);
-		
+	
 	bool bXMLOutput=false;
-	
-	char query[256];
-	char dataset[32];
-	char output[16];
-	char types[16];
-	
-	cgiFormString((char*)"q",query,sizeof(query));
-	cgiFormString((char*)"dataset",dataset,sizeof(dataset));
-	cgiFormString((char*)"output",output,sizeof(output));
+
+	char query[256]="dogfish";
+	char dataset[32]="";
+	char output[16]="";
+	char types[16]="";
+
+	cgiFormString("q",query,sizeof(query));
+	cgiFormString("dataset",dataset,sizeof(dataset));
+	cgiFormString("output",output,sizeof(output));
 
 	if (!strcasecmp(output,"xml"))
 		bXMLOutput=true;
-		
+	
 	if (bXMLOutput)
 	{
-		cgiHeaderContentType((char*)"text/xml");
-		FCGI_printf("<results>");
+		FCGX_FPrintF(out,"Content-Type: text/xml; charset=utf-8\r\n\r\n");
+		FCGX_FPrintF(out,"<results>");
 	}
 	else
-		cgiHeaderContentType((char*)"text/plain");
+		FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
 
 	size_t query_len=strlen(query);
 
 	if (!strcasecmp(dataset,"bjcp_style"))
 	{
-		autocomplete(query,query_len,beer_styles,sizeof(beer_styles)/sizeof(beer_styles[0]),bXMLOutput);
+		autocomplete(out,query,query_len,beer_styles,sizeof(beer_styles)/sizeof(beer_styles[0]),bXMLOutput);
 	}
 	else
 	{
-		autocomplete(query,query_len,searchable_names,searchable_names_count,bXMLOutput);
+		autocomplete(out,query,query_len,searchable_names,searchable_names_count,bXMLOutput);
 	}
-	
+
 	if (bXMLOutput)
-		FCGI_printf("</results>");
-	
+		FCGX_FPrintF(out,"</results>");
 	
 	return 0;
 }
+

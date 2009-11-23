@@ -1,7 +1,7 @@
-#include <fcgi_stdio.h>
+#include <fcgiapp.h>
 extern "C"
 {
-#include <cgic.h>
+#include "external/cgic/cgic.h"
 }
 #include <stdlib.h>
 #include <math.h>
@@ -25,7 +25,7 @@ size_t latlonpairs_count=0;
 
 using namespace std;
 
-extern "C" void cgiInit() 
+extern "C" void fcgiInit() 
 {
 	// Init list of latitude/longitude pairs values, sorted by latitude
 	// TODO: use shared memory so all processes don't duplicate the data
@@ -105,7 +105,7 @@ extern "C" void cgiInit()
 	}
 }
 
-extern "C" void cgiUninit() 
+extern "C" void fcgiUninit() 
 {
 	// Free list of lat/lon pairs
 	if (latlonpairs)
@@ -130,7 +130,7 @@ size_t binary_search(double lat)
 }
 
 
-int cgiMain()
+extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_ParamArray envp)
 {
 	char latstr[32];
 	char lonstr[32];
@@ -159,7 +159,7 @@ int cgiMain()
 	double lon_max=lon+(double)(within/lon_deg_len);
 	double lon_min=lon-(double)(within/lon_deg_len);
 	
-	cgiHeaderContentType((char*)"application/javascript");
+	cgiHeaderContentType((char*)"application/json; charset=utf-8");
 	// cgiHeaderStatus(200,(char*)"OK");
 	// FCGI_printf("LatDegLen: %f\nWithin: %f\n",lat_deg_len,within);
 	// FCGI_printf("Lat: %f to %f\nLon: %f to %f\n",lat_min,lat_max,lon_min,lon_max);
@@ -185,9 +185,9 @@ int cgiMain()
 	}
 	
 	if (beer_id[0]) // If filtering by a beer_id
-		FCGI_printf("{ \"count\": %d, \"places\": [",count);
+		FCGX_FPrintF(out,"{ \"count\": %d, \"places\": [",count);
 	else
-		FCGI_printf("{ \"count\": %d, \"beers\": [",count);
+		FCGX_FPrintF(out,"{ \"count\": %d, \"beers\": [",count);
 		
 	if (count)
 	{
@@ -203,7 +203,7 @@ int cgiMain()
 				if (beer_id[0]=='\0' || !strcmp(beer_id,latlonpairs[i].beer_id))
 				{
 					// Found one!
-					FCGI_printf("%c{ \"beer_id\": \"%s\", \"lat\": %f, \"lon\": %f, \"place_id\": \"%s\", \"name\": %s }",
+					FCGX_FPrintF(out,"%c{ \"beer_id\": \"%s\", \"lat\": %f, \"lon\": %f, \"place_id\": \"%s\", \"name\": %s }",
 						(bFirst?' ':','),
 						latlonpairs[i].beer_id,
 						latlonpairs[i].lat,
@@ -216,7 +216,7 @@ int cgiMain()
 			}
 		}
 	}
-	FCGI_printf("]}\n");
+	FCGX_FPrintF(out,"]}\n");
 
 	return 0;
 }
