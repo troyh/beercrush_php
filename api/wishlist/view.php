@@ -7,6 +7,7 @@ if (substr($_GET['user_id'],0,5)==='user:')
 else
 	$user_id=$_GET['user_id'];
 
+$wishlist=new OAKDocument('');
 if ($oak->get_document('wishlist:'.$user_id,&$wishlist)!==true)
 {
 	header('HTTP/1.0 400 No wishlist');
@@ -27,8 +28,8 @@ else
 			$output['items'][]=$doc;
 		}
 	}
-	
-	header('Content-Type: text/javascript; charset=utf-8');
+
+	header('Content-Type: application/json; charset=utf-8');
 	print json_encode($output);
 }
 
