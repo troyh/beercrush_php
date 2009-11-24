@@ -1,7 +1,12 @@
 #!/bin/bash
 
+function USAGE()
+{
+	echo "Usage: $0 <appserver|wwwproxyserver|couchdbproxyserver|dbserver|memcacheqserver|mgmtserver>"
+}
+
 if [ -z $1 ]; then
-	echo "Usage: $0 <appserver|proxyserver|dbserver|memcacheqserver|buildserver>"
+	USAGE;
 	exit;
 fi
 
@@ -14,8 +19,9 @@ function APT_INSTALL_MULTI()
 
 function APT_INSTALL()
 {
-	if ! dpkg-query --status $1 &> /dev/null ; then 
-		sudo apt-get install $1
+	PKG=`echo $1 | sed -e 's/=.*$//'`;
+	if ! dpkg-query --status $PKG &> /dev/null ; then 
+		sudo apt-get install $PKG
 	fi
 }
 
@@ -25,6 +31,8 @@ BEERCRUSH_ETC_DIR="/etc/BeerCrush/"
 BEERCRUSH_PHPINC_DIR="/usr/share/php/beercrush/"
 BEERCRUSH_SOURCE_DIR="$HOME/beercrush/"
 BEERCRUSH_LOCALDATA_DIR="/var/local/BeerCrush/"
+
+MGMT_SERVER=localhost
 
 #
 # Common setup tasks
@@ -37,14 +45,14 @@ APT_INSTALL rsync
 case $1 in
 	dbserver)
 		echo "Setting up database server...";
-		APT_INSTALL couchdb
+		APT_INSTALL couchdb=0.9.0-2+b1
 		# TODO: make sure bind_address is set to 0.0.0.0 in /etc/couchdb/local.ini
 		# TODO: get db to here in /var/lib/couchdb
 		# TODO: setup replication between this server and another
 		# TODO: update design docs from src/db/designdocs.json
 		;;
 	solrserver)
-		APT_INSTALL_MULTI solr-tomcat6 tomcat6-admin
+		APT_INSTALL_MULTI solr-tomcat6=1.3.0+ds1-1 tomcat6-admin=6.0.20-7
 		# TODO: verify /etc/tomcat6/tomcat-users.xml is correct
 		# TODO: copy the BeerCrush conf/solr/schema.xml to /etc/solr/conf/schema.xml
 		# TODO: copy the BeerCrush conf/solr/solrconfig.xml to /etc/solr/conf/solrconfig.xml
@@ -52,7 +60,7 @@ case $1 in
 	memcacheqserver)
 		echo "Setting up memcacheq server...";
 		# See http://memcachedb.org/memcacheq/INSTALL.html
-		APT_INSTALL_MULTI libdb4.8 libdb4.8-dev libevent-1.4-2 libevent-dev
+		APT_INSTALL_MULTI libdb4.8=4.8.24-1 libdb4.8-dev=4.8.24-1 libevent-1.4-2=1.4.12-stable-1 libevent-dev=1.4.12-stable-1
 		
 		# Install MemcacheQ:
 		curl http://troyandgay.com/memcacheq_0.1.1-1_i386.deb > $HOME/memcacheq_0.1.1-1_i386.deb
@@ -67,17 +75,11 @@ case $1 in
 		# If not, start memcacheq:
 		memcacheq -d -r -H /var/lib/memcacheq -N -v -L 1024 -B 1024 > /var/log/memcacheq.log 2>&1
 		;;
-	buildserver)
+	mgmtserver)
 		echo "Setting up build server...";
-		
-		# Run this script again to setup as a webserver (a buildserver is also a webserver)
-		$0 webserver
-		;;
-	appserver)
-		echo "Setting up web server...";
 
-		APT_INSTALL_MULTI apache2 php5 php5-cli php5-dev php5-curl php5-imagick php5-uuid php5-memcached php-apc spread libspread1-dev libfcgi-dev xmlstarlet subversion
-		
+		APT_INSTALL_MULTI subversion=1.6.3dfsg-1 
+
 		if [ ! -d $BEERCRUSH_SOURCE_DIR ]; then
 			# Get code from Subversion
 			svn co https://troyandgay.com/svn/projects/beerliberation $BEERCRUSH_SOURCE_DIR
@@ -85,8 +87,53 @@ case $1 in
 			# Get the latest version
 			svn update $BEERCRUSH_SOURCE_DIR
 		fi
+
+		# TODO: kill update_doc, if running, and start new process
 		
-		# TODO: copy files from build server to here
+		;;
+	appserver)
+		echo "Setting up web server...";
+
+		APT_INSTALL_MULTI apache2=2.2.14-1 \
+			php5=5.2.11.dfsg.1-1 php5-cli=5.2.11.dfsg.1-1 php5-dev=5.2.11.dfsg.1-1 php5-curl=5.2.11.dfsg.1-1 php5-imagick=2.1.1RC1-1+b1 \
+			php5-uuid=1.5.1-1.1+b1 php5-memcached=1.0.0-1 php-apc=3.0.19-2 \
+			supervisor=3.0a7-2.1 \
+			spread=3.17.4-2+b1 libspread1-dev=3.17.4-2+b1 \
+			libfcgi-dev=2.4.0-7 \
+			xmlstarlet=1.0.1-2 \
+			subversion=1.6.3dfsg-1 
+
+		if [ ! -f $BEERCRUSH_ETC_DIR/webapp.conf ]; then
+			echo "$BEERCRUSH_ETC_DIR/webapp.conf doesn't exist";
+			exit;
+		fi
+
+		for DIR in $BEERCRUSH_WWW_DIR $BEERCRUSH_ETC_DIR $BEERCRUSH_LOCALDATA_DIR $BEERCRUSH_PHPINC_DIR /var/run/BeerCrush $BEERCRUSH_WWW_DIR/uploads $BEERCRUSH_SOURCE_DIR/src; do
+			if [ ! -d $DIR ]; then
+				mkdir -p $DIR;
+			fi
+		done
+		
+		# Copy the src tree so we can build anything that is needed
+		echo "Copying from $MGMT_SERVER...";
+		rsync --recursive --delete $MGMT_SERVER:$BEERCRUSH_SOURCE_DIR/src/ $BEERCRUSH_SOURCE_DIR/src/
+		# Run make in source tree
+		make -C $BEERCRUSH_SOURCE_DIR/src/ clean
+		make -C $BEERCRUSH_SOURCE_DIR/src/
+		
+		# Copy some files from the source tree
+		for D in api css img js html php; do 
+			sudo rsync --recursive --delete $D/ $BEERCRUSH_WWW_DIR/$D/; 
+		done
+
+		# Copy FCGIs for the API
+		for API_FCGI in autocomplete.fcgi nearby.fcgi nearby_beer.fcgi; do
+			sudo rsync --recursive --delete $BEERCRUSH_SOURCE_DIR/src/$API_FCGI $BEERCRUSH_WWW_DIR/api/
+		done
+
+		# Copy PHP includes to PHP include path
+		sudo rsync --recursive --delete src/phpinc/ $BEERCRUSH_PHPINC_DIR/
+
 		# TODO: configure syslog.conf for OAK logging
 		# TODO: config logrotate for /var/log/oak.log
 		# TODO: install and setup PHP's APC (opcode cache)
@@ -96,45 +143,77 @@ case $1 in
 		# TODO: turn off PHP's magic quotes
 		# TODO: make sure PHP's include_path is correct and uncommented in php.ini
 
-		for DIR in $BEERCRUSH_WWW_DIR $BEERCRUSH_ETC_DIR $BEERCRUSH_LOCALDATA_DIR $BEERCRUSH_PHPINC_DIR /var/run/BeerCrush $BEERCRUSH_WWW_DIR/uploads; do
-			mkdir -p $DIR;
-		done
-		
-		if [ ! -f $BEERCRUSH_ETC_DIR/webapp.conf ]; then
-			echo "$BEERCRUSH_ETC_DIR/webapp.conf doesn't exist";
-			exit;
-		fi
-
 		# TODO: verify that the OAK.conf file is correct
 		
 		# TODO: make this work:
 		# sudo pecl install spread
 		
-		# TODO: install cgic205-patched.tar.bz2
-		# TODO: run Make to build what needs to be built (like api/autocomplete.fcgi)
-		
 		# TODO: install libmemcached 0.28+
 		# TODO: pecl install memcached
 		# TODO: make sure permissions are correct for $BEERCRUSH_WWW_DIR and subdirs (beercrush group?)
+
+		###############################################
+		# Apache 2.2
+		###############################################
 		
-		# Copy some files from the source tree
-		for D in api css img js html php; do 
-			sudo rsync --recursive --delete $D/ $BEERCRUSH_WWW_DIR/$D/; 
-		done
-		sudo rsync --recursive --delete src/phpinc/ $BEERCRUSH_PHPINC_DIR/
-
-		# TODO: kill update_doc, if running, and start new process
-
 		if [ ! -f /etc/apache2/sites-enabled/BeerCrush ]; then
-			echo "You must create /etc/apache2/sites-available/BeerCrush and then do a2ensite BeerCrush";
+			echo "You must create /etc/apache2/sites-available/BeerCrush and then create a symlink in /etc/apache2/sites-enabled.";
+			echo "You can get one from svn://beercrush/conf/apache/appserver.conf.";
+			exit;
+		fi
+
+		###############################################
+		# Supervisord
+		###############################################
+
+		# Verify that supervisord is config'd
+		if [ ! -f /etc/supervisor/conf.d/BeerCrush-app.conf ]; then
+			echo "I don't see /etc/supervisor/conf.d/BeerCrush-app.conf. You can get one from svn://beercrush/conf/supervisord/appserver.conf."
+			exit;
+		fi
+
+		# Tell supervisord to restart FCGI programs
+		echo "Restarting Supervisord...";
+		sudo /etc/init.d/supervisor stop;
+		sudo /etc/init.d/supervisor start;
+		# sudo supervisorctl restart autocomplete: nearby: nearby_beer:;
+		
+		sudo /etc/init.d/apache2 restart;
+		
+		;;
+		
+	wwwproxyserver)
+		echo "Setting up www proxy server...";
+		
+		APT_INSTALL_MULTI nginx=0.7.62-4
+		
+		if [ ! -f /etc/nginx/sites-enabled/wwwserver ]; then
+			echo "You must create /etc/nginx/sites-available/wwwserver and then create a symlink in /etc/nginx/sites-enabled.";
+			echo "You can get one from svn://beercrush/conf/nginx/wwwserver.conf.";
 			exit;
 		fi
 		
+		sudo /etc/init.d/nginx restart;
+		
 		;;
-	proxyserver)
-		echo "Setting up reverse proxy server...";
 		
-		APT_INSTALL_MULTI nginx
+	couchdbproxyserver)
+		echo "Setting up CouchDB proxy server...";
+	
+		APT_INSTALL_MULTI nginx=0.7.62-4
+
+		if [ ! -f /etc/nginx/sites-enabled/couchdb ]; then
+			echo "You must create /etc/nginx/sites-available/couchdb and then create a symlink in /etc/nginx/sites-enabled";
+			echo "You can get one from svn://beercrush/conf/nginx/couchdb.conf.";
+			exit;
+		fi
+
+		sudo /etc/init.d/nginx restart;
+
+		;;
 		
+	*)
+		echo "$1 is not a valid type of server I can set up";
+		USAGE;
 		;;
 esac
