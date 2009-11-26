@@ -1,7 +1,7 @@
 <?php
 require_once('beercrush/oak.class.php');
 
-header('Content-type: text/javascript; charset=utf-8');
+header('Content-type: application/json; charset=utf-8');
 
 mb_internal_encoding("UTF-8");
 
