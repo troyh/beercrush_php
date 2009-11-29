@@ -1,6 +1,6 @@
 	</div>
 	<div id="footer">
-		&copy; 2009 Beer Crush
+		&copy; 2009 Beer Crush (r<!-- SVNVERSION -->)
 	</div>
 <script>
 google.load("jquery","1.3.2");
