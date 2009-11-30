@@ -2,6 +2,8 @@
 
 SHELL = /bin/sh
 
+WWW_DIR:=$(shell php -r '$$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $$cfg->file_locations->WWW_DIR."\n";')
+
 ALL:
 	@for DIR in $(shell find . -maxdepth 1 -mindepth 1 -type d); do \
 		if [ -f $$DIR/Makefile ]; then \
@@ -17,4 +19,7 @@ install:
 			echo Installing $$DIR; \
 			make -C $$DIR --silent install; \
 		fi \
-	done
+	done; \
+    for DIR in api auth css img js html php; do \
+		rsync --recursive --delete $$DIR/ $$WWW_DIR/$$DIR/; \
+    done
