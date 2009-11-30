@@ -1,3 +1,4 @@
-.PHONY: install
+.PHONY: ALL install
 
-	
+
+ALL:
