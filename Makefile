@@ -1,28 +1,14 @@
-.PHONY: INSTALL BEERPAGES BREWERYPAGES PLACEPAGES FORCE ALL-BREWERY-METADATA
+.PHONY: ALL install
 
-# Install xmlstarlet
-# Create /etc/BeerCrush/BeerCrush.conf
-# Configure Apache
-# 
-# Make beer pages
-# Make brewery pages
-# Make places pages
+SHELL = /bin/sh
 
-INSTALL: /etc/BeerCrush/BeerCrush.conf BEERPAGES BREWERYPAGES PLACEPAGES
+ALL:
 
-BEERPAGES: ALL-BREWERY-METADATA
-	$(MAKE) -C html/beer ALL-BEER-PAGES
-
-BREWERYPAGES:
-	$(MAKE) -C html/brewery ALL-BREWERY-PAGES
-
-PLACEPAGES:
-
-ALL-BREWERY-METADATA:
-	$(MAKE) -C metadata/brewery ALL-BREWERY-METADATA
-
-/etc/BeerCrush/BeerCrush.conf: /etc/BeerCrush/ FORCE
-	./makeconf.sh $@
-
-/etc/BeerCrush/:
-	sudo mkdir /etc/BeerCrush
+install: 
+	@if [ $(shell whoami) != "root" ]; then echo "Must be root to install"; exit 1; fi
+	@for DIR in $(shell find . -maxdepth 1 -mindepth 1 -type d); do \
+		if [ -f $$DIR/Makefile ]; then \
+			echo Installing $$DIR; \
+			make -C $$DIR --silent install; \
+		fi \
+	done
