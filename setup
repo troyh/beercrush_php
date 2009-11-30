@@ -13,7 +13,7 @@ function USAGE()
 	echo "Usage: $0 <appserver|wwwproxy|couchdbproxy|solrproxy|couchdb|solr|memcacheq|mgmt> <mgmt server>";
 }
 
-if [ -z $1 -o -z $2 ]; then
+if [ -z "$1" -o -z "$2" ]; then
 	USAGE;
 	exit;
 fi
@@ -147,21 +147,9 @@ case $1 in
 		rsync --recursive --delete $MGMT_SERVER:$BEERCRUSH_SOURCE_DIR/src/ $BEERCRUSH_SOURCE_DIR/src/
 		# Run make in source tree
 		make -C $BEERCRUSH_SOURCE_DIR/src/ clean
-		make -C $BEERCRUSH_SOURCE_DIR/src/
+		make -C $BEERCRUSH_SOURCE_DIR
+		sudo make -C $BEERCRUSH_SOURCE_DIR install
 		
-		# Copy some files from the source tree
-		for D in api auth css img js html php; do 
-			sudo rsync --recursive --delete $D/ $BEERCRUSH_WWW_DIR/$D/; 
-		done
-
-		# Copy FCGIs for the API
-		for API_FCGI in autocomplete.fcgi nearby.fcgi nearby_beer.fcgi; do
-			sudo rsync --recursive --delete $BEERCRUSH_SOURCE_DIR/src/$API_FCGI $BEERCRUSH_WWW_DIR/api/
-		done
-
-		# Copy PHP includes to PHP include path
-		sudo rsync --recursive --delete src/phpinc/ $BEERCRUSH_PHPINC_DIR/
-
 		# TODO: configure syslog.conf for OAK logging
 		# TODO: config logrotate for /var/log/oak.log
 		# TODO: install and setup PHP's APC (opcode cache)
