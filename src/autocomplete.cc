@@ -27,8 +27,8 @@ const char* const dataFilename="/var/local/BeerCrush/meta/autocomplete_names.tsv
 
 // Searchable data structures
 const char** searchable_names=NULL;
-// typedef enum { UNKNOWN=0, BEER=1, BREWERY=2, PLACE=4, STYLE=128 } TYPES;
-// TYPES *searchable_types=NULL;
+typedef enum { UNKNOWN=0, BEER=1, BREWERY=2, PLACE=4, STYLE=128 } TYPES;
+TYPES *searchable_types=NULL;
 size_t searchable_names_count=0;
 
 const char* beer_styles[]=
@@ -138,10 +138,11 @@ const char* beer_styles[]=
 	"Wood-Aged Beer",
 };
 
-bool readFile(const char* fname, size_t* count, const char*** names)
+bool readFile(const char* fname, size_t* count, const char*** names, TYPES** types)
 {
 	char* buf=0;
 	const char** list=0;
+	TYPES* list_types=0;
 	size_t entries=0;
 	
 	struct stat statbuf;
@@ -174,21 +175,39 @@ bool readFile(const char* fname, size_t* count, const char*** names)
 		if (entries)
 		{
 			list=new const char*[entries];
+			list_types=new TYPES[entries];
 			
 			char* p=buf;
 			for(size_t i = 0; i < entries; ++i)
 			{
 				list[i]=p;
+				char* tab=strchr(p,'\t');
+				
 				for (p+=strlen(p)+1;*p=='\0';++p)
 				{ // Skip to next line, just in case there's multiple null-terminators at the end
 				}
+				
+				if (tab)
+				{
+					*tab='\0';
+					++tab;
+					if (!strcasecmp(tab,"beer"))
+						list_types[i]=BEER;
+					else if (!strcasecmp(tab,"brewery"))
+						list_types[i]=BREWERY;
+					else if (!strcasecmp(tab,"place"))
+						list_types[i]=PLACE;
+				}
+				else
+					list_types[i]=UNKNOWN;
+				
 			}
 		}
 	}
 	
 	*count=entries;
-
 	*names=list;
+	*types=list_types;
 }
 
 
@@ -205,7 +224,7 @@ extern "C" void fcgiInit()
 	// fname[sizeof(fname)-1]='\0';
 	
 	/* Load brewery list into memory, it *must* be sorted */
-	readFile(dataFilename,&searchable_names_count,&searchable_names);
+	readFile(dataFilename,&searchable_names_count,&searchable_names,&searchable_types);
 }
 
 extern "C" void fcgiUninit() 
@@ -216,7 +235,7 @@ extern "C" void fcgiUninit()
 	/* TODO: Free style list from memory */
 }
 
-void autocomplete(FCGX_Stream* out, const char* query,size_t query_len,const char** list,size_t count, bool bXMLOutput)
+void autocomplete(FCGX_Stream* out, const char* query,size_t query_len,const char** list,TYPES* types, size_t count, int filtertype, bool bXMLOutput)
 {
 	if (count==0)
 		return;
@@ -228,6 +247,7 @@ void autocomplete(FCGX_Stream* out, const char* query,size_t query_len,const cha
 	while (lo<=hi)
 	{
 		size_t mid=(hi+lo)/2;
+
 		// Remember, mid is 1-based, so use mid-1 to reference array items
 		int cmp=strncasecmp(query,list[mid-1],query_len);
 		if (cmp<0)
@@ -253,16 +273,19 @@ void autocomplete(FCGX_Stream* out, const char* query,size_t query_len,const cha
 				++mid;
 				if (strncasecmp(query,list[mid-1],query_len)==0)
 				{
-					if (bXMLOutput)
+					if (filtertype==0 || !types || (types[mid-1]&filtertype))
 					{
-						// TODO: use libxml2 to take care of XML entities
-						FCGX_FPrintF(out,"<result>");
-						FCGX_FPrintF(out,"<text>%s</text>",list[mid-1]);
-						FCGX_FPrintF(out,"</result>");
-					}
-					else
-					{
-						FCGX_FPrintF(out,"%s\n",list[mid-1]);
+						if (bXMLOutput)
+						{
+							// TODO: use libxml2 to take care of XML entities
+							FCGX_FPrintF(out,"<result>");
+							FCGX_FPrintF(out,"<text>%s</text>",list[mid-1]);
+							FCGX_FPrintF(out,"</result>");
+						}
+						else
+						{
+							FCGX_FPrintF(out,"%s\n",list[mid-1]);
+						}
 					}
 				}
 				else
@@ -290,6 +313,19 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 	cgiFormString("dataset",dataset,sizeof(dataset));
 	cgiFormString("output",output,sizeof(output));
 
+	int filtertype=0;
+	if (*dataset)
+	{
+		if (!strcasecmp(dataset,"beers"))
+			filtertype=BEER;
+		else if (!strcasecmp(dataset,"breweries"))
+			filtertype=BREWERY;
+		else if (!strcasecmp(dataset,"places"))
+			filtertype=PLACE;
+		else if (!strcasecmp(dataset,"beersandbreweries"))
+			filtertype=BEER|BREWERY;
+	}
+
 	if (!strcasecmp(output,"xml"))
 		bXMLOutput=true;
 	
@@ -305,11 +341,11 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 
 	if (!strcasecmp(dataset,"bjcp_style"))
 	{
-		autocomplete(out,query,query_len,beer_styles,sizeof(beer_styles)/sizeof(beer_styles[0]),bXMLOutput);
+		autocomplete(out,query,query_len,beer_styles,0,sizeof(beer_styles)/sizeof(beer_styles[0]),filtertype,bXMLOutput);
 	}
 	else
 	{
-		autocomplete(out,query,query_len,searchable_names,searchable_names_count,bXMLOutput);
+		autocomplete(out,query,query_len,searchable_names,searchable_types,searchable_names_count,filtertype,bXMLOutput);
 	}
 
 	if (bXMLOutput)
