@@ -304,7 +304,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 	
 	bool bXMLOutput=false;
 
-	char query[256]="dogfish";
+	char query[256]="";
 	char dataset[32]="";
 	char output[16]="";
 	char types[16]="";
