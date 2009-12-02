@@ -5,6 +5,7 @@ WWW_DIR:=$(shell php -r '$$cfg=json_decode(file_get_contents("/etc/BeerCrush/web
 FCGI_PROGS=autocomplete.fcgi nearby.fcgi nearby_beer.fcgi
 
 ALL: $(FCGI_PROGS)
+	$(MAKE) -C auth/
 
 autocomplete.fcgi: autocomplete.o external/cgic/libcgic.a
 	g++ $^ -lfcgi -o $@
