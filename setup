@@ -123,6 +123,7 @@ case $1 in
 			php5=5.2.11.dfsg.1-1 php5-cli=5.2.11.dfsg.1-1 php5-cgi=5.2.11.dfsg.1-1 \
 			php5-dev=5.2.11.dfsg.1-1 php5-curl=5.2.11.dfsg.1-1 php5-imagick=2.1.1RC1-1+b1 \
 			php5-uuid=1.5.1-1.1+b1 php5-memcached=1.0.0-1 php-apc=3.0.19-2 \
+			libapache2-mod-php5=5.2.11.dfsg.1-1 \
 			supervisor=3.0a7-2.1 \
 			spread=3.17.4-2+b1 libspread1-dev=3.17.4-2+b1 \
 			libfcgi-dev=2.4.0-7 \
@@ -130,6 +131,18 @@ case $1 in
 			xmlstarlet=1.0.1-2 \
 			subversion=1.6.3dfsg-1 
 
+		if [ ! -f /usr/local/include/jansson.h ]; then
+			echo "/usr/local/include/jansson.h doesn't exist. To install it:";
+			echo "tar xvjf src/3rdparty/jansson-1.1.2.tar.bz2";
+			echo "cd jansson-1.1.2";
+			echo "./configure";
+			echo "make";
+			echo "make check";
+			echo "sudo make install";
+			exit;
+		fi
+		exit;
+		
 		if [ ! -f $BEERCRUSH_ETC_DIR/webapp.conf ]; then
 			echo "$BEERCRUSH_ETC_DIR/webapp.conf doesn't exist. You can get a sample from svn://beercrush/conf/appserver/webapp.conf.";
 			exit;
