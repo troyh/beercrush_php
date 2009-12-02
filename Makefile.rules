@@ -1,0 +1,17 @@
+.PHONY: SAFETY_CHECK ROOT_SAFETY_CHECK ALL clean install
+.DEFAULT: ALL
+	
+SHELL = /bin/sh
+
+# Get necessary BeerCrush config settings
+WWW_DIR:=$(shell php -r '$$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $$cfg->file_locations->WWW_DIR."\n";')
+	
+ALL:
+
+# Verifies that we're ready to go
+SAFETY_CHECK:
+	@if [ $(shell whoami) = "root" ]; then echo "Must NOT be root for install"; exit 1; fi
+	@if [ -z "$(WWW_DIR)" ]; then \
+		echo "WWW_DIR is blank"; \
+		exit 1; \
+	fi

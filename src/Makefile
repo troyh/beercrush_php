@@ -1,4 +1,4 @@
-.PHONY: ALL clean install
+include ../Makefile.rules
 
 WWW_DIR:=$(shell php -r '$$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $$cfg->file_locations->WWW_DIR."\n";')
 
@@ -22,8 +22,8 @@ external/cgic/libcgic.a:
 clean:
 	rm -f $(FCGI_PROGS) $(patsubst %.fcgi,%.o,$(FCGI_PROGS))
 
-install:
-	supervisorctl stop autocomplete:
+install: SAFETY_CHECK
+	sudo /etc/init.d/supervisor stop;
 	cp $(FCGI_PROGS) $(WWW_DIR)/api/
-	supervisorctl start autocomplete:
+	sudo /etc/init.d/supervisor start;
 	

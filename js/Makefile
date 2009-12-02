@@ -1,4 +1,0 @@
-.PHONY: ALL install
-
-
-ALL:

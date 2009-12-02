@@ -1,5 +1,5 @@
-.PHONY: ALL clean install
+include ../../Makefile.rules
 
-install:
-	sudo rsync --recursive --delete . /usr/share/php/beercrush/
+install: SAFETY_CHECK
+	rsync --recursive --delete . /usr/share/php/beercrush/
     

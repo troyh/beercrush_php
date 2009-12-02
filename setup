@@ -141,7 +141,6 @@ case $1 in
 			echo "sudo make install";
 			exit;
 		fi
-		exit;
 		
 		if [ ! -f $BEERCRUSH_ETC_DIR/webapp.conf ]; then
 			echo "$BEERCRUSH_ETC_DIR/webapp.conf doesn't exist. You can get a sample from svn://beercrush/conf/appserver/webapp.conf.";
