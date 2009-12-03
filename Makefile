@@ -17,6 +17,6 @@ install: SAFETY_CHECK
 			make -C $$DIR --silent install; \
 		fi \
 	done; \
-    for DIR in api auth css img js html; do \
+    for DIR in css img js html; do \
 		rsync --recursive --delete $$DIR/ $(WWW_DIR)/$$DIR/; \
     done
