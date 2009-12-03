@@ -18,8 +18,6 @@ if [ -z "$1" -o -z "$2" ]; then
 	exit;
 fi
 
-# TODO: verify that I'm root or have sudo privileges
-
 if [ ! -f $BEERCRUSH_ETC_DIR/setup.conf ]; then
 	if [ $1 == "mgmt" ]; then
 		echo "$BEERCRUSH_ETC_DIR/setup.conf doesn't exist but must exist on the mgmt server. Please create it.";
@@ -81,6 +79,23 @@ case $1 in
 		# TODO: copy the BeerCrush conf/solr/schema.xml to /etc/solr/conf/schema.xml
 		# TODO: copy the BeerCrush conf/solr/solrconfig.xml to /etc/solr/conf/solrconfig.xml
 		# TODO: attempt a Solr query to prove it works
+		
+		if ! diff -u conf/solr/solrconfig.xml /etc/solr/conf/solrconfig.xml > /dev/null; then
+			echo "**************************************************";
+			echo "ERROR: Solr config (/etc/solr/conf/solrconfig.xml) is incorrect:";
+			echo "**************************************************";
+			diff -u conf/solr/solrconfig.xml /etc/solr/conf/solrconfig.xml;
+			exit;
+		fi
+		
+		if ! diff -u conf/solr/schema.xml /etc/solr/conf/schema.xml > /dev/null; then
+			echo "**************************************************";
+			echo "ERROR: Solr schema (/etc/solr/conf/schema.xml) is incorrect:";
+			echo "**************************************************";
+			diff -u conf/solr/schema.xml /etc/solr/conf/schema.xml;
+			exit;
+		fi
+
 		;;
 	memcacheq)
 		echo "Setting up memcacheq server...";
@@ -139,6 +154,7 @@ case $1 in
 			echo "make";
 			echo "make check";
 			echo "sudo make install";
+			echo "sudo ldconfig";
 			exit;
 		fi
 		
@@ -154,14 +170,6 @@ case $1 in
 		done
 		
 		sudo chown -R $BEERCRUSH_APPSERVER_USER.$BEERCRUSH_APPSERVER_USER /var/local/BeerCrush/;
-		
-		# Copy the src tree so we can build anything that is needed
-		echo "Copying from $MGMT_SERVER...";
-		rsync --recursive --delete $MGMT_SERVER:$BEERCRUSH_SOURCE_DIR/src/ $BEERCRUSH_SOURCE_DIR/src/
-		# Run make in source tree
-		make -C $BEERCRUSH_SOURCE_DIR/src/ clean
-		make -C $BEERCRUSH_SOURCE_DIR
-		sudo make -C $BEERCRUSH_SOURCE_DIR install
 		
 		# TODO: configure syslog.conf for OAK logging
 		# TODO: config logrotate for /var/log/oak.log
@@ -191,14 +199,16 @@ case $1 in
 			exit;
 		fi
 		
-		# Verify that the ServerName param is correct
-		if [ `grep ServerName /etc/apache2/sites-enabled/BeerCrush |awk '{print $2}'` != $APACHE_SERVER_NAME ]; then
-			echo "/etc/apache2/sites-enabled/BeerCrush: ServerName is not $APACHE_SERVER_NAME";
+		if ! diff -u  conf/apache/appserver.conf /etc/apache2/sites-enabled/BeerCrush > /dev/null; then
+			echo "**************************************************";
+			echo "ERROR: Apache config (/etc/apache2/sites-enabled/BeerCrush) is incorrect:";
+			echo "**************************************************";
+			diff -u  conf/apache/appserver.conf /etc/apache2/sites-enabled/BeerCrush;
 			exit;
 		fi
 		
 		# Verify that Apache is listening on port 8008
-		if ! grep "^ *Listen 8008 *$" /etc/apache2/ports.conf; then
+		if ! grep "^ *Listen 8008 *$" /etc/apache2/ports.conf > /dev/null; then
 			echo "/etc/apache2/ports.conf: Needs a Listen 8008 line";
 			exit;
 		fi
@@ -207,6 +217,15 @@ case $1 in
 		###############################################
 		# Supervisord
 		###############################################
+
+
+		if ! diff -u conf/supervisord/appserver.conf /etc/supervisor/conf.d/BeerCrush-app.conf > /dev/null; then
+			echo "**************************************************";
+			echo "ERROR: Supervisor config (/etc/supervisor/conf.d/BeerCrush-app.conf) is incorrect:";
+			echo "**************************************************";
+			diff -u conf/supervisord/appserver.conf /etc/supervisor/conf.d/BeerCrush-app.conf;
+			exit;
+		fi
 
 		# Verify that supervisord is config'd
 		if [ ! -f /etc/supervisor/conf.d/BeerCrush-app.conf ]; then
@@ -220,13 +239,32 @@ case $1 in
 			sudo mkdir /var/run/supervisor
 		fi
 
-		# Tell supervisord to restart FCGI programs
-		echo "Restarting Supervisord...";
-		sudo /etc/init.d/supervisor stop;
-		sudo /etc/init.d/supervisor start;
-		# sudo supervisorctl restart autocomplete: nearby: nearby_beer:;
+		###############################################
+		# Install app
+		###############################################
+
+		if ! sed -e "s/SITE_DOMAIN_NAME/$SITE_DOMAIN_NAME/" conf/appserver/webapp.conf | diff -u - /etc/BeerCrush/webapp.conf > /dev/null; then
+			echo "**************************************************";
+			echo "ERROR: Beer Crush config (/etc/BeerCrush/webapp.conf) is incorrect:";
+			echo "**************************************************";
+			sed -e "s/SITE_DOMAIN_NAME/$SITE_DOMAIN_NAME/" conf/appserver/webapp.conf | diff -u - /etc/BeerCrush/webapp.conf;
+			exit;
+		fi
 		
+		# Copy the src tree so we can build anything that is needed
+		echo "Copying from $MGMT_SERVER...";
+		rsync --recursive --delete $MGMT_SERVER:$BEERCRUSH_SOURCE_DIR/src/ $BEERCRUSH_SOURCE_DIR/src/
+		# Run make in source tree
+		make -C $BEERCRUSH_SOURCE_DIR/src/ clean
+		make -C $BEERCRUSH_SOURCE_DIR
+		make -C $BEERCRUSH_SOURCE_DIR install
+
+		###############################################
+		# Restart servers
+		###############################################
+
 		sudo /etc/init.d/apache2 restart;
+		
 		
 		;;
 		
@@ -260,8 +298,16 @@ case $1 in
 			sudo mkdir /var/local/nginx-couchdb/;
 			sudo chown www-data.www-data /var/local/nginx-couchdb/;
 		fi
+
 		
-		# TODO: Verify that server_name is correct in /etc/nginx/sites-enabled/couchdb
+		if ! diff -u conf/nginx/couchdb.conf /etc/nginx/sites-enabled/couchdb > /dev/null; then
+			echo "**************************************************";
+			echo "ERROR: NGiNX proxy for CouchDB config (/etc/nginx/sites-enabled/couchdb) is incorrect:";
+			echo "**************************************************";
+			diff -u conf/nginx/couchdb.conf /etc/nginx/sites-enabled/couchdb;
+			exit;
+		fi
+
 		# Test the config
 		if ! sudo /etc/init.d/nginx configtest; then
 			echo "Please fix NGiNX config errors above.";
@@ -292,6 +338,14 @@ case $1 in
 		if [ ! -d /var/local/nginx-solr/ ]; then
 			sudo mkdir /var/local/nginx-solr/;
 			sudo chown www-data.www-data /var/local/nginx-solr/;
+		fi
+
+		if ! diff -u  conf/nginx/solr.conf /etc/nginx/sites-enabled/solr > /dev/null; then
+			echo "**************************************************";
+			echo "ERROR: NGiNX proxy for Solr config (/etc/nginx/sites-enabled/solr) is incorrect:";
+			echo "**************************************************";
+			diff -u  conf/nginx/solr.conf /etc/nginx/sites-enabled/solr;
+			exit;
 		fi
 		
 		# Test the config
