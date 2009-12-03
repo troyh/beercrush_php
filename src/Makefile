@@ -23,6 +23,8 @@ clean:
 	rm -f $(FCGI_PROGS) $(patsubst %.fcgi,%.o,$(FCGI_PROGS))
 
 install: SAFETY_CHECK
+	$(MAKE) -C phpinc/ install;
+	$(MAKE) -C auth/ install;
 	sudo /etc/init.d/supervisor stop;
 	cp $(FCGI_PROGS) $(WWW_DIR)/api/
 	sudo /etc/init.d/supervisor start;

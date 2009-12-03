@@ -14,6 +14,6 @@ clean: SAFETY_CHECK
 	rm -f $(FCGI_PROGS) $(patsubst %.fcgi,%.o,$(FCGI_PROGS))
 
 install: SAFETY_CHECK
-	supervisorctl stop authapi:
+	sudo /etc/init.d/supervisor stop
 	cp $(FCGI_PROGS) $(WWW_DIR)/auth/
-	supervisorctl start authapi:
+	sudo /etc/init.d/supervisor start
