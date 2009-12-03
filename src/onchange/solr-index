@@ -71,7 +71,7 @@ $xmldoc=$xmlwriter->outputMemory();
 $status_code=$oak->solr_post('/update',$xmldoc);
 if ($status_code!=200)
 {
-	print "Solr udpate failed: $status_code\n";
+	print "Solr update failed: $status_code\n";
 }
 else
 {
