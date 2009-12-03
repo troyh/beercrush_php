@@ -146,8 +146,8 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 	
 	double lon_max=lon+(double)(within/lon_deg_len);
 	double lon_min=lon-(double)(within/lon_deg_len);
-	
-	cgiHeaderContentType((char*)"application/javascript");
+
+	FCGX_FPrintF(out,"Content-Type: application/json; charset=utf-8\r\n\r\n");
 	// cgiHeaderStatus(200,(char*)"OK");
 	// FCGI_printf("LatDegLen: %f\nWithin: %f\n",lat_deg_len,within);
 	// FCGI_printf("Lat: %f to %f\nLon: %f to %f\n",lat_min,lat_max,lon_min,lon_max);
