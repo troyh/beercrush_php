@@ -1,11 +1,18 @@
 #!/bin/bash
 TOOLSDIR=`dirname $0`;
 
+if [ -z "$1" -o -z "$2" ]; then
+	echo "Usage: $0 <snapshot directory 1> <snapshot directory 2>";
+	exit;
+fi
+
 diff --recursive --brief $1 $2 | sort | while read LINE; do
 	if [[ "$LINE" =~ ^Only[[:space:]]+in[[:space:]]+($1|$2):[[:space:]]*(.+)$ ]]; then
 		FILE=${BASH_REMATCH[2]};
 		if [ ${BASH_REMATCH[1]} == $1 ]; then
 			echo "Deleted document: $FILE";
+		elif [ -d ${BASH_REMATCH[1]}$FILE ]; then
+			echo "New directory: ${BASH_REMATCH[1]}$FILE";
 		else
 			echo "New document: $FILE";
 		fi

@@ -9,10 +9,13 @@ if (empty($argv[1]))
 }
 
 $dirname=$argv[1];
-if (!is_dir($dirname))
+if (!is_dir($dirname.'/_design/'))
 {
-	print $dirname." does not exist\n";
-	exit;
+	// Make the specified directory and the _design subdir that we know we'll need to have
+	if (mkdir($dirname.'/_design/',0770,true)==false)
+	{
+		exit;
+	}
 }
 
 $oak=new OAK;
