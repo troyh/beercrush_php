@@ -5,7 +5,7 @@ require_once('beercrush/oak.class.php');
 if ($argc<2)
 	exit;
 	
-$oak=new OAK('/etc/BeerCrush/json.conf');
+$oak=new OAK();
 $jsonobj=new stdClass;
 $oak->get_view($argv[1],$jsonobj);
 print json_encode($jsonobj);
