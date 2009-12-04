@@ -23,6 +23,11 @@ clean:
 install: SAFETY_CHECK
 	$(MAKE) -C phpinc/ install;
 	if /etc/init.d/supervisor status > /dev/null; then sudo /etc/init.d/supervisor stop; fi
+	@sleep 1;
+	if /etc/init.d/supervisor status > /dev/null; then sudo /etc/init.d/supervisor stop; fi
+	@sleep 1;
+	if /etc/init.d/supervisor status > /dev/null; then sudo /etc/init.d/supervisor stop; fi
+	@sleep 1;
 	$(MAKE) -C auth/ install;
 	echo "Copying FCGI programs: $(FCGI_PROGS) to $(WWW_DIR)/api";
 	cp $(FCGI_PROGS) $(WWW_DIR)/api/

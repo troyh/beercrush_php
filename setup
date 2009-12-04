@@ -1,12 +1,16 @@
 #!/bin/bash
 
-BEERCRUSH_WWW_DIR="/var/www/BeerCrush/"
 BEERCRUSH_ETC_DIR="/etc/BeerCrush/"
 BEERCRUSH_PHPINC_DIR="/usr/share/php/beercrush/"
 BEERCRUSH_SOURCE_DIR="$HOME/beercrush/"
-BEERCRUSH_LOCALDATA_DIR="/var/local/BeerCrush/"
-
 BEERCRUSH_APPSERVER_USER=www-data
+
+SUBVERSION_URL=`php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/setup.conf"));print $cfg->subversion->url."\n";'`;
+MGMT_SERVER=`php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/setup.conf"));print $cfg->servers->mgmt->servers[0]."\n";'`;
+SITE_DOMAIN_NAME=`php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $cfg->domainname."\n";'`;
+WWW_DIR=`php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $cfg->file_locations->WWW_DIR."\n";'`;
+LOCALDATA_DIR=`php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $cfg->file_locations->LOCAL_DIR."\n";'`;
+
 
 function USAGE()
 {
@@ -32,9 +36,6 @@ if ! ping -q -c 1 -W 3 -w 3 $2 &> /dev/null; then
 	echo "$2 doesn't seem to be reachable on the network. Is the name or IP address correct?";
 	exit;
 fi
-
-. $BEERCRUSH_ETC_DIR/setup.conf;
-
 
 #
 # Common setup tasks
@@ -163,7 +164,7 @@ case $1 in
 			exit;
 		fi
 
-		for DIR in $BEERCRUSH_WWW_DIR $BEERCRUSH_ETC_DIR $BEERCRUSH_LOCALDATA_DIR $BEERCRUSH_PHPINC_DIR /var/run/BeerCrush $BEERCRUSH_WWW_DIR/uploads $BEERCRUSH_SOURCE_DIR/src /var/local/BeerCrush/meta/; do
+		for DIR in $WWW_DIR $BEERCRUSH_ETC_DIR $LOCALDATA_DIR $BEERCRUSH_PHPINC_DIR /var/run/BeerCrush $WWW_DIR/uploads $BEERCRUSH_SOURCE_DIR/src /var/local/BeerCrush/meta/; do
 			if [ ! -d $DIR ]; then
 				sudo mkdir -p $DIR;
 			fi
@@ -175,11 +176,9 @@ case $1 in
 		# TODO: config logrotate for /var/log/oak.log
 		# TODO: install and setup PHP's APC (opcode cache)
 		# TODO: make autocompletenames.txt and latlonpairs.txt in /var/local/BeerCrush/meta
-		# TODO: build fcgi binaries
 		# TODO: Config PHP FastCGI
 		# TODO: turn off PHP's magic quotes
 		# TODO: make sure PHP's include_path is correct and uncommented in php.ini
-
 		# TODO: verify that the OAK.conf file is correct
 		
 		# TODO: make this work:
@@ -187,7 +186,7 @@ case $1 in
 		
 		# TODO: install libmemcached 0.28+
 		# TODO: pecl install memcached
-		# TODO: make sure permissions are correct for $BEERCRUSH_WWW_DIR and subdirs (beercrush group?)
+		# TODO: make sure permissions are correct for $WWW_DIR and subdirs (beercrush group?)
 
 		###############################################
 		# Apache 2.2
@@ -212,7 +211,6 @@ case $1 in
 			echo "/etc/apache2/ports.conf: Needs a Listen 8008 line";
 			exit;
 		fi
-		
 
 		###############################################
 		# Supervisord
@@ -264,7 +262,6 @@ case $1 in
 		###############################################
 
 		sudo /etc/init.d/apache2 restart;
-		
 		
 		;;
 		
