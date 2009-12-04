@@ -1,0 +1,173 @@
+#!/usr/bin/php
+<?php
+
+function parse_response($output)
+{
+	$headers=array();
+	$document="";
+	
+	$bHeaders=true;
+	$lines=preg_split('/\n/',$output);
+	
+	preg_match('/HTTP\/\d\.\d\s+(\d+)\s+(.*)$/',$lines[0],$matches);
+	$headers['Status']=array(
+		'code' => $matches[1],
+		'text' => $matches[2]
+	);
+	array_shift($lines);
+	
+	foreach ($lines as $line)
+	{
+		if ($bHeaders)
+		{
+			if (strlen(trim($line))==0)
+				$bHeaders=false;
+			else
+			{
+				$pos=strpos($line,':');
+				$headers[substr($line,0,$pos)]=trim(substr($line,$pos+1));
+			}
+		}
+		else
+		{
+			$document.=$line."\n";
+		}
+	}
+	
+	return array(
+		'headers' => $headers,
+		'document' => $document,
+	);
+}
+
+function test_server($test)
+{
+	foreach ($test['servers'] as $server)
+	{
+		$url=preg_replace('/SERVER/',$test['url'],$server);
+		$ch=curl_init();
+		curl_setopt($ch,CURLOPT_URL,$url);
+		curl_setopt($ch,CURLOPT_HEADER,true);
+		curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+		$output=curl_exec($ch);
+		$status=curl_getinfo($ch,CURLINFO_HTTP_CODE);
+
+		if ($status!=200)
+		{
+			print "Bad status code from {$test['name']} server: $status\n";
+			return false;
+		}
+		else
+		{
+			$response=parse_response($output);
+			foreach ($test['header_regexes'] as $header=>$regex)
+			{
+				if (!preg_match($regex,$response['headers'][$header]))
+				{
+					print $test['name'].": Unexpected header $header: ".$response['headers'][$header]."\n";
+					return false;
+				}
+			}
+		}
+	}
+
+	return true;	
+}
+
+$cfg=json_decode(file_get_contents('/etc/BeerCrush/setup.conf'));
+
+$server_tests=array(
+	array(
+		'name' => 'CouchDB',
+		'servers' => $cfg->servers->couchdb->servers,
+		'url' => 'http://SERVER/beercrush/',
+		'header_regexes' => array(
+			'Server' => '/CouchDB\\/0\.9\.0\s+/',
+		)
+	),
+	array(
+		'name' => 'Solr',
+		'servers' => $cfg->servers->solr->servers,
+		'url' => 'http://SERVER/solr/',
+		'header_regexes' => array(
+			'Server' => '/Apache-Coyote\\/1\.1/',
+		)
+	),
+	array(
+		'name' => 'Apache',
+		'servers' => $cfg->servers->apache->servers,
+		'url' => 'http://SERVER/',
+		'header_regexes' => array(
+			'Server' => '/Apache\\/2\.2\.14/'
+		)
+	),
+	array(
+		'name' => 'CouchDB proxy',
+		'servers' => $cfg->servers->proxies->couchdb->servers,
+		'url' => 'http://SERVER/beercrush/',
+		'header_regexes' => array(
+			'Server' => '/nginx\\/0\.7\.63/'
+		)
+	),
+	array(
+		'name' => 'Solr proxy',
+		'servers' => $cfg->servers->proxies->solr->servers,
+		'url' => 'http://SERVER/solr/',
+		'header_regexes' => array(
+			'Server' => '/nginx\\/0\.7\.63/'
+		)
+	),
+	array(
+		'name' => 'Apache proxy',
+		'servers' => $cfg->servers->proxies->www->servers,
+		'url' => 'http://SERVER/',
+		'header_regexes' => array(
+			'Server' => '/nginx\\/0\.7\.63/'
+		)
+	),
+);
+
+foreach ($server_tests as $test)
+{
+	if (test_server($test))
+		print $test['name']." OK\n";
+	else
+		print $test['name']." FAILED\n";
+}
+
+/****************************************************
+	Test FastCGIs
+****************************************************/
+
+$webapp=json_decode(file_get_contents('/etc/BeerCrush/webapp.conf'));
+
+$test_urls=array(
+	"http://{$webapp->domainname}/api/autocomplete.fcgi?q=d&dataset=beersandbreweries",
+	"http://{$webapp->domainname}/api/search?q=dog&dataset=beer+brewery&start=0",
+	"http://{$webapp->domainname}/api/nearby.fcgi?lat=37.331689&lon=-122.030731&within=10",
+);
+
+foreach ($test_urls as $url)
+{
+	$ch=curl_init();
+	curl_setopt($ch,CURLOPT_URL,$url);
+	// curl_setopt($ch,CURLOPT_HEADER,true);
+	curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+	$output=curl_exec($ch);
+	$status=curl_getinfo($ch,CURLINFO_HTTP_CODE);
+	$total_time=curl_getinfo($ch,CURLINFO_TOTAL_TIME);
+	$total_time*=1000;
+
+	if ($status!=200)
+	{
+		print "FastCGI error ($status) on URL: $url\n";
+		exit(1);
+	}
+	
+	print "FastCGI time: {$total_time}ms $url\n";
+	
+}
+
+print "FastCGI OK\n";
+
+?>
