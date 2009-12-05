@@ -4,92 +4,125 @@ require_once('beercrush/oak.class.php');
 
 $oak=new OAK;
 
-$xmlwriter=new XMLWriter;
-$xmlwriter->openMemory();
-$xmlwriter->startDocument();
-$xmlwriter->startElement('add');
+$total_docs_added=0;
 
 if ($argc<2)
 {
-	$breweries=array();
-
 	// Update ALL docs
-	$allbeers=new stdClass;
-	$oak->get_view('beer/all',$allbeers);
-	// print_r($allbeers);exit;
-	
-	foreach ($allbeers->rows as $beer)
-	{
-		$doc=new OAKDocument('');
-		$oak->get_document($beer->id,$doc);
-		beer_doc($doc);
-	}
-	
-	$allbreweries=new stdClass;
-	$oak->get_view('brewery/all',$allbreweries);
-	foreach ($allbreweries->rows as $brewery)
-	{
-		$doc=new OAKDocument('');
-		$oak->get_document($brewery->id,$doc);
-		brewery_doc($doc);
-	}
-	
-	$allplaces=new stdClass;
-	$oak->get_view('place/all',$allplaces);
-	foreach ($allplaces->rows as $place)
-	{
-		$doc=new OAKDocument('');
-		$oak->get_document($place->id,$doc);
-		place_doc($doc);
-	}
+	add_all_docs('beer/all','beer_doc');
+	add_all_docs('brewery/all','brewery_doc');
+	add_all_docs('place/all','place_doc');
 }
 else
 {
+	$xmlwriter=start_add();
+	
 	$doc=new OAKDocument('');
 	$oak->get_document($argv[1],$doc);
 	switch ($doc->type)
 	{
 		case 'beer':
-			beer_doc($doc);
+			beer_doc($doc,$xmlwriter);
 			break;
 		case 'brewery':
-			brewery_doc($doc);
+			brewery_doc($doc,$xmlwriter);
 			break;
 		case 'place':
-			place_doc($doc);
+			place_doc($doc,$xmlwriter);
 			break;
 		default:
 			break;
 	}
+	
+	end_add($xmlwriter);
 }
 
-$xmlwriter->endElement();
-$xmlwriter->endDocument();
-$xmldoc=$xmlwriter->outputMemory();
-
-// Submit to Solr
-$status_code=$oak->solr_post('/update',$xmldoc);
+$status_code=$oak->solr_post('/update','<optimize/>');
 if ($status_code!=200)
 {
-	print "Solr update failed: $status_code\n";
+	print "<optimize> failed: $status_code\n";
+	exit(2);
 }
-else
+
+print "$total_docs_added document(s) added/updated.\n";
+exit(0); // OK
+
+
+
+function add_all_docs($view,$func,$max=100)
 {
-	$status_code=$oak->solr_post('/update','<commit/>');
+	global $oak;
+	
+	$startkey="";
+	$startkey_docid="";
+	$count=0;
+
+	do
+	{
+		$xmlwriter=start_add();
+	
+		$alldocs=new stdClass;
+		/*
+		We have to use startkey, startkey_docid and skip to propertly paginate through all documents without repeating any docs.
+		The skip value is 0 the first time through since we don't want to skip the 1st document, but it's 1 every other loop
+		iteration because, without it, the first document would be the last document from the previous iteration.
+		*/
+		$oak->get_view($view.'?limit='.$max.'&startkey='.urlencode('"'.$startkey.'"').'&startkey_docid='.$startkey_docid.'&skip='.($count?1:0),$alldocs);
+
+		foreach ($alldocs->rows as $row)
+		{
+			$startkey=$row->key;
+			$startkey_docid=$row->id;
+		
+			$doc=new OAKDocument('');
+			$oak->get_document($row->id,$doc);
+			call_user_func($func,$doc,$xmlwriter);
+			
+			++$count;
+		}
+	
+		end_add($xmlwriter);
+
+		if (count($alldocs->rows)<$max)
+			$startkey=null; // We're done!
+
+		$pct=(int)(($count/$alldocs->total_rows)*100);
+		print "$view: $count/{$alldocs->total_rows} documents ($pct%)\n";
+	}
+	while (!is_null($startkey));
+	
+}
+
+function start_add()
+{
+	$xmlwriter=new XMLWriter;
+	$xmlwriter->openMemory();
+	$xmlwriter->startDocument();
+	$xmlwriter->startElement('add');
+
+	return $xmlwriter;
+}
+
+function end_add($xmlwriter)
+{
+	global $oak;
+	
+	$xmlwriter->endElement();
+	$xmlwriter->endDocument();
+	$xmldoc=$xmlwriter->outputMemory();
+
+	// Submit to Solr
+	$status_code=$oak->solr_post('/update',$xmldoc);
 	if ($status_code!=200)
 	{
-		exit(1);
+		print "Solr update failed: $status_code\n";
 	}
 	else
 	{
-		$status_code=$oak->solr_post('/update','<optimize/>');
+		$status_code=$oak->solr_post('/update','<commit/>');
 		if ($status_code!=200)
 		{
-			exit(2);
-		}
-		else
-		{
-			exit(0); // OK
+			exit(1);
 		}
 	}
 }
@@ -97,89 +130,96 @@ else
 /*
 	Beers
 */
-function beer_doc($beer)
+function beer_doc($beer,$xmlwriter)
 {
 	global $oak;
-	global $xmlwriter;
+	global $total_docs_added;
 	
 	$xmlwriter->startElement('doc');
 
-	writeTextValue('id',$beer->getID());
-	writeTextValue('doctype',$beer->type);
-	writeTextValue('name',$beer->name);
-	writeTextValue('description',$beer->description);
+	writeTextValue('id',$beer->getID(),$xmlwriter);
+	writeTextValue('doctype',$beer->type,$xmlwriter);
+	writeTextValue('name',$beer->name,$xmlwriter);
+	writeTextValue('description',$beer->description,$xmlwriter);
 
 	$brewery=new OAKDocument('');
 	$oak->get_document($beer->brewery_id,$brewery);
 	
-	writeTextValue('brewery',$brewery->name);
+	writeTextValue('brewery',$brewery->name,$xmlwriter);
 
 	$xmlwriter->endElement();
+
+	$total_docs_added++;
 }
 
 /*
 	Breweries
 */
-function brewery_doc($brewery)
+function brewery_doc($brewery,$xmlwriter)
 {
-	global $xmlwriter;
+	global $total_docs_added;
 
 	$xmlwriter->startElement('doc');
 
-	writeTextValue('id',$brewery->getID());
-	writeTextValue('doctype',$brewery->type);
-	writeTextValue('name',$brewery->name);
-	writeTextValue('description',$brewery->description);
-	writeTextValue('address_street',$brewery->address->street);
-	writeTextValue('address_city',$brewery->address->city);
-	writeTextValue('address_state',$brewery->address->state);
+	writeTextValue('id',$brewery->getID(),$xmlwriter);
+	writeTextValue('doctype',$brewery->type,$xmlwriter);
+	writeTextValue('name',$brewery->name,$xmlwriter);
+	writeTextValue('description',$brewery->description,$xmlwriter);
+	writeTextValue('address_street',$brewery->address->street,$xmlwriter);
+	writeTextValue('address_city',$brewery->address->city,$xmlwriter);
+	writeTextValue('address_state',$brewery->address->state,$xmlwriter);
 
 	$xmlwriter->endElement();
+
+	$total_docs_added++;
 }
 
 /*
 	Places
 */
-function place_doc($place)
+function place_doc($place,$xmlwriter)
 {
-	global $xmlwriter;
-
+	global $total_docs_added;
+	
 	$xmlwriter->startElement('doc');
 
-	writeTextValue('id',$place->getID());
-	writeTextValue('doctype',$place->type);
-	writeTextValue('placetype',$place->placetype);
-	writeTextValue('name',$place->name);
-	writeTextValue('description',$place->description);
-	writeTextValue('address_street',$place->address->street);
-	writeTextValue('address_city',$place->address->city);
-	writeTextValue('address_state',$place->address->state);
+	writeTextValue('id',$place->getID(),$xmlwriter);
+	writeTextValue('doctype',$place->type,$xmlwriter);
+	writeTextValue('placetype',$place->placetype,$xmlwriter);
+	writeTextValue('name',$place->name,$xmlwriter);
+	writeTextValue('description',$place->description,$xmlwriter);
+	writeTextValue('address_street',$place->address->street,$xmlwriter);
+	writeTextValue('address_city',$place->address->city,$xmlwriter);
+	writeTextValue('address_state',$place->address->state,$xmlwriter);
 
 	$xmlwriter->endElement();
+
+	$total_docs_added++;
 }
 
 
-function writeValue($k,$v,$type)
-{
-	global $xmlwriter;
-	
-	$xmlwriter->startElement('field');
-	$xmlwriter->writeAttribute('name',$k);
-	$xmlwriter->writeAttribute('type',$type);
-	$xmlwriter->text($v);
-	$xmlwriter->endElement();
-}
-
-function writeTextValue($k,$v)
+function writeTextValue($k,$v,$xmlwriter)
 {
 	$v=trim($v);
 	if (!empty($v))
-		writeValue($k,$v,'text');
+		writeValue($k,$v,'text',$xmlwriter);
 }
 
-function writeIntegerValue($k,$v)
+function writeIntegerValue($k,$v,$xmlwriter)
 {
-	writeValue($k,$v,'integer');
+	writeValue($k,$v,'integer',$xmlwriter);
 }
+
+function writeValue($k,$v,$type,$xmlwriter)
+{
+	$xmlwriter->startElement('field');
+	
+	$xmlwriter->writeAttribute('name',$k);
+	$xmlwriter->writeAttribute('type',$type);
+	$xmlwriter->text($v);
+	
+	$xmlwriter->endElement();
+}
+
 
 ?>
