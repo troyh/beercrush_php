@@ -205,6 +205,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 	// FCGX_FPrintF(out,"cgiReferrer=%s\n",cgiReferrer);
 
 	if (!strcmp(cgiPathInfo,"/beer/view") ||
+		!strcmp(cgiPathInfo,"/beer/edit") ||
 		!strcmp(cgiPathInfo,"/beercolors") ||
 		!strcmp(cgiPathInfo,"/beers") ||
 		!strcmp(cgiPathInfo,"/beerstyles") ||
@@ -269,7 +270,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 		// cgiHeaderStatus(403,"Permission Denied");
 		FCGX_FPrintF(out,"Status: 403 Permission denied\r\n");
 		FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
-		FCGX_FPrintF(out,"Unknown URL\n");
+		FCGX_FPrintF(out,"API Auth Unknown URL: %s\n",cgiPathInfo);
 	}
 	
 	return 0;
