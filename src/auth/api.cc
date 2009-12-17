@@ -216,11 +216,13 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 		!strcmp(cgiPathInfo,"/flavors") ||
 		!strcmp(cgiPathInfo,"/login") ||
 		!strcmp(cgiPathInfo,"/logout") ||
+		!strcmp(cgiPathInfo,"/menu/edit") ||
 		!strcmp(cgiPathInfo,"/menu/view") ||
 		!strcmp(cgiPathInfo,"/place/view") ||
 		!strcmp(cgiPathInfo,"/places") ||
 		!strcmp(cgiPathInfo,"/restaurantcategories") ||
 		!strcmp(cgiPathInfo,"/review/beer") ||
+		!strcmp(cgiPathInfo,"/review/place") ||
 		!strcmp(cgiPathInfo,"/search"))
 	{
 		FCGX_FPrintF(out,"X-Accel-Redirect: /store/api%s%s%s\r\n",cgiPathInfo,(!strlen(cgiQueryString)?"":"?"),cgiQueryString);
