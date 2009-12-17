@@ -12,6 +12,7 @@ if (empty($_GET['beer_id']))
 $oak=new OAK;
 $beerdoc=new OAKDocument('');
 $oak->get_document($_GET['beer_id'],$beerdoc);
+$beerdoc->id=$beerdoc->_id;
 unset($beerdoc->_id);
 unset($beerdoc->_rev);
 header('Content-Type: application/json; charset=utf-8');
