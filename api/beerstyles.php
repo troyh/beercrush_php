@@ -5,7 +5,7 @@ $doc=new stdClass;
 $oak->get_document('beerstyles',$doc);
 unset($doc->_id);
 unset($doc->_rev);
-header('Content-Type: text/javascript; charset=utf-8');
+header('Content-Type: application/json; charset=utf-8');
 print json_encode($doc);
 
 ?>
