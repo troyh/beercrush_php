@@ -2,7 +2,7 @@
 require_once 'beercrush/oak.class.php';
 
 $cgi_fields=array(
-	"place_id"					=> array(flags=>OAK::FIELDFLAG_REQUIRED|OAK::FIELDFLAG_CGIONLY,type=>OAK::DATATYPE_TEXT)
+	"brewery_id"					=> array(flags=>OAK::FIELDFLAG_REQUIRED|OAK::FIELDFLAG_CGIONLY,type=>OAK::DATATYPE_TEXT)
 );
 
 function oakMain($oak)
@@ -22,7 +22,7 @@ function oakMain($oak)
 
 		$info=array(
 			'user' => $oak->get_user_id(),
-			'id' => $oak->get_cgi_value('place_id',&$cgi_fields),
+			'id' => $oak->get_cgi_value('brewery_id',&$cgi_fields),
 			'fetchurl' => '/uploads/'.$filename,
 			'filename' => $filename,
 			'hostname' => php_uname('n'),

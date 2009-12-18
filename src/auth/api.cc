@@ -206,18 +206,23 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 
 	if (!strcmp(cgiPathInfo,"/beer/view") ||
 		!strcmp(cgiPathInfo,"/beer/edit") ||
+		!strcmp(cgiPathInfo,"/beer/photo") ||
 		!strcmp(cgiPathInfo,"/beercolors") ||
 		!strcmp(cgiPathInfo,"/beers") ||
 		!strcmp(cgiPathInfo,"/beerstyles") ||
 		!strcmp(cgiPathInfo,"/breweries") ||
 		!strcmp(cgiPathInfo,"/brewery/beerlist") ||
 		!strcmp(cgiPathInfo,"/brewery/edit") ||
+		!strcmp(cgiPathInfo,"/brewery/photo") ||
 		!strcmp(cgiPathInfo,"/brewery/view") ||
 		!strcmp(cgiPathInfo,"/flavors") ||
 		!strcmp(cgiPathInfo,"/login") ||
 		!strcmp(cgiPathInfo,"/logout") ||
 		!strcmp(cgiPathInfo,"/menu/edit") ||
 		!strcmp(cgiPathInfo,"/menu/view") ||
+		!strcmp(cgiPathInfo,"/place/edit") ||
+		!strcmp(cgiPathInfo,"/place/photo") ||
+		!strcmp(cgiPathInfo,"/place/review") ||
 		!strcmp(cgiPathInfo,"/place/view") ||
 		!strcmp(cgiPathInfo,"/places") ||
 		!strcmp(cgiPathInfo,"/restaurantcategories") ||

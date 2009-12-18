@@ -169,8 +169,11 @@ case $1 in
 				sudo mkdir -p $DIR;
 			fi
 		done
-		
+
+		# Set correct permissions on directories
 		sudo chown -R $BEERCRUSH_APPSERVER_USER.$BEERCRUSH_APPSERVER_USER /var/local/BeerCrush/;
+		sudo chgrp BEERCRUSH_APPSERVER_USER $WWW_DIR/uploads;
+		sudo chmod g+w $WWW_DIR/uploads;
 		
 		# TODO: configure syslog.conf for OAK logging
 		# TODO: config logrotate for /var/log/oak.log
