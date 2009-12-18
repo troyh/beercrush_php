@@ -268,10 +268,12 @@ void autocomplete(FCGX_Stream* out, const char* query,size_t query_len,const cha
 			while (mid && strncasecmp(query,list[mid-1],query_len) == 0);
 			
 			// mid is now before the 1st that matches, so spit out the names until it no longer matches
+
+			size_t limit=30; // Limit it to 30 results, more than that is unnecessary
 			do
 			{
 				++mid;
-				if (strncasecmp(query,list[mid-1],query_len)==0)
+				if (limit && (strncasecmp(query,list[mid-1],query_len)==0))
 				{
 					if (filtertype==0 || !types || (types[mid-1]&filtertype))
 					{
@@ -286,6 +288,8 @@ void autocomplete(FCGX_Stream* out, const char* query,size_t query_len,const cha
 						{
 							FCGX_FPrintF(out,"%s\n",list[mid-1]);
 						}
+						
+						--limit;
 					}
 				}
 				else
