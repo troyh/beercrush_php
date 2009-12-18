@@ -282,7 +282,8 @@ class OAK
 					
 					// Simple URI validation					
 					$parts=parse_url($value);
-					if (($parts['scheme']!='http') || // Must be HTTP
+					if (empty($parts['scheme']) || 
+						($parts['scheme']!='http') || // Must be HTTP
 						!preg_match('/\./',$parts['host'])) // Must have at least one dot in it
 						return false;
 				}
