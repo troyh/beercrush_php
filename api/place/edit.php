@@ -4,7 +4,7 @@ require_once 'beercrush/oak.class.php';
 function validate_place_id($name,$value,$attribs,$converted_value,$oak)
 {
 	// The brewery_id must already exist
-	$place_doc=new PlaceDocument;
+	$place_doc=new OAKDocument('');
 	// If there's a doc for it, it's valid
 	return $oak->get_document($converted_value,$place_doc);
 }
