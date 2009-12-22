@@ -9,7 +9,6 @@ $cgi_fields=array(
 
 function oakMain($oak)
 {
-	header("Cache-Control: no-cache");
 	global $cgi_fields;
 
 	$reviews=new stdClass;
