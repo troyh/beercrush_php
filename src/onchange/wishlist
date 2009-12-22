@@ -36,10 +36,6 @@ function process($id,$oak)
 		
 		$item->name=$itemdoc->name;
 	}
-
-	// TODO: make pages of documents for very long wishlists
-	list($type,$user_id)=split(':',$wishlist->getID());
-	$oak->persist_document($wishlist,'user/'.$user_id.'/wishlist');
 }
 
 ?>

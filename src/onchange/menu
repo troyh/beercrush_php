@@ -36,8 +36,6 @@ function process($id,$oak)
 		
 		$item->name=$itemdoc->name;
 	}
-
-	$oak->persist_document($menu);
 }
 
 ?>

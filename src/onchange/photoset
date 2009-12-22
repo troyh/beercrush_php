@@ -26,9 +26,6 @@ function process($id,$oak)
 	$photoset=new OAKDocument('');
 	if ($oak->get_document($id,$photoset)===false)
 		throw new Exception('Unable to get document '.$id);
-
-	// TODO: make pages of documents for very long photosets
-	$oak->persist_document($photoset,str_replace(':','/',$id));
 }
 
 

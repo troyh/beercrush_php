@@ -36,202 +36,29 @@ function process($id,$oak)
 		return;
 	}
 	
-	$oak->persist_document($id); // Save the actual document to the filesystem
-
-	// Make sure directory is there for the files we will create/update
-	$parts=split(':',$id);
-	array_shift($parts); // Remove the review: part
-	$user_id=array_pop($parts); // Remove the user_id at the end
-	$doc_id=join(':',$parts);
-
-	switch ($parts[0])
+	$review=new OAKDocument('');
+	if ($oak->get_document($id,$review)!==true)
 	{
-		case "place":
-			///////////////////////////////////////////
-			// Write out all the user's place reviews
-			///////////////////////////////////////////
-			write_reviews_doc(
-				'place_reviews/by_user_id?key=%22'.$user_id.'%22',
-				$oak->get_file_location('WWW_DIR').'/json/user/'.$user_id.'/reviews',
-				'place');
-
-			///////////////////////////////////////////
-			// Write out all the place's reviews
-			///////////////////////////////////////////
-			write_reviews_doc(
-				'place_reviews/by_place_id?key=%22'.$doc_id.'%22',
-				$oak->get_file_location('WWW_DIR').'/json/review/'.str_replace(':','/',$doc_id),
-				'_all');
-			break;
-		case "beer":
-			///////////////////////////////////////////
-			// Write out all the user's beer reviews
-			///////////////////////////////////////////
-			write_reviews_doc(
-				'beer_reviews/by_user?key=%22'.$user_id.'%22',
-				$oak->get_file_location('WWW_DIR').'/json/user/'.$user_id.'/reviews',
-				'beer');
-
-			///////////////////////////////////////////
-			// Write out all the beer's reviews
-			///////////////////////////////////////////
-			write_reviews_doc(
-				'beer_reviews/for_beer?key=%22'.$doc_id.'%22',
-				$oak->get_file_location('WWW_DIR').'/json/review/'.str_replace(':','/',$doc_id),
-				'_all');
-			break;
-		default:
-			$oak->log('Unrecognized review type: '.$parts[0]);
-			break;
+		$oak->log('Unable to get review document:'.$id);
 	}
-}
-
-
-function write_reviews_doc($doc_url,$directory,$basefilename,$chunk_size=20)
-{
-	global $oak;
-	
-	if (!is_dir($directory))
-	{
-		if (mkdir($directory,0777,true)===false)
-			$oak->log('Unable to mkdir '.$directory);
-	}
-		
-	$reviews=new OAKDocument('');
-
-	if ($oak->get_view($doc_url,&$reviews)!==true)
-		$oak->log('Unable to get view: '.$doc_url);
 	else
 	{
-		$chunked_reviews=array_chunk($reviews->rows,$chunk_size);
-		$total_reviews=count($reviews->rows);
-		unset($reviews); // Free the memory so we don't have all the reviews in memory twice
+		$parts=preg_split('/:/',$id);
 
-		for ($chunk=0,$limit=count($chunked_reviews);$chunk < $limit;++$chunk)
+		switch ($parts[1])
 		{
-			$output=array(
-				'total' => $total_reviews,
-				'start' => $chunk*$chunk_size,
-				'count' => count($chunked_reviews[$chunk]),
-				'seqnum'=> $chunk,
-				'seqmax'=> count($chunked_reviews)-1,
-				'reviews' => array(),
-			);
-			
-			foreach ($chunked_reviews[$chunk] as $review)
-			{
-				unset($review->value->_id);
-				unset($review->value->_rev);
-				
-				// Add in the info for the document that is being reviewed
-				if (isset($review->value->beer_id))
-				{
-					$beer=new OAKDocument('');
-					if ($oak->get_document($review->value->beer_id,&$beer)===true)
-					{
-						$review->value->beer->name=$beer->name;
-						$brewery=new OAKDocument('');
-						if ($oak->get_document($beer->getAttribute('brewery_id'),&$brewery)===true)
-						{
-							$attribs="@attributes";
-							$review->value->beer->brewery->$attribs->id=$brewery->_id;
-							$review->value->beer->brewery->name=$brewery->name;
-						}
-					}
-				}
-				else if (isset($review->value->place_id))
-				{
-					$place=new OAKDocument('');
-					if ($oak->get_document($review->value->place_id,&$place)===true)
-					{
-						$review->value->place->name=$place->name;
-					}
-				}
-				
-				array_push($output['reviews'],$review->value);
-			}
-
-			$filename="$directory/$basefilename.$chunk.json";
-			file_put_contents($filename,json_encode($output));
-			$oak->log('Wrote review document: '.$filename);
+			case "place":
+				break;
+			case "beer":
+				$oak->log("Purging beer doc");
+				// Uncache the doc for the beer
+				$oak->purge_document_cache('app','/api/beer/view?beer_id='.$parts[1].':'.$parts[2].':'.$parts[3]);
+				break;
+			default:
+				$oak->log('Unrecognized review type: '.$parts[1]);
+				break;
 		}
 	}
 }
-
-
-
-// if [ "$REVIEWOF" == "place" ]; then
-// 	# Update user's place reviews
-// 	# Update place's reviews
-// elif [ "$REVIEWOF" == "beer" ]; then
-// 	# Update user's beer reviews
-// 	# Update this beer's reviews
-// fi
-// 
-// 
-// # Update beer meta info doc
-// # $APP_DIR/scripts/beer/meta "$1"
-// 
-// BREWERY_ID=`echo "$1" | cut -d ':' -f 2`;
-// BEER_ID=`echo "$1" | cut -d ':' -f 3`;
-// USER_ID=`echo "$1" | cut -d ':' -f 4`;
-// 
-// # TODO: if BREWERY_ID, BEER_ID or USER_ID are empty strings, fail with an error
-// 
-// XMLFILE_DIR="$WWW_DIR/xml/beer_review/$BREWERY_ID/$BEER_ID";
-// 
-// # Update beer review XML doc
-// if [ ! -d $XMLFILE_DIR ]; then
-// 	mkdir -p $XMLFILE_DIR;
-// fi
-// 
-// $APP_DIR/tools/getdoc "$1" | $APP_DIR/tools/json2xml > $XMLFILE_DIR/$USER_ID.xml
-// 
-// echo $XMLFILE_DIR/$USER_ID.xml
-// 
-// # Update beer review page
-// # cat $WWW_DIR/xml/beer/$1.xml | $APP_DIR/tools/xslt $APP_DIR/xsl/beer/beer.xsl > $WWW_DIR/html/beer/$1.html
-// 
-// #
-// # Update user's beer reviews XML doc
-// #
-// if [ ! -d $WWW_DIR/xml/user/$USER_ID ]; then
-// 	mkdir -p "$WWW_DIR/xml/user/$USER_ID";
-// fi
-// 
-// $APP_DIR/tools/getdoc "/_view/beer_reviews/by_user?key=%22$USER_ID%22" |
-// $APP_DIR/tools/json2xml | 
-// xmlstarlet sel -t -m '//doc/rows/item' -v id -n |
-// sed -e '/^ *$/d' |
-// while read REVIEW_ID; do
-// 	REVIEW_XML_FILE="$WWW_DIR/xml/"`echo $REVIEW_ID | sed -e 's/:/\//g'`".xml";
-// 	BEER_ID=`xmlstarlet sel -t -m "/beer_review" -v beer_id "$REVIEW_XML_FILE"`;
-// 	BEER_XML_FILE=$WWW_DIR/xml/beer/$BEER_ID.xml;
-// 	BEER_NAME=`xmlstarlet sel -t -m "/beer" -v name $BEER_XML_FILE`;
-// 	
-// 	cat "$REVIEW_XML_FILE" |
-// 		xmlstarlet ed --omit-decl --subnode /beer_review -t elem -n beer -v "" | 
-// 		xmlstarlet ed --omit-decl --subnode /beer_review/beer -t elem -n name -v "$BEER_NAME"
-// done |
-// sed -e '1i\<beer_reviews>' -e '$a\</beer_reviews>' |
-// xmlstarlet fo > $WWW_DIR/xml/user/$USER_ID/beer_reviews.xml
-// 
-// echo $WWW_DIR/xml/user/$USER_ID/beer_reviews.xml
-// 
-// #
-// # Update the doc listing all the reviews for this beer
-// #
-// $APP_DIR/tools/getdoc "_view/beer_reviews/for_beer?key=%22$BREWERY_ID:$BEER_ID%22" | 
-// $APP_DIR/tools/json2xml | 
-// xmlstarlet sel -t -m '//doc/rows/item' -v id -n |
-// sed -e '/^ *$/d' |
-// while read REVIEW_ID; do
-// 	REVIEW_XML_FILE="$WWW_DIR/xml/"`echo $REVIEW_ID | sed -e 's/:/\//g'`".xml";
-// 	xmlstarlet fo --omit-decl $REVIEW_XML_FILE;
-// done | 
-// sed -e '1i\<beer_reviews>' -e '$a\</beer_reviews>' |
-// xmlstarlet fo > $WWW_DIR/xml/beer_review/$BREWERY_ID/$BEER_ID/_all.xml
-// 
-// echo $WWW_DIR/xml/review/$BREWERY_ID/$BEER_ID/_all.xml
 
 ?>
