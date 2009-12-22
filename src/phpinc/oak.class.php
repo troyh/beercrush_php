@@ -95,6 +95,10 @@ class OAK
 			$this->log_ident($_SERVER['SCRIPT_NAME']);
 		else
 			$this->log_ident(__FILE__);
+			
+		// Pick a couchdb host and port for this request
+		$node=$this->config->couchdb->nodes[rand()%count($this->config->couchdb->nodes)];
+		list($this->config->couchdb->host,$this->config->couchdb->port)=preg_split('/:/',$node);
 	}
 	
 	function __destruct() 
@@ -537,7 +541,7 @@ class OAK
 	{
 		if (empty($id))
 			throw new Exception('id is empty');
-		$couchdb=new CouchDB($this->config->couchdb->database);
+		$couchdb=new CouchDB($this->config->couchdb->database,$this->config->couchdb->host,$this->config->couchdb->port);
 
 		if (!is_null($rev))
 			$id=$id.'?rev='.$rev;
@@ -577,7 +581,7 @@ class OAK
 			$json=json_encode($doc);
 		}
 
-		$couchdb=new CouchDB($this->config->couchdb->database);
+		$couchdb=new CouchDB($this->config->couchdb->database,$this->config->couchdb->host,$this->config->couchdb->port);
 		$rsp=$couchdb->send($id,"put",$json);
 
 		if ($rsp->getStatusCode()==201)
@@ -594,6 +598,10 @@ class OAK
 			if ($this->get_user_id()!=null)
 				$update_msg['user_id']=$this->get_user_id();
 			$this->put_queue_msg('updates',json_encode($update_msg));
+			
+			// Purge the document from all the proxy caches, i.e., all the couchdb nodes
+			$this->purge_document_cache('couchdb','/'.$this->config->couchdb->database.'/'.$id);
+			
 			return true;
 		}
 			
@@ -603,7 +611,7 @@ class OAK
 	function copy_document($old_id,$new_id)
 	{
 		// NOTE: COPY only works in CouchDB 0.9+
-		$couchdb=new CouchDB($this->config->couchdb->database);
+		$couchdb=new CouchDB($this->config->couchdb->database,$this->config->couchdb->host,$this->config->couchdb->port);
 
 		$rsp=$couchdb->send($old_id,"copy",$new_id);
 		
@@ -619,7 +627,7 @@ class OAK
 	function delete_document($id)
 	{
 		$id=urlencode($id);
-		$couchdb=new CouchDB($this->config->couchdb->database);
+		$couchdb=new CouchDB($this->config->couchdb->database,$this->config->couchdb->host,$this->config->couchdb->port);
 		
 		$rsp=$couchdb->send($id,"get");
 		if ($rsp->getStatusCode()!=200)
@@ -874,7 +882,10 @@ class OAK
 			
 		$memQ=new Memcached();
 		$memQ->addServers($this->config->memcacheq->servers);
-		return $memQ->set($queue_name,$msg);
+		if ($memQ->set($queue_name,$msg)!==true)
+		{
+			$this->log('Failed to queue message:'.substr($msg,0,25).'...');
+		}
 	}
 
 	public function log_ident($ident)
@@ -1002,6 +1013,51 @@ class OAK
 	    return strtr($string, $table);
 	}
 
+	private function simple_http_request($url)
+	{
+		$ch=curl_init($url);
+		if ($ch!==false)
+		{
+			curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+			curl_exec($ch);
+			return curl_getinfo($ch,CURLINFO_HTTP_CODE);
+		}
+		else
+		{
+			$this->log('curl_init('.$url.') failed:'.curl_error());
+		}
+		
+		return null;
+	}
+	
+	public function purge_document_cache($type,$url)
+	{
+		switch ($type)
+		{
+			case "couchdb":
+				$servers=$this->config->couchdb->nodes;
+				break;
+			case "solr":
+				$servers=$this->config->solr->nodes;
+				break;
+			case "app":
+				$servers=$this->config->appproxy->nodes;
+				break;
+			default:
+				$servers=array();
+				break;
+		}
+		
+		foreach ($servers as $node)
+		{
+			$this->log('purging with URL:'.'http://'.$node.'/purge'.$url);
+			$status=$this->simple_http_request('http://'.$node.'/purge'.$url);
+			if ($status==200)
+				$this->log('Purged from '.$type.': '.$url);
+			else //if ($status!=404) // 404 just means it wasn't cached to begin with, which is okay for us.
+				$this->log('Error '.$status.' purging from '.$type.':'.$url);
+		}
+	}
 	
 };
 
