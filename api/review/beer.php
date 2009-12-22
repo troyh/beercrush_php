@@ -9,6 +9,7 @@ $cgi_fields=array(
 
 function oakMain($oak)
 {
+	header("Cache-Control: no-cache");
 	global $cgi_fields;
 
 	$reviews=new stdClass;
@@ -28,6 +29,7 @@ function oakMain($oak)
 			}
 			else
 			{
+				header('Content-Type: application/json; charset=utf-8');
 				print json_encode($review);
 				exit;
 			}
@@ -65,7 +67,7 @@ function oakMain($oak)
 		$output['reviews'][]=$review;
 	}
 
-	header('Content-Type: text/javascript; charset=utf-8');
+	header('Content-Type: application/json; charset=utf-8');
 	print json_encode($output);
 
 }

@@ -65,6 +65,8 @@ function load_flavors_data(&$flavorslist, $oak)
 
 function oakMain($oak)
 {
+	header("Cache-Control: no-cache");
+	
 	if ($oak->login_is_trusted()!==true) // If the user is not logged in or we can't trust the login
 	{
 		$oak->request_login();
@@ -82,10 +84,12 @@ function oakMain($oak)
 		$review=BeerReview::createReview($beer_id,$oak->get_user_id());
 
 		// Get existing review, if there is one so that we can update just the parts added/changed in this request
+		$updating_review=false;
 		if ($oak->get_document($review->getID(),&$review)===true)
 		{
 			// Do nothing, it doesn't matter
 			$oak->log('Updating review:'.$review->getID());
+			$updating_review=true;
 		}
 		else
 			$oak->log('New review:'.$review->getID());
@@ -125,7 +129,15 @@ function oakMain($oak)
 		}
 		else
 		{
-			header("Content-Type: application/javascript");
+			if ($updating_review)
+			{
+				// Uncache the data in the web proxies for the beer
+				$oak->purge_document_cache('app','/api/review/beer?user_id='.$oak->get_user_id().'&beer_id='.$beer_id);
+				$oak->purge_document_cache('app','/api/review/beer?beer_id='.$beer_id.'&user_id='.$oak->get_user_id());
+				// NOTE: we have to do both versions because we never know how the URL was requested and then cached
+			}
+			
+			header("Content-Type: application/json; charset=utf-8");
 			print json_encode($review);
 		}
 	}
