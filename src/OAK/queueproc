@@ -25,12 +25,12 @@ if (file_exists($pid_file))
 	exit;
 }
 
-$bRunOnce=false; // For debug purposes set to true
-if ($bRunOnce==false)
+$bRunOnce=false;
+$bDaemonize=false;
+if ($bDaemonize)
 	$pid=pcntl_fork();
 else
 {
-	$keep_running=false;
 	$pid=0;
 }
 	
@@ -178,7 +178,7 @@ else
 		/**********************************
 			Sleep for a while...
 		**********************************/
-		if ($bRunOnce==false)
+		if ($bRunOnce===false)
 			sleep($cfginfo->queueproc->sleep_interval);
 	}
 	while ($keep_running);
