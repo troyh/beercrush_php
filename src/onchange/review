@@ -52,7 +52,10 @@ function process($id,$oak)
 			case "beer":
 				$oak->log("Purging beer doc");
 				// Uncache the doc for the beer
-				$oak->purge_document_cache('app','/api/beer/view?beer_id='.$parts[1].':'.$parts[2].':'.$parts[3]);
+				$beer_id=$parts[1].':'.$parts[2].':'.$parts[3];
+				$oak->purge_document_cache('app','/api/beer/view?beer_id='.$beer_id);
+				// Uncache the view document for this beer
+				$oak->purge_document_cache('couchdb','/_design/beer_reviews/_view/for_beer?key=%22'.$beer_id.'%22');
 				break;
 			default:
 				$oak->log('Unrecognized review type: '.$parts[1]);
