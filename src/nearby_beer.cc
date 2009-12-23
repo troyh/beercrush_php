@@ -11,6 +11,8 @@ extern "C"
 
 #define MAX_PLACE_ID_LEN 256
 
+static time_t datafile_last_read=0;
+
 struct LATLONPAIR
 {
 	double lat;
@@ -103,6 +105,8 @@ extern "C" void fcgiInit()
 			latlonpairs_count=n;
 		}
 	}
+	
+	datafile_last_read=time(0);
 }
 
 extern "C" void fcgiUninit() 
@@ -132,6 +136,10 @@ size_t binary_search(double lat)
 
 extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_ParamArray envp)
 {
+	// See if we should refresh the data (older than 1 hour)
+	if (datafile_last_read < (time(0)-(60*60)))
+		fcgiInit();
+
 	char latstr[32];
 	char lonstr[32];
 	char withinstr[32];
@@ -145,7 +153,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 	double lat=strtod(latstr,NULL);
 	double lon=strtod(lonstr,NULL);
 	double within=strtod(withinstr,NULL);
-	
+
 	if (!within)
 		within=10;  // Default to 10 miles
 
@@ -158,8 +166,8 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 	
 	double lon_max=lon+(double)(within/lon_deg_len);
 	double lon_min=lon-(double)(within/lon_deg_len);
-	
-	cgiHeaderContentType((char*)"application/json; charset=utf-8");
+
+	FCGX_FPrintF(out,"Content-Type: application/json; charset=utf-8\r\n\r\n");
 	// cgiHeaderStatus(200,(char*)"OK");
 	// FCGI_printf("LatDegLen: %f\nWithin: %f\n",lat_deg_len,within);
 	// FCGI_printf("Lat: %f to %f\nLon: %f to %f\n",lat_min,lat_max,lon_min,lon_max);

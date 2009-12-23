@@ -19,11 +19,10 @@ extern "C"
 
 
 
-// #include <boost/filesystem.hpp>
-
 using namespace std;
 
 const char* const dataFilename="/var/local/BeerCrush/meta/autocomplete_names.tsv";
+static time_t datafile_last_read=0;
 
 // Searchable data structures
 const char** searchable_names=NULL;
@@ -208,6 +207,8 @@ bool readFile(const char* fname, size_t* count, const char*** names, TYPES** typ
 	*count=entries;
 	*names=list;
 	*types=list_types;
+	
+	datafile_last_read=time(0);
 }
 
 
@@ -304,7 +305,8 @@ void autocomplete(FCGX_Stream* out, const char* query,size_t query_len,const cha
 extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_ParamArray envp)
 {
 	// See if we should refresh the data (older than 1 hour)
-	// readFile(dataFilename,&searchable_names_count,&searchable_names,&searchable_types);
+	if (datafile_last_read < (time(0)-(60*60)))
+		readFile(dataFilename,&searchable_names_count,&searchable_names,&searchable_types);
 	
 	bool bXMLOutput=false;
 

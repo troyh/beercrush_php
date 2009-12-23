@@ -11,6 +11,8 @@ extern "C"
 
 #define MAX_PLACE_ID_LEN 256
 
+static time_t datafile_last_read=0;
+
 struct LATLONPAIR
 {
 	double lat;
@@ -93,6 +95,8 @@ extern "C" void fcgiInit()
 			latlonpairs_count=n;
 		}
 	}
+	
+	datafile_last_read=time(0);
 }
 
 extern "C" void fcgiUninit() 
@@ -122,6 +126,10 @@ size_t binary_search(double lat)
 
 extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_ParamArray envp)
 {
+	// See if we should refresh the data (older than 1 hour)
+	if (datafile_last_read < (time(0)-(60*60)))
+		fcgiInit();
+
 	char latstr[32];
 	char lonstr[32];
 	char withinstr[32];
