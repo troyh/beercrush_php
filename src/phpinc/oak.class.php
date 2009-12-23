@@ -1050,11 +1050,11 @@ class OAK
 		
 		foreach ($servers as $node)
 		{
-			$this->log('purging with URL:'.'http://'.$node.'/purge'.$url);
+			// $this->log('purging with URL:'.'http://'.$node.'/purge'.$url);
 			$status=$this->simple_http_request('http://'.$node.'/purge'.$url);
 			if ($status==200)
 				$this->log('Purged from '.$type.': '.$url);
-			else //if ($status!=404) // 404 just means it wasn't cached to begin with, which is okay for us.
+			else if ($status!=404) // 404 just means it wasn't cached to begin with, which is okay for us.
 				$this->log('Error '.$status.' purging from '.$type.':'.$url);
 		}
 	}
