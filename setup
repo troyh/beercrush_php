@@ -14,7 +14,17 @@ LOCALDATA_DIR=`php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp
 
 function USAGE()
 {
-	echo "Usage: $0 <appserver|wwwproxy|couchdbproxy|solrproxy|couchdb|solr|memcacheq|mgmt> <mgmt server>";
+	echo "Usage: $0 <app|wwwproxy|couchdbproxy|solrproxy|couchdb|solr|memcacheq|mgmt> <mgmt server>";
+}
+
+function verify_nginx_install()
+{
+	if [ "`/usr/sbin/nginx -v 2>&1`" != "nginx version: nginx/0.8.26" ]; then 
+		echo "Build and install NGiNX 0.8.26 (with cache_purge patch)";
+		echo "configure arguments: --prefix=/usr --sbin-path=/usr/sbin/nginx --conf-path=/etc/nginx/nginx.conf --error-log-path=/var/log/nginx/error.log --pid-path=/var/run/nginx.pid --user=www-data --group=www-data";
+		echo;
+		exit;
+	fi
 }
 
 if [ -z "$1" -o -z "$2" ]; then
@@ -271,7 +281,7 @@ case $1 in
 	wwwproxy)
 		echo "Setting up www proxy server...";
 		
-		sudo apt-get --quiet --quiet install nginx=0.7.63-1
+		verify_nginx_install;
 		
 		if [ ! -f /etc/nginx/sites-enabled/BeerCrush-www ]; then
 			echo "You must create /etc/nginx/sites-available/BeerCrush-www and then create a symlink in /etc/nginx/sites-enabled.";
@@ -286,7 +296,7 @@ case $1 in
 	couchdbproxy)
 		echo "Setting up CouchDB proxy server...";
 	
-		sudo apt-get --quiet --quiet install nginx=0.7.63-1
+		verify_nginx_install;
 
 		if [ ! -f /etc/nginx/sites-enabled/couchdb ]; then
 			echo "You must create /etc/nginx/sites-available/couchdb and then create a symlink in /etc/nginx/sites-enabled";
@@ -327,7 +337,7 @@ case $1 in
 	solrproxy)
 		echo "Setting up Solr proxy server...";
 	
-		sudo apt-get --quiet --quiet install nginx=0.7.63-1
+		verify_nginx_install;
 
 		if [ ! -f /etc/nginx/sites-enabled/solr ]; then
 			echo "You must create /etc/nginx/sites-available/solr and then create a symlink in /etc/nginx/sites-enabled";
