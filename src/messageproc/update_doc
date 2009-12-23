@@ -9,7 +9,9 @@ $msg=file_get_contents('php://stdin');
 $obj=json_decode($msg);
 $oak->log('user_id='.$obj->user_id.' docid='.$obj->docid.' old_rev='.$obj->old_rev.' new_rev='.$obj->new_rev);
 
-// Always invoke solr-index to update the search engine index for this document
+/*****************************************************************************
+	Always invoke solr-index to update the search engine index for this document
+*****************************************************************************/
 $prog=$oak->get_file_location('BIN_DIR').'/onchange/solr-index';
 $oak->log('Running: '.escapeshellcmd($prog).' '.escapeshellarg($obj->docid));
 exec(escapeshellcmd($prog).' '.escapeshellarg($obj->docid),$output,$return_var);
@@ -20,7 +22,9 @@ if ($return_var)
 else
 	$oak->log('Succeeded: '.escapeshellcmd($prog).' '.escapeshellarg($obj->docid));
 
-// Determine the doc type and call the appropriate script
+/*****************************************************************************
+	Determine the doc type and call the appropriate script
+*****************************************************************************/
 $parts=split(':',$obj->docid);
 // Find the script for this onchange
 $prog=$oak->get_file_location('BIN_DIR').'/onchange/'.$parts[0];
@@ -38,6 +42,55 @@ else
 	foreach ($output as $line)
 	{
 		$oak->log($line);
+	}
+}
+
+
+/*****************************************************************************
+	If nearby data, /var/local/BeerCrush/meta/latlonpairs.txt, is more than
+	3 (arbitrary number) hours old, refresh it.
+*****************************************************************************/
+update_data_file($oak->get_file_location('LOCAL_DIR').'/meta/latlonpairs.txt',3,$oak->get_file_location('APP_DIR').'/scripts/nearby/latlonfile');
+
+/*****************************************************************************
+	If beer nearby data, /var/local/BeerCrush/meta/nearby_beer.txt, is more than
+	3 (arbitrary number) hours old, refresh it.
+*****************************************************************************/
+update_data_file($oak->get_file_location('LOCAL_DIR').'/meta/nearby_beer.txt',3,$oak->get_file_location('APP_DIR').'/scripts/beer/location');
+
+/*****************************************************************************
+	If autocomplate data, /var/local/BeerCrush/meta/autocomplete_names.tsv, 
+	is more than 3 (arbitrary number) hours old, refresh it.
+*****************************************************************************/
+update_data_file($oak->get_file_location('LOCAL_DIR').'/meta/autocomplete_names.tsv',3,$oak->get_file_location('APP_DIR').'/scripts/misc/autocomplete_list');
+
+exit;
+
+
+/*****************************************************************************
+	FUNCTIONS
+*****************************************************************************/
+
+function update_data_file($filename,$age_hours,$prog)
+{
+	global $oak;
+	
+	if (!file_exists($filename) ||
+		filesize($filename)==0 ||
+		(filemtime($filename) < (time()-($age_hours*60*60))))
+	{
+		$h=popen($prog,'r');
+		if ($h===false)
+			$oak->log('Unable to exec $prog',LOGPRI_CRIT);
+		else
+		{
+			if (file_put_contents($filename,$h)===false)
+				$oak->log("Unable to write $filename",LOGPRI_CRIT);
+			else
+				$oak->log("Wrote $filename");
+				
+			pclose($h);
+		}
 	}
 }
 
