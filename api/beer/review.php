@@ -22,6 +22,17 @@ $cgi_fields=array(
 
 require_once('beercrush/BeerReview.php');
 
+function recurse_flavors($flavors,&$flavorslist)
+{
+	foreach ($flavors as $flavor)
+	{
+		if  (!empty($flavor->id))
+			$flavorslist[$flavor->id]=$flavor;
+		if (!empty($flavor->flavors))
+			recurse_flavors($flavor->flavors,$flavorslist);
+	}
+}
+
 function load_flavors_data(&$flavorslist, $oak)
 {
 	$flavorslist=array(); // If everything fails, they get an empty array back
@@ -36,19 +47,15 @@ function load_flavors_data(&$flavorslist, $oak)
 		{
 			$flavorslist=array(); // Make sure they get an empty array back, if the rest fails
 
-			$oak->log('Loading flavors data from XML document');
+			$oak->log('Loading flavors data');
 
-			// Read Flavors XML doc
-			$xml=simplexml_load_file($oak->get_file_location('XML_DIR').'/flavors.xml');
-			if ($xml===false)
-				$oak->log('Unable to parse XML doc:'.$oak->get_file_location('XML_DIR').'/flavors.xml',OAK::LOGPRI_CRIT);
+			// Read Flavors JSON doc
+			$flavors_data=json_decode(file_get_contents('http://'.$oak->get_config_info()->domainname.'/api/flavors'));
+			if (is_null($flavors_data))
+				$oak->log('Unable to parse flavors JSON doc http://'.$oak->get_config_info()->domainname.'/api/flavors',OAK::LOGPRI_CRIT);
 			else
 			{
-				$flavors=$xml->xpath('/flavors/group/flavors/flavor');
-				foreach ($flavors as $flavor)
-				{
-					$flavorslist[(string)$flavor['id']]=(string)$flavor;
-				}
+				recurse_flavors($flavors_data->flavors,$flavorslist);
 				
 				// Store list in shared mem
 				if (shm_put_var($shm_id,'1',$flavorslist)===false)
@@ -65,7 +72,7 @@ function load_flavors_data(&$flavorslist, $oak)
 
 function oakMain($oak)
 {
-	header("Cache-Control: no-cache");
+	header("Cache-Control: no-cache"); // This page should never be cached, it's an API call
 	
 	if ($oak->login_is_trusted()!==true) // If the user is not logged in or we can't trust the login
 	{
@@ -132,12 +139,13 @@ function oakMain($oak)
 			if ($updating_review)
 			{
 				// Uncache the data in the web proxies for the beer
-				$oak->purge_document_cache('app','/api/review/beer?user_id='.$oak->get_user_id().'&beer_id='.$beer_id);
 				$oak->purge_document_cache('app','/api/review/beer?beer_id='.$beer_id.'&user_id='.$oak->get_user_id());
-				// NOTE: we have to do both versions because we never know how the URL was requested and then cached
 			}
 			
 			header("Content-Type: application/json; charset=utf-8");
+			$review->id=$review->_id;
+			unset($review->_id);
+			unset($review->_rev);
 			print json_encode($review);
 		}
 	}
