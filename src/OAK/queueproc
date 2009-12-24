@@ -116,7 +116,11 @@ else
 							fclose($pipes[1]);
 							fclose($pipes[2]);
 
-							$return_value=proc_close($process);
+							$return_value=proc_close($process); // NOTE: The return value of proc_close() is unreliable. See http://us.php.net/manual/en/function.proc-close.php
+							$status=proc_get_status($process);
+							$return_value=0;
+							if ($status['running']===false)
+								$return_value=$status['exitcode'];
 						
 							if ($return_value)
 								$oak->log($prog.' returned '.$return_value,OAK::LOGPRI_ERR);

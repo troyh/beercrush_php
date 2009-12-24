@@ -101,8 +101,7 @@ else
 	}
 }
 
-if ($exitcode)
-	exit($exitcode);
+exit((int)$exitcode);
 
 function pullfile($info,$dest_file,$oak)
 {
