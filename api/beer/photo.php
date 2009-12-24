@@ -1,4 +1,6 @@
 <?php
+header("Cache-Control: no-cache");
+
 require_once 'beercrush/oak.class.php';
 
 $cgi_fields=array(
@@ -47,6 +49,10 @@ function oakMain($oak)
 			// We won't fail for this because we can (and should) scan the uploads directories 
 			// on all the servers periodically anyway.
 			// header("HTTP/1.0 500 Unable to queue upload");
+		}
+		else
+		{
+			$oak->log('Uploaded beer photo for beer '.$info['id'].' from user '.$info['user']);
 		}
 	}
 }
