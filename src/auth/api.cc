@@ -204,37 +204,38 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 	// FCGX_FPrintF(out,"cgiUserAgent=%s\n",cgiUserAgent);
 	// FCGX_FPrintF(out,"cgiReferrer=%s\n",cgiReferrer);
 
-	if (!strcmp(cgiPathInfo,"/beer/view") ||
-		!strcmp(cgiPathInfo,"/beer/edit") ||
-		!strcmp(cgiPathInfo,"/beer/photo") ||
-		!strcmp(cgiPathInfo,"/beer/review") ||
-		!strcmp(cgiPathInfo,"/beercolors") ||
-		!strcmp(cgiPathInfo,"/beers") ||
-		!strcmp(cgiPathInfo,"/beerstyles") ||
-		!strcmp(cgiPathInfo,"/breweries") ||
-		!strcmp(cgiPathInfo,"/brewery/beerlist") ||
-		!strcmp(cgiPathInfo,"/brewery/edit") ||
-		!strcmp(cgiPathInfo,"/brewery/photo") ||
-		!strcmp(cgiPathInfo,"/brewery/view") ||
-		!strcmp(cgiPathInfo,"/flavors") ||
-		!strcmp(cgiPathInfo,"/login") ||
-		!strcmp(cgiPathInfo,"/logout") ||
-		!strcmp(cgiPathInfo,"/menu/edit") ||
-		!strcmp(cgiPathInfo,"/menu/view") ||
-		!strcmp(cgiPathInfo,"/place/edit") ||
-		!strcmp(cgiPathInfo,"/place/photo") ||
-		!strcmp(cgiPathInfo,"/place/review") ||
-		!strcmp(cgiPathInfo,"/place/view") ||
-		!strcmp(cgiPathInfo,"/places") ||
-		!strcmp(cgiPathInfo,"/restaurantcategories") ||
-		!strcmp(cgiPathInfo,"/review/beer") ||
-		!strcmp(cgiPathInfo,"/review/place") ||
-		!strcmp(cgiPathInfo,"/search"))
+	if (!strcmp(cgiPathInfo,"/api/beer/view") ||
+		!strncmp(cgiPathInfo,"/api/beer/",10) ||
+		!strcmp(cgiPathInfo,"/api/beer/edit") ||
+		!strcmp(cgiPathInfo,"/api/beer/photo") ||
+		!strcmp(cgiPathInfo,"/api/beer/review") ||
+		!strcmp(cgiPathInfo,"/api/beercolors") ||
+		!strcmp(cgiPathInfo,"/api/beers") ||
+		!strcmp(cgiPathInfo,"/api/beerstyles") ||
+		!strcmp(cgiPathInfo,"/api/breweries") ||
+		!strcmp(cgiPathInfo,"/api/brewery/beerlist") ||
+		!strcmp(cgiPathInfo,"/api/brewery/edit") ||
+		!strcmp(cgiPathInfo,"/api/brewery/photo") ||
+		!strcmp(cgiPathInfo,"/api/brewery/view") ||
+		!strcmp(cgiPathInfo,"/api/flavors") ||
+		!strcmp(cgiPathInfo,"/api/login") ||
+		!strcmp(cgiPathInfo,"/api/logout") ||
+		!strcmp(cgiPathInfo,"/api/menu/edit") ||
+		!strcmp(cgiPathInfo,"/api/menu/view") ||
+		!strcmp(cgiPathInfo,"/api/place/edit") ||
+		!strcmp(cgiPathInfo,"/api/place/photo") ||
+		!strcmp(cgiPathInfo,"/api/place/review") ||
+		!strcmp(cgiPathInfo,"/api/place/view") ||
+		!strcmp(cgiPathInfo,"/api/places") ||
+		!strcmp(cgiPathInfo,"/api/restaurantcategories") ||
+		!strcmp(cgiPathInfo,"/api/review/beer") ||
+		!strcmp(cgiPathInfo,"/api/review/place") ||
+		!strcmp(cgiPathInfo,"/api/search"))
 	{
-		FCGX_FPrintF(out,"X-Accel-Redirect: /store/api%s%s%s\r\n",cgiPathInfo,(!strlen(cgiQueryString)?"":"?"),cgiQueryString);
+		FCGX_FPrintF(out,"X-Accel-Redirect: /store%s%s%s\r\n",cgiPathInfo,(!strlen(cgiQueryString)?"":"?"),cgiQueryString);
 		FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
 	}
-	else if (!strcmp(cgiPathInfo,"/wishlist/view"))
+	else if (!strcmp(cgiPathInfo,"/api/wishlist/view"))
 	{
 		char* wishlist_id_ptr;
 		char wishlist_id[256]="";
