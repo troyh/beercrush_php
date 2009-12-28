@@ -1,4 +1,5 @@
 <?php
+// header("Cache-Control: no-cache");
 require_once('beercrush/oak.class.php');
 // header('Content-Type: text/plain');
 // print_r($_SERVER);exit;
@@ -73,6 +74,21 @@ if ($averages['aftertaste_count'])
 if (arsort($flavors)===true)
 	$beerdoc->review_summary->flavors=array_slice(array_keys($flavors),0,5);
 
+// Add the thumbnail photo info
+$photoset=new OAKDocument('');
+$oak->get_document('photoset:'.$_GET['beer_id'],$photoset);
+// print_r($photoset);exit;
+$beerdoc->photos=new stdClass;
+$beerdoc->photos->total=count($photoset->photos);
+if ($beerdoc->photos->total)
+{
+	$idx=0; // Take the 1st one if we don't have one specified
+	if (isset($photoset->default_photo_index))
+		$idx=$photoset->default_photo_index;
+	$beerdoc->photos->thumbnail=$photoset->photos[$idx]->thumbnail->url;
+}
+
+header('X-CacheKey: foobar');
 header('Content-Type: application/json; charset=utf-8');
 print json_encode($beerdoc);
 
