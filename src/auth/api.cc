@@ -222,6 +222,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 		!strcmp(cgiPathInfo,"/api/logout") ||
 		!strcmp(cgiPathInfo,"/api/menu/edit") ||
 		!strcmp(cgiPathInfo,"/api/menu/view") ||
+		!strncmp(cgiPathInfo,"/api/photoset/",14) ||
 		!strcmp(cgiPathInfo,"/api/place/edit") ||
 		!strcmp(cgiPathInfo,"/api/place/photo") ||
 		!strcmp(cgiPathInfo,"/api/place/review") ||
