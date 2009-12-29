@@ -88,7 +88,6 @@ if ($beerdoc->photos->total)
 	$beerdoc->photos->thumbnail=$photoset->photos[$idx]->thumbnail->url;
 }
 
-header('X-CacheKey: foobar');
 header('Content-Type: application/json; charset=utf-8');
 print json_encode($beerdoc);
 
