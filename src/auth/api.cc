@@ -204,29 +204,19 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 	// FCGX_FPrintF(out,"cgiUserAgent=%s\n",cgiUserAgent);
 	// FCGX_FPrintF(out,"cgiReferrer=%s\n",cgiReferrer);
 
-	if (!strcmp(cgiPathInfo,"/api/beer/view") ||
-		!strncmp(cgiPathInfo,"/api/beer/",10) ||
-		!strcmp(cgiPathInfo,"/api/beer/edit") ||
-		!strcmp(cgiPathInfo,"/api/beer/photo") ||
-		!strcmp(cgiPathInfo,"/api/beer/review") ||
+	if (!strncmp(cgiPathInfo,"/api/beer/",10) ||
 		!strcmp(cgiPathInfo,"/api/beercolors") ||
 		!strcmp(cgiPathInfo,"/api/beers") ||
 		!strcmp(cgiPathInfo,"/api/beerstyles") ||
 		!strcmp(cgiPathInfo,"/api/breweries") ||
-		!strcmp(cgiPathInfo,"/api/brewery/beerlist") ||
-		!strcmp(cgiPathInfo,"/api/brewery/edit") ||
-		!strcmp(cgiPathInfo,"/api/brewery/photo") ||
-		!strcmp(cgiPathInfo,"/api/brewery/view") ||
+		!strncmp(cgiPathInfo,"/api/brewery/",13) ||
 		!strcmp(cgiPathInfo,"/api/flavors") ||
 		!strcmp(cgiPathInfo,"/api/login") ||
 		!strcmp(cgiPathInfo,"/api/logout") ||
 		!strcmp(cgiPathInfo,"/api/menu/edit") ||
-		!strcmp(cgiPathInfo,"/api/menu/view") ||
+		!strncmp(cgiPathInfo,"/api/menu/",10) ||
 		!strncmp(cgiPathInfo,"/api/photoset/",14) ||
-		!strcmp(cgiPathInfo,"/api/place/edit") ||
-		!strcmp(cgiPathInfo,"/api/place/photo") ||
-		!strcmp(cgiPathInfo,"/api/place/review") ||
-		!strcmp(cgiPathInfo,"/api/place/view") ||
+		!strncmp(cgiPathInfo,"/api/place/",11) ||
 		!strcmp(cgiPathInfo,"/api/places") ||
 		!strcmp(cgiPathInfo,"/api/restaurantcategories") ||
 		!strcmp(cgiPathInfo,"/api/review/beer") ||
