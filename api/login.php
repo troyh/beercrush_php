@@ -1,4 +1,5 @@
 <?php
+header("Cache-Control: no-cache");
 require_once 'beercrush/oak.class.php';
 
 /*
@@ -110,6 +111,10 @@ else
 					'userid'=>$user_doc->userid,
 					'usrkey'=>$usrkey,
 				);
+				
+				if (!empty($user_doc->name))
+					$answer['name']=$user_doc->name;
+					
 				print json_encode($answer);
 			
 			}
