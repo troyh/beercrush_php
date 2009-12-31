@@ -11,10 +11,17 @@ if (empty($_GET['beer_id']))
 
 $oak=new OAK;
 $photoset=new OAKDocument('');
-$oak->get_document('photoset:'.$_GET['beer_id'],$photoset);
-$photoset->id=$photoset->_id;
-unset($photoset->_id);
-unset($photoset->_rev);
+if ($oak->get_document('photoset:'.$_GET['beer_id'],$photoset)===false)
+{
+	$photoset->id='photoset:'.$_GET['beer_id'];
+	$photoset->photos=array();
+}
+else
+{
+	$photoset->id=$photoset->_id;
+	unset($photoset->_id);
+	unset($photoset->_rev);
+}
 
 header('Content-Type: application/json; charset=utf-8');
 print json_encode($photoset);

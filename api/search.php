@@ -63,6 +63,7 @@ function oakMain($oak)
 		if (is_null($results))
 		{
 			header('HTTP/1.0 500 Internal error');
+			print "Internal error";
 			exit;
 		}
 
