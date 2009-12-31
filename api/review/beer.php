@@ -23,7 +23,8 @@ function oakMain($oak)
 			$review=new OAKDocument('');
 			if ($oak->get_document('review:'.$beer_id.':'.$user_id,&$review)!==true)
 			{
-				header('HTTP/1.0 400 No review');
+				header('HTTP/1.0 404 No review');
+				print "No review";
 				exit;
 			}
 			else
@@ -36,6 +37,7 @@ function oakMain($oak)
 		else if ($oak->get_view('beer_reviews/by_user?key=%22'.$user_id.'%22',$reviews)!==true)
 		{
 			header('HTTP/1.0 500 Internal error');
+			print 'Internal error';
 			exit;
 		}
 	}
@@ -45,6 +47,7 @@ function oakMain($oak)
 		if ($oak->get_view('beer_reviews/all?key=%22'.$beer_id.'%22',$reviews)!==true)
 		{
 			header('HTTP/1.0 500 Internal error');
+			print 'Internal error';
 			exit;
 		}
 	}
