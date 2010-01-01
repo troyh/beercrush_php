@@ -204,6 +204,8 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 	// FCGX_FPrintF(out,"cgiUserAgent=%s\n",cgiUserAgent);
 	// FCGX_FPrintF(out,"cgiReferrer=%s\n",cgiReferrer);
 
+	const int CGIPATH_WISHLIST_LEN=14;
+	
 	if (!strncmp(cgiPathInfo,"/api/beer/",10) ||
 		!strcmp(cgiPathInfo,"/api/beercolors") ||
 		!strcmp(cgiPathInfo,"/api/beers") ||
@@ -227,18 +229,8 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 		FCGX_FPrintF(out,"X-Accel-Redirect: /store%s%s%s\r\n",cgiPathInfo,(!strlen(cgiQueryString)?"":"?"),cgiQueryString);
 		FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
 	}
-	else if (!strcmp(cgiPathInfo,"/api/wishlist/view"))
+	else if (!strncmp(cgiPathInfo,"/api/wishlist/",CGIPATH_WISHLIST_LEN))
 	{
-		char* wishlist_id_ptr;
-		char wishlist_id[256]="";
-		
-		cgiFormString("user_id",wishlist_id,sizeof(wishlist_id));
-		
-		if (!strncasecmp(wishlist_id,"user:",5))
-			wishlist_id_ptr=wishlist_id+5;
-		else
-			wishlist_id_ptr=wishlist_id;
-	
 		if (login_is_trusted(/*out*/)!=true)
 		{
 			// cgiHeaderStatus(403,"Login required");
@@ -253,7 +245,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 			char user_id[256];
 			cgiFormString("userid",user_id,sizeof(user_id));
 			
-			if (strcmp(user_id,wishlist_id_ptr))
+			if (strcmp(user_id,cgiPathInfo+CGIPATH_WISHLIST_LEN))
 			{
 				FCGX_FPrintF(out,"Status: 403 Permission denied\r\n");
 				FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
@@ -261,7 +253,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 			}
 			else
 			{
-				FCGX_FPrintF(out,"X-Accel-Redirect: /store/api/wishlist/view?user_id=%s\r\n",wishlist_id);
+				FCGX_FPrintF(out,"X-Accel-Redirect: /store/api/wishlist/%s\r\n",cgiPathInfo+CGIPATH_WISHLIST_LEN);
 				FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
 			}
 		}

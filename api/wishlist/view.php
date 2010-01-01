@@ -11,6 +11,7 @@ $wishlist=new OAKDocument('');
 if ($oak->get_document('wishlist:'.$user_id,&$wishlist)!==true)
 {
 	header('HTTP/1.0 400 No wishlist');
+	print "No wishlist";
 }
 else
 {
