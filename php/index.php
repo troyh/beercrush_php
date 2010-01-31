@@ -19,7 +19,7 @@
 	<img src="/img/Logo.jpg">
 
 	<div id="footer">
-		&copy; 2009 Beer Crush (r<!-- SVNVERSION -->)
+		&copy; 2009 Beer Crush (r317)
 	</div>
 	
 	<script type="text/javascript">

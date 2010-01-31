@@ -1,7 +1,9 @@
 	</div>
 	<div id="footer">
-		&copy; 2009 Beer Crush (r<!-- SVNVERSION -->)
+		&copy; 2010 Beer Crush (r<!-- SVNVERSION -->)
+		<div id="pagemodtime">Page last modified: <?=date('M j, Y g:i:sa T',time())?></div>
 	</div>
+	
 <script>
 google.load("jquery","1.3.2");
 google.setOnLoadCallback(BeerCrushMain);

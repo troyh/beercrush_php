@@ -1,19 +1,17 @@
 <?php
 require_once('beercrush/oak.class.php');
-
 $oak=new OAK;
 
-$doc=file_get_contents($oak->get_config_info()->api->base_uri."/brewery/view?brewery_id=brewery:".$_GET['id']);
+$doc=file_get_contents($oak->get_config_info()->api->base_uri."/brewery/view?brewery_id=brewery:".$_GET['brewery_id']);
 $brewerydoc=json_decode($doc);
 
-$doc=@file_get_contents($oak->get_config_info()->api->base_uri."/brewery/beerlist?brewery_id=brewery:".$_GET['id']);
+$doc=@file_get_contents($oak->get_config_info()->api->base_uri."/brewery/".$_GET['brewery_id']."/beerlist");
 $beerlistdoc=json_decode($doc);
 if ($beerlistdoc==null)
 {
 	$beerlistdoc->beers=array();
 }
 
-$attributes='@attributes';
 // var_dump($beerlistdoc);exit;
 
 include("header.php");

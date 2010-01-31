@@ -2,7 +2,9 @@
 <?php
 require_once('beercrush/BeerCrushClient.class.php');
 
-$breweries_data=json_decode(@file_get_contents('http://macdev/api/breweries'));
+$config=json_decode(@file_get_contents("/etc/BeerCrush/webapp.conf"));
+
+$breweries_data=json_decode(@file_get_contents($config->api->base_uri.'/breweries'));
 
 if (is_null($breweries_data))
 {
@@ -10,7 +12,7 @@ if (is_null($breweries_data))
 	exit;
 }
 
-$styles_data=json_decode(@file_get_contents('http://macdev/api/beerstyles'));
+$styles_data=json_decode(@file_get_contents($config->api->base_uri.'/beerstyles'));
 
 if (is_null($styles_data))
 {
@@ -37,9 +39,9 @@ foreach ($styles_data->styles as $toplevel)
 		$styles[$style->name]=$style;
 	}
 }
-// print_r($styles);exit;
+print_r($styles);exit;
 
-$bc=new BeerCrushClient('http://macdev','troy.hakala@gmail.com','blah');
+$bc=new BeerCrushClient($config->api->base_uri,'troy.hakala@gmail.com','blah');
 
 $line=0;
 while ($txt=fgets(STDIN))

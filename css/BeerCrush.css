@@ -70,3 +70,13 @@ a {
 	background: #137aa1;
 	padding-top:7px;
 }
+
+#pagemodtime {
+	position:fixed;
+	right:5px;
+	bottom:0px;
+}
+
+img {
+	border: 0;
+}
