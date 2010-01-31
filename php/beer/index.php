@@ -26,9 +26,9 @@ switch ($_GET['view'])
 		}
 		else
 		{	// Get the 1st date in the $beers list
-			$selected_year="2009";
-			$selected_month="12";
-			$selected_day="18";
+			$selected_year=null;
+			$selected_month=null;
+			$selected_day=null;
 		}
 		
 		?>
@@ -36,13 +36,22 @@ switch ($_GET['view'])
 		<?php
 		foreach ($beers->days as $year=>$months)
 		{
+			if (is_null($selected_year))
+				$selected_year=$year;
+				
 			print "<div>$year</div>";
 			foreach ($months as $month=>$days)
 			{
+				if (is_null($selected_month))
+					$selected_month=$month;
+					
 				$t=mktime(0,0,0,$month,1,$year);
 				print "<div>".date('F',$t)."</div>";
 				foreach ($days as $day=>$b)
 				{
+					if (is_null($selected_day))
+						$selected_day=$day;
+						
 					if ($selected_year==$year && $selected_month==$month && $selected_day==$day)
 						print "<div>$day (".count($beers->days->$year->$month->$day).")</div>";
 					else
