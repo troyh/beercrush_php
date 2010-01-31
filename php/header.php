@@ -24,7 +24,7 @@ header('Content-Type: text/html; charset=utf-8');
 <body>
 	<a href="/"><img src="/img/Logosmall.jpg"></a>
 	<ol id="navmenu">
-		<li><a href="/beer/">Beers</a></li>
+		<li><a href="/beers/">Beers</a></li>
 		<li><a href="/brewery/">Breweries</a></li>
 		<li><a href="/place/">Places</a></li>
 	</ol>

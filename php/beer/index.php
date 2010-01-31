@@ -6,6 +6,11 @@ include('../header.php');
 
 <h1>Beers</h1>
 
+<ul>
+	<li><a href="/beers/">By Name</a></li>
+	<li><a href="/beers/bydate/">By Date</a></li>
+</ul>
+	
 <?php
 $oak=new OAK;
 
