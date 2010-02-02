@@ -1,0 +1,153 @@
+#!/usr/bin/php
+<?php
+
+/*
+
+beers.map:
+
+{
+	"brewery": { "mapfile": "brewery.map", "field": "brewery_id" },
+	"beer name": "name",
+	"style":  { "mapfile": "style.map", "field": "styles" },
+	"color":  { "mapfile": "color.map", "field": "srm" },
+	"ABV": "abv",
+	"OG": "og",
+	"FG": "fg",
+	"IBU": "ibu",
+	"other ingredients": "otherings"
+}
+
+
+Make brewery.map:
+
+curl http://beercrush.com/api/breweries | php -r '
+	$map=array();
+	$obj=json_decode(stream_get_contents(STDIN));
+	foreach ($obj as $letter=>$a) { 
+		foreach ($a as $p=>$v) {
+			$map[$v->name]=$v->id;
+		}
+	} 
+	print json_encode($map);' > brewery.map
+
+
+Make styles.map:
+
+curl http://duff/api/beerstyles | php -r '
+	$map=array();
+	$obj=json_decode(stream_get_contents(STDIN));
+	function ss($obj) {
+		global $map;
+		foreach ($obj as $s) {
+			$map[$s->name]=$s->id; 
+			if (isset($s->styles)) 
+				ss($s->styles);
+		}
+	}; 
+	ss($obj->styles); 
+	print json_encode($map);' > style.map
+	
+	
+Double-check all the values (and hand-edit as necessary):
+	
+cat beers.json  | php -R '$obj=json_decode($argn);print $obj->brewery."\n";' |sort |uniq -c | sort -n
+cat beers.json  | php -R '$obj=json_decode($argn);print $obj->{"beer name"}."\n";' |sort |uniq -c | sort -n	
+cat beers.json  | php -R '$obj=json_decode($argn);print $obj->style."\n";' |sort |uniq -c | sort -n	
+cat beers.json  | php -R '$obj=json_decode($argn);print $obj->color."\n";' |sort |uniq -c | sort -n	
+cat beers.json  | php -R '$obj=json_decode($argn);print $obj->ABV."\n";' |sort |uniq -c | sort -n	
+cat beers.json  | php -R '$obj=json_decode($argn);print $obj->OG."\n";' |sort |uniq -c | sort -n	
+cat beers.json  | php -R '$obj=json_decode($argn);print $obj->FG."\n";' |sort |uniq -c | sort -n	
+cat beers.json  | php -R '$obj=json_decode($argn);print $obj->IBU."\n";' |sort |uniq -c | sort -n	
+cat beers.json  | php -R '$obj=json_decode($argn);print $obj->{"other ingredients"}."\n";' |sort |uniq -c | sort -n	
+	
+*/
+
+$mapfiles=array();
+
+$opts=getopt('m:na:');
+if (!empty($opts['m']))
+{
+	load_mapfile($opts['m']);
+}
+
+while ($line=fgets(STDIN))
+{
+	$obj=json_decode($line);
+	if (is_null($obj))
+	{
+		print "\nBad input:$line\n\n";
+		exit;
+	}
+	$clauses=array();
+	foreach ($obj as $prop=>$value)
+	{
+		if (isset($mapfiles[$opts['m']]->$prop))
+		{
+			if ($mapfiles[$opts['m']]->$prop===FALSE)
+			{
+				// Drop it
+			}
+			else if (!empty($value))
+			{
+				if (is_object($mapfiles[$opts['m']]->$prop))
+				{
+					if (!isset($mapfiles[$mapfiles[$opts['m']]->$prop->mapfile]->$value))
+					{
+						if (isset($opts['n']))
+							print "Unable to map $prop: $value\n";
+					}
+					else
+					{
+						// Map value
+						$value=$mapfiles[$mapfiles[$opts['m']]->$prop->mapfile]->$value;
+				
+						// Map name
+						if (isset($mapfiles[$opts['m']]->$prop->field))
+							$prop=$mapfiles[$opts['m']]->$prop->field;
+					}
+				}
+				else
+				{
+					$prop=$mapfiles[$opts['m']]->$prop;
+				}
+				
+				$clauses[]=urlencode($prop)."=".urlencode($value);
+			}
+		}
+	}
+	if (!isset($opts['n']))
+	{
+		if (!empty($opts['a']))
+		{
+			foreach ($opts['a'] as $a)
+			{
+				$clauses[]=$a;
+			}
+		}
+		print join("&",$clauses)."\n";
+	}
+}
+
+
+function load_mapfile($filename)
+{
+	global $mapfiles;
+	$mapfiles[$filename]=json_decode(file_get_contents($filename));
+	if (is_null($mapfiles[$filename]))
+	{
+		print "$filename is invalid JSON\n";
+		exit;
+	}
+	
+	// Recursively load any other mapfiles
+	foreach ($mapfiles[$filename] as $prop=>$value)
+	{
+		if (is_object($value) && isset($value->mapfile))
+		{
+			load_mapfile($value->mapfile);
+		}
+	}
+}
+
+
+?>
