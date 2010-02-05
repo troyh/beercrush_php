@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Get my IP(s)
+MYIPS=$(/sbin/ifconfig |grep "inet addr:" | sed -e 's/ *inet  *addr:\([0-9\.]*\).*$/\1/');
+
+SERVER_TYPE_IPS=$(cat /etc/BeerCrush/setup.conf | php -r '
+$conf=json_decode(stream_get_contents(STDIN));
+foreach ($conf->servers->{$argv[1]}->servers as $s) {
+	list($ip,$port)=preg_split("/:/",$s);
+	print $ip;
+}; 
+' $1);
+
+for S in $SERVER_TYPE_IPS; do
+	S=`dig $S +short`;
+	for MY in $MYIPS; do
+		if [ "$S" == "$MY" ]; then
+			echo "Yes";
+			exit 0;
+		fi
+	done
+done
+
+echo "No";
+exit 1;
+
