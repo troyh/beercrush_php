@@ -14,5 +14,5 @@ clean: SAFETY_CHECK
 	rm -f $(FCGI_PROGS) $(patsubst %.fcgi,%.o,$(FCGI_PROGS))
 
 install: SAFETY_CHECK
-	echo "Copying FCGI programs: $(FCGI_PROGS) to $(WWW_DIR)/auth/";
-	cp $(FCGI_PROGS) $(WWW_DIR)/auth/
+	@./install.sh
+	$(RECURSIVE_MAKE)

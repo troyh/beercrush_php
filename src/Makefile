@@ -3,7 +3,7 @@ include ../Makefile.rules
 FCGI_PROGS=autocomplete.fcgi nearby.fcgi nearby_beer.fcgi
 
 ALL: $(FCGI_PROGS)
-	$(MAKE) -C auth/
+	$(RECURSIVE_MAKE)
 
 autocomplete.fcgi: autocomplete.o external/cgic/libcgic.a
 	g++ $^ -lfcgi -o $@
@@ -21,16 +21,5 @@ clean:
 	rm -f $(FCGI_PROGS) $(patsubst %.fcgi,%.o,$(FCGI_PROGS))
 
 install: SAFETY_CHECK
-	$(MAKE) -C phpinc/ install;
-	if /etc/init.d/supervisor status > /dev/null; then sudo /etc/init.d/supervisor stop; fi
-	@sleep 1;
-	if /etc/init.d/supervisor status > /dev/null; then sudo /etc/init.d/supervisor stop; fi
-	@sleep 1;
-	if /etc/init.d/supervisor status > /dev/null; then sudo /etc/init.d/supervisor stop; fi
-	@sleep 1;
-	$(MAKE) -C auth/ install;
-	$(MAKE) -C OAK/ install;
-	echo "Copying FCGI programs: $(FCGI_PROGS) to $(WWW_DIR)/api";
-	cp $(FCGI_PROGS) $(WWW_DIR)/api/
-	sudo /etc/init.d/supervisor start;
-	
+	$(RECURSIVE_MAKE)
+	@./install.sh $(FCGI_PROGS)
