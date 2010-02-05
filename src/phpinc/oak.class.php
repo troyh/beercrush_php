@@ -122,18 +122,18 @@ class OAK
 	function get_user_id()
 	{
 		if (!empty($_GET['userid']))
-			return $_GET['userid'];
+			return trim($_GET['userid']);
 		if (!empty($_POST['userid']))
-			return $_POST['userid'];
+			return trim($_POST['userid']);
 		return null;
 	}
 
 	function get_user_key()
 	{
 		if (!empty($_GET['usrkey']))
-			return $_GET['usrkey'];
+			return trim($_GET['usrkey']);
 		if (!empty($_POST['usrkey']))
-			return $_POST['usrkey'];
+			return trim($_POST['usrkey']);
 		return null;
 	}
 	
@@ -167,7 +167,7 @@ class OAK
 		$correct_key=md5($this->get_user_id().$user_doc->secret.$_SERVER['REMOTE_ADDR']);
 		if ($correct_key!==$this->get_user_key())
 			return false;
-			
+
 		return true;
 	}
 	
