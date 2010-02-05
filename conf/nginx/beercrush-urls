@@ -1,0 +1,28 @@
+# .php-less URLs
+rewrite ^/store/api/beercolors$ /api/beercolors.php break;
+rewrite ^/store/api/beers$ /api/beers.php break;
+rewrite ^/store/api/beerstyles$ /api/beerstyles.php break;
+rewrite ^/store/api/breweries$ /api/breweries.php break;
+rewrite ^/store/api/createlogin$ /api/createlogin.php break;
+rewrite ^/store/api/flavors$ /api/flavors.php break;
+rewrite ^/store/api/login$ /api/login.php break;
+rewrite ^/store/api/logout$ /api/logout.php break;
+rewrite ^/store/api/restaurantcategories$ /api/restaurantcategories.php break;
+rewrite ^/store/api/search$ /api/search.php break;
+rewrite ^/store/api/user/edit$ /api/user/edit.php break;
+
+# Friendly URIs for documents
+rewrite ^/store/api/beer/edit$	/api/beer/edit.php break;
+rewrite ^/store/api/beer/([^/]+)/([^/]+)$	/api/beer/view.php?beer_id=beer:$1:$2 break;
+rewrite ^/store/api/photoset/(beer|brewery|place)/([^/]+)/([^/]+)$	/api/$1/photoset.php?$1_id=$1:$2:$3 break;
+rewrite ^/store/api/brewery/([^/]+)$ 		/api/brewery/view.php?brewery_id=brewery:$1 break;
+rewrite ^/store/api/brewery/([^/]+)/beerlist$ 	/api/brewery/beerlist.php?brewery_id=brewery:$1 break;
+rewrite ^/store/api/photoset/beer/([^/]+)/([^/]+)$ 		/api/beer/photoset.php?beer_id=beer:$1:$2 break;
+rewrite ^/store/api/photoset/(brewery|place)/([^/]+)$ 		/api/$1/photoset.php?$1_id=$1:$2 break;
+rewrite ^/store/api/place/([^/]+)$ 		/api/place/view.php?place_id=place:$1 break;
+rewrite ^/store/api/place/([^/]+)/menu$ 	/api/menu/view.php?place_id=place:$1 break;
+rewrite ^/store/api/review/(beer|place)/([^/]+)/([^/]+)/(\d+)$	/api/review/$1.php?$1_id=$1:$2:$3&seqnum=$4 break;
+rewrite ^/store/api/review/(beer|place)/([^/]+)/([^/]+)/([^/]+)$	/api/review/$1.php?$1_id=$1:$2:$3&user_id=$4 break;
+rewrite ^/store/api/wishlist/([^/]+)$ 		/api/wishlist/view.php?user_id=$1 break;
+rewrite ^/store/api/user/(.+)$ 		/api/user/view.php?user_id=user:$1 break;
+
