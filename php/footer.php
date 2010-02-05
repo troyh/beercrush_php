@@ -1,6 +1,6 @@
 	</div>
 	<div id="footer">
-		&copy; 2010 Beer Crush (r<!-- SVNVERSION -->)
+		&copy; <!-- YEAR --> Beer Crush (r<!-- SVNVERSION -->)
 		<div id="pagemodtime">Page last modified: <?=date('M j, Y g:i:sa T',time())?></div>
 	</div>
 	
