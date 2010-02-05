@@ -19,6 +19,10 @@ include("header.php");
 
 <div id="description"><?=$beerdoc->description?></div>
 
+<div>OG: <?=$beerdoc->og?></div>
+<div>FG: <?=$beerdoc->fg?></div>
+<div>ABV: <?=$beerdoc->abv?>%</div>
+<div>IBU: <?=$beerdoc->ibu?></div>
 <div>Grains:</div>
 <div>Yeast:</div>
 <div>Photos</div>
