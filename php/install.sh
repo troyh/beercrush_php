@@ -10,7 +10,7 @@ if ../tools/iamservertype -q php-cgi; then
 	R=$(svnversion -n);
 	YEAR=$(date +%Y);
 	for F in index.php footer.php; do
-		sed -e "s/<\\!--\\s*YEAR\\s*-->/$YEAR/" -e "s/<\\!--\\s*SVNVERSION\\s*-->/$R/" $F > $WWW_DIR/php/$F;
+		sed -e "s/<\\!--\\s*YEAR\\s*-->/$YEAR/g" -e "s/<\\!--\\s*SVNVERSION\\s*-->/$R/g" $F > $WWW_DIR/php/$F;
 	done
 
 fi

@@ -13,6 +13,6 @@ api.fcgi: api.o ../external/cgic/libcgic.a
 clean: SAFETY_CHECK
 	rm -f $(FCGI_PROGS) $(patsubst %.fcgi,%.o,$(FCGI_PROGS))
 
-install: SAFETY_CHECK
+install: SAFETY_CHECK $(WWW_DIR)/auth/
 	@./install.sh
 	$(RECURSIVE_MAKE)
