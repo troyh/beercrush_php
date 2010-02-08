@@ -22,3 +22,13 @@ if [ `tools/iamservertype -q php-cgi` -o `tools/iamservertype -q web` ]; then
 	fi
 	
 fi
+
+if tools/iamservertype -q mgmt; then
+	if [ ! -d /var/run/BeerCrush ]; then
+		sudo mkdir /var/run/BeerCrush;
+	fi
+	
+	sudo chown www-data.www-data /var/run/BeerCrush;
+	sudo chmod g+w /var/run/BeerCrush;
+	
+fi
