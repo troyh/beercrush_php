@@ -1,0 +1,18 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/oak.class.php');
+include(dirname($argv[0]).'/handler.php');
+
+if ($argc<2)
+{
+	print "Usage: ".dirname($argv[0])." <DocumentID>\n";
+	exit;
+}
+
+$oak=new OAK();
+$change=new stdClass;
+$change->id=$argv[1];
+app_change_handler($oak,$change);
+
+
+?>

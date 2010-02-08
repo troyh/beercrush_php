@@ -1,0 +1,100 @@
+#!/usr/bin/php
+<?php
+require_once 'beercrush/oak.class.php';
+
+define(STATUS_FILE,'/var/run/BeerCrush/watch_changes.status');
+
+$oak=new OAK;
+$oak->log_ident('watch_changes');
+
+function standard_app_change_handler($oak,$change) {
+	print "standard_app_change_handler($change->id)\n";
+}
+
+$webapp=json_decode(file_get_contents('/etc/BeerCrush/webapp.conf'));
+
+$app_handler_include=$webapp->file_locations->APP_DIR.'/onchange/handler.php';
+if (file_exists($app_handler_include))
+	include($app_handler_include);
+	
+if (function_exists('app_change_handler'))
+	$app_handler='app_change_handler';
+else
+	$app_handler='standard_app_change_handler';
+
+$setup=json_decode(file_get_contents('/etc/BeerCrush/setup.conf'));
+$svr=$setup->servers->couchdb->servers[rand(0,count($setup->servers->couchdb->servers)-1)];
+
+$since=0;
+$buffer="";
+
+$keep_running=true;
+while ($keep_running)
+{
+	if (file_exists(STATUS_FILE))
+	$status=json_decode(file_get_contents(STATUS_FILE));
+	if (is_null($status->since))
+		$since=0;
+	else
+		$since=$status->since;
+	
+	$ch=curl_init('http://'.$svr.'/'.$webapp->couchdb->database.'/_changes?feed=continuous&since='.$since);
+	if ($ch)
+	{
+		curl_setopt($ch,CURLOPT_WRITEFUNCTION,'readdata');
+		curl_exec($ch);
+		curl_close($ch);
+	}
+	
+	// Record $since so we can start with it the next time we run
+	$status=array(
+		'since' => $since,
+		'timestamp' => date('c'),
+	);
+	file_put_contents(STATUS_FILE,json_encode($status));
+}
+
+function readdata($ch,$data)
+{
+	global $buffer;
+	global $webapp;
+	global $app_handler;
+	global $since;
+	global $oak;
+	
+	$buffer.=$data;
+	while (($pos=strpos($buffer,"\n"))!==FALSE)
+	{
+		// Grab the 1st line
+		$json=trim(substr($buffer,0,$pos));
+		if (strlen($json))
+		{
+			$change=json_decode($json);
+			if (is_null($change))
+			{
+				print "Bad JSON:$json";
+			}
+			else
+			{
+				if (isset($change->seq) && isset($change->id))
+				{
+					$oak->log('document changed: '.$change->id);
+					$since=$change->seq;
+					// Purge the document from the CouchDB proxy cache
+					$oak->purge_document_cache('couchdb','/'.str_replace(':','/',$change->id));
+					// Call the app's handler
+					call_user_func($app_handler,$oak,$change);
+				}
+			}
+		}
+
+		// Remove the 1st line from $buffer
+		$buffer=trim(substr($buffer,$pos+1));
+	}
+
+	return strlen($data);
+}
+
+
+
+?>

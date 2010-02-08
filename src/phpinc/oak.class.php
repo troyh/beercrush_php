@@ -1030,6 +1030,12 @@ class OAK
 		return null;
 	}
 	
+	public function purge_view_cache($url)
+	{
+		list($designname,$viewname)=preg_split("/\//",$url,2);
+		return $this->purge_document_cache('couchdb','_design/'.$designname.'/_view/'.$viewname);
+	}
+	
 	public function purge_document_cache($type,$url)
 	{
 		switch ($type)
@@ -1040,8 +1046,8 @@ class OAK
 			case "solr":
 				$servers=$this->config->solr->nodes;
 				break;
-			case "app":
-				$servers=$this->config->appproxy->nodes;
+			case "web":
+				$servers=$this->config->web->nodes;
 				break;
 			default:
 				$servers=array();
