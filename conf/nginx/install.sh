@@ -10,6 +10,11 @@ elif ../../tools/iamservertype -q solr-proxy; then
 
 	sudo cp solr.conf /etc/nginx/sites-available/solr;
 	sudo ln -s /etc/nginx/sites-available/solr /etc/nginx/sites-enabled/solr;
+	
+	if [ ! -d /var/local/nginx-solr/ ]; then
+		sudo mkdir /var/local/nginx-solr/;
+		sudo chown www-data.www-data /var/local/nginx-solr/;
+	fi
 
 elif ../../tools/iamservertype -q couchdb-proxy; then
 
@@ -25,3 +30,4 @@ if [ `../../tools/iamservertype -q web` -o `../../tools/iamservertype -q couchdb
 	# and we want to restart NGiNX just once (just to not be dumb, not because it's required).
 	sudo /etc/init.d/nginx restart;
 fi
+

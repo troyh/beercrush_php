@@ -11,3 +11,4 @@ elif [ `../../tools/iamservertype -q cgi` -o `../../tools/iamservertype -q php-c
 	sudo cp appserver.conf /etc/supervisor/conf.d/;
 	
 fi
+
