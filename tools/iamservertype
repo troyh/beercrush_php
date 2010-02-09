@@ -15,6 +15,38 @@ while getopts "q" opt; do
 	esac
 done
 
+case $1 in
+	web) ;;
+	mgmt) ;;
+	solr) ;;
+	php-cgi) ;;
+	cgi) ;;
+	couchdb) ;;
+	memcached) ;;
+	couchdb-proxy) ;;
+	solr-proxy) ;;
+	*)
+		cat - <<EOF
+Unrecognized server type: $1
+
+Recognized types:
+
+	cgi             FastCGI server (not a PHP5 FastCGI server)
+	couchdb         CouchDB database server
+	couchdb-proxy   NGiNX server acting as a proxy to a CouchDB server
+	memcached       memcached server
+	mgmt            management server
+	php-cgi         PHP FastCGI server
+	solr            Apache Solr search server
+	solr-proxy      NGiNX server acting as a proxy to a Solr server
+	web             NGiNX server acting as a proxy to the web site
+
+EOF
+		exit;
+		;;
+		
+esac
+
 # Get my IP(s)
 MYIPS=$(/sbin/ifconfig |grep "inet addr:" | sed -e 's/ *inet  *addr:\([0-9\.]*\).*$/\1/');
 

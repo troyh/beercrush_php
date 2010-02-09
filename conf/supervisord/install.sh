@@ -2,7 +2,7 @@
 
 . ../../config.sh
 
-if ../tools/iamservertype -q mgmt; then
+if ../../tools/iamservertype -q mgmt; then
 
 	sudo cp watch_changes.conf /etc/supervisor/conf.d/;
 
