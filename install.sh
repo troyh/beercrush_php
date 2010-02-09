@@ -2,7 +2,7 @@
 
 . ./config.sh;
 
-if [ ! -f $BEERCRUSH_ETC_DIR ]; then
+if [ ! -d $BEERCRUSH_ETC_DIR ]; then
 	sudo mkdir $BEERCRUSH_ETC_DIR;
 fi
 
