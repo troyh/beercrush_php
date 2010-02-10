@@ -54,8 +54,22 @@ a {
 	border-style: none none dotted none;	
 }
 
+#login {
+	font-size:10pt;
+	position:fixed;
+	top:0px;
+	right:0px;
+	background:#137aa1;
+	color:#38bdec;
+	padding:3px;
+}
+
 #page_content {
 	margin-left:125px;
+}
+
+#footer_spacer {
+	height:25px;
 }
 
 #footer {

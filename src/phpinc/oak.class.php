@@ -125,6 +125,8 @@ class OAK
 			return trim($_GET['userid']);
 		if (!empty($_POST['userid']))
 			return trim($_POST['userid']);
+		if (!empty($_COOKIE['userid']))
+			return trim($_COOKIE['userid']);
 		return null;
 	}
 
@@ -134,6 +136,8 @@ class OAK
 			return trim($_GET['usrkey']);
 		if (!empty($_POST['usrkey']))
 			return trim($_POST['usrkey']);
+		if (!empty($_COOKIE['usrkey']))
+			return trim($_COOKIE['usrkey']);
 		return null;
 	}
 	

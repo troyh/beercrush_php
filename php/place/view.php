@@ -2,11 +2,10 @@
 require_once('beercrush/oak.class.php');
 
 $oak=new OAK;
-$place=new stdClass;
-$oak->get_document('place:'.$_GET['id'],$place);
+$place=json_decode(file_get_contents($oak->get_config_info()->api->base_uri.'/place/'.str_replace(':','/',$_GET['place_id'])));
 // var_dump($place);exit;
 
-include("header.php");
+include("../header.php");
 ?>
 
 <h1><?=$place->name?></h1>
@@ -32,5 +31,5 @@ include("header.php");
 </div>
 
 <?
-include("footer.php");
+include("../footer.php");
 ?>

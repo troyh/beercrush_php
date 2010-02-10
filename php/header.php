@@ -5,7 +5,7 @@ header('Content-Type: text/html; charset=utf-8');
 <head>
 	<title>Beer Crush</title>
 	<link href="/css/BeerCrush.css" rel="stylesheet" type="text/css" />
-	<script src="http://www.google.com/jsapi"></script>
+	<script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAAtBVHEgzTr_SrDgMUCmnRJRQfXbV2W6YcYPLUqvTgqWubOD1G5hSaFaNTdVgdeM66iYgNhcbzSAGHNg"></script>
 	<script type="text/javascript">
 	function getUrlVars()
 	{
@@ -22,6 +22,7 @@ header('Content-Type: text/html; charset=utf-8');
 	</script>
 </head>
 <body>
+	<div id="login"></div>
 	<a href="/"><img src="/img/Logosmall.jpg"></a>
 	<ol id="navmenu">
 		<li><a href="/beers/">Beers</a></li>
