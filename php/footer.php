@@ -88,7 +88,8 @@ function BeerCrushMain()
 		}
 	});
 	
-	pageMain();
+	if (jQuery.isFunction('pageMain'))
+		pageMain();
 }
 
 google.setOnLoadCallback(BeerCrushMain);
