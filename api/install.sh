@@ -10,4 +10,8 @@ if ../tools/iamservertype -q php-cgi; then
 
 	# Note: the order of --exclude & --include matters here... (we only want non-hidden .php files)
 	rsync --recursive --delete --times --exclude=".*" --include="*/" --include="*.php" --exclude="*" ./ $WWW_DIR/api/;
+	
+	# Delete the NGiNX cache
+	sudo rm -rf /var/local/nginx/caches/api/*;
+	
 fi

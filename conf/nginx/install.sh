@@ -7,6 +7,12 @@ if ../../tools/iamservertype -q web; then
 	if [ ! -h /etc/nginx/sites-enabled/beercrush ]; then
 		sudo ln -s /etc/nginx/sites-available/beercrush /etc/nginx/sites-enabled/beercrush;
 	fi
+	
+	# Make  the directory for caches
+	if [ ! -d /var/local/nginx/caches ]; then
+		sudo mkdir /var/local/nginx/caches;
+		sudo chown www-data.www-data /var/local/nginx/caches;
+	fi
 
 fi
 
@@ -33,7 +39,7 @@ if ../../tools/iamservertype -q couchdb-proxy; then
 
 fi
 
-if [ `../../tools/iamservertype -q web` -o `../../tools/iamservertype -q couchdb-proxy` -o `../../tools/iamservertype -q solr-proxy` ]; then
+if ../../tools/iamservertype -q web ||  ../../tools/iamservertype -q couchdb-proxy ||  ../../tools/iamservertype -q solr-proxy ; then
 	# Restart NGiNX (we've probably copied an NGiNX config file or two above).
 	#
 	# We do this separately here rather than in each block above because one host can be multiple NGiNX server types

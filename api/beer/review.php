@@ -1,4 +1,5 @@
 <?php
+header("Cache-Control: no-cache");
 require_once("beercrush/oak.class.php");
 require_once('beercrush/Beer.class.php');
 

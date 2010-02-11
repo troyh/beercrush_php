@@ -7,6 +7,10 @@ header('Content-Type: text/html; charset=utf-8');
 	<link href="/css/BeerCrush.css" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAAtBVHEgzTr_SrDgMUCmnRJRQfXbV2W6YcYPLUqvTgqWubOD1G5hSaFaNTdVgdeM66iYgNhcbzSAGHNg"></script>
 	<script type="text/javascript">
+	google.load("jquery","1.4.1");
+	</script>
+	<script type="text/javascript" src="/js/jquery.cookie.js"></script>
+	<script type="text/javascript">
 	function getUrlVars()
 	{
 	    var vars = [], hash;

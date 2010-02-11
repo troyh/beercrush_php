@@ -8,7 +8,10 @@ function app_change_handler($oak,$change)
 	switch ($parts[0])
 	{
 	case 'beer':
+		// Purge the beer's API doc 
 		$oak->purge_document_cache('web','/api/'.str_replace(':','/',$change->id));
+		// Purge the beer page
+		$oak->purge_document_cache('web','/'.str_replace(':','/',$change->id));
 		break;
 	case 'review':
 		$beer_id=$parts[1].':'.$parts[2].':'.$parts[3];
@@ -17,7 +20,7 @@ function app_change_handler($oak,$change)
 		// Purge the beer doc
 		$oak->purge_document_cache('couchdb',$beer_id);
 		// Force a recalc and re-cache of the review info by re-requesting the beer doc
-		$oak->simple_http_request($oak->get_config_info()->api->base_uri.'/'.str_replace(':','/',$beer_id));
+		file_get_contents($oak->get_config_info()->api->base_uri.'/'.str_replace(':','/',$beer_id));
 		break;
 	}
 }

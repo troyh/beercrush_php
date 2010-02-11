@@ -1,4 +1,5 @@
 <?php
+header("Cache-Control: no-cache");
 require_once 'beercrush/oak.class.php';
 
 function validate_brewery_id($name,$value,$attribs,$converted_value,$oak)
@@ -174,6 +175,7 @@ function oakMain($oak)
 		}
 		else
 		{
+			header('Content-Type: application/json; charset=utf-8');
 			print json_encode($beer);
 			$oak->log('Edited:'.$beer->getID());
 		}

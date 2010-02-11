@@ -50,17 +50,22 @@ include("header.php");
 ?>
 
 <a id="brewery_link" href="/brewery/<?=preg_replace('/^.*:/','',$brewerydoc->{"@attributes"}->id)?>"><?=$brewerydoc->name?></a>
-<h2 id="beer_title"><?=$beerdoc->name?></h2>
 
-<div id="description"><?=$beerdoc->description?></div>
+<div id="beer">
+	<h2 id="beer_name"><?=$beerdoc->name?></h2>
 
-<div>OG: <?=$beerdoc->og?></div>
-<div>FG: <?=$beerdoc->fg?></div>
-<div>ABV: <?=$beerdoc->abv?>%</div>
-<div>IBU: <?=$beerdoc->ibu?></div>
-<div>Grains:</div>
-<div>Yeast:</div>
+	<input type="hidden" id="beer_id" value="<?=$beerdoc->id?>" />
+	<div id="beer_description"><?=$beerdoc->description?></div>
+
+	<div>OG: <span id="beer_og"><?=$beerdoc->og?></span></div>
+	<div>FG: <span id="beer_fg"><?=$beerdoc->fg?></span></div>
+	<div>ABV: <span id="beer_abv"><?=$beerdoc->abv?>%</span></div>
+	<div>IBU: <span id="beer_ibu"><?=$beerdoc->ibu?></span></div>
+	<div>Grains:<span id="beer_grains"><?=$beerdoc->grains?></span></div>
+	<div>Yeast:<span id="beer_yeast"><?=$beerdoc->yeast?></span></div>
+</div>
 <div>Beer last modified: <span class="datestring"><?=date('D, d M Y H:i:s O',$beerdoc->meta->mtime)?></span></div>
+
 <h3>Photos</h3>
 <h3><?=count($reviews->reviews)?> Reviews</h3>
 
@@ -153,7 +158,50 @@ foreach ($reviews->reviews as $review)
 
 <div id="reviewdata"></div>
 
+<script type="text/javascript" src="/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript">
+
+var beer_changes=new Object;
+
+function saveChanges()
+{
+	console.log('saving changes to server');
+	
+	// for (c in beer_changes)
+	// {
+	// 	console.log(c+'='+beer_changes[c]);
+	// }
+
+	beer_changes.beer_id=$('#beer_id').val();
+	console.log(beer_changes);
+	$.post('/api/beer/edit',beer_changes,function(data,status,req){
+		console.log(data);
+		$('#savechanges_button').remove();
+		$('#discardchanges_button').remove();
+	},'json');
+	return false;
+}
+
+function discardChanges()
+{
+	$('#savechanges_button').remove();
+	$('#discardchanges_button').remove();
+	
+	// TODO: put the old data back
+	return false;
+}
+
+function data_edited(changes,name,value,oldvalue)
+{
+	changes[name]=value;
+	console.log(changes);
+	
+	// Put Save Changes button up (if not already there) to commit changes to server
+	if ($('#savechanges_button').size()==0)
+	{
+		$('#beer').append('<input id="savechanges_button" type="button" value="Save Changes" onclick="saveChanges()" /><input id="discardchanges_button" type="button" value="Discard Changes" onclick="discardChanges()" />');
+	}
+}
 
 function pageMain()
 {
@@ -162,6 +210,64 @@ function pageMain()
 		$.post('/api/beer/review',$('#review_form').serialize(),function(data){
 			$('#reviewdata').text(data)
 		});
+	});
+	
+	$('#beer_name').editable(function(value,settings){
+		data_edited(beer_changes,'name',value);
+		return value;
+	},{
+		cancel: 'Cancel',
+		submit: 'OK'
+	});
+	$('#beer_description').editable(function(value,settings){
+		data_edited(beer_changes,'description',value);
+		return value;
+	}, {
+		type: 'textarea',
+		cancel: 'Cancel',
+		submit: 'OK'
+	});
+	$('#beer_og').editable(function(value,settings){
+		data_edited(beer_changes,'og',value);
+		return value;
+	},{
+		cancel: 'Cancel',
+		submit: 'OK'
+	});
+	$('#beer_fg').editable(function(value,settings){
+		data_edited(beer_changes,'fg',value);
+		return value;
+	},{
+		cancel: 'Cancel',
+		submit: 'OK'
+	});
+	$('#beer_abv').editable(function(value,settings){
+		data_edited(beer_changes,'abv',value);
+		return value;
+	},{
+		cancel: 'Cancel',
+		submit: 'OK'
+	});
+	$('#beer_ibu').editable(function(value,settings){
+		data_edited(beer_changes,'ibu',value);
+		return value;
+	},{
+		cancel: 'Cancel',
+		submit: 'OK'
+	});
+	$('#beer_grains').editable(function(value,settings){
+		data_edited(beer_changes,'grains',value);
+		return value;
+	},{
+		cancel: 'Cancel',
+		submit: 'OK'
+	});
+	$('#beer_yeast').editable(function(value,settings){
+		data_edited(beer_changes,'yeast',value);
+		return value;
+	},{
+		cancel: 'Cancel',
+		submit: 'OK'
 	});
 }
 

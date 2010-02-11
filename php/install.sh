@@ -12,5 +12,8 @@ if ../tools/iamservertype -q php-cgi; then
 	for F in index.php footer.php; do
 		sed -e "s/<\\!--\\s*YEAR\\s*-->/$YEAR/g" -e "s/<\\!--\\s*SVNVERSION\\s*-->/$R/g" $F > $WWW_DIR/php/$F;
 	done
+	
+	# Delete the NGiNX cache
+	sudo rm -rf /var/local/nginx/caches/all/*;
 
 fi

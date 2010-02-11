@@ -8,7 +8,7 @@ if ../../tools/iamservertype -q mgmt; then
 
 fi
 
-if [ `../../tools/iamservertype -q cgi` -o `../../tools/iamservertype -q php-cgi` ]; then
+if ../../tools/iamservertype -q cgi || ../../tools/iamservertype -q php-cgi; then
 	
 	sudo cp appserver.conf /etc/supervisor/conf.d/;
 	

@@ -11,7 +11,7 @@ if [ ! -f $BEERCRUSH_ETC_DIR/webapp.conf ]; then
 	exit 1;
 fi
 
-if [ `tools/iamservertype -q php-cgi` -o `tools/iamservertype -q web` ]; then
+if tools/iamservertype -q php-cgi || tools/iamservertype -q web; then
 
 	if [ ! -d $WWW_DIR ]; then
 		echo "Creating $WWW_DIR";
@@ -36,7 +36,7 @@ if [ `tools/iamservertype -q php-cgi` -o `tools/iamservertype -q web` ]; then
 
 fi
 
-if [ `tools/iamservertype -q php-cgi` -o `tools/iamservertype -q cgi` ]; then
+if tools/iamservertype -q php-cgi || tools/iamservertype -q cgi; then
 
 	for DIR in  $LOCALDATA_DIR  /var/local/BeerCrush/meta/; do
 		if [ ! -d $DIR ]; then

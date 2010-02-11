@@ -7,10 +7,6 @@
 	</div>
 	
 <script type="text/javascript">
-google.load("jquery","1.4.1");
-</script>
-<script type="text/javascript" src="/js/jquery.cookie.js"></script>
-<script type="text/javascript">
 
 function login()
 {
@@ -88,7 +84,7 @@ function BeerCrushMain()
 		}
 	});
 	
-	if (jQuery.isFunction('pageMain'))
+	if (typeof(window['pageMain'])!='undefined' && jQuery.isFunction(pageMain))
 		pageMain();
 }
 
