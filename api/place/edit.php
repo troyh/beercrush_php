@@ -155,16 +155,12 @@ function oakMain($oak)
 		{
 			$oak->log('Edited:'.$place->getID());
 			
+			header('Content-Type: application/json; charset=utf-8');
+			$place->id=$place->_id;
+			unset($place->_id);
+			unset($place->_rev);
+			unset($place->{"@attributes"});
 			print json_encode($place);
-			
-			// $xmlwriter=new XMLWriter;
-			// $xmlwriter->openMemory();
-			// $xmlwriter->startDocument();
-			// 
-			// $oak->write_document($place,$xmlwriter);
-			// 
-			// $xmlwriter->endDocument();
-			// print $xmlwriter->outputMemory();
 		}
 	}
 }

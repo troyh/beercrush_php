@@ -41,7 +41,7 @@ include('../header.php');
 
 <script type="text/javascript">
 
-function BeerCrushMain()
+function pageMain()
 {
 }
 

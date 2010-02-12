@@ -21,6 +21,7 @@ rewrite ^/store/api/brewery/([^/]+)$ 		/api/brewery/view.php?brewery_id=brewery:
 rewrite ^/store/api/brewery/([^/]+)/beerlist$ 	/api/brewery/beerlist.php?brewery_id=brewery:$1 break;
 rewrite ^/store/api/photoset/beer/([^/]+)/([^/]+)$ 		/api/beer/photoset.php?beer_id=beer:$1:$2 break;
 rewrite ^/store/api/photoset/(brewery|place)/([^/]+)$ 		/api/$1/photoset.php?$1_id=$1:$2 break;
+rewrite ^/store/api/place/edit$	/api/place/edit.php break;
 rewrite ^/store/api/place/([^/]+)$ 		/api/place/view.php?place_id=place:$1 break;
 rewrite ^/store/api/place/([^/]+)/menu$ 	/api/menu/view.php?place_id=place:$1 break;
 rewrite ^/store/api/review/(beer|place)/([^/]+)/([^/]+)/(\d+)$	/api/review/$1.php?$1_id=$1:$2:$3&seqnum=$4 break;
