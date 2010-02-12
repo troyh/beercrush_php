@@ -14,6 +14,6 @@ if ../tools/iamservertype -q php-cgi; then
 	done
 	
 	# Delete the NGiNX cache
-	sudo rm -rf /var/local/nginx/caches/all/*;
+	sudo rm -rf /var/local/nginx/caches/all;
 
 fi

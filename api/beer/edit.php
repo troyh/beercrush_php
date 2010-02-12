@@ -175,9 +175,13 @@ function oakMain($oak)
 		}
 		else
 		{
+			$oak->log('Edited:'.$beer->getID());
+
+			$beer->id=$beer->_id;
+			unset($beer->_id);
+			unset($beer->_rev);
 			header('Content-Type: application/json; charset=utf-8');
 			print json_encode($beer);
-			$oak->log('Edited:'.$beer->getID());
 		}
 	}
 }

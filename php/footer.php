@@ -45,19 +45,9 @@ function showlogin()
 	<input value="Go" type="button" onclick="javascript:login()" />');
 }
 
-function BeerCrushMain()
+function formatDates(selector)
 {
-	if ($.cookie('userid'))
-	{
-		showusername();
-	}
-	else
-	{
-		// Put login window at top of page
-		showlogin();
-	}
-
-	$('.datestring').each(function(i,e){
+	$(selector).each(function(i,e){
 		d=new Date($(this).text());
 		if (d.getTime())
 		{
@@ -83,7 +73,133 @@ function BeerCrushMain()
 			}
 		}
 	});
+}
+
+var editable_changes=new Object;
+
+function makeDocEditable(docSelector,docid_id,url)
+{
+	// Iterate each child, making every non-input element that has an id prefixed with
+	// '<STR>_', where <STR> is the ID of selector, into an editable field
+	if ($(docSelector).attr('id').length)
+	{
+		editable_changes[$(docSelector).attr('id')]=new Object;
+		
+		var prefix=$(docSelector).attr('id')+'_';
+		$(docSelector+' *').each(function() {
+			if ($(this).get(0).tagName!='INPUT' && ($(this).attr('id').substr(0,prefix.length) == prefix))
+			{ // This is a field we need to make editable
+
+				// Get the name of this field
+				var fieldname=$(this).attr('id').substr(prefix.length);
+				
+				$(this).editable(function(value,settings) {
+					
+					editable_changes[$(docSelector).attr('id')][fieldname]=value;
+					
+					$(docSelector+' .editable_savechanges_button').each(function() {
+						
+						// Unhide the button
+						$(this).removeClass('hidden');
+
+						// Unbind the click function, so we don't add multiple ones
+						$(this).unbind('click');
+						// Put onclick functions on each Save Changes button
+						$(this).click(function(){
+							// TODO: disable all the buttons so they can't be pressed while the POST request is happening
+						
+							// Add in document id to change object
+							editable_changes[$(docSelector).attr('id')][docid_id]=$('#'+docid_id).val();
+
+							// Post the data to the server
+							console.log(editable_changes[$(docSelector).attr('id')]);
+							
+							$('#savemsg').text('');
+							$('#savemsg').ajaxError(function(e,xhr,settings,exception){
+								if (settings.url==url)
+								{
+									explanation=jQuery.parseJSON(xhr.responseText);
+									$(this).text('Changes were not saved: '+explanation.exception.message);
+									$(this).ajaxError(null);
+								}
+							});
+							
+							$.post('/api/beer/edit',editable_changes[$(docSelector).attr('id')],function(data,status,req){
+								$('#savemsg').text('Changes saved!');
+
+								// Hide all the save & cancel buttons
+								$(docSelector+' .editable_savechanges_button').each(function(){$(this).addClass('hidden');});
+								$(docSelector+' .editable_cancelchanges_button').each(function(){$(this).addClass('hidden');});
+
+								// Put the values from the response, they could be slightly different than what the user actually typed.
+								$(docSelector+' *').each(function(){
+									if ($(this).attr('id').substr(0,prefix.length) == prefix)
+									{
+										fieldname=$(this).attr('id').substr(prefix.length);
+										$(this).text(data[fieldname]);
+									}
+								});
+
+								// Change the document modtime
+								// if (data.meta.mtime)
+								// {
+								// 	mtime=new Date(data.meta.mtime * 1000);
+								// 	$(docSelector+'_lastmodified').text(mtime.toLocaleString());
+								// 	formatDates('.datestring');
+								// }
+
+							},'json');
+						
+							// Hide all the save & cancel buttons
+							$(docSelector+' .editable_savechanges_button').each(function(){$(this).addClass('hidden');});
+							$(docSelector+' .editable_cancelchanges_button').each(function(){$(this).addClass('hidden');});
+							
+							return false;
+						});
+					});
+
+					$(docSelector+' .editable_cancelchanges_button').each(function(){
+
+						// Unhide the button
+						$(this).removeClass('hidden');
+
+						// Unbind the click function, so we don't add multiple ones
+						$(this).unbind('click');
+						// Put onclick functions on each Cancel Changes button
+						$(this).click(function(){
+							// TODO: put all the old data back
+							
+							// Hide all the save & cancel buttons
+							$(docSelector+' .editable_savechanges_button').each(function(){$(this).addClass('hidden');});
+							$(docSelector+' .editable_cancelchanges_button').each(function(){$(this).addClass('hidden');});
+						});
+					});
+					
+					return value;
+				}, {
+					type: $(this).hasClass('editable_textarea')?'textarea':'text',
+					cancel: 'Cancel',
+					submit: 'OK'
+				});
+			}
+		});
+	}
+}
+
+function BeerCrushMain()
+{
+	if ($.cookie('userid'))
+	{
+		showusername();
+	}
+	else
+	{
+		// Put login window at top of page
+		showlogin();
+	}
 	
+	formatDates('.datestring');
+
 	if (typeof(window['pageMain'])!='undefined' && jQuery.isFunction(pageMain))
 		pageMain();
 }
