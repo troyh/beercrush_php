@@ -12,7 +12,7 @@ if ($beerlistdoc==null)
 	$beerlistdoc->beers=array();
 }
 
-include("header.php");
+include("../header.php");
 ?>
 
 <div id="brewery">
@@ -54,5 +54,5 @@ function pageMain()
 
 
 <?php
-	include("footer.php");
+	include("../footer.php");
 ?>

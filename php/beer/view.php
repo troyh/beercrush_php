@@ -46,10 +46,10 @@ function output_flavors($flavors)
 		}
 	}
 }
-include("header.php");
+include("../header.php");
 ?>
 
-<a id="brewery_link" href="/brewery/<?=preg_replace('/^.*:/','',$brewerydoc->{"@attributes"}->id)?>"><?=$brewerydoc->name?></a>
+<a id="brewery_link" href="/brewery/<?=preg_replace('/^.*:/','',$brewerydoc->id)?>"><?=$brewerydoc->name?></a>
 
 <div id="beer">
 	<h2 id="beer_name"><?=$beerdoc->name?></h2>
@@ -182,4 +182,4 @@ function pageMain()
 
 </script>
 
-<?php include("footer.php"); ?>
+<?php include("../footer.php"); ?>
