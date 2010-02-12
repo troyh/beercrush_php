@@ -30,8 +30,8 @@ header('Content-Type: text/html; charset=utf-8');
 	<a href="/"><img src="/img/Logosmall.jpg"></a>
 	<ol id="navmenu">
 		<li><a href="/beers/">Beers</a></li>
-		<li><a href="/brewery/">Breweries</a></li>
-		<li><a href="/place/">Places</a></li>
+		<li><a href="/breweries/">Breweries</a></li>
+		<li><a href="/places/">Places</a></li>
 	</ol>
 	<div id="searchform">
 		<form method="GET" action="/php/search">
