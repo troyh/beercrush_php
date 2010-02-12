@@ -8,7 +8,7 @@ $oak=new OAK;
 $oak->log_ident('watch_changes');
 
 function standard_app_change_handler($oak,$change) {
-	print "standard_app_change_handler($change->id)\n";
+	$oak->log("no handler for document id $change->id");
 }
 
 $webapp=json_decode(file_get_contents('/etc/BeerCrush/webapp.conf'));

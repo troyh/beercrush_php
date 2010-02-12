@@ -14,6 +14,7 @@ rewrite ^/store/api/user/edit$ /api/user/edit.php break;
 # Friendly URIs for documents
 rewrite ^/store/api/beer/edit$	/api/beer/edit.php break;
 rewrite ^/store/api/beer/([^/]+)/([^/]+)$	/api/beer/view.php?beer_id=beer:$1:$2 break;
+rewrite ^/store/api/brewery/edit$	/api/brewery/edit.php break;
 rewrite ^/store/api/photoset/(beer|brewery|place)/([^/]+)/([^/]+)$	/api/$1/photoset.php?$1_id=$1:$2:$3 break;
 rewrite ^/store/api/brewery/([^/]+)$ 		/api/brewery/view.php?brewery_id=brewery:$1 break;
 rewrite ^/store/api/brewery/([^/]+)/beerlist$ 	/api/brewery/beerlist.php?brewery_id=brewery:$1 break;

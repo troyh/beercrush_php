@@ -12,6 +12,6 @@ if ../tools/iamservertype -q php-cgi; then
 	rsync --recursive --delete --times --exclude=".*" --include="*/" --include="*.php" --exclude="*" ./ $WWW_DIR/api/;
 	
 	# Delete the NGiNX cache
-	sudo rm -rf /var/local/nginx/caches/api/*;
+	sudo rm -rf /var/local/nginx/caches/api;
 	
 fi

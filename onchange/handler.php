@@ -3,14 +3,17 @@
 function app_change_handler($oak,$change)
 {
 	print "BeerCrush change handler:".$change->id."\n";
+	$oak->log("BeerCrush change handler:".$change->id);
 	
 	$parts=preg_split('/:/',$change->id);
 	switch ($parts[0])
 	{
 	case 'beer':
-		// Purge the beer's API doc 
+	case 'brewery':
+	case 'place':
+		// Purge the beer/brewery/place's API doc 
 		$oak->purge_document_cache('web','/api/'.str_replace(':','/',$change->id));
-		// Purge the beer page
+		// Purge the beer/brewery/place's page
 		$oak->purge_document_cache('web','/'.str_replace(':','/',$change->id));
 		break;
 	case 'review':

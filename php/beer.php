@@ -64,7 +64,7 @@ include("header.php");
 	<div>Grains:<span id="beer_grains"><?=$beerdoc->grains?></span></div>
 	<div>Yeast:<span id="beer_yeast"><?=$beerdoc->yeast?></span></div>
 	
-	<div id="savemsg"></div>
+	<div id="editable_save_msg"></div>
 	<input class="editable_savechanges_button hidden" type="button" value="Save Changes" />
 	<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
 	

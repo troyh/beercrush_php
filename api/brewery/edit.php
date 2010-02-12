@@ -83,6 +83,11 @@ function oakMain($oak)
 		{
 			$oak->log('Edited:'.$brewery->getID());
 			
+			header('Content-Type: application/json; charset=utf-8');
+			$brewery->id=$brewery->_id;
+			unset($brewery->_id);
+			unset($brewery->_rev);
+			unset($brewery->{"@attributes"});
 			print json_encode($brewery);
 		}
 	}

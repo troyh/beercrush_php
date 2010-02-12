@@ -114,8 +114,8 @@ function makeDocEditable(docSelector,docid_id,url)
 							// Post the data to the server
 							console.log(editable_changes[$(docSelector).attr('id')]);
 							
-							$('#savemsg').text('');
-							$('#savemsg').ajaxError(function(e,xhr,settings,exception){
+							$('#editable_save_msg').text('');
+							$('#editable_save_msg').ajaxError(function(e,xhr,settings,exception){
 								if (settings.url==url)
 								{
 									explanation=jQuery.parseJSON(xhr.responseText);
@@ -124,8 +124,8 @@ function makeDocEditable(docSelector,docid_id,url)
 								}
 							});
 							
-							$.post('/api/beer/edit',editable_changes[$(docSelector).attr('id')],function(data,status,req){
-								$('#savemsg').text('Changes saved!');
+							$.post(url,editable_changes[$(docSelector).attr('id')],function(data,status,req){
+								$('#editable_save_msg').text('Changes saved!');
 
 								// Hide all the save & cancel buttons
 								$(docSelector+' .editable_savechanges_button').each(function(){$(this).addClass('hidden');});
