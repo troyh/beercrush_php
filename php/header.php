@@ -27,7 +27,7 @@ header('Content-Type: text/html; charset=utf-8');
 </head>
 <body>
 	<div id="login"></div>
-	<a href="/"><img src="/img/Logosmall.jpg"></a>
+	<div id="logo"><a href="/"><img src="/img/Logosmall.jpg"></a></div>
 	<ol id="navmenu">
 		<li><a href="/beers/">Beers</a></li>
 		<li><a href="/breweries/">Breweries</a></li>

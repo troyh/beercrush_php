@@ -17,6 +17,7 @@ ol#navmenu {
 	text-align:left;
 	width:100px;
 	position:absolute;
+	top:0px;
 	left:150px;
 	list-style-type:none;
 }
@@ -97,4 +98,13 @@ img {
 
 .hidden {
 	display:none;
+}
+
+/*#logo {
+	position:fixed;
+}
+*/
+#logo a {
+	border-bottom:0px;
+	text-decoration:none;
 }
