@@ -21,7 +21,7 @@ foreach ($viewdoc->rows as $row)
 	);
 }
 
-header('Content-Type: text/javascript; charset=utf-8');
+header('Content-Type: application/json; charset=utf-8');
 print json_encode($beerlist);
 
 ?>

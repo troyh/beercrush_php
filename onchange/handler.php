@@ -9,6 +9,13 @@ function app_change_handler($oak,$change)
 	switch ($parts[0])
 	{
 	case 'beer':
+		// Purge the beerlist view for the brewery
+		$oak->purge_view_cache('beer/made_by?key=%22brewery:'.$parts[1].'%22');
+		// Purge the beerlist for the brewery
+		$oak->purge_document_cache('web','/api/brewery/'.$parts[1].'/beerlist');
+		// Purge the brewery's page
+		$oak->purge_document_cache('web','/brewery/'.$parts[1]);
+		// Fall through....
 	case 'brewery':
 	case 'place':
 		// Purge the beer/brewery/place's API doc 
