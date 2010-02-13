@@ -82,6 +82,8 @@ function pageMain()
 			$('#new_beer_form').serialize(),
 			function(data,status,xhr){
 				$('#new_beer_msg').html(data.name+' added! <a href="/'+data.id.replace(/:/g,'/')+'">Edit it</a>');
+				
+				$('#beerlist').append('<div><a href="/'+data.id.replace(/:/g,'/')+'">'+data.name+'</a></div>');
 			},
 			'json'
 		);
