@@ -39,10 +39,36 @@ include('../header.php');
 <?php } ?>
 </div>
 
+<h2>Add a brewery</h2>
+
+<p>Don't see a brewery here? Add it:</p>
+
+<form id="new_brewery_form" method="post" action="/api/brewery/edit">
+	<input type="text" name="name" size="30" value="" />
+	<input type="submit" value="Add" />
+	<div id="new_brewery_msg"></div>
+</form>
+
 <script type="text/javascript">
 
 function pageMain()
 {
+	$('#new_brewery_form').submit(function(){
+		$('#new_brewery_msg').text('Adding...');
+		$('#new_brewery_form').ajaxError(function(e,xhr,options,exception) {
+			if (options.url=='/api/brewery/edit') {
+				if (xhr.status==409) { // Duplicate beer
+					$('#new_brewery_msg').html("There's already a brewery with that name.");
+				}
+			}
+		});
+
+		$.post($(this).attr('action'),$(this).serialize(),function(data,status,xhr){
+			$('#new_brewery_msg').html(data.name+' added! <a href="/'+data.id.replace(/:/g,'/')+'">Edit it</a>');
+		},'json');
+		
+		return false;
+	});
 }
 
 </script>
