@@ -60,6 +60,8 @@ a {
 	position:fixed;
 	top:0px;
 	right:0px;
+	width:330px;
+	z-index:999;
 	background:#137aa1;
 	color:#38bdec;
 	padding:3px;
