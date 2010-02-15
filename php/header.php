@@ -11,20 +11,7 @@ header('Content-Type: text/html; charset=utf-8');
 	</script>
 	<script type="text/javascript" src="/js/jquery.cookie.js"></script>
 	<script type="text/javascript" src="/js/json2.js"></script>
-	<script type="text/javascript">
-	function getUrlVars()
-	{
-	    var vars = [], hash;
-	    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-	    for(var i = 0; i < hashes.length; i++)
-	    {
-	        hash = hashes[i].split('=');
-	        vars.push(hash[0]);
-	        vars[hash[0]] = hash[1];
-	    }
-	    return vars;
-	}
-	</script>
+	<script type="text/javascript" src="/js/beercrush.js"></script>
 </head>
 <body>
 	<div id="login"></div>
