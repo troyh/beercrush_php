@@ -12,6 +12,7 @@ if ../../tools/iamservertype -q web; then
 	if [ ! -d /var/local/nginx/caches ]; then
 		sudo mkdir /var/local/nginx/caches;
 		sudo chown www-data.www-data /var/local/nginx/caches;
+		sudo chmod g+rw /var/local/nginx/caches;
 	fi
 
 fi

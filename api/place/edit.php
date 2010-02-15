@@ -125,8 +125,9 @@ function oakMain($oak)
 						break;
 				}
 
-				// See if this place already exists
-				if ($oak->get_document($id,&$place)===false)
+				// See if this place already exists (use a temp variable so we don't overwrite our $place doc if this ID does already exist)
+				$tmp_place=new OAKDocument('');
+				if ($oak->get_document($id,&$tmp_place)===false)
 				{
 					$bUniqueID=true;
 					$place->setID($id);
@@ -140,7 +141,8 @@ function oakMain($oak)
 				header("HTTP/1.0 409 Unable to create unique id");
 				exit;
 			}
-			
+
+			$place->meta->cuser=$oak->get_user_id(); // Record user who created this place
 		}
 
 		// Give it this request's edits

@@ -67,6 +67,8 @@ function oakMain($oak)
 				print json_encode($brewery);
 				exit;
 			}
+
+			$brewery->meta->cuser=$oak->get_user_id(); // Record user who created this brewery
 		}
 		else
 			throw new Exception('Brewery name required to create a brewery');

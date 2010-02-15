@@ -132,6 +132,8 @@ function oakMain($oak)
 				header('HTTP/1.0 409 Duplicate');
 				exit;
 			}
+
+			$beer->meta->cuser=$oak->get_user_id(); // Record user who created this beer
 		}
 
 		/* 

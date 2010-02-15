@@ -2,7 +2,6 @@ var login_data=new Object;
 
 function set_login_cookies(login,date) 
 {
-	// console.log('set_login_cookies:'+login);
 	var login_data=new Object;
 	$.each(login,function(key,val) {
 		switch (key) {
@@ -151,8 +150,6 @@ function makeDocEditable(docSelector,docid_id,url)
 							editable_changes[$(docSelector).attr('id')][docid_id]=$('#'+docid_id).val();
 
 							// Post the data to the server
-							console.log(editable_changes[$(docSelector).attr('id')]);
-							
 							$('#editable_save_msg').text('');
 							$('#editable_save_msg').ajaxError(function(e,xhr,settings,exception){
 								if (settings.url==url)
