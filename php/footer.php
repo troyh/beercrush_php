@@ -12,7 +12,15 @@ function login()
 {
 	var email=$("#login_form :input[name=email]").val();
 	var passw=$("#login_form :input[name=password]").val();
-	$.post("/api/login",{email:email, password:passw},function(data) {
+	$('#login_form').ajaxError(function(e,xhr,settings,exception){
+		if (settings.url==$('#login_form').attr('action'))
+		{
+			$('#login_msg').text('Unable to login. Try again.');
+			$('#login_msg').ajaxError(null);
+		}
+	});
+	$.post($('#login_form').attr('action'),{email:email, password:passw},function(data) {
+		$('#login_msg').text('');
 		var date;
 		if ($('#login_form input:checkbox[name=login_days]:checked').val()) {
 			date = new Date();
@@ -52,17 +60,18 @@ function showlogin()
 	Email:<input name="email" type="text" size="10" />\
 	Password:<input name="password" type="password" size="10" />\
 	<input value="Go" type="submit" />\
+	<div id="login_msg"></div>\
 	<div id="login_dropdown" class="hidden"><input type="checkbox" name="login_days" value="1" />Keep me logged in on this computer\
 	<p>Without this checked, you will be logged out automatically when you close the browser window.</p>\
 	</div>\
 	</form>');
 
 	$('#login_form').submit(function(){login();return false;});
-	$('#login').focusin(function(e){
-		$('#login_dropdown').slideDown();
+	$('#login_form').focusin(function(e){
+		$('#login_dropdown').clearQueue().slideDown();
 	});
 	$('#login').focusout(function(e){
-		$('#login_dropdown').slideUp();
+		$('#login_dropdown').delay(200).slideUp();
 	});
 	
 }
