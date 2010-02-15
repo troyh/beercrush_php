@@ -8,6 +8,23 @@
 	
 <script type="text/javascript">
 
+function set_login_cookies(login,date) {
+	// console.log('set_login_cookies:'+login);
+	var login_data=new Object;
+	$.each(login,function(key,val) {
+		switch (key) {
+			case 'userid':
+			case 'usrkey':
+				$.cookie(key,val, { path: '/', expires: date});
+				break;
+			default:
+				login_data[key]=val;
+				break;
+		}
+	});
+	$.cookie('login_data',JSON.stringify(login_data), { path: '/', expires: date});
+}
+
 function login()
 {
 	var email=$("#login_form :input[name=email]").val();
@@ -21,19 +38,17 @@ function login()
 	});
 	$.post($('#login_form').attr('action'),{email:email, password:passw},function(data) {
 		$('#login_msg').text('');
-		var date;
+		// Figure out how long to keep the cookies (session-only or a number of days)
+		var date=null;
 		if ($('#login_form input:checkbox[name=login_days]:checked').val()) {
 			date = new Date();
 			date.setTime(date.getTime() + ($('#login_form input:checkbox[name=login_days]').val() * 24 * 60 * 60 * 1000)); // set to expire in 1 day
-		}
-		else {
-			date=null;
+
+			// Add login_days to data so we track it in a cookie
+			data.login_days=parseInt($('#login_form input:checkbox[name=login_days]').val());
 		}
 		
-		$.cookie('userid',data.userid, { path: '/', expires: date});
-		$.cookie('usrkey',data.usrkey, { path: '/', expires: date});
-		$.cookie('name',data.name, { path: '/', expires: date});
-		
+		set_login_cookies(data,date);
 		showusername();
 	},"json");
 }
@@ -50,7 +65,7 @@ function logout()
 
 function showusername()
 {
-	$('#login').html('You are logged in as '+$.cookie('name')+' <a href="javascript:logout();">Logout</a>');
+	$('#login').html('You are logged in as '+login_data.name+' <a href="javascript:logout();">Logout</a>');
 }
 
 function showlogin()
@@ -217,11 +232,32 @@ function makeDocEditable(docSelector,docid_id,url)
 	}
 }
 
+var login_data=new Object;
+
 function BeerCrushMain()
 {
+	if ($.cookie('login_data'))
+		login_data=jQuery.parseJSON($.cookie('login_data'));
+		
 	if ($.cookie('userid'))
 	{
 		showusername();
+		if (login_data.login_days)
+		{
+			// Extend login so that the user stays logged in if they continue to use the site
+			date = new Date();
+			date.setTime(date.getTime() + (login_data.login_days * 24 * 60 * 60 * 1000)); // set to expire in the future
+			
+			// Use tmp_data so that we don't put userid and usrkey in the global
+			// login_data, which may be used to set a cookie, in which case the cookies
+			// would have duplicate data (in the login_data cookie and in the userid and
+			// usrkey cookies).
+									
+			var tmp_data=login_data;
+			tmp_data.userid=$.cookie('userid');
+			tmp_data.usrkey=$.cookie('usrkey');
+			set_login_cookies(tmp_data,date);
+		}
 	}
 	else
 	{

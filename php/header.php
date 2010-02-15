@@ -10,6 +10,7 @@ header('Content-Type: text/html; charset=utf-8');
 	google.load("jquery","1.4.1");
 	</script>
 	<script type="text/javascript" src="/js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="/js/json2.js"></script>
 	<script type="text/javascript">
 	function getUrlVars()
 	{
