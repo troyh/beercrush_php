@@ -134,7 +134,8 @@ case $1 in
 			libfcgi-dev=2.4.0-7 \
 			libcurl4-openssl-dev=7.19.7-1 \
 			xmlstarlet=1.0.1-2 \
-			subversion=1.6.3dfsg-1 
+			subversion=1.6.3dfsg-1 \
+			yui-compressor
 
 		if [ ! -f /usr/local/include/jansson.h ]; then
 			echo "/usr/local/include/jansson.h doesn't exist. To install it:";
