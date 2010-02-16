@@ -225,6 +225,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 		!strncmp(cgiPathInfo,"/api/review/beer",16) ||
 		!strncmp(cgiPathInfo,"/api/review/place",17) ||
 		!strncmp(cgiPathInfo,"/api/user/",10) ||
+		!strncmp(cgiPathInfo,"/api/users",10) ||
 		!strcmp(cgiPathInfo,"/api/search"))
 	{
 		FCGX_FPrintF(out,"X-Accel-Redirect: /store%s%s%s\r\n",cgiPathInfo,(!strlen(cgiQueryString)?"":"?"),cgiQueryString);

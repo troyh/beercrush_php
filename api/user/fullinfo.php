@@ -21,6 +21,11 @@ else
 	unset($userdoc->_rev);
 	unset($userdoc->password);
 	unset($userdoc->secret);
+	unset($userdoc->{"@attributes"});
+	
+	if (empty($userdoc->avatar))
+		$userdoc->gravatar_url='http://www.gravatar.com/avatar/'.md5($userdoc->email).'.jpg';
+	
 	print json_encode($userdoc);
 }
 

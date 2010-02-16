@@ -12,6 +12,7 @@ rewrite ^/store/api/restaurantcategories$ /api/restaurantcategories.php break;
 rewrite ^/store/api/search$ /api/search.php break;
 rewrite ^/store/api/user/fullinfo$ 		/api/user/fullinfo.php break;
 rewrite ^/store/api/user/edit$ /api/user/edit.php break;
+rewrite ^/store/api/users$ /api/users.php break;
 
 # Friendly URIs for documents
 rewrite ^/store/api/beer/edit$	/api/beer/edit.php break;

@@ -20,6 +20,7 @@ header('Content-Type: text/html; charset=utf-8');
 		<li><a href="/beers/">Beers</a></li>
 		<li><a href="/breweries/">Breweries</a></li>
 		<li><a href="/places/">Places</a></li>
+		<li><a href="/users/">People</a></li>
 	</ol>
 	<div id="searchform">
 		<form method="GET" action="/php/search">
@@ -30,6 +31,7 @@ header('Content-Type: text/html; charset=utf-8');
 				<input type="radio" name="dt" value="" checked="checked">All
 				<input type="radio" name="dt" value="beers">Beers/Breweries
 				<input type="radio" name="dt" value="place">Places
+				<input type="radio" name="dt" value="place">People
 			</div>
 		</form>
 	</div>
