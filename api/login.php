@@ -114,6 +114,8 @@ else
 				
 				if (!empty($user_doc->name))
 					$answer['name']=$user_doc->name;
+				if (!empty($user_doc->avatar))
+					$answer['avatar']=$user_doc->avatar;
 					
 				print json_encode($answer);
 			

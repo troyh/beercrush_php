@@ -67,6 +67,11 @@ a {
 	padding:3px;
 }
 
+#login img {
+	width:30px;
+	height:30px;
+}
+
 #page_content {
 	margin-left:125px;
 }
