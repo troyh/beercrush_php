@@ -2,7 +2,7 @@ var login_data=new Object;
 
 function set_login_cookies(login,date) 
 {
-	var login_data=new Object;
+	login_data=new Object;
 	$.each(login,function(key,val) {
 		switch (key) {
 			case 'userid':
@@ -50,20 +50,21 @@ function logout()
 	// Clear login cookies
 	$.cookie('userid',null,{path:'/'});
 	$.cookie('usrkey',null,{path:'/'});
-	$.cookie('name',null,{path:'/'});
+	$.cookie('login_data',null,{path:'/'});
 	
 	showlogin();
 }
 
 function showusername()
 {
-	$('#login').html('You are logged in as '+login_data.name+' <a href="javascript:logout();">Logout</a>');
+	$('#login').html('You are logged in as <a href="/user/'+$.cookie('userid')+'">'+login_data.name+'</a> <a href="javascript:logout();">Logout</a>');
 }
 
 function showlogin()
 {
 	$('#login').html('\
 	<form id="login_form" method="post" action="/api/login">\
+	<div>Log in or <a href="/user/create">create an account</a></div>\
 	Email:<input name="email" type="text" size="10" />\
 	Password:<input name="password" type="password" size="10" />\
 	<input value="Go" type="submit" />\

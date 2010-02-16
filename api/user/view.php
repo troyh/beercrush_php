@@ -1,5 +1,4 @@
 <?php
-header("Cache-Control: no-cache");
 require_once('beercrush/oak.class.php');
 
 if (!preg_match('/^user:/',$_GET['user_id']))
@@ -24,6 +23,8 @@ add it here if we want itout.
 */
 $user=new stdClass;
 $user->id=$userdoc->_id;
+$user->meta->timestamp=$userdoc->meta->timestamp;
+$user->aboutme=$userdoc->aboutme;
 if (!empty($userdoc->name))
 	$user->name=$userdoc->name;
 

@@ -32,6 +32,12 @@ function app_change_handler($oak,$change)
 		// Force a recalc and re-cache of the review info by re-requesting the beer doc
 		file_get_contents($oak->get_config_info()->api->base_uri.'/'.str_replace(':','/',$beer_id));
 		break;
+	case 'user':
+		// Purge the user's API doc 
+		$oak->purge_document_cache('web','/api/'.str_replace(':','/',$change->id));
+		// Purge the user's page
+		$oak->purge_document_cache('web','/'.str_replace(':','/',$change->id));
+		break;
 	}
 }
 

@@ -3,8 +3,9 @@ header('Cache-Control: no-cache');
 require_once 'beercrush/oak.class.php';
 
 $cgi_fields=array(
-	"user_id"			=> array(type=>OAK::DATATYPE_TEXT,flags=>OAK::FIELDFLAG_REQUIRED,minlen=>36,maxlen=>36),
+	"user_id"			=> array(type=>OAK::DATATYPE_TEXT,flags=>OAK::FIELDFLAG_REQUIRED,minlen=>36,maxlen=>41),
 	"name"				=> array(type=>OAK::DATATYPE_TEXT,minlen=>3),
+	"aboutme"			=> array(type=>OAK::DATATYPE_TEXT,minlen=>1),
 	"avatar"			=> array(type=>OAK::DATATYPE_TEXT,validatefunc=>validate_avatar_url),
 );
 
@@ -41,11 +42,6 @@ function oakMain($oak)
 			exit;
 		}
 		
-		if ($oak->cgi_value_exists('name',$cgi_fields))
-		{
-			$userdoc->name=$oak->get_cgi_value('name',$cgi_fields);
-		}
-
 		if ($oak->cgi_value_exists('avatar',$cgi_fields))
 		{
 			$avatar=$oak->get_cgi_value('avatar',$cgi_fields);
@@ -54,6 +50,9 @@ function oakMain($oak)
 			else
 				$userdoc->avatar=$avatar;
 		}
+		
+		// Give it this request's edits
+		$oak->assign_cgi_values(&$userdoc,$cgi_fields);
 
 		// Store in db
 		if ($oak->put_document($userdoc->getID(),$userdoc)!==true)
@@ -67,6 +66,7 @@ function oakMain($oak)
 		$user=new stdClass;
 		$user->id=$userdoc->_id;
 		$user->email=$userdoc->email;
+		$user->aboutme=$userdoc->aboutme;
 		if (!empty($userdoc->name))
 			$user->name=$userdoc->name;
 		if (!empty($userdoc->avatar))

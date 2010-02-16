@@ -10,6 +10,7 @@ rewrite ^/store/api/logout$ /api/logout.php break;
 rewrite ^/store/api/places$ /api/places.php break;
 rewrite ^/store/api/restaurantcategories$ /api/restaurantcategories.php break;
 rewrite ^/store/api/search$ /api/search.php break;
+rewrite ^/store/api/user/fullinfo$ 		/api/user/fullinfo.php break;
 rewrite ^/store/api/user/edit$ /api/user/edit.php break;
 
 # Friendly URIs for documents
