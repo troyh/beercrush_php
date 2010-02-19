@@ -1,36 +1,44 @@
 <?php
-header('Cache-Control: no-cache');
+header('Cache-Control: no-cache'); // TODO: allow caching
 require_once('beercrush/beercrush.php');
 
 $oak=new OAK;
 
-$filename='/var/local/BeerCrush/images/'.chunk_split(substr($_GET['fname'],0,8),2,'/').$_GET['fname'];
-
-if (!strcasecmp($_SERVER['REQUEST_METHOD'],'DELETE')) {
-	$failures=0;
-	
-	if (file_exists($filename)) {
-		if (unlink($filename)===FALSE) {
-			$failures++;
-		}
-	}
-
-	foreach ($oak->get_config_info()->photos->sizes as $size=>$size_info) {
-		$sizefname=preg_replace('/\.jpg$/','.'.$size.'.jpg',$filename);
-		if (file_exists($sizefname)) {
-			if (unlink($sizefname)===FALSE) {
-				$failures++;
-			}
-		}
-	}
-	
-	if ($failures) {
-		header('HTTP/1.0 500 Delete failed');
-	}
-	
-	exit;
+if (substr($_GET['fname'],0,4)=="tmp/") {
+	$dir='uploads'; // Temp location
+	$_GET['fname']=substr($_GET['fname'],4); // Remove "tmp/" from the beginning
+}
+else {
+	$dir='images'; // Permanent location
 }
 
+$filename='/var/local/BeerCrush/'.$dir.'/'.chunk_split(substr($_GET['fname'],0,8),2,'/').$_GET['fname'];
+
+// // TODO: make sure that DELETEs only happen in the temporary directory, i.e., prohibit relative (../../, etc.) paths
+// if (!strcasecmp($_SERVER['REQUEST_METHOD'],'DELETE')) {
+// 	$failures=0;
+// 	
+// 	if (file_exists($filename)) {
+// 		if (unlink($filename)===FALSE) {
+// 			$failures++;
+// 		}
+// 	}
+// 
+// 	foreach ($oak->get_config_info()->photos->sizes as $size=>$size_info) {
+// 		$sizefname=preg_replace('/\.jpg$/','.'.$size.'.jpg',$filename);
+// 		if (file_exists($sizefname)) {
+// 			if (unlink($sizefname)===FALSE) {
+// 				$failures++;
+// 			}
+// 		}
+// 	}
+// 	
+// 	if ($failures) {
+// 		header('HTTP/1.0 500 Delete failed');
+// 	}
+// 	
+// 	exit;
+// }
 
 if (!file_exists($filename)) {
 	header('HTTP/1.0 404 Not found');

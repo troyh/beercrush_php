@@ -1,17 +1,38 @@
 <?php
-require_once('beercrush/oak.class.php');
+require_once('beercrush/beercrush.php');
 
 $oak=new OAK;
 	
-$beerdoc=json_decode(file_get_contents($oak->get_config_info()->api->base_uri."/beer/".str_replace(':','/',$_GET['beer_id'])));
 $brewery_id=preg_replace('/:[^:]*$/','',$_GET['beer_id']);
-$brewerydoc=json_decode(file_get_contents($oak->get_config_info()->api->base_uri."/brewery/".$brewery_id));
-$reviews=json_decode(file_get_contents($oak->get_config_info()->api->base_uri."/review/beer/".str_replace(':','/',$_GET['beer_id']).'/0'));
-$flavors=json_decode(file_get_contents($oak->get_config_info()->api->base_uri."/flavors"));
+$api_beer_id=str_replace(':','/',$_GET['beer_id']);
+
+$beerdoc   =BeerCrush::api_doc($oak,'beer/'.$api_beer_id);
+$brewerydoc=BeerCrush::api_doc($oak,'brewery/'.$brewery_id);
+$reviews   =BeerCrush::api_doc($oak,'review/beer/'.$api_beer_id.'/0');
+$flavors   =BeerCrush::api_doc($oak,'flavors');
+$photoset  =BeerCrush::api_doc($oak,'photoset/beer/'.$api_beer_id);	
 
 // Build flavor id lookup table
 $flavor_lookup=array();
 build_flavor_lookup_table($flavors->flavors);
+
+$places=array();
+$users=array();
+foreach ($reviews->reviews as $review)
+{
+	if (!isset($places[$review->purchase_place_id])) {
+		$places[$review->purchase_place_id]=BeerCrush::api_doc($oak,str_replace(':','/',$review->purchase_place_id));
+	}
+	if (!isset($users[$review->user_id])) {
+		$users[$review->user_id]=BeerCrush::api_doc($oak,'user/'.$review->user_id);
+	}
+}
+
+foreach ($photoset->photos as $photo) {
+	if (!isset($users[$photo->user_id])) {
+		$users[$photo->user_id]=BeerCrush::api_doc($oak,'user/'.$photo->user_id);
+	}
+}
 
 function build_flavor_lookup_table($flavors)
 {
@@ -79,26 +100,20 @@ include("../header.php");
 
 <h3>Photos</h3>
 
+<?php foreach ($photoset->photos as $photo) :?>
+	<div>
+	<img src="<?=$photo->url?>?size=small" />
+	<a href="/user/<?=$photo->user_id?>"><?=$users[$photo->user_id]->name?></a> <span class="datestring"><?=date(BeerCrush::DATE_FORMAT,$photo->timestamp)?></span>
+	</div>
+<?php endforeach; ?>
+
 <div id="new_photos"></div>
 
 <input id="photo_upload" name="photo" type="file" />
 
 <h3><?=count($reviews->reviews)?> Reviews</h3>
 
-<?php
-$places=array();
-$users=array();
-foreach ($reviews->reviews as $review)
-{
-	if (!isset($places[$review->purchase_place_id]))
-	{
-		$places[$review->purchase_place_id]=json_decode(@file_get_contents($oak->get_config_info()->api->base_uri.'/'.str_replace(':','/',$review->purchase_place_id)));
-	}
-	if (!isset($users[$review->user_id]))
-	{
-		$users[$review->user_id]=json_decode(@file_get_contents($oak->get_config_info()->api->base_uri.'/user/'.$review->user_id));
-	}
-?>
+<?php foreach ($reviews->reviews as $review) :?>
 <div>
 	<div>User: <a href="/user/<?=$review->user_id?>"><?=$users[$review->user_id]->name?></a></div>
 	<div>Posted: <span class="datestring"><?=date('D, d M Y H:i:s O',$review->meta->timestamp)?></span></div>
@@ -119,9 +134,7 @@ foreach ($reviews->reviews as $review)
 	<div>Poured: <?=$review->poured_from?></div>
 	<div>Comments: <?=$review->comments?></div>
 </div>
-<?php
-}
-?>
+<?php endforeach; ?>
 
 <h3>Post a review</h3>
 <form id="review_form">
@@ -231,14 +244,11 @@ function pageMain()
 			console.log(err);
 		},
 		'onComplete': function(evt,queueID,fileObj,response,data) {
+			console.log(response);
 			photoinfo=$.parseJSON(response);
 			console.log(photoinfo);
 			
-			$('#new_photos').append('\
-<div id="new_photo-'+photoinfo.uuid+'">\
-<img src="'+photoinfo.url+'?size=small" />\
-<input type="button" value="Oops, delete this" onclick="undo_photo(\''+photoinfo.uuid+'\',\''+photoinfo.url+'\');" />\
-</div>');
+			$('#new_photos').append('<img src="'+photoinfo.url+'?size=small" />');
 		}
 	});
 	

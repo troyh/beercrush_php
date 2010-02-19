@@ -14,6 +14,12 @@ if ../tools/iamservertype -q php-cgi; then
 		sudo chmod -R g+rwx /var/local/BeerCrush/images;
 	fi
 
+	if [ ! -d /var/local/BeerCrush/uploads ]; then
+		mkdir /var/local/BeerCrush/uploads;
+		sudo chown www-data.www-data /var/local/BeerCrush/uploads;
+		sudo chmod -R g+rwx /var/local/BeerCrush/uploads;
+	fi
+
 	# Note: the order of --exclude & --include matters here... (we only want non-hidden .php files)
 	rsync --recursive --delete --times --exclude=".*" --include="*/" --include="*.php" --exclude="*" ./ $WWW_DIR/api/;
 	

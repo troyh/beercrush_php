@@ -18,6 +18,7 @@ function oakMain($oak)
 	else
 	{
 		// TODO: verify that it's a JPEG
+		// TODO: put the photo in a temporary location
 		
 		$uuid=$oak->create_uuid();
 		$filename=$uuid.'.jpg';
@@ -31,32 +32,28 @@ function oakMain($oak)
 			'id' => $oak->get_cgi_value('beer_id',&$cgi_fields),
 			'uuid' => $uuid,
 			'url' => '/api/image/'.$filename,
+			'filename' => $uploadfile,
 			'timestamp' => time(),
 			'type' => 'newphoto'
 		);
 		$json_info=json_encode($info);
 		
-		// Make info file as a backup (used in the event the queue is destroyed for any reason)
-		$infofile = $uploadfile.'.info';
-
 		if (@move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfile)===FALSE) 
 		{
 			header("HTTP/1.0 500 Unable to save photo");
 			exit;
 		}
 		else if ($oak->broadcast_msg('newphotos',$json_info)===FALSE) {
-			$oak->log('Broadcast message failed: '.$json_info,OAK::LOGPRI_ERR);
+			// What to do?
 		}
-		else
-		{
-			$oak->log('Uploaded beer photo for beer '.$info['id'].' from user '.$info['user']);
-			
-			unset($info['fetchurl']);
-			unset($info['hostname']);
-			
-			header('Content-Type: application/json; charset=utf-8');
-			print json_encode($info);
-		}
+
+		$oak->log('Uploaded beer photo for beer '.$info['id'].' from user '.$info['user']);
+		
+		unset($info['fetchurl']);
+		unset($info['hostname']);
+		
+		header('Content-Type: application/json; charset=utf-8');
+		print json_encode($info);
 	}
 }
 

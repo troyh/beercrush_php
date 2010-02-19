@@ -964,8 +964,7 @@ class OAK
 				$msg=json_encode($msg);
 			}
 
-			if (spread_multicast($sid,$group,$msg)===FALSE) {
-				// Failed
+			if (spread_multicast($sid,$group,$msg)===FALSE) { // Failed
 			}
 			else {
 				$success=true;
@@ -974,6 +973,10 @@ class OAK
 			spread_disconnect($sid);
 		}
 		
+		if ($success!==true) {
+			$this->log('Broadcast message failed: '.$group.':'.$msg,OAK::LOGPRI_ERR);
+		}		
+
 		return $success;
 	}
 	
@@ -1079,6 +1082,29 @@ class OAK
 			else if ($status!=404) // 404 just means it wasn't cached to begin with, which is okay for us.
 				$this->log('Error '.$status.' purging from '.$type.':'.$url);
 		}
+	}
+	
+	public function scp($host,$src_filename,$dst_filename)
+	{
+		$success=FALSE;
+		if ($host=='localhost') {
+			$success=TRUE;
+		}
+		else {
+			// $ssh=ssh2_connect($host);
+			// if ($ssh===TRUE) {
+			// 	if (ssh2_auth($ssh,)) {
+			// 	}
+			// 	else if (ssh2_scp_recv($ssh,$src_filename,$dst_filename)===false) {
+			// 	}
+			// 	else {
+			// 		$success=TRUE;
+			// 	}
+			// 	
+			// 	ssh2_disconnect($ssh);
+			// }
+		}
+		return $success;
 	}
 	
 };
