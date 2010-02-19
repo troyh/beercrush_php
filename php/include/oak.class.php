@@ -592,17 +592,6 @@ class OAK
 		{
 			$body=$rsp->getBody(true);
 
-			// Record pertinent info about the change and put it in the updates queue
-			$update_msg=array(
-				'docid'=>$body->id,
-				'old_rev'=>$doc->_rev,
-				'new_rev'=>$body->rev,
-				'timestamp'=>time()
-			);
-			if ($this->get_user_id()!=null)
-				$update_msg['user_id']=$this->get_user_id();
-			$this->put_queue_msg('updates',json_encode($update_msg));
-			
 			// Purge the document from all the proxy caches, i.e., all the couchdb nodes
 			$this->purge_document_cache('couchdb','/'.$this->config->couchdb->database.'/'.$id);
 			
@@ -881,17 +870,17 @@ class OAK
 	
 	function put_queue_msg($queue_name,$msg)
 	{
-		if (!is_string($msg))
-			$msg=json_encode($msg);
-			
-		$memQ=new Memcached();
-		$memQ->addServers($this->config->memcacheq->servers);
-		if ($memQ->set($queue_name,$msg)!==true)
-		{
-			$this->log('Failed to queue message:'.substr($msg,0,25).'...');
-		}
+		// if (!is_string($msg))
+		// 	$msg=json_encode($msg);
+		// 	
+		// $memQ=new Memcached();
+		// $memQ->addServers($this->config->memcacheq->servers);
+		// if ($memQ->set($queue_name,$msg)!==true)
+		// {
+		// 	$this->log('Failed to queue message:'.substr($msg,0,25).'...');
+		// }
 	}
-
+	
 	public function log_ident($ident)
 	{
 		$this->log_ident=$ident;
@@ -912,7 +901,7 @@ class OAK
 		return $this->config->couchdb->database;
 	}
 	
-	public function make_image_size($original,$size)
+	public function make_image_size($original,$size,$destfile=null)
 	{
 		if (!isset($this->config->photos->sizes->$size))
 			throw new Exception('Unknown photo size:'.$size);
@@ -946,9 +935,14 @@ class OAK
 			$newimage->resizeImage($new_width,$new_height,Imagick::FILTER_LANCZOS,1);
 		}
 		
-		// Calculate the filename
-		$pi=pathinfo($original);
-		$newimage_filename=$pi['dirname'].'/'.$size.'.'.$pi['extension'];
+		if (is_null($destfile)) {
+			// Calculate the filename
+			$pi=pathinfo($original);
+			$newimage_filename=$pi['dirname'].'/'.$size.'.'.$pi['extension'];
+		}
+		else {
+			$newimage_filename=$destfile;
+		}
 		
 		$newimage->writeImage($newimage_filename);
 		$newimage->destroy(); 
@@ -960,9 +954,27 @@ class OAK
 		);
 	}
 	
-	public function broadcast_msg($type,$msg)
+	public function broadcast_msg($group,$msg)
 	{
-		// TODO: broadcast the message via the Spread Toolkit (or something similar)
+		// Broadcast the message via the Spread Toolkit
+		$success=false;
+		$sid=spread_connect(4803);
+		if ($sid) {
+			if (is_object($msg) || is_array($msg)) {
+				$msg=json_encode($msg);
+			}
+
+			if (spread_multicast($sid,$group,$msg)===FALSE) {
+				// Failed
+			}
+			else {
+				$success=true;
+			}
+
+			spread_disconnect($sid);
+		}
+		
+		return $success;
 	}
 	
 	public function query($query_string,$return_json=TRUE,$doctypes=null)

@@ -24,16 +24,6 @@ if tools/iamservertype -q php-cgi || tools/iamservertype -q web; then
 		sudo chmod g+w $WWW_DIR;
 	fi
 
-	if tools/iamservertype -q php-cgi; then
-		
-		if [ ! -d $WWW_DIR/uploads ]; then
-			mkdir $WWW_DIR/uploads;
-		fi
-
-		sudo chgrp $BEERCRUSH_APPSERVER_USER $WWW_DIR/uploads;
-		sudo chmod g+w $WWW_DIR/uploads;
-	fi
-
 fi
 
 if tools/iamservertype -q php-cgi || tools/iamservertype -q cgi; then

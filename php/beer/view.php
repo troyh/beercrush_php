@@ -46,6 +46,12 @@ function output_flavors($flavors)
 		}
 	}
 }
+
+
+// Add the CSS for Uploadify
+$header['css'][]='<link href="/css/uploadify.css" rel="stylesheet" type="text/css" />';
+$header['title']=$brewerydoc->name.' '.$beerdoc->name;
+
 include("../header.php");
 ?>
 
@@ -72,6 +78,11 @@ include("../header.php");
 <div>Beer last modified: <span id="beer_lastmodified" class="datestring"><?=date('D, d M Y H:i:s O',$beerdoc->meta->mtime)?></span></div>
 
 <h3>Photos</h3>
+
+<div id="new_photos"></div>
+
+<input id="photo_upload" name="photo" type="file" />
+
 <h3><?=count($reviews->reviews)?> Reviews</h3>
 
 <?php
@@ -164,8 +175,27 @@ foreach ($reviews->reviews as $review)
 <div id="reviewdata"></div>
 
 <script type="text/javascript" src="/js/jquery.jeditable.mini.js"></script>
+<script type="text/javascript" src="/js/jquery.uploadify.v2.1.0.js"></script>
+<script type="text/javascript" src="/js/swfobject.js"></script>
 <script type="text/javascript">
 
+function undo_photo(uuid,url) {
+	console.log(url);
+	$.ajax({
+		"url": url,
+		"type": "DELETE",
+		"error": function (xhr,status,err) {
+			console.log('DELETE failed:');
+			console.log(status);
+			console.log(xhr);
+			console.log(err);
+		},
+		"success": function (data,status,xhr) {
+			console.log('removing div #new_photo-'+uuid);
+			$('#new_photo-'+uuid).remove();
+		}
+	});
+}
 
 function pageMain()
 {
@@ -178,6 +208,41 @@ function pageMain()
 	
 	// Make the beer doc editable
 	makeDocEditable('#beer','beer_id','/api/beer/edit');
+	
+	$('#photo_upload').uploadify({
+		'uploader'  : '/flash/uploadify.swf',
+		'script'    : '/api/beer/photo',
+		'cancelImg' : '/img/uploadify/cancel.png',
+		'auto'      : true,
+		'multi'     : true,
+		'fileDataName': 'photo',
+		'fileDesc'	: 'Upload a photo',
+		'fileExt'	: '*.jpg;*.jpeg;*.png',
+		'buttonText': "Upload a photo", 
+		'sizeLimit' : 5000000, 
+		'scriptData': {
+			'beer_id': $('#beer_id').val(),
+			'userid': $.cookie('userid')
+		},
+		'onError'	: function(evt,qid,file,err) {
+			console.log(evt);
+			console.log(qid);
+			console.log(file);
+			console.log(err);
+		},
+		'onComplete': function(evt,queueID,fileObj,response,data) {
+			photoinfo=$.parseJSON(response);
+			console.log(photoinfo);
+			
+			$('#new_photos').append('\
+<div id="new_photo-'+photoinfo.uuid+'">\
+<img src="'+photoinfo.url+'?size=small" />\
+<input type="button" value="Oops, delete this" onclick="undo_photo(\''+photoinfo.uuid+'\',\''+photoinfo.url+'\');" />\
+</div>');
+		}
+	});
+	
+
 }
 
 </script>

@@ -18,8 +18,8 @@ function oakMain($oak)
 	{
 		// TODO: verify that it's a JPEG
 		
-		$filename=uniqid('',FALSE).'.jpg';
-		$uploadfile = $oak->get_file_location('WWW_DIR').'/uploads/'.$filename;
+		$filename=$oak->create_uuid().'.jpg';
+		$uploadfile = '/var/local/BeerCrush/uploads/'.$filename;
 
 		$info=array(
 			'user' => $oak->get_user_id(),

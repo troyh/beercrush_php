@@ -224,6 +224,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 		!strcmp(cgiPathInfo,"/api/restaurantcategories") ||
 		!strncmp(cgiPathInfo,"/api/review/beer",16) ||
 		!strncmp(cgiPathInfo,"/api/review/place",17) ||
+		!strncmp(cgiPathInfo,"/api/image/",11) ||
 		!strncmp(cgiPathInfo,"/api/user/",10) ||
 		!strncmp(cgiPathInfo,"/api/users",10) ||
 		!strcmp(cgiPathInfo,"/api/search"))

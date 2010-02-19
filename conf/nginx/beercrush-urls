@@ -5,6 +5,7 @@ rewrite ^/store/api/beerstyles$ /api/beerstyles.php break;
 rewrite ^/store/api/breweries$ /api/breweries.php break;
 rewrite ^/store/api/createlogin$ /api/createlogin.php break;
 rewrite ^/store/api/flavors$ /api/flavors.php break;
+rewrite ^/store/api/image/(.+)$ /api/image/view.php?fname=$1 break;
 rewrite ^/store/api/login$ /api/login.php break;
 rewrite ^/store/api/logout$ /api/logout.php break;
 rewrite ^/store/api/places$ /api/places.php break;
@@ -16,6 +17,7 @@ rewrite ^/store/api/users$ /api/users.php break;
 
 # Friendly URIs for documents
 rewrite ^/store/api/beer/edit$	/api/beer/edit.php break;
+rewrite ^/store/api/beer/photo$	/api/beer/photo.php break;
 rewrite ^/store/api/beer/([^/]+)/([^/]+)$	/api/beer/view.php?beer_id=beer:$1:$2 break;
 rewrite ^/store/api/brewery/edit$	/api/brewery/edit.php break;
 rewrite ^/store/api/photoset/(beer|brewery|place)/([^/]+)/([^/]+)$	/api/$1/photoset.php?$1_id=$1:$2:$3 break;

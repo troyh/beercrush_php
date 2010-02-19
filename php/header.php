@@ -1,10 +1,22 @@
 <?php
 header('Content-Type: text/html; charset=utf-8'); 
+
+if (!isset($header))
+	$header=array();
+	
+// Add $header types, if they aren't already set
+foreach (array('css','js') as $t) {
+	if (!isset($header[$t]))
+		$header[$t]=array();
+}
+
 ?>
 <html>
 <head>
-	<title>Beer Crush</title>
+	<title><?=isset($header['title'])?$header['title']:'Beer Crush'?></title>
 	<link href="/css/BeerCrush.css" rel="stylesheet" type="text/css" />
+	<?=join("\n",$header['css'])?>
+	
 	<script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAAtBVHEgzTr_SrDgMUCmnRJRQfXbV2W6YcYPLUqvTgqWubOD1G5hSaFaNTdVgdeM66iYgNhcbzSAGHNg"></script>
 	<script type="text/javascript">
 	google.load("jquery","1.4.1");
@@ -12,6 +24,7 @@ header('Content-Type: text/html; charset=utf-8');
 	<script type="text/javascript" src="/js/jquery.cookie.js"></script>
 	<script type="text/javascript" src="/js/json2.js"></script>
 	<script type="text/javascript" src="/js/beercrush.js"></script>
+	<?=join("\n",$header['js'])?>
 </head>
 <body>
 	<div id="login"></div>
