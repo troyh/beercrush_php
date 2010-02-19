@@ -1,0 +1,88 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/beercrush.php');
+
+$oak=new OAK('/etc/BeerCrush/webapp.conf');
+
+$sid=spread_connect(4803);
+if ($sid) {
+	spread_join($sid,'newphotos');
+	
+	do {
+		$msg=spread_receive($sid,60);
+		if ($msg) {
+	
+			foreach ($msg['groups'] as $group) {
+				switch ($group) {
+					case 'newphotos':
+						$photoinfo=json_decode($msg['message']);
+						// print "Msg:";print_r($msg);print "\n\n";
+						print "User:".$photoinfo->user."\n";
+						print "ID:".$photoinfo->id."\n";
+						print "UUID:".$photoinfo->uuid."\n";
+						print "URL:".$photoinfo->url."\n";
+						print "Filename:".$photoinfo->filename."\n";
+						print "Time:".date('r',$photoinfo->timestamp)."\n\n";
+						
+						$sender=$msg['sender'];
+						if (preg_match('/#(.*)#(.*)$/',$sender,$matches)) {
+							$host=$matches[2];
+
+							print "scp'ing from $host\n";
+							// Copy the file from the original host to this host
+							if ($oak->scp($host,$photoinfo->filename,$photoinfo->filename)===TRUE) 	{
+								print "scp'ed ".$photoinfo->filename."\n";
+								// Update the database
+								$bFound=FALSE;
+								$photoset=new OAKDocument('');
+								// Get the photoset doc
+								if ($oak->get_document('photoset:'.$photoinfo->id,&$photoset)!==TRUE) {
+									// It doesn't exist, create one
+									$photoset->setID('photoset:'.$photoinfo->id);
+									$photoset->beer_id=$photoinfo->id;
+									$photoset->photos=array();
+								}
+								else {
+									print "photoset doc:".json_encode($photoset)."\n";
+									// Find out if this file is already in the database
+									foreach ($photoset->photos as $photo) {
+										if ($photo->filename==$photoinfo->filename) {
+											// Already there, don't need to do anything
+											$bFound=TRUE;
+											break;
+										}
+									}
+								}
+									
+								if ($bFound==FALSE) {
+									// Update photoset doc with this photo
+									$photoset->photos[]=array(
+										'filename' => $photoinfo->filename,
+										'url' => $photoinfo->url,
+										'user_id' => $photoinfo->user,
+										'uuid' => $photoinfo->uuid,
+										'timestamp' => $photoinfo->timestamp,
+									);
+									
+									if ($oak->put_document($photoset->getID(),$photoset)===FALSE) {
+										$oak->log('Unable to put document: '.$photoset->getID());
+									}
+									else {
+										print "Added photoset to phototset ".$photoset->getID()."\n";
+									}
+								}
+							}
+						}
+						break;
+					default:
+						break;
+				}
+			}
+		}
+	}
+	while (true);
+	
+	spread_disconnect($sid);
+}
+
+?>
