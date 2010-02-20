@@ -1091,12 +1091,16 @@ class OAK
 		$status=$this->simple_http_request('http://localhost:'.$port.'/purge'.$url);
 		if ($status==200) {
 			$this->log('Purged: '.$url);
-			$this->broadcast_msg('docchanges',$url);
 		}
 		else if ($status!=404) { // 404 just means it wasn't cached to begin with, which is okay for us.
 			$this->log('Error '.$status.' purging from '.$type.':'.$url,OAK::LOGPRI_ERR);
 			return false;
 		}
+
+		// Either it purged it or it got a 404 (because it wasn't cached). But we still broadcast a message
+		// so that the change propagates to other docs that are cached.
+		$this->broadcast_msg('docchanges',$url);
+		
 		return true;
 	}
 	

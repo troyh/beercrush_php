@@ -16,22 +16,22 @@ if ($oak->spread_connect()) {
 			$oak->log('Document changed:'.$url);
 
 			$docmap=array(
-				array('/beercrush/beer:(.+):(.+)$'							, '/api/beer/$1/$2'),
-				array('/beercrush/brewery:(.+)$'  							, '/api/brewery/$1'),
-				array('/beercrush/place:(.+)$'    							, '/api/place/$1'),
-				array('/beercrush/review:(beer|brewery|place):(.+):(.+)$'	, '/api/review/$1/$2/$3/0'),
-				array('/beercrush/user:(.+)$'     							, '/api/user/$1'),
+				array('/beercrush/beer:(.+):(.+)'							, '/api/beer/$1/$2'),
+				array('/beercrush/brewery:(.+)'  							, '/api/brewery/$1'),
+				array('/beercrush/place:(.+)'    							, '/api/place/$1'),
+				array('/beercrush/review:(beer|brewery|place):(.+):(.+)'	, '/api/review/$1/$2/$3/0'),
+				array('/beercrush/user:(.+)'     							, '/api/user/$1'),
 				array('/beercrush/photoset:(.+):(.+):(.+)'					, '/api/photoset/$1/$2/$3'),
 				array('/beercrush/_design/beer/_view/made_by?key=%22brewery:(.+)%22', '/api/brewery/$1/beerlist'),
 				array('/beercrush/_design/beer_reviews/_view/for_beer?key=%22(.+):(.+):(.+)%22', '/api/review/beer/$1/$2/$3/0'),
 				array('/beercrush/flavors'									, '/api/flavors'),
 
-				array('/api/beer/(.+)/(.+)$'								, '/beer/$1/$2'),
-				array('/api/brewery/(.+)$'									, '/brewery/$1'),
-				array('/api/place/(.+)$'									, '/place/$1'),
-				array('/api/review/(beer|brewery|place)/(.+)/(.+)$'			, '/$1/$2/$3'),
-				array('/api/user/(.+)$'										, '/user/$1'),
-				array('/api/photoset/(beer|brewery|place)/(.+)/(.+)$'		, '/$1/$2/$3'),
+				array('/api/beer/(.+)/(.+)'								, '/beer/$1/$2'),
+				array('/api/brewery/(.+)'									, '/brewery/$1'),
+				array('/api/place/(.+)'									, '/place/$1'),
+				array('/api/review/(beer|brewery|place)/(.+)/(.+)'			, '/$1/$2/$3'),
+				array('/api/user/(.+)'										, '/user/$1'),
+				array('/api/photoset/(beer|brewery|place)/(.+)/(.+)'		, '/$1/$2/$3'),
 				array('/api/brewery/(.+)/beerlist'							, '/brewery/$1'),
 			);
 

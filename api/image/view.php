@@ -1,5 +1,4 @@
 <?php
-header('Cache-Control: no-cache'); // TODO: allow caching
 require_once('beercrush/beercrush.php');
 
 $oak=new OAK;
