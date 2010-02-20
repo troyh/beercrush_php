@@ -595,11 +595,11 @@ class OAK
 		if ($status==201)
 		{
 			$body=$rsp->getBody(false);
-			$this->broadcast_msg('docchanges',$body);
+			$this->broadcast_msg('dbchanges',$body);
 			return true;
 		}
 		else {
-			$this->log('CouchDB PUT failed: '.$status,OAK::LOGPRI_ERR);
+			$this->log('CouchDB PUT '.$id.' failed: '.$status,OAK::LOGPRI_ERR);
 		}
 			
 		return false;
@@ -1089,8 +1089,10 @@ class OAK
 	public function purge_document_cache($url,$port=80)
 	{
 		$status=$this->simple_http_request('http://localhost:'.$port.'/purge'.$url);
-		if ($status==200)
+		if ($status==200) {
 			$this->log('Purged: '.$url);
+			$this->broadcast_msg('docchanges',$url);
+		}
 		else if ($status!=404) { // 404 just means it wasn't cached to begin with, which is okay for us.
 			$this->log('Error '.$status.' purging from '.$type.':'.$url,OAK::LOGPRI_ERR);
 			return false;

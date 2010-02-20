@@ -5,25 +5,42 @@ require_once('beercrush/beercrush.php');
 $oak=new OAK('/etc/BeerCrush/webapp.conf');
 
 if ($oak->spread_connect()) {
-	$oak->spread_join('docchanges');
+	$oak->spread_join('dbchanges');
 	
 	do {
 		$msg=$oak->spread_receive();
 		if ($msg) {
-			foreach ($msg['groups'] as $group) {
-				switch ($group) {
-					case 'docchanges':
-						$docinfo=json_decode($msg['message']);
-						$oak->log('docchange: '.$docinfo->id);
-						// Purge the document from all the proxy caches, i.e., all the couchdb nodes
-						$docurl='/'.$oak->get_config_info()->couchdb->database.'/'.$docinfo->id;
-						if ($oak->purge_document_cache($docurl,7000)) {
-							$oak->log('Purged document '.$docurl);
-						}
-						break;
-					default:
-						break;
-				}
+			$change=json_decode($msg['message']);
+			$oak->log('dbchange: '.$change->id);
+
+			// Purge the document itself from the couchdb proxy cache
+			$url_prefix='/'.$oak->get_config_info()->couchdb->database.'/';
+			$docurl=$url_prefix.$change->id;
+			if ($oak->purge_document_cache($docurl,7000)) { // TODO: don't hardcode port 7000 here
+				$oak->log('Purged document '.$docurl);
+			}
+
+			// Purge documents that are affected by the document that changed
+			$parts=preg_split('/:/',$change->id);
+			switch ($parts[0])
+			{
+				case 'beer':
+					// Purge the beerlist view for the brewery
+					$oak->purge_view_cache('beer/made_by?key=%22brewery:'.$parts[1].'%22');
+					break;
+				case 'brewery':
+					break;
+				case 'place':
+					break;
+				case 'review':
+					$beer_id=$parts[1].':'.$parts[2].':'.$parts[3];
+					// Purge the view doc
+					$oak->purge_view_cache('beer_reviews/for_beer?key=%22'.$beer_id.'%22');
+					break;
+				case 'user':
+					break;
+				case 'photoset':
+					break;
 			}
 		}
 	}
