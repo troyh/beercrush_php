@@ -1,0 +1,26 @@
+#!/bin/bash
+
+. ../config.sh
+
+if [ ! -d /usr/local/beercrush ]; then \
+	sudo mkdir /usr/local/beercrush; \
+fi
+
+if ../tools/iamservertype -q php-cgi; then
+
+	sudo cp php-cgi /usr/local/beercrush/spread-php-cgi;
+	
+fi
+
+if ../tools/iamservertype -q web; then
+
+	sudo cp web /usr/local/beercrush/spread-web;
+	
+fi
+
+if ../tools/iamservertype -q couchdb-proxy; then
+
+	sudo cp couchdb-proxy /usr/local/beercrush/spread-couchdb-proxy;
+	
+fi
+
