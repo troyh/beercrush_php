@@ -1,0 +1,35 @@
+#!/usr/bin/php
+<?php
+require_once('beercrush/beercrush.php');
+
+$oak=new OAK('/etc/BeerCrush/webapp.conf');
+
+if ($oak->spread_connect()) {
+	$oak->spread_join('docchanges');
+	
+	do {
+		$msg=$oak->spread_receive();
+		if ($msg) {
+			foreach ($msg['groups'] as $group) {
+				switch ($group) {
+					case 'docchanges':
+						$docinfo=json_decode($msg['message']);
+						$oak->log('docchange: '.$docinfo->id);
+						// Purge the document from all the proxy caches, i.e., all the couchdb nodes
+						$docurl='/'.$oak->get_config_info()->couchdb->database.'/'.$docinfo->id;
+						if ($oak->purge_document_cache($docurl,7000)) {
+							$oak->log('Purged document '.$docurl);
+						}
+						break;
+					default:
+						break;
+				}
+			}
+		}
+	}
+	while (true);
+	
+	$oak->spread_disconnect();
+}
+
+?>

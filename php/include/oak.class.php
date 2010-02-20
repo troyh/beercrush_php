@@ -99,6 +99,8 @@ class OAK
 		// Pick a couchdb host and port for this request
 		$node=$this->config->couchdb->nodes[rand()%count($this->config->couchdb->nodes)];
 		list($this->config->couchdb->host,$this->config->couchdb->port)=preg_split('/:/',$node);
+		
+		$this->spread_id=null;
 	}
 	
 	function __destruct() 
@@ -572,6 +574,7 @@ class OAK
 	
 	function put_document($id,$doc)
 	{
+		$this->log('put_document:'.$id);
 		if (is_string($doc))
 			$json=$doc;
 		else
@@ -588,14 +591,15 @@ class OAK
 		$couchdb=new CouchDB($this->config->couchdb->database,$this->config->couchdb->host,$this->config->couchdb->port);
 		$rsp=$couchdb->send($id,"put",$json);
 
-		if ($rsp->getStatusCode()==201)
+		$status=$rsp->getStatusCode();
+		if ($status==201)
 		{
-			$body=$rsp->getBody(true);
-
-			// Purge the document from all the proxy caches, i.e., all the couchdb nodes
-			$this->purge_document_cache('couchdb','/'.$this->config->couchdb->database.'/'.$id);
-			
+			$body=$rsp->getBody(false);
+			$this->broadcast_msg('docchanges',$body);
 			return true;
+		}
+		else {
+			$this->log('CouchDB PUT failed: '.$status,OAK::LOGPRI_ERR);
 		}
 			
 		return false;
@@ -954,23 +958,50 @@ class OAK
 		);
 	}
 	
+	public function spread_connect($port=4803)
+	{
+		$this->spread_id=spread_connect($port);
+		return $this->spread_id?TRUE:FALSE;
+	}
+	
+	public function spread_join($group)
+	{
+		spread_join($this->spread_id,$group);
+	}
+	
+	public function spread_receive($timeout=60)
+	{
+		return spread_receive($this->spread_id,$timeout);
+	}
+	
+	public function spread_disconnect()
+	{
+		spread_disconnect($this->spread_id);
+	}
+	
 	public function broadcast_msg($group,$msg)
 	{
+		$bDisconnect=FALSE;
+		if (is_null($this->spread_id)) {
+			$this->spread_connect();
+			$bDisconnect=TRUE;
+		}
+			
 		// Broadcast the message via the Spread Toolkit
 		$success=false;
-		$sid=spread_connect(4803);
-		if ($sid) {
+		if ($this->spread_id) {
 			if (is_object($msg) || is_array($msg)) {
 				$msg=json_encode($msg);
 			}
 
-			if (spread_multicast($sid,$group,$msg)===FALSE) { // Failed
+			if (spread_multicast($this->spread_id,$group,$msg)===FALSE) { // Failed
 			}
 			else {
 				$success=true;
 			}
 
-			spread_disconnect($sid);
+			if ($bDisconnect)
+				$this->spread_disconnect();
 		}
 		
 		if ($success!==true) {
@@ -1052,36 +1083,19 @@ class OAK
 	public function purge_view_cache($url)
 	{
 		list($designname,$viewname)=preg_split("/\//",$url,2);
-		return $this->purge_document_cache('couchdb','/'.$this->config->couchdb->database.'/_design/'.$designname.'/_view/'.$viewname);
+		return $this->purge_document_cache('/'.$this->config->couchdb->database.'/_design/'.$designname.'/_view/'.$viewname);
 	}
 	
-	public function purge_document_cache($type,$url)
+	public function purge_document_cache($url,$port=80)
 	{
-		switch ($type)
-		{
-			case "couchdb":
-				$servers=$this->config->couchdb->nodes;
-				break;
-			case "solr":
-				$servers=$this->config->solr->nodes;
-				break;
-			case "web":
-				$servers=$this->config->web->nodes;
-				break;
-			default:
-				$servers=array();
-				break;
+		$status=$this->simple_http_request('http://localhost:'.$port.'/purge'.$url);
+		if ($status==200)
+			$this->log('Purged: '.$url);
+		else if ($status!=404) { // 404 just means it wasn't cached to begin with, which is okay for us.
+			$this->log('Error '.$status.' purging from '.$type.':'.$url,OAK::LOGPRI_ERR);
+			return false;
 		}
-		
-		foreach ($servers as $node)
-		{
-			// $this->log('purging with URL:'.'http://'.$node.'/purge'.$url);
-			$status=$this->simple_http_request('http://'.$node.'/purge'.$url);
-			if ($status==200)
-				$this->log('Purged from '.$type.': '.$url);
-			else if ($status!=404) // 404 just means it wasn't cached to begin with, which is okay for us.
-				$this->log('Error '.$status.' purging from '.$type.':'.$url);
-		}
+		return true;
 	}
 	
 	public function scp($host,$src_filename,$dst_filename)

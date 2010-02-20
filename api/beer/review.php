@@ -137,12 +137,6 @@ function oakMain($oak)
 		}
 		else
 		{
-			if ($updating_review)
-			{
-				// Uncache the data in the web proxies for the beer
-				$oak->purge_document_cache('app','/api/review/beer?beer_id='.$beer_id.'&user_id='.$oak->get_user_id());
-			}
-			
 			header("Content-Type: application/json; charset=utf-8");
 			$review->id=$review->_id;
 			unset($review->_id);
