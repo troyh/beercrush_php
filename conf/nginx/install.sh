@@ -10,7 +10,7 @@ if ../../tools/iamservertype -q web; then
 	
 	# Make  the directory for caches
 	if [ ! -d /var/local/nginx/caches ]; then
-		sudo mkdir /var/local/nginx/caches;
+		sudo mkdir -p /var/local/nginx/caches;
 		sudo chown www-data.www-data /var/local/nginx/caches;
 		sudo chmod g+rw /var/local/nginx/caches;
 	fi
