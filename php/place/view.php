@@ -1,5 +1,5 @@
 <?php
-require_once('beercrush/oak.class.php');
+require_once('OAK/oak.class.php');
 
 $oak=new OAK;
 $place=json_decode(file_get_contents($oak->get_config_info()->api->base_uri.'/place/'.str_replace(':','/',$_GET['place_id'])));

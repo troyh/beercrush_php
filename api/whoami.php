@@ -1,6 +1,6 @@
 <?php
 header("Cache-Control: no-cache");
-require_once 'beercrush/oak.class.php';
+require_once 'OAK/oak.class.php';
 
 /*
 	Log the user out.

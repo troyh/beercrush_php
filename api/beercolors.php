@@ -1,5 +1,5 @@
 <?php
-require_once('beercrush/oak.class.php');
+require_once 'OAK/oak.class.php';
 $oak=new OAK;
 $doc=new stdClass;
 $oak->get_document('beercolors',&$doc);

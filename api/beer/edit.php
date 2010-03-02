@@ -1,6 +1,6 @@
 <?php
 header("Cache-Control: no-cache");
-require_once 'beercrush/oak.class.php';
+require_once 'OAK/oak.class.php';
 
 function validate_brewery_id($name,$value,$attribs,$converted_value,$oak)
 {
@@ -188,6 +188,6 @@ function oakMain($oak)
 	}
 }
 
-require_once 'beercrush/oak.php';
+require_once 'OAK/oak.php';
 
 ?>

@@ -1,6 +1,6 @@
 <?php
 header("Cache-Control: no-cache");
-require_once("beercrush/oak.class.php");
+require_once 'OAK/oak.class.php';
 require_once('beercrush/Beer.class.php');
 
 $cgi_fields=array(
@@ -135,6 +135,9 @@ function oakMain($oak)
 		{
 			header("HTTP/1.0 500 Save failed");
 		}
+		else if ($oak->broadcast_msg('newreviews',$review)) {
+			
+		}
 		else
 		{
 			header("Content-Type: application/json; charset=utf-8");
@@ -146,6 +149,6 @@ function oakMain($oak)
 	}
 }
 
-require_once('beercrush/oak.php');
+require_once('OAK/oak.php');
 
 ?>

@@ -1,5 +1,5 @@
 <?php
-require_once('beercrush/oak.class.php');
+require_once('OAK/oak.class.php');
 
 $cgi_fields=array(
 	"beer_id"				=> array(type=>OAK::DATATYPE_TEXT,minlen=>9),
@@ -74,6 +74,6 @@ function oakMain($oak)
 
 }
 
-require_once 'beercrush/oak.php';
+require_once 'OAK/oak.php';
 
 ?>

@@ -1,6 +1,6 @@
 <?php
 header('Cache-Control: no-cache');
-require_once 'beercrush/oak.class.php';
+require_once 'OAK/oak.class.php';
 
 $cgi_fields=array(
 	"user_id"			=> array(type=>OAK::DATATYPE_TEXT,flags=>OAK::FIELDFLAG_REQUIRED,minlen=>36,maxlen=>41),
@@ -77,6 +77,6 @@ function oakMain($oak)
 	}
 }
 
-require_once 'beercrush/oak.php';
+require_once 'OAK/oak.php';
 
 ?>

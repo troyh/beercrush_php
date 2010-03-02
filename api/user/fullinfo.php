@@ -4,7 +4,7 @@
 // fullinfo.
 
 header("Cache-Control: no-cache");
-require_once('beercrush/oak.class.php');
+require_once('OAK/oak.class.php');
 
 $oak=new OAK;
 if ($oak->login_is_trusted()!==true) // If the user is not logged in or we can't trust the login

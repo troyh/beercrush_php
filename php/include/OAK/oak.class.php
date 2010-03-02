@@ -72,6 +72,37 @@ class OAK
 	
 	const CGI_NAME_SEP=':';
 
+	const UNRELIABLE_MESS         =0x00000001;
+	const RELIABLE_MESS           =0x00000002;
+	const FIFO_MESS               =0x00000004;
+	const CAUSAL_MESS             =0x00000008;
+	const AGREED_MESS             =0x00000010;
+	const SAFE_MESS               =0x00000020;
+	const REGULAR_MESS            =0x0000003f;
+
+	const SELF_DISCARD            =0x00000040;
+	const DROP_RECV               =0x01000000;
+
+	const REG_MEMB_MESS           =0x00001000;
+	const TRANSITION_MESS         =0x00002000;
+	const CAUSED_BY_JOIN          =0x00000100;
+	const CAUSED_BY_LEAVE         =0x00000200;
+	const CAUSED_BY_DISCONNECT    =0x00000400;
+	const CAUSED_BY_NETWORK       =0x00000800;
+	const MEMBERSHIP_MESS         =0x00003f00;
+
+	const ENDIAN_RESERVED         =0x80000080;
+	const RESERVED                =0x003fc000;
+	const REJECT_MESS             =0x00400000;
+
+	public function IS_REG_MEMB_MESS( $type )                { return $type &  OAK::REG_MEMB_MESS; }
+	public function IS_TRANSITION_MESS( $type )              { return $type &  OAK::TRANSITION_MESS; }
+	public function IS_CAUSED_JOIN_MESS( $type )             { return $type &  OAK::CAUSED_BY_JOIN; }
+	public function IS_CAUSED_LEAVE_MESS( $type )            { return $type &  OAK::CAUSED_BY_LEAVE; }
+	public function IS_CAUSED_DISCONNECT_MESS( $type )       { return $type &  OAK::CAUSED_BY_DISCONNECT; }
+	public function IS_CAUSED_NETWORK_MESS( $type )          { return $type &  OAK::CAUSED_BY_NETWORK; }
+	public function IS_MEMBERSHIP_MESS( $type )              { return ($type &  OAK::MEMBERSHIP_MESS) && !($type & OAK::REJECT_MESS); }
+	
 	private $config;
 
 	function __construct($conf_file=null) 
@@ -958,15 +989,20 @@ class OAK
 		);
 	}
 	
-	public function spread_connect($port=4803)
+	public function spread_connect($port=4803,$private_name=null,$receive_joins=FALSE)
 	{
-		$this->spread_id=spread_connect($port);
-		return $this->spread_id?TRUE:FALSE;
+		$this->spread_id=spread_connect($port,$private_name,$receive_joins);
+		return $this->spread_id===FALSE?FALSE:TRUE;
 	}
 	
 	public function spread_join($group)
 	{
-		spread_join($this->spread_id,$group);
+		return spread_join($this->spread_id,$group);
+	}
+	
+	public function spread_leave($group) 
+	{
+		return spread_leave($this->spread_id,$group);
 	}
 	
 	public function spread_receive($timeout=60)
@@ -976,7 +1012,7 @@ class OAK
 	
 	public function spread_disconnect()
 	{
-		spread_disconnect($this->spread_id);
+		return spread_disconnect($this->spread_id);
 	}
 	
 	public function broadcast_msg($group,$msg)
@@ -1000,8 +1036,10 @@ class OAK
 				$success=true;
 			}
 
-			if ($bDisconnect)
+			if ($bDisconnect) {
 				$this->spread_disconnect();
+				$this->spread_id=null;
+			}
 		}
 		
 		if ($success!==true) {
