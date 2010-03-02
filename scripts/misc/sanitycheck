@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-require_once('beercrush/oak.class.php');
+require_once('OAK/oak.class.php');
 
 // TODO: Verify all values in each doc are valid
 // TODO: Verify document structures are correct

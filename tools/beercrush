@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 require_once('beercrush/BeerCrushClient.class.php');
-require_once('beercrush/oak.class.php');
+require_once('OAK/oak.class.php');
 
 // shift function from http://us.php.net/manual/en/function.getopt.php
 function shift($options_array)
