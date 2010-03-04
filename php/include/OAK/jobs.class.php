@@ -34,6 +34,8 @@ class OAKJobs {
 		}
 	}
 	
+	public function getOAK() { return $this->oak; }
+	
 	private function message_loop($timeout=null) {
 		while (($newmsg=$this->oak->spread_receive($timeout))!=FALSE) {
 			if (OAK::IS_MEMBERSHIP_MESS($newmsg['service_type'])) { // A Spread membership message
@@ -77,7 +79,7 @@ class OAKJobs {
 						switch ($k) {
 							case 'bid':
 								// Check for a tie
-								foreach ($this->job_queue[$idx]->bids as $member=>$bid) {
+									foreach ($this->job_queue[$idx]->bids as $member=>$bid) {
 									if ($bid==$v) {
 										// print "TIE!!\n";
 										++$v; // Tie goes to first member
@@ -191,13 +193,20 @@ class OAKJobs {
 		return FALSE; // No job for us to do
 	}
 	
-	public function gimme_jobs($callback,$time_estimate=null) {
-		// TODO: setup signal handler to stop this loop gracefully
+	public function gimme_jobs($callback,$signal_handler=null) {
+
+		if (is_null($signal_handler))
+			$signal_handler=array($this,'gimme_jobs_default_sig_handler');
+			
+		// Setup signal handler to stop this loop gracefully
+		declare(ticks = 1);
+		foreach (array(SIGUSR1,SIGUSR2,SIGTERM,SIGINT,SIGABRT,SIGCONT) as $sig) {
+			pcntl_signal($sig,$signal_handler);
+		}
+		
+		$this->gimme_jobs_continue=TRUE;
 		do {
-			if (is_null($time_estimate))
-				$job=$this->next_job();
-			else
-				$job=$this->next_job($time_estimate);
+			$job=$this->next_job();
 				
 			if ($job !== FALSE) {
 				if (call_user_func($callback,$this,$job))
@@ -209,7 +218,11 @@ class OAKJobs {
 				usleep(250000); // Don't monopolize the CPU, sleep for 1/4th of a second
 			}
 		}
-		while (TRUE);
+		while ($this->gimme_jobs_continue);
+	}
+	
+	public function gimme_jobs_stop() {
+		$this->gimme_jobs_continue=FALSE;
 	}
 
 	private function all_potential_bidders_have_bid($job_queue_item) {
@@ -268,7 +281,30 @@ class OAKJobs {
 		}
 		return FALSE;
 	}
-	
+
+	private function gimme_jobs_default_sig_handler($signo)
+	{
+		switch ($signo)
+		{
+		case SIGTERM: // 15
+		case SIGINT:  // 2
+		case SIGQUIT: // 3       /* Quit (POSIX).  */
+		case SIGABRT: // 6       /* Abort (ANSI).  */
+		case SIGKILL: // 9       /* Kill, unblockable (POSIX).  */
+		case SIGHUP:  // 1
+		case SIGSTOP: // 19      /* Stop, unblockable (POSIX).  */
+		case SIGTSTP: // 20      /* Keyboard stop (POSIX).  */
+			$this->gimme_jobs_stop();
+			break;
+		case SIGUSR1: // 10      /* User-defined signal 1 (POSIX).  */
+		case SIGUSR2: // 12      /* User-defined signal 2 (POSIX).  */
+		case SIGCONT: // 18      /* Continue (POSIX).  */
+			break;
+		default:
+			break;
+		}
+	}
 };
+
 
 ?>
