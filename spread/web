@@ -1,23 +1,22 @@
 #!/usr/bin/php
 <?php
 require_once('beercrush/beercrush.php');
-require_once('OAK/jobs.class.php');
+require_once('OAK/listener.class.php');
 
 $oak=new OAK(BeerCrush::CONF_FILE);
-$oakjobs=new OAKJobs($oak,'docchanges');
-$oakjobs->set_message_callback('handle_docchange');
-$oakjobs->gimme_jobs('do_nothing'); // We don't care, we're just using OAKJobs to easily get every message
+$oaklistener=new OAKListener($oak,'docchanges');
+$oaklistener->gimme_messages('handle_docchange');
 
-function handle_docchange($oakjobs,$docid) {
-	$oakjobs->getOAK()->log('Document changed:'.$docid);
+function handle_docchange($oaklistener,$docid) {
+	$oaklistener->getOAK()->log('Document changed:'.$docid);
 
 	$docmap=array(
 		// Document -> APIs
 		array('beer:(.+):(.+)'							, array('/api/beer/$1/$2','/api/brewery/$1/beerlist')),
 		array('brewery:(.+)'  							, '/api/brewery/$1'),
 		array('place:(.+)'    							, '/api/place/$1'),
-		array('review:beer:(.+):(.+):(.+)'				, '/api/review/beer/$1/$2/$3/0',
-		array('review:(brewery|place):(.+):(.+)'		, '/api/review/$1/$2/$3/0',
+		array('review:beer:(.+):(.+):(.+)'				, '/api/review/beer/$1/$2/$3/0'),
+		array('review:(brewery|place):(.+):(.+)'		, '/api/review/$1/$2/$3/0'),
 		array('user:(.+)'     							, '/api/user/$1'),
 		array('photoset:(.+):(.+):(.+)'					, '/api/photoset/$1/$2/$3'),
 		array('flavors'									, '/api/flavors'),
@@ -30,23 +29,29 @@ function handle_docchange($oakjobs,$docid) {
 		array('/api/user/(.+)'								, '/user/$1'),
 		array('/api/photoset/(beer|brewery|place)/(.+)/(.+)', '/$1/$2/$3'),
 	);
+	
+	do_purges($docid,$docmap,0);
 
-	foreach ($docmap as $map) {
-		if (!is_array($map[1]))
-			$map[1]=array($map[1]);
+}
+
+function do_purges($url,$docmap,$idx) {
+	global $oaklistener;
+	
+	for ($max=count($docmap);$idx<$max;++$idx) {
+		$from=$docmap[$idx][0];
+		$to=$docmap[$idx][1];
+
+		if (!is_array($to))
+			$to=array($to);
 			
-		foreach ($map[1] as $replacement) {
-			$new_url=preg_replace('/'.str_replace('/','\\/',$map[0]).'/',$replacement,$url);
+		foreach ($to as $replacement) {
+			$new_url=preg_replace('/'.str_replace('/','\\/',$from).'/',$replacement,$url);
 			if ($new_url!=$url) {
-				$oakjobs->getOAK()->purge_document_cache($new_url);
-				$oakjobs->getOAK()->broadcast_msg('docchanges',$new_url);
+				$oaklistener->getOAK()->purge_document_cache($new_url);
+				do_purges($new_url,$docmap,$idx+1);
 			}
 		}
 	}
-}
-
-function do_nothing($oakjobs,$job) {
-	return TRUE;
 }
 
 ?>

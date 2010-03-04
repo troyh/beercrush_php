@@ -7,6 +7,7 @@ class BeerCrush
 	const DATE_FORMAT='D, d M Y H:i:s O';
 	const DEFAULT_AVATAR_URL="/img/default_avatar.gif";
 	const CONF_FILE='/etc/BeerCrush/webapp.conf';
+	const SETUP_CONF='/etc/BeerCrush/setup.conf';
 	
 	static function api_doc($oak,$url)
 	{

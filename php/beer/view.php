@@ -2,7 +2,7 @@
 require_once('beercrush/beercrush.php');
 
 $oak=new OAK;
-	
+
 $brewery_id=preg_replace('/:[^:]*$/','',$_GET['beer_id']);
 $api_beer_id=str_replace(':','/',$_GET['beer_id']);
 

@@ -8,7 +8,6 @@ install: SAFETY_CHECK
 		sudo chown www-data.www-data /etc/BeerCrush; \
 		sudo chmod ug+rw /etc/BeerCrush; \
 	fi
-	cp webapp.conf /etc/BeerCrush/;
 	$(RECURSIVE_MAKE);
 
 check:

@@ -14,8 +14,8 @@ function handle_dbchange($oakjobs,$change) {
 	// Purge the document itself from the couchdb proxy cache
 	$url_prefix='/'.$oakjobs->getOAK()->get_config_info()->couchdb->database.'/';
 	$docurl=$url_prefix.$change->id;
-	if ($oak->purge_document_cache($docurl,7000)) { // TODO: don't hardcode port 7000 here
-		$oak->log('Purged document '.$docurl);
+	if ($oakjobs->getOAK()->purge_document_cache($docurl,7000)) { // TODO: don't hardcode port 7000 here
+		$oakjobs->getOAK()->log('Purged document '.$docurl);
 	}
 
 	// Purge documents that are affected by the document that changed

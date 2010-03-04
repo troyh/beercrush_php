@@ -77,8 +77,6 @@ $cgi_fields=array(
 	"yeast"						=> array(type=>OAK::DATATYPE_TEXT),
 );
 
-require_once 'beercrush/Beer.class.php';
-
 
 function oakMain($oak)
 {

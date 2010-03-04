@@ -40,8 +40,8 @@ class OAKListener {
 		
 		$this->gimme_messages_continue=TRUE;
 		do {
-			$newmsg=$this->oak->spread_receive();
-			if ($newmsg !== FALSE) {
+			$newmsg=$this->oak->spread_receive(null);
+			if ($newmsg) {
 				if (OAK::IS_MEMBERSHIP_MESS($newmsg['service_type'])) { // A Spread membership message
 				}
 				else {
