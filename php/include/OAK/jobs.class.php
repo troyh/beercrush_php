@@ -4,35 +4,33 @@ require_once('oak.class.php');
 class OAKJobs {
 	private $oak=null;
 	private $job_queue=array();
+	private $msg_group=null;
 	private $job_group=null;
 	private $job_group_members=array();
 	private $my_spread_name=null;
 	
-	public function __construct($oak) {
+	public function __construct($oak,$group) {
 		$this->oak=$oak;
-	}
-	public function __destruct() {
-		if ($this->oak)
-			$this->oak->spread_disconnect();
-	}
-	public function join_group($group=null) {
-		if (is_null($group))
-			$this->job_group='jobs-'.basename($_SERVER['PHP_SELF']);
-		else
-			$this->job_group='jobs-'.$group;
-			
 		$my_name='OAK-'.getmypid();
+		$this->msg_group=$group;
+		$this->job_group='jobs-'.basename($_SERVER['PHP_SELF']);
 		
-		if ($this->oak && $this->oak->spread_connect(4803,$my_name,TRUE)===TRUE) {
-			if ($this->oak->spread_join($this->job_group)) {
-				return TRUE;
-			}
+		if ($this->oak && $this->oak->spread_connect(4803,$my_name,TRUE)!==TRUE) {
+			// TODO: do something
 		}
-		return FALSE;
+		else if ($this->oak->spread_join($this->job_group)!==TRUE) {
+			// TODO: do something
+		}
+		else if ($this->oak->spread_join($this->msg_group)!==TRUE) {
+			// TODO: do something
+		}
 	}
-	public function leave_group() {
+
+	public function __destruct() {
 		if ($this->oak) {
 			$this->oak->spread_leave($this->job_group);
+			$this->oak->spread_leave($this->msg_group);
+			$this->oak->spread_disconnect();
 		}
 	}
 	
@@ -44,6 +42,12 @@ class OAKJobs {
 					$this->job_group_members=$newmsg['group_members'];
 					$this->my_spread_name=$newmsg['group_members'][$newmsg['current_index']];
 				}
+			}
+			else if (in_array($this->msg_group,$newmsg['groups'])) { // A regular message
+				$job=json_decode($newmsg['message']);
+				if (is_null($job))
+					$job=$newmsg['message'];
+				$this->create_job($job);
 			}
 			else if (in_array($this->job_group,$newmsg['groups'])) { // A job control message
 				$job_queue_msg=json_decode($newmsg['message']);
@@ -67,8 +71,9 @@ class OAKJobs {
 					array_splice($this->job_queue,$idx,1);
 				}
 				else { // Update it
+					// print "Updating job: {$job_queue_msg->sha1key}\n";
 					foreach ($job_queue_msg as $k=>$v) {
-						// print "$k=";print_r($v)."\n";
+						// print "$k=";print_r($v);print "\n";
 						switch ($k) {
 							case 'bid':
 								// Check for a tie
@@ -88,6 +93,7 @@ class OAKJobs {
 								break;
 						}
 					}
+					// print "Job updated:";print_r($this->job_queue[$idx]);print "\n";
 				}
 			}
 		}
@@ -128,18 +134,13 @@ class OAKJobs {
 	}
 
 	private function print_queue() {
-		if (count($this->job_queue)==0) {
-			print "Empty queue\n";
-		}
-		else {
-			print "Job Queue (".count($this->job_queue)."):\n";
-			foreach ($this->job_queue as $job_queue_item) {
-				print $job_queue_item->sha1key.':'.$job_queue_item->job.' '.count(get_object_vars($job_queue_item->bids)).' bidders (';
-				foreach ($job_queue_item->bids as $m=>$b) {
-					print $b.' ';
-				}
-				print ")\n";
+		print "Job Queue (".count($this->job_queue)."):\n";
+		foreach ($this->job_queue as $job_queue_item) {
+			print $job_queue_item->sha1key.':'.$job_queue_item->job.' '.count(get_object_vars($job_queue_item->bids)).' bidders (';
+			foreach ($job_queue_item->bids as $m=>$b) {
+				print $b.' ';
 			}
+			print ")\n";
 		}
 	}
 	
@@ -159,14 +160,15 @@ class OAKJobs {
 					//
 					// I won!
 					//
-					if (!$job_queue_item->assigned) {
-						// We have to mark it locally as assigned or we may give it out again if next_job() is called 
-						// before the Spread daemon can distribute the message to us.
-						$job_queue_item->assigned=TRUE;
-						return $job_queue_item->job;
+					if (!$job_queue_item->completed) {
+						// Note: I may be giving it out again to myself because job_done() was never called.
+						$job=json_decode($job_queue_item->job);
+						if (is_null($job))
+							return $job_queue_item->job;
+						return $job;
 					}
 				}
-				else if (!isset($job_queue_item->bids->{$this->my_spread_name})) {
+				else if (!$job_queue_item->ihavebid) {
 					// I haven't bid, submit my bid
 					$job_msg=array(
 						'sha1key' => $job_queue_item->sha1key,
@@ -174,6 +176,9 @@ class OAKJobs {
 					);
 
 					$this->update_job($job_msg);
+				
+					// Remind myself that I've submitted a bid, so I don't need to keep doing it
+					$job_queue_item->ihavebid=TRUE;
 				}
 				else {
 					// Either I lost or we are still waiting on bids from others and we can't do anything with it.
@@ -183,8 +188,28 @@ class OAKJobs {
 		}
 		while ($this->job_count());
 		
-		// No job for us to do
-		return FALSE;
+		return FALSE; // No job for us to do
+	}
+	
+	public function gimme_jobs($callback,$time_estimate=null) {
+		// TODO: setup signal handler to stop this loop gracefully
+		do {
+			if (is_null($time_estimate))
+				$job=$this->next_job();
+			else
+				$job=$this->next_job($time_estimate);
+				
+			if ($job !== FALSE) {
+				if (call_user_func($callback,$this,$job))
+					$this->job_done($job);
+				else
+					$this->clear_my_bid($job); // Gives someone else a chance at it
+			}
+			else {
+				usleep(250000); // Don't monopolize the CPU, sleep for 1/4th of a second
+			}
+		}
+		while (TRUE);
 	}
 
 	private function all_potential_bidders_have_bid($job_queue_item) {
@@ -214,41 +239,36 @@ class OAKJobs {
 		return count($this->job_group_members);
 	}
 	
-	public function job_refuse($job_msg) {
-		if (is_scalar($job_msg))
-			$sha1key=sha1($job_msg);
-		else
-			$sha1key=sha1(json_encode($job_msg));
-
-		// Find the job in the queue
-		foreach ($this->job_queue as $job_queue_item) {
-			if ($job_queue_item->sha1key==$sha1key) {
-				$job_msg=array(
-					'sha1key' => $job_queue_item->sha1key,
-					'bid' => PHP_INT_MAX,
-				);
-
-				$this->update_job($job_msg);
-				break;
-			}
+	private function clear_my_bid($job) {
+		$idx=$this->find_job_in_queue($job);
+		if ($idx!==FALSE)
+			$this->job_queue[$idx]->ihavebid=FALSE;
+	}
+	
+	public function job_done($job) {
+		$idx=$this->find_job_in_queue($job);
+		if ($idx!==FALSE) {
+			$this->job_queue[$idx]->completed=TRUE;
+			// Tell everyone I did it, they'll remove it from their queues
+			$this->update_job($this->job_queue[$idx]);
 		}
 	}
 	
-	public function job_done($job_msg) {
-		if (is_scalar($job_msg))
-			$sha1key=sha1($job_msg);
+	private function find_job_in_queue($job) {
+		if (is_scalar($job))
+			$sha1key=sha1($job);
 		else
-			$sha1key=sha1(json_encode($job_msg));
+			$sha1key=sha1(json_encode($job));
 
 		// Find the job in the queue
-		foreach ($this->job_queue as $job_queue_item) {
-			if ($job_queue_item->sha1key==$sha1key) {
-				$job_queue_item->completed=TRUE;
-				$this->update_job($job_queue_item);
-				break;
+		for ($i=0,$j=count($this->job_queue);$i<$j;++$i) {
+			if ($this->job_queue[$i]->sha1key==$sha1key) {
+				return $i;
 			}
 		}
+		return FALSE;
 	}
+	
 };
 
 ?>
