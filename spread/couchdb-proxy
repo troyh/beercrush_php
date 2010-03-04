@@ -4,6 +4,9 @@ require_once('beercrush/beercrush.php');
 require_once('OAK/jobs.class.php');
 
 $oak=new OAK(BeerCrush::CONF_FILE);
+
+list($host,$port)=explode(':',$oak->get_config_info()->couchdb->nodes[0]);
+
 $oakjobs=new OAKJobs($oak,'dbchanges');
 // Every instance of couchdb-proxy gets handle_dbchange() called
 $oakjobs->set_message_callback('handle_dbchange');
@@ -11,10 +14,12 @@ $oakjobs->set_message_callback('handle_dbchange');
 $oakjobs->gimme_jobs('announce_docchange');
 
 function handle_dbchange($oakjobs,$change) {
+	global $port;
+	
 	// Purge the document itself from the couchdb proxy cache
 	$url_prefix='/'.$oakjobs->getOAK()->get_config_info()->couchdb->database.'/';
 	$docurl=$url_prefix.$change->id;
-	if ($oakjobs->getOAK()->purge_document_cache($docurl,7000)) { // TODO: don't hardcode port 7000 here
+	if ($oakjobs->getOAK()->purge_document_cache($docurl,$port)) {
 		$oakjobs->getOAK()->log('Purged document '.$docurl);
 	}
 
