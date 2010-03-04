@@ -1,0 +1,15 @@
+#!/usr/bin/php
+<?php
+require_once 'OAK/jobs.class.php';
+
+$oak=new OAK('/etc/BeerCrush/webapp.conf');
+$oakjobs=new OAKJobs($oak,'newreviews');
+$oakjobs->gimme_jobs('notify_reviewee');
+
+function notify_reviewee($oakjobs,$info) {
+	// Get the reviewed document ID
+	// Get the owner of that document
+	// Send mail or something to that person
+}
+
+?>

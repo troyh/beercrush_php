@@ -1,0 +1,13 @@
+#!/usr/bin/php
+<?php
+require_once 'OAK/jobs.class.php';
+
+function new_user($oakjobs,$info) {
+	// Send email to user welcoming them
+}
+
+$oak=new OAK('/etc/BeerCrush/webapp.conf');
+$oakjobs=new OAKJobs($oak,'newusers');
+$oakjobs->gimme_jobs('new_user');
+
+?>

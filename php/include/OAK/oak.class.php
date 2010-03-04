@@ -1137,7 +1137,7 @@ class OAK
 
 		// Either it purged it or it got a 404 (because it wasn't cached). But we still broadcast a message
 		// so that the change propagates to other docs that are cached.
-		$this->broadcast_msg('docchanges',$url);
+		// $this->broadcast_msg('docchanges',$url);
 		
 		return true;
 	}

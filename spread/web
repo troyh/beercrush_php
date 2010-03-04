@@ -1,52 +1,52 @@
 #!/usr/bin/php
 <?php
 require_once('beercrush/beercrush.php');
+require_once('OAK/jobs.class.php');
 
-$oak=new OAK('/etc/BeerCrush/webapp.conf');
+$oak=new OAK(BeerCrush::CONF_FILE);
+$oakjobs=new OAKJobs($oak,'docchanges');
+$oakjobs->set_message_callback('handle_docchange');
+$oakjobs->gimme_jobs('do_nothing'); // We don't care, we're just using OAKJobs to easily get every message
 
-if ($oak->spread_connect()) {
-	$oak->spread_join('docchanges');
-	
-	do {
-		$msg=$oak->spread_receive();
-		if ($msg) {
-	
-			$url=$msg['message'];
+function handle_docchange($oakjobs,$docid) {
+	$oakjobs->getOAK()->log('Document changed:'.$docid);
 
-			$oak->log('Document changed:'.$url);
+	$docmap=array(
+		// Document -> APIs
+		array('beer:(.+):(.+)'							, array('/api/beer/$1/$2','/api/brewery/$1/beerlist')),
+		array('brewery:(.+)'  							, '/api/brewery/$1'),
+		array('place:(.+)'    							, '/api/place/$1'),
+		array('review:beer:(.+):(.+):(.+)'				, '/api/review/beer/$1/$2/$3/0',
+		array('review:(brewery|place):(.+):(.+)'		, '/api/review/$1/$2/$3/0',
+		array('user:(.+)'     							, '/api/user/$1'),
+		array('photoset:(.+):(.+):(.+)'					, '/api/photoset/$1/$2/$3'),
+		array('flavors'									, '/api/flavors'),
+		// API -> Pages
+		array('/api/beer/(.+)/(.+)'							, array('/beer/$1/$2','/brewery/$1/beerlist')),
+		array('/api/brewery/(.+)'							, '/brewery/$1'),
+		array('/api/brewery/(.+)/beerlist'					, '/brewery/$1'),
+		array('/api/place/(.+)'								, '/place/$1'),
+		array('/api/review/(beer|brewery|place)/(.+)/(.+)'	, '/$1/$2/$3'),
+		array('/api/user/(.+)'								, '/user/$1'),
+		array('/api/photoset/(beer|brewery|place)/(.+)/(.+)', '/$1/$2/$3'),
+	);
 
-			$docmap=array(
-				array('/beercrush/beer:(.+):(.+)'							, '/api/beer/$1/$2'),
-				array('/beercrush/brewery:(.+)'  							, '/api/brewery/$1'),
-				array('/beercrush/place:(.+)'    							, '/api/place/$1'),
-				array('/beercrush/review:(beer|brewery|place):(.+):(.+)'	, '/api/review/$1/$2/$3/0'),
-				array('/beercrush/user:(.+)'     							, '/api/user/$1'),
-				array('/beercrush/photoset:(.+):(.+):(.+)'					, '/api/photoset/$1/$2/$3'),
-				array('/beercrush/_design/beer/_view/made_by?key=%22brewery:(.+)%22', '/api/brewery/$1/beerlist'),
-				array('/beercrush/_design/beer_reviews/_view/for_beer?key=%22(.+):(.+):(.+)%22', '/api/review/beer/$1/$2/$3/0'),
-				array('/beercrush/flavors'									, '/api/flavors'),
-
-				array('/api/beer/(.+)/(.+)'								, '/beer/$1/$2'),
-				array('/api/brewery/(.+)'									, '/brewery/$1'),
-				array('/api/place/(.+)'									, '/place/$1'),
-				array('/api/review/(beer|brewery|place)/(.+)/(.+)'			, '/$1/$2/$3'),
-				array('/api/user/(.+)'										, '/user/$1'),
-				array('/api/photoset/(beer|brewery|place)/(.+)/(.+)'		, '/$1/$2/$3'),
-				array('/api/brewery/(.+)/beerlist'							, '/brewery/$1'),
-			);
-
-			foreach ($docmap as $map) {
-				$new_url=preg_replace('/'.str_replace('/','\\/',$map[0]).'/',$map[1],$url);
-				if ($new_url!=$url) {
-					$oak->purge_document_cache($new_url);
-					break;
-				}
+	foreach ($docmap as $map) {
+		if (!is_array($map[1]))
+			$map[1]=array($map[1]);
+			
+		foreach ($map[1] as $replacement) {
+			$new_url=preg_replace('/'.str_replace('/','\\/',$map[0]).'/',$replacement,$url);
+			if ($new_url!=$url) {
+				$oakjobs->getOAK()->purge_document_cache($new_url);
+				$oakjobs->getOAK()->broadcast_msg('docchanges',$new_url);
 			}
 		}
 	}
-	while (true);
-	
-	$oak->spread_disconnect();
+}
+
+function do_nothing($oakjobs,$job) {
+	return TRUE;
 }
 
 ?>

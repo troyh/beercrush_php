@@ -1,0 +1,8 @@
+#!/usr/bin/php
+<?php
+require_once 'OAK/oak.class.php';
+
+$oak=new OAK();
+$oak->broadcast_msg($argv[1],$argv[2]);
+
+?>

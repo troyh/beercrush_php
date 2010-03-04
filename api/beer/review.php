@@ -135,11 +135,10 @@ function oakMain($oak)
 		{
 			header("HTTP/1.0 500 Save failed");
 		}
-		else if ($oak->broadcast_msg('newreviews',$review)) {
-			
-		}
 		else
 		{
+			$oak->broadcast_msg('newreviews',$review);
+			
 			header("Content-Type: application/json; charset=utf-8");
 			$review->id=$review->_id;
 			unset($review->_id);

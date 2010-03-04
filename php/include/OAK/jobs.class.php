@@ -8,12 +8,13 @@ class OAKJobs {
 	private $job_group=null;
 	private $job_group_members=array();
 	private $my_spread_name=null;
+	private $message_callback=null;
 	
 	public function __construct($oak,$group) {
 		$this->oak=$oak;
 		$my_name='OAK-'.getmypid();
 		$this->msg_group=$group;
-		$this->job_group='jobs-'.basename($_SERVER['PHP_SELF']);
+		$this->job_group=basename($_SERVER['PHP_SELF']).'-jobq';
 		
 		if ($this->oak && $this->oak->spread_connect(4803,$my_name,TRUE)!==TRUE) {
 			// TODO: do something
@@ -49,6 +50,11 @@ class OAKJobs {
 				$job=json_decode($newmsg['message']);
 				if (is_null($job))
 					$job=$newmsg['message'];
+					
+				if ($this->message_callback) {
+					call_user_func($this->message_callback,$this,$job);
+				}
+				
 				$this->create_job($job);
 			}
 			else if (in_array($this->job_group,$newmsg['groups'])) { // A job control message
@@ -191,6 +197,10 @@ class OAKJobs {
 		while ($this->job_count());
 		
 		return FALSE; // No job for us to do
+	}
+	
+	public function set_message_callback($callback) {
+		$this->message_callback=$callback;
 	}
 	
 	public function gimme_jobs($callback,$signal_handler=null) {

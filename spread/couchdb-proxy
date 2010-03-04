@@ -1,52 +1,50 @@
 #!/usr/bin/php
 <?php
 require_once('beercrush/beercrush.php');
+require_once('OAK/jobs.class.php');
 
-$oak=new OAK('/etc/BeerCrush/webapp.conf');
+$oak=new OAK(BeerCrush::CONF_FILE);
+$oakjobs=new OAKJobs($oak,'dbchanges');
+// Every instance of couchdb-proxy gets handle_dbchange() called
+$oakjobs->set_message_callback('handle_dbchange');
+// Only one instance of couchdb-proxy gets announce_docchange() called
+$oakjobs->gimme_jobs('announce_docchange');
 
-if ($oak->spread_connect()) {
-	$oak->spread_join('dbchanges');
-	
-	do {
-		$msg=$oak->spread_receive();
-		if ($msg) {
-			$change=json_decode($msg['message']);
-			$oak->log('dbchange: '.$change->id);
-
-			// Purge the document itself from the couchdb proxy cache
-			$url_prefix='/'.$oak->get_config_info()->couchdb->database.'/';
-			$docurl=$url_prefix.$change->id;
-			if ($oak->purge_document_cache($docurl,7000)) { // TODO: don't hardcode port 7000 here
-				$oak->log('Purged document '.$docurl);
-			}
-
-			// Purge documents that are affected by the document that changed
-			$parts=preg_split('/:/',$change->id);
-			switch ($parts[0])
-			{
-				case 'beer':
-					// Purge the beerlist view for the brewery
-					$oak->purge_view_cache('beer/made_by?key=%22brewery:'.$parts[1].'%22');
-					break;
-				case 'brewery':
-					break;
-				case 'place':
-					break;
-				case 'review':
-					$beer_id=$parts[1].':'.$parts[2].':'.$parts[3];
-					// Purge the view doc
-					$oak->purge_view_cache('beer_reviews/for_beer?key=%22'.$beer_id.'%22');
-					break;
-				case 'user':
-					break;
-				case 'photoset':
-					break;
-			}
-		}
+function handle_dbchange($oakjobs,$change) {
+	// Purge the document itself from the couchdb proxy cache
+	$url_prefix='/'.$oakjobs->getOAK()->get_config_info()->couchdb->database.'/';
+	$docurl=$url_prefix.$change->id;
+	if ($oak->purge_document_cache($docurl,7000)) { // TODO: don't hardcode port 7000 here
+		$oak->log('Purged document '.$docurl);
 	}
-	while (true);
-	
-	$oak->spread_disconnect();
+
+	// Purge documents that are affected by the document that changed
+	$parts=preg_split('/:/',$change->id);
+	switch ($parts[0])
+	{
+		case 'beer':
+			// Purge the beerlist view for the brewery
+			$oakjobs->getOAK()->purge_view_cache('beer/made_by?key=%22brewery:'.$parts[1].'%22');
+			break;
+		case 'brewery':
+			break;
+		case 'place':
+			break;
+		case 'review':
+			$beer_id=$parts[1].':'.$parts[2].':'.$parts[3];
+			// Purge the view doc
+			$oakjobs->getOAK()->purge_view_cache('beer_reviews/for_beer?key=%22'.$beer_id.'%22');
+			break;
+		case 'user':
+			break;
+		case 'photoset':
+			break;
+	}
+}
+
+function announce_docchange($oakjobs,$change) {
+	$oakjobs->getOAK()->broadcast_msg('docchanges',$change->id);
+	return TRUE;
 }
 
 ?>
