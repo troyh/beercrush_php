@@ -6,7 +6,7 @@ install: SAFETY_CHECK
 	if [ ! -d /etc/BeerCrush ]; then \
 		sudo mkdir /etc/BeerCrush; \
 		sudo chown www-data.www-data /etc/BeerCrush; \
-		sudo chmod ug+rw /etc/BeerCrush; \
+		sudo chmod ug+rwX /etc/BeerCrush; \
 	fi
 	$(RECURSIVE_MAKE);
 

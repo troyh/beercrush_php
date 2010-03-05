@@ -21,7 +21,7 @@ if tools/iamservertype -q php-cgi || tools/iamservertype -q web; then
 	if [ "$(ls -ld $WWW_DIR | awk '{print $3" "$4}')" != "www-data www-data" ]; then
 		echo "Setting permissions on $WWW_DIR";
 		sudo chown www-data.www-data $WWW_DIR;
-		sudo chmod g+w $WWW_DIR;
+		sudo chmod -R g+rwX $WWW_DIR;
 	fi
 
 fi

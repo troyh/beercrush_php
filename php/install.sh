@@ -14,6 +14,13 @@ if ../tools/iamservertype -q php-cgi; then
 	done
 	
 	# Delete the NGiNX cache
-	sudo rm -rf /var/local/nginx/caches/all;
+	rm -rf /var/local/nginx/caches/all;
+	# Re-create the NGiNX cache so that we have the permissions we want (NGiNX won't change 
+	# permissions on existing dirs)
+	mkdir -p /var/local/nginx/caches/all;
+	# We give RW group permissions so that the owner remains the user that runs this script 
+	# so that they can continue to delete the cache directories.
+	chgrp -R www-data /var/local/nginx/caches;
+	chmod -R g+rwX /var/local/nginx/caches;
 
 fi

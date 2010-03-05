@@ -8,12 +8,6 @@ if ../../tools/iamservertype -q web; then
 		sudo ln -s /etc/nginx/sites-available/beercrush /etc/nginx/sites-enabled/beercrush;
 	fi
 	
-	# Make  the directory for caches
-	if [ ! -d /var/local/nginx/caches ]; then
-		sudo mkdir -p /var/local/nginx/caches;
-		sudo chown www-data.www-data /var/local/nginx/caches;
-		sudo chmod g+rw /var/local/nginx/caches;
-	fi
 
 fi
 
@@ -48,3 +42,12 @@ if ../../tools/iamservertype -q web ||  ../../tools/iamservertype -q couchdb-pro
 	sudo /etc/init.d/nginx restart;
 fi
 
+	sudo rm -rf /var/local/nginx/caches;
+	# Make  the directory for caches
+	mkdir -p /var/local/nginx/caches/all;
+	mkdir -p /var/local/nginx/caches/api;
+	mkdir -p /var/local/nginx/caches/couchdb; 
+	# We give RW group permissions so that the owner remains the user that runs this script 
+	# so that they can continue to delete the cache directories.
+	chgrp -R www-data /var/local/nginx/caches;
+	chmod -R g+rwX /var/local/nginx/caches;
