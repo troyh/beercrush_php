@@ -30,12 +30,13 @@ if tools/iamservertype -q php-cgi || tools/iamservertype -q cgi; then
 
 	for DIR in  $LOCALDATA_DIR  /var/local/BeerCrush/meta/; do
 		if [ ! -d $DIR ]; then
-			sudo mkdir -p $DIR;
+			mkdir -p $DIR;
 		fi
 	done
 
 	# Set correct permissions on directories
-	sudo chown -R $BEERCRUSH_APPSERVER_USER.$BEERCRUSH_APPSERVER_USER /var/local/BeerCrush/;
+	chgrp -R $BEERCRUSH_APPSERVER_USER /var/local/BeerCrush/;
+	chmod -R g+rwX $DIR;
 	
 fi
 

@@ -10,14 +10,14 @@ if ../tools/iamservertype -q php-cgi; then
 	
 	if [ ! -d /var/local/BeerCrush/images ]; then
 		mkdir /var/local/BeerCrush/images;
-		sudo chown www-data.www-data /var/local/BeerCrush/images;
-		sudo chmod -R g+rwX /var/local/BeerCrush/images;
+		chgrp www-data /var/local/BeerCrush/images;
+		chmod -R g+rwX /var/local/BeerCrush/images;
 	fi
 
 	if [ ! -d /var/local/BeerCrush/uploads ]; then
 		mkdir /var/local/BeerCrush/uploads;
-		sudo chown www-data.www-data /var/local/BeerCrush/uploads;
-		sudo chmod -R g+rwX /var/local/BeerCrush/uploads;
+		chgrp www-data /var/local/BeerCrush/uploads;
+		chmod -R g+rwX /var/local/BeerCrush/uploads;
 	fi
 
 	# Note: the order of --exclude & --include matters here... (we only want non-hidden .php files)

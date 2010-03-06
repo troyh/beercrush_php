@@ -1,9 +1,9 @@
 #!/usr/bin/php
 <?php
-require_once 'OAK/oak.class.php';
+require_once 'beercrush/beercrush.php';
 
 $list=array();
-$oak=new OAK;
+$oak=new OAK(BeerCrush::CONF_FILE);
 
 $brewery_list=json_decode(file_get_contents($oak->get_config_info()->api->base_uri.'/breweries'));
 foreach ($brewery_list as $letter=>$breweries)
