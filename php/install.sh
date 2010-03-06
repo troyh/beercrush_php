@@ -20,7 +20,7 @@ if ../tools/iamservertype -q php-cgi; then
 	mkdir -p /var/local/nginx/caches/all;
 	# We give RW group permissions so that the owner remains the user that runs this script 
 	# so that they can continue to delete the cache directories.
-	chgrp -R www-data /var/local/nginx/caches;
-	chmod -R g+rwX /var/local/nginx/caches;
+	chgrp www-data /var/local/nginx/caches/all;
+	chmod g+rwX /var/local/nginx/caches/all;
 
 fi

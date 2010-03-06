@@ -1,7 +1,6 @@
 <?php
 header("Cache-Control: no-cache");
 require_once 'OAK/oak.class.php';
-require_once('beercrush/Beer.class.php');
 
 $cgi_fields=array(
 	"beer_id"		   => array(flags=>OAK::FIELDFLAG_REQUIRED, type=>OAK::DATATYPE_TEXT, validatefunc=>'Beer::validateID' ),
@@ -20,8 +19,6 @@ $cgi_fields=array(
 	// "drankwithfood"	   => array(type=>OAK::DATATYPE_TEXT),
 	// "food_recommended" => array(type=>OAK::DATATYPE_BOOL),
 );
-
-require_once('beercrush/BeerReview.php');
 
 function recurse_flavors($flavors,&$flavorslist)
 {
@@ -83,13 +80,23 @@ function oakMain($oak)
 	{
 		global $cgi_fields;
 		
+		$user_id=$oak->get_user_id();
 		$beer_id=$oak->get_cgi_value('beer_id',$cgi_fields);
 		// Validate the beer_id
 		$beer=new OAKDocument('');
 		if ($oak->get_document($beer_id,&$beer)!==true)
 			throw new Exception('Invalid beer_id:'.$beer_id);
 
-		$review=BeerReview::createReview($beer_id,$oak->get_user_id());
+		if (empty($beer_id))
+			throw new Exception('beer_id is empty');
+		if (empty($user_id))
+			throw new Exception('user_id is empty');
+
+		// TODO: verify that beer_id and user_id are valid IDs for existing documents
+		$review=new OAKDocument('review');
+		$review->beer_id=$beer_id;
+		$review->user_id=$user_id;
+		$review->setID('review:'.$review->beer_id.':'.$review->user_id);
 
 		// Get existing review, if there is one so that we can update just the parts added/changed in this request
 		$updating_review=false;

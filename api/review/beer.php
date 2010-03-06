@@ -65,7 +65,7 @@ function oakMain($oak)
 	foreach ($rows as $row)
 	{
 		$review=new OAKDocument('');
-		$oak->get_document($row->id,$review);
+		$oak->get_document($row->id,$review); // TODO: use API, don't go straight to the db
 		$output['reviews'][]=$review;
 	}
 

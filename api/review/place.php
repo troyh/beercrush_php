@@ -28,6 +28,7 @@ function oakMain($oak)
 			}
 			else
 			{
+				header('Content-Type: application/json; charset=utf-8');
 				print json_encode($review);
 				exit;
 			}
@@ -61,11 +62,11 @@ function oakMain($oak)
 	foreach ($rows as $row)
 	{
 		$review=new OAKDocument('');
-		$oak->get_document($row->id,$review);
+		$oak->get_document($row->id,$review); // TODO: use API, don't go straight to the db
 		$output['reviews'][]=$review;
 	}
 	
-	header('Content-Type: text/javascript; charset=utf-8');
+	header('Content-Type: application/json; charset=utf-8');
 	print json_encode($output);
 
 }

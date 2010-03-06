@@ -63,7 +63,7 @@ function output_flavors($flavors)
 		}
 		else
 		{
-			print '<input type="checkbox" name="flavors[]" value="'.$flavor->id.'" />'.$flavor->title;
+			print '<input type="checkbox" name="flavors_set[]" value="'.$flavor->id.'" />'.$flavor->title;
 		}
 	}
 }
@@ -176,6 +176,7 @@ include("../header.php");
 	</div>
 	<div>
 		Flavors: <?=output_flavors($flavors->flavors)?>
+		<input type="hidden" name="flavors" value="" />
 	</div>
 	<div>
 		Comments:
@@ -183,9 +184,10 @@ include("../header.php");
 	</div>
 	
 	<input id="post_review_button" type="button" value="Post my review" />
+	<div id="review_result_msg"></div>
 </form>
 
-<div id="reviewdata"></div>
+<!-- <div id="reviewdata"></div> -->
 
 <script type="text/javascript" src="/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript" src="/js/jquery.uploadify.v2.1.0.js"></script>
@@ -213,7 +215,19 @@ function undo_photo(uuid,url) {
 function pageMain()
 {
 	$('#post_review_button').click(function(){
-		$('#reviewdata').text($('#review_form').serialize());
+		// $('#reviewdata').text($('#review_form').serialize());
+		$('#review_result_msg').text(); // Clear last message, if any
+		$(this).ajaxError(function(evt,xhr,options,err) {
+			if (options.url=='/api/beer/review') {
+				doc=$.parseJSON(xhr.responseText);
+				$('#review_result_msg').text(doc.exception.message);
+			}
+		});
+		flavors=new Array();
+		$("#review_form input[name='flavors_set[]']:checked").each(function(idx,elem) {
+			flavors[flavors.length]=$(elem).val();
+		});
+		$("#review_form input[name='flavors']").val(flavors.join(' '));
 		$.post('/api/beer/review',$('#review_form').serialize(),function(data){
 			$('#reviewdata').text(data)
 		});
