@@ -115,3 +115,7 @@ img {
 	border-bottom:0px;
 	text-decoration:none;
 }
+
+#flavors_table {
+	font-size:8pt;
+}

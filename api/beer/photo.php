@@ -43,7 +43,8 @@ function oakMain($oak)
 			header("HTTP/1.0 500 Unable to save photo");
 			exit;
 		}
-		else if ($oak->broadcast_msg('newphotos',$json_info)===FALSE) {
+
+		if ($oak->broadcast_msg('newphotos',$json_info)===FALSE) {
 			// What to do?
 		}
 

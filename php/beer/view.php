@@ -57,13 +57,13 @@ function output_flavors($flavors)
 	{
 		if (isset($flavor->flavors))
 		{
-			print '<div>'.$flavor->title.':';
+			print '<tr><td>'.$flavor->title.':</td>';
 			output_flavors($flavor->flavors);
-			print '</div>';
+			print '</tr>';
 		}
 		else
 		{
-			print '<input type="checkbox" name="flavors_set[]" value="'.$flavor->id.'" />'.$flavor->title;
+			print '<td><input type="checkbox" name="flavors_set[]" value="'.$flavor->id.'" />'.$flavor->title.'</td>';
 		}
 	}
 }
@@ -175,7 +175,7 @@ include("../header.php");
 		Price: <input name="price" type="text" size="10" /> at <input type="place_id" size="40" />
 	</div>
 	<div>
-		Flavors: <?=output_flavors($flavors->flavors)?>
+		Flavors: <table id="flavors_table"><?=output_flavors($flavors->flavors)?></table>
 		<input type="hidden" name="flavors" value="" />
 	</div>
 	<div>
@@ -251,18 +251,10 @@ function pageMain()
 			'beer_id': $('#beer_id').val(),
 			'userid': $.cookie('userid')
 		},
-		'onError'	: function(evt,qid,file,err) {
-			console.log(evt);
-			console.log(qid);
-			console.log(file);
-			console.log(err);
-		},
 		'onComplete': function(evt,queueID,fileObj,response,data) {
-			console.log(response);
 			photoinfo=$.parseJSON(response);
-			console.log(photoinfo);
-			
 			$('#new_photos').append('<img src="'+photoinfo.url+'?size=small" />');
+			return true;
 		}
 	});
 	
