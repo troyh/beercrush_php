@@ -41,6 +41,12 @@ function BeerCrushMain()
 	
 	formatDates('.datestring');
 
+	$("#searchbox").autocomplete('/api/autocomplete.fcgi',{
+		"extraParams": {
+			"dataset": function() { return $("#searchform input:radio[name='dt']:checked").val(); }
+		}
+	});
+
 	if (typeof(window['pageMain'])!='undefined' && jQuery.isFunction(pageMain))
 		pageMain();
 }

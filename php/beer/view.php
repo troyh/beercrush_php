@@ -71,10 +71,7 @@ function output_flavors($flavors)
 
 // Add the CSS for Uploadify
 $header['css'][]='<link href="/css/uploadify.css" rel="stylesheet" type="text/css" />';
-$header['css'][]='<link href="/css/jquery.autocomplete.css" rel="stylesheet" type="text/css" />';
 $header['title']=$brewerydoc->name.' '.$beerdoc->name;
-
-$header['js'][]='<script type="text/javascript" src="/js/jquery-autocomplete/jquery.autocomplete.min.js"></script>';
 
 include("../header.php");
 ?>
