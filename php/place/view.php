@@ -1,9 +1,13 @@
 <?php
-require_once('OAK/oak.class.php');
+require_once('beercrush/beercrush.php');
 
-$oak=new OAK;
-$place=json_decode(file_get_contents($oak->get_config_info()->api->base_uri.'/place/'.str_replace(':','/',$_GET['place_id'])));
+$oak=new OAK(BeerCrush::CONF_FILE);
+$place=BeerCrush::api_doc($oak,'/place/'.str_replace(':','/',$_GET['place_id']));
+$beerlist=BeerCrush::api_doc($oak,'/place/'.str_replace(':','/',$_GET['place_id']).'/menu');
+$reviews=BeerCrush::api_doc($oak,'/review/place/'.str_replace(':','/',$_GET['place_id']).'/0');
+// var_dump($beerlist);exit;
 // var_dump($place);exit;
+// var_dump($reviews);exit;
 
 include("../header.php");
 ?>
@@ -40,9 +44,40 @@ include("../header.php");
 	
 </div>
 
-<h2>Beers</h2>
+<h2>Beers Available</h2>
 <div id="beerlist">
+	<table>
+		<tr>
+			<th>Brewery</th>
+			<th>Beer</th>
+			<th>Price</th>
+			<th>Tap</th>
+			<th>Cask</th>
+			<th>Bottle (12 fl. oz.)</th>
+			<th>Bottle (22 fl. oz.)</th>
+			<th>Can</th>
+		</tr>
+	<?foreach ($beerlist->items as $item) :?>
+	<tr>
+		<td><a href="/<?=str_replace(':','/',$item->brewery->id)?>"><?=$item->brewery->name?></a></td>
+		<td><a href="/<?=str_replace(':','/',$item->id)?>"><?=$item->name?></a></td>
+		<td>$<?=number_format($item->price,2)?></td>
+
+		<td><input <?=$item->ontap?"checked=\"checked\"":""?> type="checkbox" name="" value="ontap" /></td>
+		<td><input <?=$item->oncask?"checked=\"checked\"":""?> type="checkbox" name="" value="oncask" /></td>
+		<td><input <?=$item->inbottle?"checked=\"checked\"":""?> type="checkbox" name="" value="inbottle" /></td>
+		<td><input <?=$item->inbottle22?"checked=\"checked\"":""?> type="checkbox" name="" value="inbottle22" /></td>
+		<td><input <?=$item->incan?"checked=\"checked\"":""?> type="checkbox" name="" value="incan" /></td>
+
+	</tr>
+	<?endforeach;?>
+	</table>
 </div>
+
+<h2>Reviews</h2>
+<div id="reviewlist">
+</div>
+
 <script type="text/javascript" src="/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript">
 
