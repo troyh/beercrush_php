@@ -14,6 +14,7 @@ function handle_docchange($oaklistener,$docid) {
 		// Document -> APIs
 		array('^beer:([^:]+):([^:]+)$'					, array('/api/beer/$1/$2','/api/brewery/$1/beerlist')),
 		array('^brewery:([^:]+)$'  						, '/api/brewery/$1'),
+		array('^menu:place:([^:]+)$'    				, '/api/place/$1/menu'),
 		array('^place:([^:]+)$'    						, '/api/place/$1'),
 		array('^review:beer:([^:]+):([^:]+):([^:]+)$'	, array('/api/review/beer/$1/$2/0','/api/review/beer/$1/$2/$3')),
 		array('^review:(brewery|place):([^:]+):([^:]+)$', '/api/review/$1/$2/$3/0'),
@@ -24,6 +25,7 @@ function handle_docchange($oaklistener,$docid) {
 		array('^/api/beer/([^/]+)/([^/]+)$'				, array('/beer/$1/$2','/brewery/$1/beerlist')),
 		array('^/api/brewery/([^/]+)$'					, '/brewery/$1'),
 		array('^/api/brewery/([^/]+)/beerlist$'			, '/brewery/$1'),
+		array('^/api/place/([^/]+)/menu$'				, '/place/$1'),
 		array('^/api/place/([^/]+)$'					, '/place/$1'),
 		array('^/api/review/beer/([^/]+)/([^/]+)/([^/]+)$', '/beer/$1/$2'),
 		array('^/api/review/(brewery|place)/([^/]+)/([^/]+)$', '/$1/$2/$3'),

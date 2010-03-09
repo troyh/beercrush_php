@@ -11,7 +11,7 @@ class BeerCrush
 	
 	static function api_doc($oak,$url)
 	{
-		return json_decode(@file_get_contents($oak->get_config_info()->api->base_uri.'/'.$url));
+		return json_decode(@file_get_contents($oak->get_config_info()->api->base_uri.'/'.ltrim($url,'/')));
 	}
 };
 

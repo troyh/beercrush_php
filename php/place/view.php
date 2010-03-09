@@ -2,9 +2,9 @@
 require_once('beercrush/beercrush.php');
 
 $oak=new OAK(BeerCrush::CONF_FILE);
-$place=BeerCrush::api_doc($oak,'/place/'.str_replace(':','/',$_GET['place_id']));
-$beerlist=BeerCrush::api_doc($oak,'/place/'.str_replace(':','/',$_GET['place_id']).'/menu');
-$reviews=BeerCrush::api_doc($oak,'/review/place/'.str_replace(':','/',$_GET['place_id']).'/0');
+$place=BeerCrush::api_doc($oak,'place/'.str_replace(':','/',$_GET['place_id']));
+$beerlist=BeerCrush::api_doc($oak,'place/'.str_replace(':','/',$_GET['place_id']).'/menu');
+$reviews=BeerCrush::api_doc($oak,'review/place/'.str_replace(':','/',$_GET['place_id']).'/0');
 // var_dump($beerlist);exit;
 // var_dump($place);exit;
 // var_dump($reviews);exit;
@@ -63,11 +63,11 @@ include("../header.php");
 		<td><a href="/<?=str_replace(':','/',$item->id)?>"><?=$item->name?></a></td>
 		<td>$<?=number_format($item->price,2)?></td>
 
-		<td><input <?=$item->ontap?"checked=\"checked\"":""?> type="checkbox" name="" value="ontap" /></td>
-		<td><input <?=$item->oncask?"checked=\"checked\"":""?> type="checkbox" name="" value="oncask" /></td>
-		<td><input <?=$item->inbottle?"checked=\"checked\"":""?> type="checkbox" name="" value="inbottle" /></td>
-		<td><input <?=$item->inbottle22?"checked=\"checked\"":""?> type="checkbox" name="" value="inbottle22" /></td>
-		<td><input <?=$item->incan?"checked=\"checked\"":""?> type="checkbox" name="" value="incan" /></td>
+		<td><input <?=$item->ontap     ?'checked="checked"':''?> type="checkbox" value="tap"      name="serving_<?=str_replace(':','_',$item->id)?>" /></td>
+		<td><input <?=$item->oncask    ?'checked="checked"':''?> type="checkbox" value="cask"     name="serving_<?=str_replace(':','_',$item->id)?>" /></td>
+		<td><input <?=$item->inbottle  ?'checked="checked"':''?> type="checkbox" value="bottle"   name="serving_<?=str_replace(':','_',$item->id)?>" /></td>
+		<td><input <?=$item->inbottle22?'checked="checked"':''?> type="checkbox" value="bottle22" name="serving_<?=str_replace(':','_',$item->id)?>" /></td>
+		<td><input <?=$item->incan     ?'checked="checked"':''?> type="checkbox" value="can"      name="serving_<?=str_replace(':','_',$item->id)?>" /></td>
 
 	</tr>
 	<?endforeach;?>
@@ -84,6 +84,17 @@ include("../header.php");
 function pageMain()
 {
 	makeDocEditable('#place','place_id','/api/place/edit');
+	
+	$('#beerlist input[type=checkbox]').change(function(evt){
+		var serving_types=[];
+		var n=$(evt.target).attr('name').replace(/^serving_/,'').replace(/_/g,':');
+		$('#beerlist input[name='+$(evt.target).attr('name')+']').each(function(){if ($(this).attr('checked')) serving_types[serving_types.length]=$(this).val();});
+
+		$.post('/api/menu/edit', {
+			"place_id": $('#place_id').val(),
+			"add_item": n+';'+serving_types.join(',')
+		});
+	});
 }
 
 </script>
