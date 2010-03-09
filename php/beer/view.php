@@ -71,7 +71,10 @@ function output_flavors($flavors)
 
 // Add the CSS for Uploadify
 $header['css'][]='<link href="/css/uploadify.css" rel="stylesheet" type="text/css" />';
+$header['css'][]='<link href="/css/jquery.autocomplete.css" rel="stylesheet" type="text/css" />';
 $header['title']=$brewerydoc->name.' '.$beerdoc->name;
+
+$header['js'][]='<script type="text/javascript" src="/js/jquery-autocomplete/jquery.autocomplete.min.js"></script>';
 
 include("../header.php");
 ?>
@@ -172,7 +175,9 @@ include("../header.php");
 		<input name="aftertaste" type="radio" value="5" />5
 	</div>
 	<div>
-		Price: <input name="price" type="text" size="10" /> at <input type="place_id" size="40" />
+		Price: <input name="purchase_price" type="text" size="10" />
+		at <input name="purchase_place_name" type="text" size="40" />
+		<input type="hidden" id="purchase_place_name_id" name="purchase_place_id" />
 	</div>
 	<div>
 		Flavors: <table id="flavors_table"><?=output_flavors($flavors->flavors)?></table>
@@ -258,7 +263,21 @@ function pageMain()
 		}
 	});
 	
-
+	$("#review_form input[name='purchase_place_name']").autocomplete('/api/autocomplete.fcgi',{
+		"mustMatch": true,
+		"extraParams": {
+			"dataset": "places"
+		}
+	}).result(function(evt,data,formatted) {
+		if (data) {
+			$.getJSON('/api/search?q='+data+'&dataset=place',function(data,textStatus){
+				$("#purchase_place_name_id").val(data.response.docs[0].id);
+			})
+		}
+		else {
+			$("#purchase_place_name_id").val('');
+		}
+	});
 }
 
 </script>
