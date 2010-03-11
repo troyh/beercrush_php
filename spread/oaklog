@@ -1,0 +1,41 @@
+#!/usr/bin/php
+<?php
+require_once('OAK/jobs.class.php');
+
+$bOutput=FALSE;
+if (!empty($argv[1]) && $argv[1]=='--output')
+	$bOutput=TRUE;
+
+$oak=new OAK();
+$oakjobs=new OAKJobs($oak,'oaklog');
+$oakjobs->set_message_callback('log_message');
+$oakjobs->gimme_jobs('log_job');
+
+function log_job($oakjobs,$msg) {
+	// Send ERRs and CRITs to somewhere where they'll be seen
+	list($priority,$ident,$logmsg)=preg_split('/:/',$msg,3);
+	print "$msg\n";
+	if ($priority=='CRIT' || $priority=='ERR') {
+		// TODO: do something with it
+	}
+	$oakjobs->job_done($msg);
+}
+
+function log_message($oakjobs,$msg) {
+	global $bOutput;
+	if ($bOutput) {
+		// Parse message
+		list($priority,$ident,$logmsg)=preg_split('/:/',$msg,3);
+		// See man console_codes for console escape codes
+		if ($priority=='CRIT')
+			print "\7\033[37;41m"; // Bell w/ white on red
+		else if ($priority=='ERR')
+			print "\033[31m"; // Red on white
+		else
+			print "\033[32m"; // Green on white
+		print date('Y-m-d H:i:s').' '.$priority.' '.$ident.' '.$logmsg;
+		print "\033[0m\n";
+	}
+}
+
+?>

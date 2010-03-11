@@ -49,5 +49,9 @@ fi
 	mkdir -p /var/local/nginx/caches/couchdb; 
 	# We give RW group permissions so that the owner remains the user that runs this script 
 	# so that they can continue to delete the cache directories.
-	chgrp -R www-data /var/local/nginx/caches;
-	chmod -R g+rwX /var/local/nginx/caches;
+	chgrp www-data /var/local/nginx/caches/all;
+	chgrp www-data /var/local/nginx/caches/api;
+	chgrp www-data /var/local/nginx/caches/couchdb;
+	chmod g+rwX /var/local/nginx/caches/all;
+	chmod g+rwX /var/local/nginx/caches/api;
+	chmod g+rwX /var/local/nginx/caches/couchdb;

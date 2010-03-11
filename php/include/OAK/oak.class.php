@@ -70,6 +70,12 @@ class OAK
 	const LOGPRI_ERR=LOG_ERR;
 	const LOGPRI_CRIT=LOG_CRIT;
 	
+	private $LOGPRI_STRINGS=array(
+		OAK::LOGPRI_INFO => 'INFO',
+		OAK::LOGPRI_ERR  => 'ERR',
+		OAK::LOGPRI_CRIT => 'CRIT',
+	);
+	
 	const CGI_NAME_SEP=':';
 
 	const UNRELIABLE_MESS         =0x00000001;
@@ -120,8 +126,6 @@ class OAK
 		if ($this->config==NULL)
 			throw new Exception($conf_file.' could not be read');
 		
-		// Open syslog
-		openlog('OAK',LOG_ODELAY|LOG_CONS|LOG_PID,LOG_LOCAL0);
 		if (!empty($_SERVER['SCRIPT_NAME']))
 			$this->log_ident($_SERVER['SCRIPT_NAME']);
 		else
@@ -136,8 +140,10 @@ class OAK
 	
 	function __destruct() 
 	{
-		// Close syslog
-		closelog();
+		// Disconnect from Spread daemon
+		if (!is_null($this->spread_id)) {
+			$this->spread_disconnect();
+		}
 	}
 	
 	/*
@@ -923,7 +929,7 @@ class OAK
 	
 	public function log($msg, $priority=OAK::LOGPRI_INFO)
 	{
-		syslog($priority,$this->log_ident.':'.$msg);
+		$this->broadcast_msg('oaklog',$this->LOGPRI_STRINGS[$priority].':'.$this->log_ident.':'.$msg);
 	}
 	
 	public function get_config_info()
@@ -991,17 +997,23 @@ class OAK
 	
 	public function spread_connect($port=4803,$private_name=null,$receive_joins=FALSE)
 	{
+		if (!is_null($this->spread_id))
+			$this->spread_disconnect();
 		$this->spread_id=spread_connect($port,$private_name,$receive_joins);
 		return $this->spread_id===FALSE?FALSE:TRUE;
 	}
 	
 	public function spread_join($group)
 	{
+		if (is_null($this->spread_id))
+			return FALSE;
 		return spread_join($this->spread_id,$group);
 	}
 	
 	public function spread_leave($group) 
 	{
+		if (is_null($this->spread_id))
+			return FALSE;
 		return spread_leave($this->spread_id,$group);
 	}
 	
@@ -1012,15 +1024,17 @@ class OAK
 	
 	public function spread_disconnect()
 	{
-		return spread_disconnect($this->spread_id);
+		if (is_null($this->spread_id))
+			return TRUE;
+		$ret=spread_disconnect($this->spread_id);
+		$this->spread_id=null;
+		return $ret;
 	}
 	
 	public function broadcast_msg($group,$msg)
 	{
-		$bDisconnect=FALSE;
 		if (is_null($this->spread_id)) {
 			$this->spread_connect();
-			$bDisconnect=TRUE;
 		}
 			
 		// Broadcast the message via the Spread Toolkit
@@ -1035,17 +1049,8 @@ class OAK
 			else {
 				$success=true;
 			}
-
-			if ($bDisconnect) {
-				$this->spread_disconnect();
-				$this->spread_id=null;
-			}
 		}
 		
-		if ($success!==true) {
-			$this->log('Broadcast message failed: '.$group.':'.$msg,OAK::LOGPRI_ERR);
-		}		
-
 		return $success;
 	}
 	

@@ -35,8 +35,8 @@ if tools/iamservertype -q php-cgi || tools/iamservertype -q cgi; then
 	done
 
 	# Set correct permissions on directories
-	chgrp -R $BEERCRUSH_APPSERVER_USER /var/local/BeerCrush/;
-	chmod -R g+rwX $DIR;
+	chgrp $BEERCRUSH_APPSERVER_USER /var/local/BeerCrush/{meta,uploads,images};
+	chmod g+rwX /var/local/BeerCrush/{meta,uploads,images};
 	
 fi
 
