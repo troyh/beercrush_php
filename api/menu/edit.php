@@ -78,32 +78,52 @@ function oakMain($oak)
 				}
 			}
 
-			foreach ($adds as $idandtype)
+			foreach ($adds as $idandtypeandprice)
 			{
-				list($id,$types)=preg_split('/;/',$idandtype,null,PREG_SPLIT_NO_EMPTY);
-				$types_array=preg_split('/,/',$types,null,PREG_SPLIT_NO_EMPTY);
-				
-				// Does it already exist?
-				$item=null;
-				for ($i=0,$j=count($menu->items);$i<$j;++$i)
-				{
-					if ($menu->items[$i]->id==$id)
-						$item=$i;
+				$parts=preg_split('/;/',$idandtypeandprice);
+				if (count($parts)==2) {
+					$parts[2]=""; // No price specified
 				}
-				if (is_null($item))
-					$item=count($menu->items); // Add to end
+				else if (count($parts)==1) {
+					$parts[1]="";
+					$parts[2]=""; // No price specified
+				}
+				
+				if (count($parts)) {
+					list($id,$types,$price)=$parts;
+					$types_array=preg_split('/,/',$types,null,PREG_SPLIT_NO_EMPTY);
+				
+					// Does it already exist?
+					$item=null;
+					for ($i=0,$j=count($menu->items);$i<$j;++$i)
+					{
+						if ($menu->items[$i]->id==$id)
+							$item=$i;
+					}
+					if (is_null($item)) {
+						$item=count($menu->items); // Add to end
+						$menu->items[$item]=new stdClass; // Create a new one
+					}
 
-				$parts=split(':',$id);
+					$parts=split(':',$id);
 
-				$menu->items[$item]=new stdClass;
-				$menu->items[$item]->type=$parts[0];
-				$menu->items[$item]->id=$id;
-				$menu->items[$item]->ontap=in_array('tap',$types_array);
-				$menu->items[$item]->inbottle=in_array('bottle',$types_array);
-				$menu->items[$item]->inbottle22=in_array('bottle22',$types_array);
-				$menu->items[$item]->oncask=in_array('cask',$types_array);
-				$menu->items[$item]->incan=in_array('can',$types_array);
-				$menu->items[$item]->price=0;
+					$menu->items[$item]->type=$parts[0];
+					$menu->items[$item]->id=$id;
+					if (count($types_array)) {
+						$menu->items[$item]->ontap=in_array('tap',$types_array);
+						$menu->items[$item]->inbottle=in_array('bottle',$types_array);
+						$menu->items[$item]->inbottle22=in_array('bottle22',$types_array);
+						$menu->items[$item]->oncask=in_array('cask',$types_array);
+						$menu->items[$item]->incan=in_array('can',$types_array);
+					}
+
+					if (is_numeric($price)) {
+						if (((float)$price)>0)
+							$menu->items[$item]->price=(float)$price;
+						else
+							unset($menu->items[$item]->price); // Setting it to zero unsets it
+					}
+				}
 			}
 			
 			// Store in db

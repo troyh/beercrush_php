@@ -5,6 +5,8 @@ require_once("OAK/oak.class.php");
 $cgi_fields=array(
 	"place_id"		=> array(flags=>OAK::FIELDFLAG_REQUIRED, type=>OAK::DATATYPE_TEXT, validatefunc=>'Place::validatePlaceID' ),
 	"rating"		=> array(flags=>OAK::FIELDFLAG_REQUIRED, type=>OAK::DATATYPE_INT, min=>0, max=>5),
+	"kidfriendly"	=> array(type=>OAK::DATATYPE_INT, min=>0, max=>5),
+	"comments"		=> array(type=>OAK::DATATYPE_TEXT),
 );
 
 function oakMain($oak)
@@ -38,7 +40,11 @@ function oakMain($oak)
 		else
 		{
 			header("HTTP/1.0 200 OK");
-			$oak->write_document_json($review);
+			header("Content-Type: application/json; charset=utf-8");
+			$review->id=$review->_id;
+			unset($review->_id);
+			unset($review->_rev);
+			print json_encode($review);
 		}
 	}
 

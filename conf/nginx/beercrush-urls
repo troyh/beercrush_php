@@ -9,6 +9,7 @@ rewrite ^/store/api/flavors$ /api/flavors.php break;
 rewrite ^/store/api/image/(.+)$ /api/image/view.php?fname=$1 break;
 rewrite ^/store/api/login$ /api/login.php break;
 rewrite ^/store/api/logout$ /api/logout.php break;
+rewrite ^/store/api/place/review$ /api/place/review.php break;
 rewrite ^/store/api/places$ /api/places.php break;
 rewrite ^/store/api/restaurantcategories$ /api/restaurantcategories.php break;
 rewrite ^/store/api/search$ /api/search.php break;
