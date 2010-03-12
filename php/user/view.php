@@ -1,8 +1,8 @@
 <?php
 require_once('beercrush/beercrush.php');
 
-$oak=new OAK;
-$userdoc=BeerCrush::api_doc($oak,'user/'.$_GET['user_id']);
+$userdoc=BeerCrush::api_doc($BC->oak,'user/'.$_GET['user_id']);
+$reviews=BeerCrush::api_doc($BC->oak,'user/'.$_GET['user_id'].'/reviews');
 
 include("../header.php");
 ?>
@@ -26,6 +26,31 @@ include("../header.php");
 	<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
 
 </div>
+
+<h2>My Reviews (<?=count($reviews->reviews)?>)</h2>
+<?
+foreach ($reviews->reviews as $review) {
+	$review_type=BeerCrush::get_review_type($review->id);
+?>
+	<div>
+		<div>
+			[<?=$review_type?>]
+			<?if ($review_type=='beer') {?>
+				<a href="/<?=BeerCrush::docid_to_docurl($review->beer_id)?>"><?=$BC->docobj($review->beer_id)->name?></a>
+				by <a href="/<?=BeerCrush::docid_to_docurl($BC->docobj(BeerCrush::beer_id_to_brewery_id($review->beer_id))->id)?>"><?=$BC->docobj(BeerCrush::beer_id_to_brewery_id($review->beer_id))->name?></a>
+			<?} else if ($review_type=='place'){?>
+				<a href="/<?=BeerCrush::docid_to_docurl($review->place_id)?>"><?=$BC->docobj($review->place_id)->name?></a>
+			<?}?>
+		</div>
+		<div>Rating: <?=str_repeat('&#9829;',$review->rating)?></div>
+		<?if ($review_type=='place'){?>
+			<div>Kid-Friendly: <?=str_repeat('&#9829;',$review->kidfriendly)?></div>
+		<?}?>
+		<?if (!empty($review->comments)):?><div>Comments: <?=$review->comments?></div><?endif?>
+	</div>
+<?
+}
+?>
 
 <script type="text/javascript" src="/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript">
