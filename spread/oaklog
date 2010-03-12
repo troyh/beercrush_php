@@ -2,11 +2,33 @@
 <?php
 require_once('OAK/jobs.class.php');
 
-$bOutput=FALSE;
-if (!empty($argv[1]) && $argv[1]=='--output')
-	$bOutput=TRUE;
+$opts=getopt('ocC:h');
 
-$oak=new OAK();
+if (isset($opts['h'])) {
+	$cmdname=basename($argv[0]);
+	print <<<EOF
+Usage: $cmdname [-o] [-c] -C <conf file>
+
+	-o Output log messages to stdout
+	-c Use color in output
+	-C Specify path to .conf file
+
+
+EOF;
+	exit;
+}
+
+$bOutput=isset($opts['o']);
+$bColorOutput=isset($opts['c']);
+
+try {
+	$oak=new OAK($opts['C']);
+}
+catch (Exception $x) {
+	print $x->getMessage()."\n";
+	exit;
+}
+
 $oakjobs=new OAKJobs($oak,'oaklog');
 $oakjobs->set_message_callback('log_message');
 $oakjobs->gimme_jobs('log_job');
@@ -14,28 +36,35 @@ $oakjobs->gimme_jobs('log_job');
 function log_job($oakjobs,$msg) {
 	// Send ERRs and CRITs to somewhere where they'll be seen
 	list($priority,$ident,$logmsg)=preg_split('/:/',$msg,3);
-	print "$msg\n";
 	if ($priority=='CRIT' || $priority=='ERR') {
-		// TODO: do something with it
+		// TODO: If on a production server, send email to email address in config
 	}
+
 	$oakjobs->job_done($msg);
 }
 
 function log_message($oakjobs,$msg) {
 	global $bOutput;
+	global $bColorOutput;
+	
 	if ($bOutput) {
 		// Parse message
 		list($priority,$ident,$logmsg)=preg_split('/:/',$msg,3);
-		// See man console_codes for console escape codes
-		if ($priority=='CRIT')
-			print "\7\033[37;41m"; // Bell w/ white on red
-		else if ($priority=='ERR')
-			print "\033[31m"; // Red on white
-		else
-			print "\033[32m"; // Green on white
-		print date('Y-m-d H:i:s').' '.$priority.' '.$ident.' '.$logmsg;
-		print "\033[0m\n";
+		if ($bColorOutput) {
+			// See man console_codes for console escape codes
+			if ($priority=='CRIT')
+				print "\7\033[37;41m"; // Bell w/ white on red
+			else if ($priority=='ERR')
+				print "\033[31m"; // Red on white
+			else
+				print "\033[32m"; // Green on white
+		}
+		
+		print $priority.' '.date('Y-m-d H:i:s').' '.$ident.' '.$logmsg."\n";
+		
+		if ($bColorOutput) {
+			print "\033[0m";
+		}
 	}
 }
-
 ?>
