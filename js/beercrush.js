@@ -129,11 +129,11 @@ function makeDocEditable(docSelector,docid_id,url)
 			if ($(this).get(0).tagName!='INPUT' && ($(this).attr('id').substr(0,prefix.length) == prefix))
 			{ // This is a field we need to make editable
 
-				// Get the name of this field
-				var fieldname=$(this).attr('id').substr(prefix.length);
 				
 				$(this).editable(function(value,settings) {
-					
+
+					// Get the name of this field
+					var fieldname=$(this).attr('id').substr(prefix.length);
 					editable_changes[$(docSelector).attr('id')][fieldname]=value;
 					
 					$(docSelector+' .editable_savechanges_button').each(function() {
