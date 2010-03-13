@@ -18,7 +18,6 @@ function oakMain($oak)
 	else
 	{
 		// TODO: verify that it's a JPEG
-		// TODO: put the photo in a temporary location
 		
 		$uuid=$oak->create_uuid();
 		$filename=$uuid.'.jpg';
@@ -49,9 +48,6 @@ function oakMain($oak)
 		}
 
 		$oak->log('Uploaded beer photo for beer '.$info['id'].' from user '.$info['user']);
-		
-		unset($info['fetchurl']);
-		unset($info['hostname']);
 		
 		header('Content-Type: application/json; charset=utf-8');
 		print json_encode($info);

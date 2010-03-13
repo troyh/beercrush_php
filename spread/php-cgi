@@ -1,83 +1,90 @@
 #!/usr/bin/php
 <?php
 require_once('beercrush/beercrush.php');
+require_once('OAK/jobs.class.php');
 
-$oak=new OAK('/etc/BeerCrush/webapp.conf');
+$oak=new OAK(BeerCrush::CONF_FILE);
+$oakjobs=new OAKJobs($oak,'newphotos');
+$oakjobs->set_message_callback('messages');
+$oakjobs->gimme_jobs('process_new_photo');
+	
+function messages($oakjobs,$photoinfo,$fullmsg) {
 
-if ($oak->spread_connect()===TRUE) {
-	
-	$oak->spread_join('newphotos');
-	
-	do {
-		$msg=$oak->spread_receive();
-		if ($msg) {
-	
-			foreach ($msg['groups'] as $group) {
-				switch ($group) {
-					case 'newphotos':
-						$photoinfo=json_decode($msg['message']);
-						print "User:".$photoinfo->user."\n";
-						print "ID:".$photoinfo->id."\n";
-						print "UUID:".$photoinfo->uuid."\n";
-						print "URL:".$photoinfo->url."\n";
-						print "Filename:".$photoinfo->filename."\n";
-						print "Time:".date('r',$photoinfo->timestamp)."\n\n";
-						
-						$sender=$msg['sender'];
-						if (preg_match('/#(.*)#(.*)$/',$sender,$matches)) {
-							$host=$matches[2];
+	// print "User:".$photoinfo->user."\n";
+	// print "ID:".$photoinfo->id."\n";
+	// print "UUID:".$photoinfo->uuid."\n";
+	// print "URL:".$photoinfo->url."\n";
+	// print "Filename:".$photoinfo->filename."\n";
+	// print "Time:".date('r',$photoinfo->timestamp)."\n\n";
 
-							// Copy the file from the original host to this host
-							if ($oak->scp($host,$photoinfo->filename,$photoinfo->filename)===TRUE) 	{
-								// Update the database
-								$bFound=FALSE;
-								$photoset=new OAKDocument('');
-								// Get the photoset doc
-								if ($oak->get_document('photoset:'.$photoinfo->id,&$photoset)!==TRUE) {
-									// It doesn't exist, create one
-									$photoset->setID('photoset:'.$photoinfo->id);
-									$photoset->beer_id=$photoinfo->id;
-									$photoset->photos=array();
-								}
-								else {
-									$oak->log('Got document '.$photoset->getID().' rev='.$photoset->_rev);
-									// Find out if this file is already in the database
-									foreach ($photoset->photos as $photo) {
-										if ($photo->filename==$photoinfo->filename) {
-											// Already there, don't need to do anything
-											$bFound=TRUE;
-											break;
-										}
-									}
-								}
-									
-								if ($bFound==FALSE) {
-									// Update photoset doc with this photo
-									$photoset->photos[]=array(
-										'filename' => $photoinfo->filename,
-										'url' => $photoinfo->url,
-										'user_id' => $photoinfo->user,
-										'uuid' => $photoinfo->uuid,
-										'timestamp' => $photoinfo->timestamp,
-									);
-									
-									$oak->log('Putting document '.$photoset->getID().' rev='.$photoset->_rev);
-									if ($oak->put_document($photoset->getID(),$photoset)===FALSE) {
-										$oak->log('Unable to put document: '.$photoset->getID());
-									}
-								}
-							}
-						}
-						break;
-					default:
-						break;
-				}
+	// If I didn't send the message, copy the file here
+	$sender=$fullmsg['sender'];
+	if (preg_match('/^#(.*)#(.*)$/',$sender,$matches)) {
+		$host=$matches[2];
+		if ($host!='localhost') { // TODO: Also check for my real hostname (Spread will give a real hostname, not "localhost")
+			$oakjobs->getOAK()->log('Copying photo file from '.$host.': '.$photoinfo->filename);
+
+			// Copy the file from the original host to this host
+			if ($oakjobs->getOAK()->scp($host,$photoinfo->filename,$photoinfo->filename)===TRUE) 	{
 			}
 		}
 	}
-	while (true);
 	
-	$oak->spread_disconnect();
+}
+
+function process_new_photo($oakjobs,$photoinfo) {
+
+	// print "User:".$photoinfo->user."\n";
+	// print "ID:".$photoinfo->id."\n";
+	// print "UUID:".$photoinfo->uuid."\n";
+	// print "URL:".$photoinfo->url."\n";
+	// print "Filename:".$photoinfo->filename."\n";
+	// print "Time:".date('r',$photoinfo->timestamp)."\n\n";
+	
+	// Update the database
+	$bFound=FALSE;
+	$photoset=new OAKDocument('');
+	// Get the photoset doc
+	if ($oakjobs->getOAK()->get_document('photoset:'.$photoinfo->id,&$photoset)!==TRUE) {
+		// It doesn't exist, create one
+		$photoset->setID('photoset:'.$photoinfo->id);
+
+		$parts=explode(':',$photoinfo->id);
+		$type_id_specifier=$parts[0].'_id';
+
+		$photoset->$type_id_specifier=$photoinfo->id;
+		$photoset->photos=array();
+	}
+	else {
+		$oakjobs->getOAK()->log('Got document '.$photoset->getID().' rev='.$photoset->_rev);
+		// Find out if this file is already in the database
+		foreach ($photoset->photos as $photo) {
+			if ($photo->filename==$photoinfo->filename) {
+				// Already there, don't need to do anything
+				$bFound=TRUE;
+				break;
+			}
+		}
+	}
+				
+	if ($bFound==FALSE) {
+		// Update photoset doc with this photo
+		$photoset->photos[]=array(
+			'filename' => $photoinfo->filename,
+			'url' => $photoinfo->url,
+			'user_id' => $photoinfo->user,
+			'uuid' => $photoinfo->uuid,
+			'timestamp' => $photoinfo->timestamp,
+		);
+		
+		if ($oakjobs->getOAK()->put_document($photoset->getID(),$photoset)===FALSE) {
+			// OAK will log the error, we don't need to log it too
+		}
+	}
+	
+	$oakjobs->job_done($photoinfo);
+	
+	// TODO: backup photo to S3 or somewhere permanent
 }
 
 ?>

@@ -1,5 +1,4 @@
 <?php
-header("Cache-Control: no-cache");
 require_once('OAK/oak.class.php');
 
 if (empty($_GET['place_id']))
@@ -10,7 +9,7 @@ if (empty($_GET['place_id']))
 }
 
 $oak=new OAK;
-$photoset=new OAKDocument('');
+$photoset=new OAKDocument('photoset');
 if ($oak->get_document('photoset:'.$_GET['place_id'],$photoset)===false)
 {
 	$photoset->id='photoset:'.$_GET['place_id'];
@@ -23,7 +22,6 @@ else
 	unset($photoset->_rev);
 }
 
-$photoset->id=$photoset->_id;
 unset($photoset->_id);
 unset($photoset->_rev);
 

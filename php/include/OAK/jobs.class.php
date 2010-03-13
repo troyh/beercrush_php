@@ -52,7 +52,7 @@ class OAKJobs {
 					$job=$newmsg['message'];
 					
 				if ($this->message_callback) {
-					call_user_func($this->message_callback,$this,$job);
+					call_user_func($this->message_callback,$this,$job,$newmsg);
 				}
 				
 				$this->create_job($job);

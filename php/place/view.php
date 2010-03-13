@@ -2,15 +2,22 @@
 require_once('beercrush/beercrush.php');
 
 $oak=new OAK(BeerCrush::CONF_FILE);
-$place=BeerCrush::api_doc($oak,'place/'.str_replace(':','/',$_GET['place_id']));
+$place   =BeerCrush::api_doc($oak,'place/'.str_replace(':','/',$_GET['place_id']));
 $beerlist=BeerCrush::api_doc($oak,'place/'.str_replace(':','/',$_GET['place_id']).'/menu');
-$reviews=BeerCrush::api_doc($oak,'review/place/'.str_replace(':','/',$_GET['place_id']).'/0');
+$reviews =BeerCrush::api_doc($oak,'review/place/'.str_replace(':','/',$_GET['place_id']).'/0');
+$photoset=BeerCrush::api_doc($oak,'photoset/place/'.$_GET['place_id']);	
+// var_dump($photoset);exit;
 // var_dump($beerlist);exit;
 // var_dump($place);exit;
 // var_dump($reviews);exit;
 
 $header['title']=$place->name;
 $header['js'][]='<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>';
+$header['js'][]='<script type="text/javascript" src="/js/jquery.uploadify.v2.1.0.js"></script>';
+$header['js'][]='<script type="text/javascript" src="/js/swfobject.js"></script>';
+
+// Add the CSS for Uploadify
+$header['css'][]='<link href="/css/uploadify.css" rel="stylesheet" type="text/css" />';
 
 include("../header.php");
 ?>
@@ -98,6 +105,19 @@ include("../header.php");
 	</tr>
 	</table>
 </div>
+
+<h2>Photos</h2>
+
+<?php foreach ($photoset->photos as $photo) :?>
+	<div>
+	<img src="<?=$photo->url?>?size=small" />
+	<a href="/user/<?=$photo->user_id?>"><?=$BC->docobj('user/'.$photo->user_id)->name?></a> <span class="datestring"><?=date(BeerCrush::DATE_FORMAT,$photo->timestamp)?></span>
+	</div>
+<?php endforeach; ?>
+
+<div id="new_photos"></div>
+
+<input id="photo_upload" name="photo" type="file" />
 
 <h2><?=count($reviews->reviews)?> Reviews</h2>
 <div id="reviewlist">
@@ -264,6 +284,29 @@ function pageMain()
 		});
 		return false;
 	});
+
+	$('#photo_upload').uploadify({
+		'uploader'  : '/flash/uploadify.swf',
+		'script'    : '/api/place/photo',
+		'cancelImg' : '/img/uploadify/cancel.png',
+		'auto'      : true,
+		'multi'     : true,
+		'fileDataName': 'photo',
+		'fileDesc'	: 'Upload a photo',
+		'fileExt'	: '*.jpg;*.jpeg;*.png',
+		'buttonText': "Upload a photo", 
+		'sizeLimit' : 5000000, 
+		'scriptData': {
+			'place_id': $('#place_id').val(),
+			'userid': $.cookie('userid')
+		},
+		'onComplete': function(evt,queueID,fileObj,response,data) {
+			photoinfo=$.parseJSON(response);
+			$('#new_photos').append('<img src="'+photoinfo.url+'?size=small" />');
+			return true;
+		}
+	});
+	
 
 }
 
