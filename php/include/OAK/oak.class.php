@@ -3,7 +3,7 @@ require_once('beercrush/couchdb.php');
 
 class OAKDocument
 {
-	function __construct($type) 
+	function __construct($type='') 
 	{
 		$this->type=$type;
 		if (!isset($this->meta))
@@ -631,7 +631,13 @@ class OAK
 		$status=$rsp->getStatusCode();
 		if ($status==201)
 		{
-			$body=$rsp->getBody(false);
+			$body=$rsp->getBody(true);
+			$body->oldrev=$doc->_rev;
+			$body->couchdb=array(
+				'host'=>$this->config->couchdb->host,
+				'port'=>$this->config->couchdb->port,
+				'db'=>$this->config->couchdb->database,
+			);
 			$this->broadcast_msg('dbchanges',$body);
 			return true;
 		}
