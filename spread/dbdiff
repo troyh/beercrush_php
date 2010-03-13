@@ -2,10 +2,15 @@
 <?php
 require_once('OAK/oak.class.php');
 require_once('OAK/jobs.class.php');
-require_once('OAK/jsondiff.php');
+// require_once('OAK/jsondiff.php');
+require_once('/home/troy/beercrush/php/include/OAK/jsondiff.php');
 
-$opts=getopt('C:');
+$opts=getopt('C:m:');
 if (isset($opts['C'])) {
+	array_shift($argv);
+	array_shift($argv);
+}
+if (isset($opts['m'])) {
 	array_shift($argv);
 	array_shift($argv);
 }
@@ -19,7 +24,14 @@ catch (Exception $x) {
 }
 
 $oakjobs=new OAKJobs($oak,'dbchanges');
-$oakjobs->gimme_jobs('dbchange_callback');
+
+if (isset($opts['m'])) {
+	$msg=json_decode($opts['m']);
+	call_user_func('dbchange_callback',$oakjobs,$msg);
+}
+else {
+	$oakjobs->gimme_jobs('dbchange_callback');
+}
 
 function dbchange_callback($oakjobs,$msg) {
 
@@ -30,29 +42,63 @@ function dbchange_callback($oakjobs,$msg) {
 	$docb=new OAKDocument();
 	$oakjobs->getOAK()->get_document($doca_url,&$doca);
 	$oakjobs->getOAK()->get_document($docb_url,&$docb);
+	
+	// print_r($doca);
+	// print_r($docb);
+
+	$mtime_a=$doca->meta->mtime;
+	$mtime_b=$docb->meta->mtime;
 
 	// We know these changed, remove them first
 	unset($doca->_rev);
-	unset($doca->meta->mtime);
 	unset($docb->_rev);
+	unset($doca->meta->mtime);
 	unset($docb->meta->mtime);
+	
+	print "---{$msg->id} ({$msg->oldrev}) ".(!is_null($mtime_a)?date('Y-m-d H:i:s',$mtime_a):'')."\n";
+	print "+++{$msg->id} ({$msg->rev}) ".(!is_null($mtime_b)?date('Y-m-d H:i:s',$mtime_b):'')."\n";
 	
 	$changes=array();
 	JSONdiff($doca,$docb,'',&$changes);
 
 	// print_r($changes);
-	print "---{$msg->id} ({$msg->oldrev})\n";
-	print "+++{$msg->id} ({$msg->rev})\n";
-
-	foreach ($changes as $k=>$v) {
-		if (!empty($v)) {
-			print '@@ '.$k."\n";
-			print '-'.$v['old']."\n";
-			print '+'.$v['new']."\n";
-		}
-	}
+	output_changes($changes);
 	
 	$oakjobs->job_done($msg);
+}
+
+function output_changes($changes,$name='') {
+	if (empty($changes))
+		return;
+	foreach ($changes as $k=>$v) {
+		if ($k=='_diff') {
+			if (!empty($v))
+				print '@@ '.$name."\n";
+
+			if (isset($v['old'])) {
+				if (is_scalar($v['old']))
+					print '-'.$v['old']."\n";
+				else if (is_object($v['old'])) {
+					foreach ($v['old'] as $k=>$v) {
+						print '@@ '.$name.'.'.$k."\n-$v\n";
+					}
+				}
+			}
+			
+			if (isset($v['new'])) {
+				if (is_scalar($v['new']))
+					print '+'.$v['new']."\n";
+				else if (is_object($v['new'])) {
+					foreach ($v['new'] as $k=>$v) {
+						print '@@ '.$name.'.'.$k."\n+$v\n";
+					}
+				}
+			}
+		}
+		else {
+			output_changes($v,(empty($name)?'':$name.'.').$k);
+		}
+	}
 }
 
 ?>
