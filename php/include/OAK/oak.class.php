@@ -1131,10 +1131,10 @@ class OAK
 		return null;
 	}
 	
-	public function purge_view_cache($url)
+	public function purge_view_cache($url,$port)
 	{
 		list($designname,$viewname)=preg_split("/\//",$url,2);
-		return $this->purge_document_cache('/'.$this->config->couchdb->database.'/_design/'.$designname.'/_view/'.$viewname);
+		return $this->purge_document_cache('/'.$this->config->couchdb->database.'/_design/'.$designname.'/_view/'.$viewname,$port);
 	}
 	
 	public function purge_document_cache($url,$port=80)

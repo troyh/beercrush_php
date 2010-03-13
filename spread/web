@@ -16,8 +16,8 @@ function handle_docchange($oaklistener,$docid) {
 		array('^brewery:([^:]+)$'  						, '/api/brewery/$1'),
 		array('^menu:place:([^:]+)$'    				, '/api/place/$1/menu'),
 		array('^place:([^:]+)$'    						, '/api/place/$1'),
-		array('^review:beer:([^:]+):([^:]+):([^:]+)$'	, array('/api/review/beer/$1/$2/0','/api/review/beer/$1/$2/$3')),
-		array('^review:(brewery|place):([^:]+):([^:]+)$', array('/api/review/$1/$2/0','/api/review/$1/$2/$3')),
+		array('^review:beer:([^:]+):([^:]+):([^:]+)$'	, array('/api/review/beer/$1/$2/0','/api/review/beer/$1/$2/$3')), // TODO: the /0 URL should also do /1, /2, etc.
+		array('^review:(brewery|place):([^:]+):([^:]+)$', array('/api/review/$1/$2/0','/api/review/$1/$2/$3')), // TODO: the /0 URL should also do /1, /2, etc.
 		array('^user:([^:]+)$'     						, '/api/user/$1'),
 		array('^photoset:([^:]+):([^:]+):([^:]+)$'		, '/api/photoset/$1/$2/$3'),
 		array('^flavors'								, '/api/flavors'),

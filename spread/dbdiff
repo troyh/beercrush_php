@@ -41,8 +41,8 @@ function dbchange_callback($oakjobs,$msg) {
 	JSONdiff($doca,$docb,'',&$changes);
 
 	// print_r($changes);
-	print "---$doca_url\n";
-	print "+++$docb_url\n";
+	print "---{$msg->id} ({$msg->oldrev})\n";
+	print "+++{$msg->id} ({$msg->rev})\n";
 
 	foreach ($changes as $k=>$v) {
 		if (!empty($v)) {

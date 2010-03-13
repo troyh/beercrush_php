@@ -9,8 +9,6 @@ $reviews=BeerCrush::api_doc($oak,'review/place/'.str_replace(':','/',$_GET['plac
 // var_dump($place);exit;
 // var_dump($reviews);exit;
 
-$user_cache=array();
-
 $header['title']=$place->name;
 $header['js'][]='<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>';
 
@@ -104,12 +102,8 @@ include("../header.php");
 <h2><?=count($reviews->reviews)?> Reviews</h2>
 <div id="reviewlist">
 	<?foreach($reviews->reviews as $review):?>
-	<? if (!isset($user_cache[$review->user_id])) {
-		$userdoc=BeerCrush::api_doc($oak,'user/'.$review->user_id);
-		$user_cache[$review->user_id]=$userdoc;
-	}?>
 	<div>
-		<div><img src="<?=$user_cache[$review->user_id]->avatar?>" /><a href="/user/<?=$review->user_id?>"><?=$user_cache[$review->user_id]->name?></a></div>
+		<div><img src="<?=$BC->docobj('user/'.$review->user_id)->avatar?>" /><a href="/user/<?=$review->user_id?>"><?=$BC->docobj('user/'.$review->user_id)->name?></a></div>
 		<div>Rating: <?=str_repeat("&#9829;",$review->rating)?></div>
 		<div>Kid-Friendly: <?=str_repeat("&#9829;",$review->kidfriendly)?></div>
 		<div><?=$review->comments?></div>
