@@ -1,0 +1,58 @@
+#!/usr/bin/php
+<?php
+require_once('OAK/oak.class.php');
+require_once('OAK/jobs.class.php');
+require_once('OAK/jsondiff.php');
+
+$opts=getopt('C:');
+if (isset($opts['C'])) {
+	array_shift($argv);
+	array_shift($argv);
+}
+
+try {
+$oak=new OAK($opts['C']);
+}
+catch (Exception $x) {
+	print $x->getMessage()."\n";
+	exit;
+}
+
+$oakjobs=new OAKJobs($oak,'dbchanges');
+$oakjobs->gimme_jobs('dbchange_callback');
+
+function dbchange_callback($oakjobs,$msg) {
+
+	$doca_url=$msg->id.'?rev='.$msg->oldrev;
+	$docb_url=$msg->id.'?rev='.$msg->rev;
+
+	$doca=new OAKDocument();
+	$docb=new OAKDocument();
+	$oakjobs->getOAK()->get_document($doca_url,&$doca);
+	$oakjobs->getOAK()->get_document($docb_url,&$docb);
+
+	// We know these changed, remove them first
+	unset($doca->_rev);
+	unset($doca->meta->mtime);
+	unset($docb->_rev);
+	unset($docb->meta->mtime);
+	
+	$changes=array();
+	JSONdiff($doca,$docb,'',&$changes);
+
+	// print_r($changes);
+	print "---$doca_url\n";
+	print "+++$docb_url\n";
+
+	foreach ($changes as $k=>$v) {
+		if (!empty($v)) {
+			print '@@ '.$k."\n";
+			print '-'.$v['old']."\n";
+			print '+'.$v['new']."\n";
+		}
+	}
+	
+	$oakjobs->job_done($msg);
+}
+
+?>
