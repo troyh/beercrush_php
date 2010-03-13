@@ -11,7 +11,7 @@ $cgi_fields=array(
 	"aftertaste"	   => array(type=>OAK::DATATYPE_INT, min=>0, max=>5),
 	"comments"		   => array(type=>OAK::DATATYPE_TEXT),
 	"flavors"		   => array(type=>OAK::DATATYPE_TEXT,flags=>OAK::FIELDFLAG_CGIONLY),
-	"purchase_price"   => array(type=>OAK::DATATYPE_MONEY),
+	"purchase_price"   => array(type=>OAK::DATATYPE_MONEY,minlen=>0),
 	"purchase_place_id"=> array(type=>OAK::DATATYPE_TEXT),
 	"poured_from"	   => array(type=>OAK::DATATYPE_TEXT),
 	"date_drank"	   => array(type=>OAK::DATATYPE_TEXT),

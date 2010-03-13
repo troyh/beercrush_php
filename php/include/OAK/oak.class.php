@@ -284,7 +284,9 @@ class OAK
 				break;
 			case OAK::DATATYPE_MONEY:
 				// TODO: support currency symbol
-				if (!is_numeric($value))
+				if (empty($value) && $attribs['minlen']==0) { // OK
+				}
+				else if (!is_numeric($value))
 					return false;
 
 				$attribs['converted_value']=(float)$value;
@@ -469,7 +471,7 @@ class OAK
 				if (isset($_POST[$cgi_name]))
 				{
 					$attribs['isset']=true;
-					$aattribs['value']=$_POST[$cgi_name];
+					$attribs['value']=$_POST[$cgi_name];
 					if ($this->validate_field($cgi_name,$_POST[$cgi_name],&$attribs))
 						$attribs['validated']=true;
 				}
