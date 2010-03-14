@@ -119,3 +119,9 @@ img {
 #flavors_table {
 	font-size:8pt;
 }
+
+#findnearbylink {
+	position:absolute;
+	top:75px;
+	left:500px;
+}

@@ -37,6 +37,7 @@ foreach (array('css','js') as $t) {
 		<li><a href="/places/">Places</a></li>
 		<li><a href="/users/">People</a></li>
 	</ol>
+	<div id="findnearbylink"><a href="/nearby">Find Places Nearby</a></div>
 	<div id="searchform">
 		<form method="GET" action="/search">
 			Search:
