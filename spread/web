@@ -8,29 +8,31 @@ $oaklistener=new OAKListener($oak,'docchanges');
 $oaklistener->gimme_messages('handle_docchange');
 
 function handle_docchange($oaklistener,$docid) {
-	$oaklistener->getOAK()->log('Document changed:'.$docid);
+	$oaklistener->getOAK()->log('Document changed: '.$docid);
 
 	$docmap=array(
 		// Document -> APIs
 		array('^beer:([^:]+):([^:]+)$'					, array('/api/beer/$1/$2','/api/brewery/$1/beerlist')),
 		array('^brewery:([^:]+)$'  						, '/api/brewery/$1'),
 		array('^menu:place:([^:]+)$'    				, '/api/place/$1/menu'),
+		array('^photoset:beer:([^:]+):([^:]+)$'			, '/api/photoset/beer/$1/$2'),
+		array('^photoset:(brewery|place):([^:]+)$'		, '/api/photoset/$1/$2'),
 		array('^place:([^:]+)$'    						, '/api/place/$1'),
 		array('^review:beer:([^:]+):([^:]+):([^:]+)$'	, array('/api/review/beer/$1/$2/0','/api/review/beer/$1/$2/$3')), // TODO: the /0 URL should also do /1, /2, etc.
 		array('^review:(brewery|place):([^:]+):([^:]+)$', array('/api/review/$1/$2/0','/api/review/$1/$2/$3')), // TODO: the /0 URL should also do /1, /2, etc.
 		array('^user:([^:]+)$'     						, '/api/user/$1'),
-		array('^photoset:([^:]+):([^:]+):([^:]+)$'		, '/api/photoset/$1/$2/$3'),
 		array('^flavors'								, '/api/flavors'),
 		// API -> Pages
 		array('^/api/beer/([^/]+)/([^/]+)$'				, array('/beer/$1/$2','/brewery/$1/beerlist')),
 		array('^/api/brewery/([^/]+)$'					, '/brewery/$1'),
 		array('^/api/brewery/([^/]+)/beerlist$'			, '/brewery/$1'),
+		array('^/api/photoset/beer/([^/]+)/([^/]+)$'	, '/beer/$1/$2'),
+		array('^/api/photoset/(brewery|place)/([^/]+)$'	, '/$1/$2'),
 		array('^/api/place/([^/]+)/menu$'				, '/place/$1'),
 		array('^/api/place/([^/]+)$'					, '/place/$1'),
 		array('^/api/review/beer/([^/]+)/([^/]+)/([^/]+)$', '/beer/$1/$2'),
 		array('^/api/review/(brewery|place)/([^/]+)/([^/]+)$', '/$1/$2'),
 		array('^/api/user/([^/]+)$'						, '/user/$1'),
-		array('^/api/photoset/(beer|brewery|place)/([^/]+)/([^/]+)$', '/$1/$2/$3'),
 	);
 	
 	do_purges($docid,$docmap,0);

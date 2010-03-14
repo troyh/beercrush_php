@@ -1,5 +1,6 @@
 <?php
 header("Cache-Control: no-cache");
+
 require_once 'OAK/oak.class.php';
 
 $cgi_fields=array(
@@ -18,37 +19,38 @@ function oakMain($oak)
 	{
 		// TODO: verify that it's a JPEG
 		
-		$filename=$oak->create_uuid().'.jpg';
-		$uploadfile = '/var/local/BeerCrush/uploads/'.$filename;
+		$uuid=$oak->create_uuid();
+		$filename=$uuid.'.jpg';
+		$path='/var/local/BeerCrush/images/'.chunk_split(substr($uuid,0,8),2,'/');
+		$uploadfile=$path.$filename;
+
+		mkdir($path,0775,true);
 
 		$info=array(
 			'user' => $oak->get_user_id(),
 			'id' => $oak->get_cgi_value('brewery_id',&$cgi_fields),
-			'fetchurl' => '/uploads/'.$filename,
-			'filename' => $filename,
-			'hostname' => php_uname('n'),
+			'uuid' => $uuid,
+			'url' => '/api/image/'.$filename,
+			'filename' => $uploadfile,
 			'timestamp' => time(),
-			'type' => 'photo'
+			'type' => 'newphoto'
 		);
 		$json_info=json_encode($info);
 		
-		// Make info file as a backup (used in the event the queue is destroyed for any reason)
-		$infofile = $oak->get_file_location('WWW_DIR').'/uploads/'.$filename.'.info';
-
 		if (@move_uploaded_file($_FILES['photo']['tmp_name'], $uploadfile)===FALSE) 
 		{
 			header("HTTP/1.0 500 Unable to save photo");
+			exit;
 		}
-		else if (file_put_contents($infofile,$json_info)===FALSE)
-		{
-			header("HTTP/1.0 500 Unable to save photo info");
+
+		if ($oak->broadcast_msg('newphotos',$json_info)===FALSE) {
+			// What to do?
 		}
-		else if ($oak->put_queue_msg('uploads',$json_info)===FALSE) // Add the info to the queue
-		{
-			// We won't fail for this because we can (and should) scan the uploads directories 
-			// on all the servers periodically anyway.
-			// header("HTTP/1.0 500 Unable to queue upload");
-		}
+
+		$oak->log('Uploaded beer photo for beer '.$info['id'].' from user '.$info['user']);
+		
+		header('Content-Type: application/json; charset=utf-8');
+		print json_encode($info);
 	}
 }
 

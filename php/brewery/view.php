@@ -1,16 +1,18 @@
 <?php
-require_once('OAK/oak.class.php');
-$oak=new OAK;
+require_once('beercrush/beercrush.php');
 
-$doc=@file_get_contents($oak->get_config_info()->api->base_uri."/brewery/".$_GET['brewery_id']);
-$brewerydoc=json_decode($doc);
-
-$doc=@file_get_contents($oak->get_config_info()->api->base_uri."/brewery/".$_GET['brewery_id']."/beerlist");
-$beerlistdoc=json_decode($doc);
+$brewerydoc=$BC->docobj("/brewery/".$_GET['brewery_id']);
+$beerlistdoc=$BC->docobj("/brewery/".$_GET['brewery_id']."/beerlist");
 if ($beerlistdoc==null)
 {
 	$beerlistdoc->beers=array();
 }
+$photoset=$BC->docobj('photoset/brewery/'.$_GET['brewery_id']);	
+
+$header['title']=$brewerydoc->name;
+$header['js'][]='<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>';
+$header['js'][]='<script type="text/javascript" src="/js/jquery.uploadify.v2.1.0.js"></script>';
+$header['js'][]='<script type="text/javascript" src="/js/swfobject.js"></script>';
 
 include("../header.php");
 ?>
@@ -34,6 +36,8 @@ include("../header.php");
 	<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
 
 </div>
+
+<div id="map" style="width:300px;height:300px"></div>
 
 <h3>Beers</h3>
 <div id="beerlist">
@@ -59,12 +63,40 @@ include("../header.php");
 	<input type="submit" value="Add" />
 	<div id="new_beer_msg"></div>
 </form>
+
+<h3>Photos</h3>
+
+<?php foreach ($photoset->photos as $photo) :?>
+	<div>
+	<img src="<?=$photo->url?>?size=small" />
+	<a href="/user/<?=$photo->user_id?>"><?=$BC->docobj('user/'.$photo->user_id)->name?></a> <span class="datestring"><?=date(BeerCrush::DATE_FORMAT,$photo->timestamp)?></span>
+	</div>
+<?php endforeach; ?>
+
+<div id="new_photos"></div>
+
+<input id="photo_upload" name="photo" type="file" />
 	
 <script type="text/javascript" src="/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript">
 
 function pageMain()
 {
+	<? if (!empty($brewerydoc->address->latitude) && !empty($brewerydoc->address->longitude)) {?>
+	var latlng = new google.maps.LatLng(<?=$brewerydoc->address->latitude?>,<?=$brewerydoc->address->longitude?>);
+	var myOptions = {
+		zoom: 10,
+		center: latlng,
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+	};
+	    var map = new google.maps.Map(document.getElementById("map"), myOptions);
+	var marker=new google.maps.Marker({
+		position: latlng,
+		map: map,
+		title: "<?=$brewery->name?>"
+	});
+	<?}?>
+    
 	makeDocEditable('#brewery','brewery_id','/api/brewery/edit');
 	
 	$('#new_beer_form').submit(function() {
@@ -88,6 +120,28 @@ function pageMain()
 			'json'
 		);
 		return false;
+	});
+	
+	$('#photo_upload').uploadify({
+		'uploader'  : '/flash/uploadify.swf',
+		'script'    : '/api/brewery/photo',
+		'cancelImg' : '/img/uploadify/cancel.png',
+		'auto'      : true,
+		'multi'     : true,
+		'fileDataName': 'photo',
+		'fileDesc'	: 'Upload a photo',
+		'fileExt'	: '*.jpg;*.jpeg;*.png',
+		'buttonText': "Upload a photo", 
+		'sizeLimit' : 5000000, 
+		'scriptData': {
+			'brewery_id': $('#brewery_id').val(),
+			'userid': $.cookie('userid')
+		},
+		'onComplete': function(evt,queueID,fileObj,response,data) {
+			photoinfo=$.parseJSON(response);
+			$('#new_photos').append('<img src="'+photoinfo.url+'?size=small" />');
+			return true;
+		}
 	});
 }
 
