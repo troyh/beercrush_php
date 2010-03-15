@@ -1,5 +1,5 @@
 include ../Makefile.rules
 
 install: SAFETY_CHECK
-	@./install.sh
+	sh ./install.sh
 	$(RECURSIVE_MAKE)
