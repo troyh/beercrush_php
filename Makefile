@@ -11,11 +11,11 @@ ALL: SAFETY_CHECK
 	done
 
 install: SAFETY_CHECK
-	./supervisord.sh stop;
-	./install.sh
+	sh ./supervisord.sh stop;
+	sh ./install.sh
 	$(RECURSIVE_MAKE);
 	./supervisord.sh start;
 
 check:
-	./check.sh
+	sh ./check.sh
 	$(RECURSIVE_MAKE);
