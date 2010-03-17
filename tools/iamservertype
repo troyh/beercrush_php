@@ -42,6 +42,13 @@ Recognized types:
 	web             NGiNX server acting as a proxy to the web site
 
 EOF
+
+		echo "This host matches these:";
+		for T in cgi couchdb couchdb-proxy memcached mgmt php-cgi solr solr-proxy web; do
+			if $0 -q $T; then
+				echo $T
+			fi
+		done
 		exit;
 		;;
 		
