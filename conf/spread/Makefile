@@ -8,7 +8,7 @@ ALL: SAFETY_CHECK
 		fi \
 	done
 
-install: SAFETY_CHECK /etc/default/spread /etc/init.d/spread
+install: SAFETY_CHECK /etc/default/spread /etc/init.d/spread /etc/spread.conf
 	sh ./install.sh
 	$(RECURSIVE_MAKE);
 
@@ -20,7 +20,10 @@ check: SAFETY_CHECK
 	sudo cp default $@
 
 /etc/init.d/spread: /etc/rc2.d/S17spread
-	sudo ln -s $^ $@
+	sudo ln -f -s $^ $@
 
 /etc/rc2.d/S17spread: init-script
+	sudo cp $^ $@
+
+/etc/spread.conf: spread.conf
 	sudo cp $^ $@

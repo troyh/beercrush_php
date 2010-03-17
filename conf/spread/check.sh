@@ -1,8 +1,11 @@
 #!/bin/sh
 
 # Verify that Spread daemon is running
-PID=`cat /var/run/spread/spread.pid`;
-CMD=`ps h -o args  $PID`;
+PID_FILE="/var/run/spread/spread.pid";
+if [ -f $PID_FILE ]; then
+	PID=`cat $PID_FILE`;
+	CMD=`ps h -o args  $PID`;
+fi
 
 if [ "$CMD" != "/usr/local/sbin/spread -c /etc/spread.conf" ]; then
 	echo "Spread daemon is not running";
