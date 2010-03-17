@@ -3,7 +3,7 @@
 # Test the config
 if ! sudo /etc/init.d/nginx configtest; then
 	echo "Please fix NGiNX config errors above.";
-	exit;
+	exit 1;
 fi
 
 if ../../tools/iamservertype -q couchdb-proxy; then

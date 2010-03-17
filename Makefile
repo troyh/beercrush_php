@@ -17,5 +17,5 @@ install: SAFETY_CHECK
 	./supervisord.sh start;
 
 check:
-	sh ./check.sh
+	@sh ./check.sh
 	$(RECURSIVE_MAKE);

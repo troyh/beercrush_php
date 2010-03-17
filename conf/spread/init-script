@@ -1,0 +1,73 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          spread
+# Required-Start:    $remote_fs
+# Required-Stop:     $remote_fs
+# Should-Start:      $named
+# Should-Stop:       $named
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: The Spread messaging daemon
+# Description:       Debian init script for spread
+### END INIT INFO
+
+
+# Spread init script
+# June 2003
+# Eric Dorland
+ 
+# Based on spamassassin init script
+ 
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/local/sbin/spread
+NAME=spread
+SNAME=spread
+DESC="Spread Messaging Daemon"
+PIDFILE="/var/run/$NAME/$NAME.pid"
+PNAME="spread"
+DOPTIONS="-c /etc/spread.conf"
+
+# Defaults - don't touch, edit /etc/default/spread
+ENABLED=0
+OPTIONS=""
+
+test -x $DAEMON || exit 0
+
+test -f /etc/default/spread && . /etc/default/spread
+             
+test "$ENABLED" != "0" || exit 0
+
+case "$1" in
+  start)
+        echo -n "Starting $DESC: "
+        start-stop-daemon --start --make-pidfile --pidfile $PIDFILE \
+        	--name $PNAME --oknodo --background --startas $DAEMON \
+            -- $OPTIONS $DOPTIONS
+        
+        echo "$NAME."
+        ;;
+  stop)
+        echo -n "Stopping $DESC: "
+        
+        start-stop-daemon --stop --pidfile $PIDFILE --name $PNAME --oknodo
+        
+        echo "$NAME."
+        ;;
+  restart|force-reload)
+        echo -n "Restarting $DESC: "
+        start-stop-daemon --stop --pidfile $PIDFILE --name $PNAME \
+            --retry 5 --oknodo
+        start-stop-daemon --start --make-pidfile --pidfile $PIDFILE \
+            --name $PNAME --oknodo --background --startas $DAEMON \
+            -- $OPTIONS $DOPTIONS
+        
+        echo "$NAME."
+        ;;
+  *)
+        N=/etc/init.d/$SNAME
+        echo "Usage: $N {start|stop|restart|force-reload}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0

@@ -8,8 +8,9 @@ install: SAFETY_CHECK
 		sudo chown www-data.www-data /etc/BeerCrush; \
 		sudo chmod ug+rwX /etc/BeerCrush; \
 	fi
+	sh install.sh
 	$(RECURSIVE_MAKE);
 
 check:
-	./check.sh
+	sh ./check.sh
 	$(RECURSIVE_MAKE);

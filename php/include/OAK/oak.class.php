@@ -1034,7 +1034,7 @@ class OAK
 	{
 		if (is_null($this->spread_id))
 			return TRUE;
-		$ret=spread_disconnect($this->spread_id);
+		$ret=@spread_disconnect($this->spread_id);
 		$this->spread_id=null;
 		return $ret;
 	}
