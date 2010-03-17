@@ -1,12 +1,11 @@
 <?php
 header("Cache-Control: no-cache");
 require_once 'OAK/oak.class.php';
-require_once 'beercrush/Brewery.class.php';
 
 function validate_brewery_id($name,$value,$attribs,$converted_value,$oak)
 {
 	// If there's a doc for it, it's valid
-	$brewery_doc=new BreweryDocument;
+	$brewery_doc=new OAKDocument();
 	return $oak->get_document($converted_value,$brewery_doc);
 }
 
@@ -52,13 +51,19 @@ function oakMain($oak)
 		{
 			$brewery_id=$oak->get_cgi_value('brewery_id',$cgi_fields);
 			// Get existing brewery, if there is one so that we can update just the parts added/changed in this request
-			$brewery=new BreweryDocument;
+			$brewery=new OAKDocument();
 			if ($oak->get_document($brewery_id,&$brewery)!==true)
 				throw new Exception("No existing brewery $brewery_id");
 		}
 		else if ($oak->cgi_value_exists('name',$cgi_fields)) // Adding a new brewery
 		{
-			$brewery=BreweryDocument::createBrewery($oak->get_cgi_value('name',$cgi_fields));
+			$name=$oak->get_cgi_value('name',$cgi_fields);
+			$brewery=new BreweryDocument('brewery');
+			$id=preg_replace('/[^a-zA-Z0-9]+/','-',$name);
+			$id=preg_replace('/--+/','-',$id);
+			$id=preg_replace('/^-/','',$id);
+			$id=preg_replace('/-$/','',$id);
+			$brewery->setID('brewery:'.$id);
 			
 			// See if this brewery already exists
 			if ($oak->get_document($brewery->getID(),&$brewery)===true)
