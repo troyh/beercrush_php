@@ -3,14 +3,23 @@
 QUIET=0;
 ISTYPE=0;
 
-while getopts "q" opt; do
+while getopts "qt" opt; do
 	case $opt in 
 		q)
 			QUIET=1;
 			shift;
 			;;
+		t)
+			for T in cgi couchdb couchdb-proxy memcached mgmt php-cgi solr solr-proxy web; do
+				if $0 -q $T; then
+					echo $T
+				fi
+			done
+			exit;
+			;;
 		\?)
-			echo "Invalid option: -$OPTARG" >&2
+			# echo "Invalid option: -$OPTARG" >&2
+			exit;
 			;;
 	esac
 done
@@ -42,13 +51,6 @@ Recognized types:
 	web             NGiNX server acting as a proxy to the web site
 
 EOF
-
-		echo "This host matches these:";
-		for T in cgi couchdb couchdb-proxy memcached mgmt php-cgi solr solr-proxy web; do
-			if $0 -q $T; then
-				echo $T
-			fi
-		done
 		exit;
 		;;
 		
