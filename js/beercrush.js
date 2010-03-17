@@ -19,8 +19,9 @@ function set_login_cookies(login,date)
 
 function login()
 {
-	var email=$("#login_form :input[name=email]").val();
-	var passw=$("#login_form :input[name=password]").val();
+	var email=$("#login_form input[name=email]").val();
+	var passw=$("#login_form input[name=password]").val();
+
 	$('#login_form').ajaxError(function(e,xhr,settings,exception){
 		if (settings.url==$('#login_form').attr('action'))
 		{
@@ -92,7 +93,9 @@ function formatDates(selector)
 		{
 			now=new Date();
 			diff=(now.getTime()-d.getTime())/1000;
-			if (diff<60)
+			if (diff<0)
+				$(this).text('just now'); // Times really can be negative due to variations in server & client clocks
+			else if (diff<60)
 				$(this).text(Math.round(diff)+' seconds ago');
 			else if ((diff/60) < 60)
 				$(this).text(Math.round(diff/60)+' minutes ago');
