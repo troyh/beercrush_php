@@ -88,6 +88,7 @@ include("../header.php");
 	<div>FG: <span id="beer_fg"><?=$beerdoc->fg?></span></div>
 	<div>ABV: <span id="beer_abv"><?=$beerdoc->abv?>%</span></div>
 	<div>IBU: <span id="beer_ibu"><?=$beerdoc->ibu?></span></div>
+	<div>Hops: <span id="beer_hops"><?=$beerdoc->hops?></span></div>
 	<div>Grains:<span id="beer_grains"><?=$beerdoc->grains?></span></div>
 	<div>Yeast:<span id="beer_yeast"><?=$beerdoc->yeast?></span></div>
 	
