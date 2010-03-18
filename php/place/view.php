@@ -181,7 +181,10 @@ function beerlist_add(evt,brewery_name,beer_name,beer_price) {
 			$('a',$(tds[1])).attr('href','/'+data.items[data.items.length-1].id.replace(/:/g,'/')).text(data.items[data.items.length-1].name);
 			$('input[type=button]',$(tds[1])).attr('onclick','').click(function(delevt){beerlist_delete(data.items[data.items.length-1].id,delevt);});
 
-			$(tds[2]).text('$'+data.items[data.items.length-1].price.toFixed(2));
+			if (data.items[data.items.length-1].price)
+				$(tds[2]).text('$'+data.items[data.items.length-1].price.toFixed(2));
+			else
+				$(tds[2]).text('');
 
 			var serving_types=["ontap","oncask","inbottle","inbottle22","incan"];
 			
