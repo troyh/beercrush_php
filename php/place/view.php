@@ -6,6 +6,12 @@ $place   =BeerCrush::api_doc($oak,'place/'.str_replace(':','/',$_GET['place_id']
 $beerlist=BeerCrush::api_doc($oak,'place/'.str_replace(':','/',$_GET['place_id']).'/menu');
 $reviews =BeerCrush::api_doc($oak,'review/place/'.str_replace(':','/',$_GET['place_id']).'/0');
 $photoset=BeerCrush::api_doc($oak,'photoset/place/'.$_GET['place_id']);	
+
+if (is_null($beerlist)) {
+	$beerlist=new stdClass;
+	$beerlist->items=array();
+}
+
 // var_dump($photoset);exit;
 // var_dump($beerlist);exit;
 // var_dump($place);exit;
@@ -32,15 +38,18 @@ include("../header.php");
 	<div>Type: <?=$place->placetype?></div>
 
 	<div id="address">
-		<div id="place_address:street"><?=$place->address->street?></div>
-		<span id="place_address:city"><?=$place->address->city?></span>, 
-		<span id="place_address:state"><?=$place->address->state?></span> 
-		<span id="place_address:zip"><?=$place->address->zip?></span> 
-		<span id="place_address:country"><?=$place->address->country?></span>
+		<div>Street:<span id="place_address:street"><?=$place->address->street?></span></div>
+		<div>City:<span id="place_address:city"><?=$place->address->city?></span></div>
+		<div>State:<span id="place_address:state"><?=$place->address->state?></span> </div>
+		<div>Zip:<span id="place_address:zip"><?=$place->address->zip?></span> </div>
+		<div>Country:<span id="place_address:country"><?=$place->address->country?></span></div>
+		<input type="hidden" name="latitude" value="<?=$place->address->latitude?>" />
+		<input type="hidden" name="longitude" value="<?=$place->address->longitude?>" />
 	</div>
 	
-	<div id="place_phone"><?=$place->phone?></div>
-	<div>
+	<div>Phone:<span id="place_phone"><?=$place->phone?></span></div>
+	
+	<div>Web site:
 		<span id="place_uri" href="<?=$place->uri?>"><?=$place->uri?></span>
 		<a href="<?=$place->uri?>">Visit web site</a>
 	</div>
@@ -232,18 +241,22 @@ var beerlist_new_beer_id=null;
 
 function pageMain()
 {
-	var latlng = new google.maps.LatLng(<?=$place->address->latitude?>,<?=$place->address->longitude?>);
-	var myOptions = {
-		zoom: 10,
-		center: latlng,
-		mapTypeId: google.maps.MapTypeId.ROADMAP,
-	};
-    var map = new google.maps.Map(document.getElementById("map"), myOptions);
-	var marker=new google.maps.Marker({
-		position: latlng,
-		map: map,
-		title: "<?=$place->name?>"
-	});
+	var lat=$('#address input[type="hidden"][name="latitude"]').val();
+	var lon=$('#address input[type="hidden"][name="longitude"]').val();
+	if (lat && lon) {
+		var latlng = new google.maps.LatLng(lat,lon);
+		var myOptions = {
+			zoom: 10,
+			center: latlng,
+			mapTypeId: google.maps.MapTypeId.ROADMAP,
+		};
+	    var map = new google.maps.Map(document.getElementById("map"), myOptions);
+		var marker=new google.maps.Marker({
+			position: latlng,
+			map: map,
+			title: "<?=$place->name?>"
+		});
+	}
     
 
 	makeDocEditable('#place','place_id','/api/place/edit');
