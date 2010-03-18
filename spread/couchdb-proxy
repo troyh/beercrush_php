@@ -29,7 +29,7 @@ function handle_dbchange($oakjobs,$change) {
 	{
 		case 'beer':
 			// Purge the beerlist view for the brewery
-			$oakjobs->getOAK()->purge_view_cache('beer/made_by?key=%22brewery:'.$parts[1].'%22');
+			$oakjobs->getOAK()->purge_view_cache('beer/made_by?key=%22brewery:'.$parts[1].'%22',$port);
 			break;
 		case 'brewery':
 			break;
