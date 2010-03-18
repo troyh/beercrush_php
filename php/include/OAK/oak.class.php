@@ -1144,7 +1144,7 @@ class OAK
 			$this->log('Purged: '.$url);
 		}
 		else if ($status!=404) { // 404 just means it wasn't cached to begin with, which is okay for us.
-			$this->log('Error '.$status.' purging from '.$type.':'.$url,OAK::LOGPRI_ERR);
+			$this->log('Error '.$status.' purging:'.$url,OAK::LOGPRI_ERR);
 			return false;
 		}
 
