@@ -33,7 +33,10 @@ include("../header.php");
 
 	<div id="address">
 		<div id="place_address:street"><?=$place->address->street?></div>
-		<span id="place_address:city"><?=$place->address->city?></span>, <span id="place_address:state"><?=$place->address->state?></span> <span id="place_address:country"><?=$place->address->country?></span>
+		<span id="place_address:city"><?=$place->address->city?></span>, 
+		<span id="place_address:state"><?=$place->address->state?></span> 
+		<span id="place_address:zip"><?=$place->address->zip?></span> 
+		<span id="place_address:country"><?=$place->address->country?></span>
 	</div>
 	
 	<div id="place_phone"><?=$place->phone?></div>
@@ -42,7 +45,7 @@ include("../header.php");
 		<a href="<?=$place->uri?>">Visit web site</a>
 	</div>
 
-	<div id="place_description"><?=$place->description?></div>
+	<div>Description:<span id="place_description"><?=$place->description?></span></div>
 
 	<div id="map" style="width:300px;height:300px"></div>
 

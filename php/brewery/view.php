@@ -25,6 +25,7 @@ include("../header.php");
 		<div id="brewery_address:street"><?=$brewerydoc->address->street?></div>
 		<span id="brewery_address:city"><?=$brewerydoc->address->city?></span>, 
 		<span id="brewery_address:state"><?=$brewerydoc->address->state?></span> 
+		<span id="brewery_address:zip"><?=$brewerydoc->address->zip?></span> 
 		<span id="brewery_address:country"><?=$brewerydoc->address->country?></span>
 	</div>
 

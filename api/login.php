@@ -105,7 +105,7 @@ else
 				$oak->log('Login:'.$userid);
 
 				header("HTTP/1.0 200 OK");
-				header("Content-Type: application/javascript");
+				header("Content-Type: application/json; charset=utf-8");
 			
 				$answer=array(
 					'userid'=>$user_doc->userid,
@@ -114,6 +114,8 @@ else
 				
 				if (!empty($user_doc->name))
 					$answer['name']=$user_doc->name;
+				else
+					$answer['name']="Anonymous";
 				if (!empty($user_doc->avatar))
 					$answer['avatar']=$user_doc->avatar;
 					

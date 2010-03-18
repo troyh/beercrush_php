@@ -58,7 +58,7 @@ function oakMain($oak)
 		else if ($oak->cgi_value_exists('name',$cgi_fields)) // Adding a new brewery
 		{
 			$name=$oak->get_cgi_value('name',$cgi_fields);
-			$brewery=new BreweryDocument('brewery');
+			$brewery=new OAKDocument('brewery');
 			$id=preg_replace('/[^a-zA-Z0-9]+/','-',$name);
 			$id=preg_replace('/--+/','-',$id);
 			$id=preg_replace('/^-/','',$id);
