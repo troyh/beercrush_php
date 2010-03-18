@@ -22,15 +22,15 @@ include("../header.php");
 	<h1 id="brewery_name"><?=$brewerydoc->name?></h1>
 
 	<div id="address">
-		<div id="brewery_address:street"><?=$brewerydoc->address->street?></div>
-		<span id="brewery_address:city"><?=$brewerydoc->address->city?></span>, 
-		<span id="brewery_address:state"><?=$brewerydoc->address->state?></span> 
-		<span id="brewery_address:zip"><?=$brewerydoc->address->zip?></span> 
-		<span id="brewery_address:country"><?=$brewerydoc->address->country?></span>
+		<div>Street:<span id="brewery_address:street"><?=$brewerydoc->address->street?></span></div>
+		<div>City:<span id="brewery_address:city"><?=$brewerydoc->address->city?></span></div>
+		<div>State:<span id="brewery_address:state"><?=$brewerydoc->address->state?></span> </div>
+		<div>Zip:<span id="brewery_address:zip"><?=$brewerydoc->address->zip?></span> </div>
+		<div>Country:<span id="brewery_address:country"><?=$brewerydoc->address->country?></span></div>
 	</div>
 
-	<div id="brewery_phone"><?=$brewerydoc->phone?></div>
-	<div><span id="brewery_uri"><?=$brewerydoc->uri?></span> <span><a href="<?=$brewerydoc->uri?>">Visit web site</a></span></div>
+	<div>Phone:<span id="brewery_phone"><?=$brewerydoc->phone?></span></div>
+	<div>Web site:<span id="brewery_uri"><?=$brewerydoc->uri?></span> <span><a href="<?=$brewerydoc->uri?>">Visit web site</a></span></div>
 
 	<div id="editable_save_msg"></div>
 	<input class="editable_savechanges_button hidden" type="button" value="Save Changes" />
