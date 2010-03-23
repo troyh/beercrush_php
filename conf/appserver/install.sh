@@ -6,3 +6,4 @@
 # TODO: pecl install memcached (we don't yet use memcached)
 
 sudo cp fcgi.sh /etc/BeerCrush/
+sudo cp spread.ini /etc/php5/conf.d/

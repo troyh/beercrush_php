@@ -8,6 +8,6 @@ if [ -f $PID_FILE ]; then
 fi
 
 if [ "$CMD" != "/usr/local/sbin/spread -c /etc/spread.conf" ]; then
-	echo "Spread daemon is not running";
+	echo "ERROR: Spread daemon is not running";
 	exit;
 fi
