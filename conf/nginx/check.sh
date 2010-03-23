@@ -17,7 +17,7 @@ if ../../tools/iamservertype -q couchdb-proxy; then
 	fi
 
 	# Test that the CouchDB proxy works
-	if [ `curl --silent  -D  -  http://localhost:7000/beercrush/ |head -n 1 | awk '{print $2}'` != "200" ]; then
+	if [ "`curl --silent  -D  -  http://localhost:7000/beercrush/ |head -n 1 | awk '{print $2}'`" != "200" ]; then
 		echo "Unable to access couchdb through proxy (http://localhost:7000/beercrush/)";
 		exit 1;
 	fi

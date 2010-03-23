@@ -3,9 +3,9 @@ include ../Makefile.rules
 ALL:
 
 install: SAFETY_CHECK
-	./install.sh
+	sh ./install.sh
 	$(RECURSIVE_MAKE);
 
 check:
-	./check.sh
+	sh ./check.sh
 	$(RECURSIVE_MAKE);

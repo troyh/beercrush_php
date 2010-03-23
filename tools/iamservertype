@@ -70,7 +70,9 @@ if (!is_null($conf)) {
 ' $1);
 
 for S in $SERVER_TYPE_IPS; do
-	S=`dig $S +short`;
+	SS=`dig $S +short`;
+	# Some hosts return nothing when dig is used against it's IP address, so do this check first...
+	if [ ! -z "$SS" ]; then S=$SS; fi
 	for MY in $MYIPS; do
 		if [ "$S" = "$MY" ]; then
 			let ISTYPE=1;

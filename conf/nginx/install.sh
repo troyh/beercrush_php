@@ -1,5 +1,15 @@
 #!/bin/bash
 
+if ../../tools/iamservertype -q web ||  ../../tools/iamservertype -q couchdb-proxy ||  ../../tools/iamservertype -q solr-proxy ; then
+    # Make sure NGiNX is installed
+    if [ ! -d /etc/nginx ]; then
+	echo "NGiNX 0.8.29 is not installed. You must build it manually.";
+	exit 1;
+    fi
+
+    sudo cp nginx.conf /etc/nginx/nginx.conf
+fi
+
 if ../../tools/iamservertype -q web; then
 
 	sudo cp beercrush-urls /etc/nginx/beercrush-urls;

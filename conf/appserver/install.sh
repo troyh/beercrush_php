@@ -4,3 +4,5 @@
 # TODO: Config PHP FastCGI
 # TODO: install libmemcached 0.28+
 # TODO: pecl install memcached (we don't yet use memcached)
+
+sudo cp fcgi.sh /etc/BeerCrush/
