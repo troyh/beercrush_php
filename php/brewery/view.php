@@ -81,24 +81,69 @@ include("../header.php");
 <script type="text/javascript" src="/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript">
 
-function pageMain()
-{
-	<? if (!empty($brewerydoc->address->latitude) && !empty($brewerydoc->address->longitude)) {?>
-	var latlng = new google.maps.LatLng(<?=$brewerydoc->address->latitude?>,<?=$brewerydoc->address->longitude?>);
+function geocodeAddress(callback) {
+	var addressstr=$('#brewery_address\\:street').text() + ', ' +
+		$('#brewery_address\\:city').text() + ', ' +
+		$('#brewery_address\\:state').text() + ' ' +
+		$('#brewery_address\\:zip').text() + ' ' +
+		$('#brewery_address\\:country').text();
+
+	var geocoder = new google.maps.Geocoder();
+	geocoder.geocode({
+		address: addressstr
+	},
+	callback);
+    
+}
+
+var brewery_latitude=<?=$brewerydoc->address->latitude?$brewerydoc->address->latitude:'null'?>;
+var brewery_longitude=<?=$brewerydoc->address->longitude?$brewerydoc->address->longitude:'null'?>;
+
+function makemap(lat,lon) {
+	var latlng = new google.maps.LatLng(lat,lon);
 	var myOptions = {
 		zoom: 10,
 		center: latlng,
 		mapTypeId: google.maps.MapTypeId.ROADMAP,
 	};
-	    var map = new google.maps.Map(document.getElementById("map"), myOptions);
+    var map = new google.maps.Map(document.getElementById("map"), myOptions);
 	var marker=new google.maps.Marker({
 		position: latlng,
 		map: map,
 		title: "<?=$brewery->name?>"
 	});
-	<?}?>
+	
+}
+
+function updateLatLon(results,status) {
+	if (status == google.maps.GeocoderStatus.OK) {
+		brewery_latitude=results[0].geometry.location.lat();
+		brewery_longitude=results[0].geometry.location.lng();
+		makemap(brewery_latitude,brewery_longitude);
+
+		$.post('/api/brewery/edit',{
+			'brewery_id': $('#brewery_id').val(),
+			'address:latitude': brewery_latitude,
+			'address:longitude': brewery_longitude
+		},function(data){
+		});
+	}
+}
+
+function pageMain()
+{
+	if (brewery_longitude && brewery_latitude) {
+		makemap(brewery_latitude,brewery_longitude)
+	}
+	else {
+		geocodeAddress(updateLatLon);
+	}
     
-	makeDocEditable('#brewery','brewery_id','/api/brewery/edit');
+	makeDocEditable('#brewery','brewery_id','/api/brewery/edit',{
+		'afterSave': function() {
+			geocodeAddress(updateLatLon);
+		}
+	});
 	
 	$('#new_beer_form').submit(function() {
 		$('#new_beer_msg').text('Adding...');

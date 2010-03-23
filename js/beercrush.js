@@ -119,7 +119,7 @@ function formatDates(selector)
 
 var editable_changes=new Object;
 
-function makeDocEditable(docSelector,docid_id,url)
+function makeDocEditable(docSelector,docid_id,url,options)
 {
 	// Iterate each child, making every non-input element that has an id prefixed with
 	// '<STR>_', where <STR> is the ID of selector, into an editable field
@@ -152,6 +152,11 @@ function makeDocEditable(docSelector,docid_id,url)
 						
 							// Add in document id to change object
 							editable_changes[$(docSelector).attr('id')][docid_id]=$('#'+docid_id).val();
+							
+							if (typeof(options['beforeSave']) == 'function') {
+								var more_data=options['beforeSave']();
+								$.extend(editable_changes[$(docSelector).attr('id')],more_data);
+							}
 
 							// Post the data to the server
 							$('#editable_save_msg').text('');
@@ -187,6 +192,10 @@ function makeDocEditable(docSelector,docid_id,url)
 								// 	$(docSelector+'_lastmodified').text(mtime.toLocaleString());
 								// 	formatDates('.datestring');
 								// }
+
+								if (typeof(options['afterSave']) == 'function') {
+									options['afterSave']();
+								}
 
 							},'json');
 						
