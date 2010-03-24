@@ -239,27 +239,68 @@ var brewery_beerlist=[];
 var brewery_beerlist_ids=[];
 var beerlist_new_beer_id=null;
 
-function pageMain()
-{
-	var lat=$('#address input[type="hidden"][name="latitude"]').val();
-	var lon=$('#address input[type="hidden"][name="longitude"]').val();
-	if (lat && lon) {
-		var latlng = new google.maps.LatLng(lat,lon);
-		var myOptions = {
-			zoom: 10,
-			center: latlng,
-			mapTypeId: google.maps.MapTypeId.ROADMAP,
-		};
-	    var map = new google.maps.Map(document.getElementById("map"), myOptions);
-		var marker=new google.maps.Marker({
-			position: latlng,
-			map: map,
-			title: "<?=$place->name?>"
+function geocodeAddress(callback) {
+	var addressstr=$('#place_address\\:street').text() + ', ' +
+		$('#place_address\\:city').text() + ', ' +
+		$('#place_address\\:state').text() + ' ' +
+		$('#place_address\\:zip').text() + ' ' +
+		$('#place_address\\:country').text();
+
+	var geocoder = new google.maps.Geocoder();
+	geocoder.geocode({
+		address: addressstr
+	},
+	callback);
+    
+}
+
+var place_latitude=<?=$place->address->latitude?$place->address->latitude:'null'?>;
+var place_longitude=<?=$place->address->longitude?$place->address->longitude:'null'?>;
+
+function makemap(lat,lon) {
+	var latlng = new google.maps.LatLng(lat,lon);
+	var myOptions = {
+		zoom: 10,
+		center: latlng,
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+	};
+    var map = new google.maps.Map(document.getElementById("map"), myOptions);
+	var marker=new google.maps.Marker({
+		position: latlng,
+		map: map,
+		title: "<?=$place->name?>"
+	});
+	
+}
+
+function updateLatLon(results,status) {
+	if (status == google.maps.GeocoderStatus.OK) {
+		place_latitude=results[0].geometry.location.lat();
+		place_longitude=results[0].geometry.location.lng();
+		makemap(place_latitude,place_longitude);
+
+		$.post('/api/place/edit',{
+			'place_id': $('#place_id').val(),
+			'address:latitude': place_latitude,
+			'address:longitude': place_longitude
+		},function(data){
 		});
 	}
-    
+}
+function pageMain()
+{
+	if (place_longitude && place_latitude) {
+		makemap(place_latitude,place_longitude)
+	}
+	else {
+		geocodeAddress(updateLatLon);
+	}
 
-	makeDocEditable('#place','place_id','/api/place/edit');
+	makeDocEditable('#place','place_id','/api/place/edit',{
+		'afterSave': function() {
+			geocodeAddress(updateLatLon);
+		}
+	});
 	
 	$('#beerlist input[type=checkbox]').change(beerlist_edit);
 	

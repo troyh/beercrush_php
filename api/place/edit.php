@@ -39,8 +39,8 @@ $cgi_fields=array(
 		"state"						=> array(type=>OAK::DATATYPE_TEXT , minlen=>0),
 		"zip"						=> array(type=>OAK::DATATYPE_TEXT , minlen=>0, maxlen=>10),
 		"country"					=> array(type=>OAK::DATATYPE_TEXT , minlen=>0, maxlen=>100),
-		"latitude"					=> array(type=>OAK::DATATYPE_FLOAT, min=>-180.0, max=>180),
-		"longitude"					=> array(type=>OAK::DATATYPE_FLOAT, min=>-180.0, max=>180),
+		"latitude"					=> array(type=>OAK::DATATYPE_FLOAT, min=>-180.0, max=>180.0),
+		"longitude"					=> array(type=>OAK::DATATYPE_FLOAT, min=>-180.0, max=>180.0),
 		"neighborhood"				=> array(type=>OAK::DATATYPE_TEXT),
 	)),
 	"hours"			=> array(type=>OAK::DATATYPE_OBJ, properties => array(

@@ -153,7 +153,7 @@ function makeDocEditable(docSelector,docid_id,url,options)
 							// Add in document id to change object
 							editable_changes[$(docSelector).attr('id')][docid_id]=$('#'+docid_id).val();
 							
-							if (typeof(options['beforeSave']) == 'function') {
+							if (options && typeof(options['beforeSave']) == 'function') {
 								var more_data=options['beforeSave']();
 								$.extend(editable_changes[$(docSelector).attr('id')],more_data);
 							}
@@ -193,7 +193,7 @@ function makeDocEditable(docSelector,docid_id,url,options)
 								// 	formatDates('.datestring');
 								// }
 
-								if (typeof(options['afterSave']) == 'function') {
+								if (options && typeof(options['afterSave']) == 'function') {
 									options['afterSave']();
 								}
 
