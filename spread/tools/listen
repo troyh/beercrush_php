@@ -7,7 +7,7 @@ $oaklistener=new OAKListener($BC->oak,$argv[1]);
 $oaklistener->gimme_messages('message_callback');
 
 function message_callback($oaklistener,$msg) {
-	print_r($msg);
+	print json_encode($msg);
 	print "\n";
 }
 ?>
