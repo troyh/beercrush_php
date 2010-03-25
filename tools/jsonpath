@@ -1,0 +1,31 @@
+#!/usr/bin/php
+<?php
+
+if ($argc<2)
+{
+	print "Usage: $argv[0] <json property> ...\n";
+	exit;
+}
+
+$input=fopen("php://stdin",'r');
+while (($line=fgets($input))!==FALSE) {
+	$values=array();
+	$data=json_decode($line);
+
+	for ($i=1;$i<$argc;++$i) {
+		$components=explode('.',$argv[$i]);
+		// print "Components:".join(' ',$components)."\n";
+		$ref=$data;
+		// print "ref=";print_r($ref);print "\n";
+		foreach ($components as $p) {
+			// print "Part:$p"; print_r($ref);print "\n";
+			$ref=$ref->$p;
+		}
+		$values[]=$ref;
+	}
+	
+	print join("\t",$values)."\n";
+}
+fclose($input);
+
+?>
