@@ -1,0 +1,23 @@
+#!/bin/sh
+GIT_DIR="/var/local/BeerCrush/git";
+
+/home/troy/beercrush/spread/tools/listen dbchanges |
+	/home/troy/beercrush/tools/jsonpath id rev oldrev couchdb.host couchdb.port couchdb.db |
+	while read DOCID NEWREV OLDREV COUCHDB_HOST COUCHDB_PORT COUCHDB_DBNAME; do
+		# Get the new doc
+		DOC=$(curl --silent --fail http://$COUCHDB_HOST:$COUCHDB_PORT/$COUCHDB_DBNAME/$DOCID);
+		if [ $? -eq 0 ]; then
+			# Put doc in git working tree
+			FNAME=$(echo $DOCID | sed -e 's/:/\//g');
+			DIRNAME=$(dirname /$FNAME);
+			
+			if [ ! -d "$GIT_DIR$DIRNAME" ]; then mkdir -p "$GIT_DIR$DIRNAME"; fi
+			echo $DOC | tools/jsontidy > "$GIT_DIR/$FNAME";
+			# Commit it
+			git --work-tree=$GIT_DIR --git-dir=$GIT_DIR/.git add $FNAME
+			git --work-tree=$GIT_DIR --git-dir=$GIT_DIR/.git commit -m 'Auto-commit by diff2git.sh' "$FNAME";
+
+			echo Committed $FNAME;
+		fi
+		
+done

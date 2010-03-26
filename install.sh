@@ -51,5 +51,14 @@ if tools/iamservertype -q mgmt; then
 	
 fi
 
+if tools/iamservertype -q couchdb; then
+	if [ ! -d /var/local/BeerCrush/git ]; then
+		mkdir -p /var/local/BeerCrush/git;
+	fi
+	
+	sudo chgrp www-data /var/local/BeerCrush/git;
+	sudo chmod g+w /var/local/BeerCrush/git;
+	
+fi
 
 # TODO: make autocompletenames.txt and latlonpairs.txt in /var/local/BeerCrush/meta
