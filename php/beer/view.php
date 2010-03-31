@@ -6,6 +6,7 @@ $oak=new OAK;
 $brewery_id=preg_replace('/:[^:]*$/','',$_GET['beer_id']);
 $api_beer_id=str_replace(':','/',$_GET['beer_id']);
 
+// $history   =BeerCrush::api_doc($oak,'beer/'.$api_beer_id.'/history');
 $beerdoc   =BeerCrush::api_doc($oak,'beer/'.$api_beer_id);
 $brewerydoc=BeerCrush::api_doc($oak,'brewery/'.$brewery_id);
 $reviews   =BeerCrush::api_doc($oak,'review/beer/'.$api_beer_id.'/0');
@@ -192,6 +193,41 @@ include("../header.php");
 
 <!-- <div id="reviewdata"></div> -->
 
+<h3>Beer Edit History</h3>
+<div id="history"></div>
+
+<?php
+if ($history) {
+	foreach ($history->changes as $change) {
+?>
+	<div><?=$change->index?></div>
+<?php
+		$oldprops=get_object_vars($change->change->old);
+		if ($oldprops===false || is_null($oldprops)) // PHP 5.3 returns null, pre-5.3 returns false
+			$oldprops=array();
+		else
+			$oldprops=array_keys($oldprops);
+		$newprops=get_object_vars($change->change->new);
+		if ($newprops===false || is_null($newprops))
+			$newprops=array();
+		else
+			$newprops=array_keys($newprops);
+		$allprops=array_merge($oldprops,$newprops);
+		foreach ($allprops as $prop) {
+			if (isset($change->change->old->$prop) && isset($change->change->new->$prop)) { // Changed
+				print '<div>'.$prop.':'.$change->change->old->$prop.' -> '.$change->change->new->$prop.'</div>';
+			}
+			else if (isset($change->change->old->$prop)) { // Deleted value
+				print '<div>'.$prop.':'.$change->change->old->$prop.' -> </div>';
+			}
+			else { // Added value
+				print '<div>'.$prop.':->'.$change->change->new->$prop.'</div>';
+			}
+		}
+	}
+}
+?>
+
 <script type="text/javascript" src="/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript" src="/js/jquery.uploadify.v2.1.0.js"></script>
 <script type="text/javascript" src="/js/swfobject.js"></script>
@@ -212,6 +248,138 @@ function undo_photo(uuid,url) {
 			console.log('removing div #new_photo-'+uuid);
 			$('#new_photo-'+uuid).remove();
 		}
+	});
+}
+
+var dochistory=new Array();
+var docversions=new Object();
+
+function mydiff(a,b) {
+	var diffs=new Object();
+
+	// Get the union of properties of a & b
+	var allprops=new Array();
+	for (var p in a) {allprops.push(p);}
+	for (var p in b) {if (jQuery.inArray(p,allprops) == -1) allprops.push(p);}
+	
+	for (var i in allprops) {
+		var p=allprops[i];
+
+		if (typeof(a[p])!==typeof(b[p])) { // Different types
+			if (typeof(diffs[p])=='undefined')
+				diffs[p]=new Object();
+				
+			if (typeof(a[p])=='undefined') {
+				diffs[p].old=null;
+				diffs[p].new=b[p];
+			}
+			else if (typeof(b[p])=='undefined') {
+				diffs[p].old=a[p];
+				diffs[p].new=null;
+			}
+			else {
+				diffs[p].old=a[p];
+				diffs[p].new=b[p];
+			}
+		}
+		else if (a[p] != b[p]) { // Same type, different values
+			if (typeof(diffs[p])=='undefined')
+				diffs[p]=new Object();
+				
+			if (typeof(a[p])=='object') {
+				jQuery.extend(diffs[p],mydiff(a[p],b[p]));
+			}
+			else if (typeof(a[p])=='array') {
+				for (var arrayidx in a[p]) {
+					if (a[p][arrayidx]!==b[p][arrayidx]) {
+						diffs[p][arrayidx]=new Object();
+						jQuery.extend(diffs[p],mydiff(a[p][arrayidx],b[p][arrayidx]));
+					}
+				}
+			}
+			else {
+				diffs[p].old=a[p];
+				diffs[p].new=b[p];
+			}
+		}
+	}
+
+	return diffs;
+}
+
+function display_diffs_base(vindex,diffs) {
+	for (var prop in diffs) {
+		if (typeof(diffs[prop].old) == 'undefined' && typeof(diffs[prop].new) == 'undefined') {
+			display_diffs_base(vindex,diffs[prop]);
+		}
+		else {
+			var s='<tr><td>'+prop+'</td><td>';
+			if (diffs[prop].old!=null)
+				s+=diffs[prop].old;
+			s+='</td><td>';
+			if (diffs[prop].new)
+				s+=diffs[prop].new;
+			s+='</td></tr>';
+			$('#version_'+vindex+' table').append(s);
+		}
+	}
+	
+}
+function display_diffs(vindex,diffs) {
+	$('#version_'+vindex).append('<table>');
+	// var proppath=new Array();
+	display_diffs_base(vindex,diffs);
+	$('#version_'+vindex).append('</table>');
+}
+
+function show_diff(a,b) {
+	// console.log(a);
+	// console.log(b);
+	var path=$('#beer_id').val().replace(/:/g,'/');
+
+	var doca=null;
+	var docb=null;
+	
+	$.getJSON('/api/history/'+path+'/'+a,function(doc){
+		doca=doc;
+		if (doca && docb) {
+			var diffs=mydiff(doca,docb);
+			display_diffs(b,diffs);
+		}
+	});
+	$.getJSON('/api/history/'+path+'/'+b,function(doc){
+		docb=doc;
+		if (doca && docb) {
+			var diffs=mydiff(doca,docb);
+			display_diffs(b,diffs);
+		}
+	});
+}
+
+function show_history() {
+	var path=$('#beer_id').val().replace(/:/g,'/');
+	$.getJSON('/api/history/'+path,function(data){
+		for (var i=0,j=data.changes.length;i<j;++i) {
+			dochistory.push(data.changes[i].index);
+			$('#history').append('<div id="version_'+data.changes[i].index+'">'+data.changes[i].date+'</div>');
+			if ((i+1) < j) {
+				$('#version_'+data.changes[i].index).append('<a href="#" onclick="show_diff(\''+data.changes[i+1].index+'\',\''+data.changes[i].index+'\');return false;">Show Diff</a>');
+			}
+		}
+
+		// for (chg in data.changes) {
+		// 	$('#history').append('<div id="version_'+data.changes[chg].index+'">'+data.changes[chg].date+'</div>');
+		// 	$.getJSON('/api/history/'+path+'/'+data.changes[chg].index,function(doc,ts,xhr){
+		// 		var idx=this.url.match(/[a-z0-9]+$/);
+		// 		if (idx) {
+		// 			docversions[idx[0]]=doc;
+		// 			var i=jQuery.inArray(idx[0],dochistory);
+		// 			if (i > -1 && (i+1) < dochistory.length) {
+		// 				$('#version_'+idx).append('<a href="#" onclick="show_diff(\''+idx[0]+'\',\''+dochistory[i+1]+'\');return false;">Show Diff</a>');
+		// 			}
+		// 		}
+		// 	});
+		// }
 	});
 }
 
@@ -276,6 +444,9 @@ function pageMain()
 			$("#purchase_place_name_id").val('');
 		}
 	});
+	
+	show_history();
+	
 }
 
 </script>

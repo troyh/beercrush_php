@@ -214,6 +214,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 		!strncmp(cgiPathInfo,"/api/brewery/",13) ||
 		!strncmp(cgiPathInfo,"/api/createlogin",16) ||
 		!strcmp(cgiPathInfo,"/api/flavors") ||
+		!strncmp(cgiPathInfo,"/api/history/",13) ||
 		!strcmp(cgiPathInfo,"/api/login") ||
 		!strcmp(cgiPathInfo,"/api/logout") ||
 		!strcmp(cgiPathInfo,"/api/menu/edit") ||
