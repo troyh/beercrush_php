@@ -23,15 +23,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 .uploadifyQueueItem {
-	font: 11px Verdana, Geneva, sans-serif;
+	font-size: 11px;
 	border: 2px solid #E5E5E5;
 	background-color: #F5F5F5;
 	margin-top: 5px;
 	padding: 10px;
-	width: 350px;
+	width: 90%;
+	z-index: 1;
 }
 .uploadifyError {
-	border: 2px solid #FBCBBC !important;
+	border: 2px solid #6f0014 !important;
 	background-color: #FDE5DD !important;
 }
 .uploadifyQueueItem .cancel {

@@ -11,69 +11,274 @@ black:		000000
 
 */
 
-ol#navmenu {
-	display:inline;
-	font-size:17pt;
-	text-align:left;
-	width:100px;
-	position:absolute;
-	top:0px;
-	left:150px;
-	list-style-type:none;
+/* General Typography
+ ---------------------------------------------------------------------*/
+/** Yahoo CSS
+ * Percents could work for IE, but for backCompat purposes, we are using keywords.
+ * x-small is for IE6/7 quirks mode.
+ */
+html, body {
+	font:13px/1.231em arial,helvetica,clean,sans-serif;
+	line-height: 24px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
 }
 
-#navmenu li {
-	display:inline;
+html > body {
+	font:13px/1.231em arial,helvetica,clean,sans-serif; /*16px/1.515 */
+	*font-size:small; /* for IE */
+	*font:x-small; /* for IE in quirks mode */
+	line-height: 24px;
+}
+/**
+ * Nudge down to get to 13px equivalent for these form elements
+ */ 
+select, input, button, textarea {
+	font:99% arial,helvetica,clean,sans-serif;
 }
 
-#navmenu a {
-	color:#137aa1;
+/**
+ * To help tables remember to inherit
+ */
+table {
+	font-size:inherit;
+	font:100%;
 }
 
-#navmenu a {
-	text-decoration:none;
-	border-style:none;
+h1 {
+	font-size:2em;  
+	color: #6f0014;
+	line-height: 1em;
+	margin: .75em 0 .25em 0;
 }
 
-#searchform {
-	position:absolute;
-	left:350px;
-	top:100px;
+h2 {
+	color: #1371aa;
+	font-size: 1.2em;
+	line-height: 1em;
+	margin: .75em 0 .25em 0;
 }
 
-body {
-	font-family: Helvetica;
-	color:#137aa1;
-	background:#fff;
+h3 {
+	color: #1371aa;
+	font-weight: bold;
+	font-size: 1.2em;
+	line-height: 1em;
+	margin: .75em 0 .25em 0;
+}
+
+.tiny {
+	font-size: x-small;
+}
+
+strong {
+	font-weight: bold;
+}
+
+em {
+	font-style: italic;
+	line-height: 1.75em;
+}
+
+p {
+	font-size: 1em;
+	line-height: 1.5em;
+	margin-bottom: .25em;
+}
+
+td, td a, th, th a, span {
+	line-height: 1.3333em;
+}
+
+blockquote {
+	margin: .416em 0 .416em 1.1667em;
 }
 
 a {
-	color:#ee3124;
-	text-decoration:none;
-	border-bottom: #c49a6c;
+	color: #137aa1;
+	text-decoration: none;
+	font-size: inherit;
+	font-weight: inherit;
+	border-bottom: #137aa1;
 	border-width: 0px 0px 1px 0px;
 	border-style: none none dotted none;	
 }
 
-#login {
-	font-size:10pt;
-	position:fixed;
-	top:0px;
-	right:0px;
-	width:330px;
-	z-index:999;
-	background:#137aa1;
-	color:#38bdec;
-	padding:3px;
+a:visited {
+	color: #666699;
+	border-bottom: #666699;
+	border-width: 0px 0px 1px 0px;
+	border-style: none none dotted none;	
 }
 
+a:hover {
+	border-style: none none solid none;	
+}
+
+.white a {
+	color: #FFF;
+	border-bottom: #FFF;
+	border-width: 0px 0px 1px 0px;
+	border-style: none none dotted none;	
+}
+
+ul, ol {
+	margin: .833em 0;
+	padding-left: 2em;
+}
+
+ul {
+	list-style-type: disc;
+}
+
+ol {
+	list-style-type: decimal;
+}
+
+ul li, ol li
+{
+	line-height: 1.5em;
+}
+
+img {
+	border: 0;
+}
+
+.hidden {
+	display:none;
+}
+
+
+
+/* Structure
+ ---------------------------------------------------------------------*/
+#page_wrap {
+	margin:0 auto 10px;
+	padding: 0 10px;
+	text-align:left;
+	width:974px;
+	background: white;
+	position: relative;
+}
+#header {
+	padding-top: 30px;
+	border-bottom: 1px solid #137aa1;
+	color: #137aa1;
+}
+#header_main {
+	float: left;
+	width: 80%;
+	height: 116px; /*this changes with font size?*/
+}
+#logo {
+	float: left;
+	width: 15%;
+	height: 116px;
+}
+
+#logo a {
+	text-decoration:none;
+	border: none;
+}
+#tabs_wrap {
+	position: absolute;
+	top: 106px;
+}
+#tabs_wrap #navmenu {
+	text-align:left;
+}
+#navmenu ol, #navmenu ul {
+	margin: 0;
+	vertical-align: bottom;
+}
+
+#header #navmenu li, #submenu li {
+	float: left;
+	list-style: none outside;
+}
+
+#navmenu a {
+	display: block;
+	font-size: 22px;
+	padding: 5px 15px 2px;
+	text-decoration: none;
+	border-color: #137aa1 #137aa1 #137aa1;
+	border-style: dotted;
+	border-width: 1px;
+	color: #137aa1;
+	font-weight: bold;
+	padding: 4px 15px;
+	position: relative;
+	top: 1px;
+	margin-left: 5px;
+}
+
+#navmenu a:hover {
+	background: #137aa1;
+	color: white;
+}
+#navmenu li.selected a{
+	background-color:#137aa1;
+	border-style: solid;
+	border-width: 1px;
+	color: #FFFFFF;
+	position: relative;
+	top: 1px;
+}
+#submenu {
+	-moz-background-clip: border;
+	-moz-background-inline-policy: continuous;
+	-moz-background-origin: padding;
+	background: #FCB040;
+	color: white;
+	margin: 0;
+}
+#searchform {
+	margin: 30px 0 0 30px;
+}
+
+#login {
+	font-size:10pt;
+	width:100%;
+	z-index:999;
+	background:#38bdec;
+	color:#FFFFFF;
+	padding:3px;
+	position: fixed;
+	text-align:center;
+	height:25px;
+	left:0px;
+	top:0px;
+	position:fixed;
+	padding-top:7px;
+}
+#login input {
+	font-size: 13px;
+}
 #login img {
 	width:30px;
 	height:30px;
 }
-
+#login_dropdown {
+}
+#login_msg {
+}
 #page_content {
-	margin-left:125px;
+}
+#main {
+	width: 714px;
+	float: right;
+	padding: 0 5px;
+	min-height: 1px;
+	overflow: hidden;
+}
+
+#sidebar {
+	width: 250px;
+	float: right;
+	min-height: 1px;
+	overflow: hidden;
 }
 
 #footer_spacer {
@@ -89,7 +294,7 @@ a {
 	left:0px;
 	bottom:0px;
 	position:fixed;
-	background: #137aa1;
+	background: #FCCC4F;
 	padding-top:7px;
 }
 
@@ -99,29 +304,71 @@ a {
 	bottom:0px;
 }
 
-img {
-	border: 0;
+
+/* Page Specific
+ ---------------------------------------------------------------------*/
+#beer_description {
+	min-height: 50px;
 }
 
-.hidden {
-	display:none;
+.editable_textarea {
 }
 
-/*#logo {
-	position:fixed;
-}
-*/
-#logo a {
-	border-bottom:0px;
-	text-decoration:none;
+#beer_og:hover {
+	background: aqua;
 }
 
 #flavors_table {
 	font-size:8pt;
 }
 
-#findnearbylink {
-	position:absolute;
-	top:75px;
-	left:500px;
+.photos img {
+	border: 1px solid grey;
+	padding: 3px;	
+}
+#beer div:hover {
+	background: #D0fbff;
+}
+
+div.label {
+	float: left;
+	text-align: right;
+	width: 15%; /*41% and 55% for values if in left column */
+	padding-right: 3px;
+}
+.label {
+	color: #666;
+}
+#beer_og, #beer_fg, #beer_abv, #beer_ibu, #beer_hops, #beer_grains, #beer_yeast {
+	float: right;
+	width: 84%;
+}
+
+#flavors_table td {
+	white-space: nowrap;
+}
+
+/* Float Clearing
+ ---------------------------------------------------------------------*/
+
+.clearfix:after, .cf:after
+{
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0;
+	visibility: hidden;
+}
+
+/* float clearing for IE6 */
+* html .clearfix, *html .cf
+{
+	height: 1%;
+	overflow: visible;
+}
+
+/* float clearing for IE7 */
+* + html .clearfix, * + html .cf
+{
+	min-height: 1%;
 }

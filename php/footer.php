@@ -1,11 +1,10 @@
 	</div>
-	<div id="footer_spacer">
-	</div>
+	<div id="footer_spacer"></div>
 	<div id="footer">
 		&copy; <!-- YEAR --> Beer Crush (r<!-- SVNVERSION -->)
 		<div id="pagemodtime">Page last modified: <span class="datestring"><?=date('D, d M Y H:i:s O',time())?></span></div>
 	</div>
-	
+</div>
 <script type="text/javascript">
 
 function BeerCrushMain()

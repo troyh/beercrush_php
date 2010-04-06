@@ -65,14 +65,12 @@ function showlogin()
 {
 	$('#login').html('\
 	<form id="login_form" method="post" action="/api/login">\
-	<div>Log in or <a href="/user/create">create an account</a></div>\
-	Email:<input name="email" type="text" size="10" />\
+	Sign in or <a href="/user/create">create an account</a>\
+	Email:<input name="email" type="text" size="20" />\
 	Password:<input name="password" type="password" size="10" />\
 	<input value="Go" type="submit" />\
-	<div id="login_msg"></div>\
-	<div id="login_dropdown" class="hidden"><input type="checkbox" name="login_days" value="1" />Keep me logged in on this computer\
-	<p>Without this checked, you will be logged out automatically when you close the browser window.</p>\
-	</div>\
+	<span id="login_dropdown" class="tiny"><input type="checkbox" name="login_days" value="1" />Keep me signed in on this computer</span>\
+	<span id="login_msg"></span>\
 	</form>');
 
 	$('#login_form').submit(function(){login();return false;});

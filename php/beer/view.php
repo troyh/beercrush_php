@@ -76,43 +76,31 @@ $header['title']=$brewerydoc->name.' '.$beerdoc->name;
 
 include("../header.php");
 ?>
+<div id="main">
 
-<a id="brewery_link" href="/brewery/<?=preg_replace('/^.*:/','',$brewerydoc->id)?>"><?=$brewerydoc->name?></a>
+<div>
+	<h2><a id="brewery_link" href="/brewery/<?=preg_replace('/^.*:/','',$brewerydoc->id)?>"><?=$brewerydoc->name?>'s</a></h2>
+	<h1 id="beer_name"><?=$beerdoc->name?></h1>
 
-<div id="beer">
-	<h2 id="beer_name"><?=$beerdoc->name?></h2>
-
-	<input type="hidden" id="beer_id" value="<?=$beerdoc->id?>" />
-	<div id="beer_description" class="editable_textarea"><?=$beerdoc->description?></div>
-
-	<div>OG: <span id="beer_og"><?=$beerdoc->og?></span></div>
-	<div>FG: <span id="beer_fg"><?=$beerdoc->fg?></span></div>
-	<div>ABV: <span id="beer_abv"><?=$beerdoc->abv?>%</span></div>
-	<div>IBU: <span id="beer_ibu"><?=$beerdoc->ibu?></span></div>
-	<div>Hops: <span id="beer_hops"><?=$beerdoc->hops?></span></div>
-	<div>Grains:<span id="beer_grains"><?=$beerdoc->grains?></span></div>
-	<div>Yeast:<span id="beer_yeast"><?=$beerdoc->yeast?></span></div>
+	<div id="beer">
+		<input type="hidden" id="beer_id" value="<?=$beerdoc->id?>" />
+		<div><span class="label">Brewer's description:</span>
+		<p id="beer_description" class="editable_textarea"><?=$beerdoc->description?></p></div>
 	
-	<div id="editable_save_msg"></div>
-	<input class="editable_savechanges_button hidden" type="button" value="Save Changes" />
-	<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
-	
-</div>
-<div>Beer last modified: <span id="beer_lastmodified" class="datestring"><?=date('D, d M Y H:i:s O',$beerdoc->meta->mtime)?></span></div>
-
-<h3>Photos</h3>
-
-<?php foreach ($photoset->photos as $photo) :?>
-	<div>
-	<img src="<?=$photo->url?>?size=small" />
-	<a href="/user/<?=$photo->user_id?>"><?=$users[$photo->user_id]->name?></a> <span class="datestring"><?=date(BeerCrush::DATE_FORMAT,$photo->timestamp)?></span>
+		<div class="cf"><div class="label">Original Gravity: </div><div id="beer_og"><?=$beerdoc->og?></div></div>
+		<div class="cf"><div class="label">Final Gravity: </div><div id="beer_fg"><?=$beerdoc->fg?></div></div>
+		<div class="cf"><div class="label">Alcohol (abv): </div><div id="beer_abv"><?=$beerdoc->abv?></div></div>
+		<div class="cf"><div class="label">Bitterness (IBUs): </div><div id="beer_ibu"><?=$beerdoc->ibu?></div></div>
+		<div class="cf"><div class="label">Hops: </div><div id="beer_hops"><?=$beerdoc->hops?></div></div>
+		<div class="cf"><div class="label">Grains: </div><div id="beer_grains"><?=$beerdoc->grains?></div></div>
+		<div class="cf"><div class="label">Yeast: </div><div id="beer_yeast"><?=$beerdoc->yeast?></div></div>
+		
+		<div id="editable_save_msg"></div>
+		<input class="editable_savechanges_button hidden" type="button" value="Save Changes" />
+		<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
 	</div>
-<?php endforeach; ?>
 
-<div id="new_photos"></div>
-
-<input id="photo_upload" name="photo" type="file" />
-
+</div>
 <h3><?=count($reviews->reviews)?> Reviews</h3>
 
 <?php foreach ($reviews->reviews as $review) :?>
@@ -132,68 +120,81 @@ include("../header.php");
 		}
 		print join(', ',$flavor_titles);
 	?>
+	</div>
 	<div>Price: $<?=$review->purchase_price?> at <a href="/<?=str_replace(':','/',$review->purchase_place_id)?>"><?=$places[$review->purchase_place_id]->name?></a></div>
 	<div>Poured: <?=$review->poured_from?></div>
 	<div>Comments: <?=$review->comments?></div>
 </div>
 <?php endforeach; ?>
+<!-- <div id="reviewdata"></div> -->
 
 <h3>Post a review</h3>
 <form id="review_form">
 	<input type="hidden" name="beer_id" value="<?=$beerdoc->id?>" />
-	<div>
-		Rating: 
+	<div class="cf"><div class="label">Rating:</div><div> 
 		<input name="rating" type="radio" value="1" />1
 		<input name="rating" type="radio" value="2" />2
 		<input name="rating" type="radio" value="3" />3
 		<input name="rating" type="radio" value="4" />4
 		<input name="rating" type="radio" value="5" />5
-	</div>
-	<div>
-		Body: 
+	</div></div>
+	<div class="cf"><div class="label">Body:</div><div> 
 		<input name="body" type="radio" value="1" />1
 		<input name="body" type="radio" value="2" />2
 		<input name="body" type="radio" value="3" />3
 		<input name="body" type="radio" value="4" />4
 		<input name="body" type="radio" value="5" />5
-	</div>
-	<div>
-		Balance: 
+	</div></div>
+	<div class="cf"><div class="label">Balance:</div><div> 
 		<input name="balance" type="radio" value="1" />1
 		<input name="balance" type="radio" value="2" />2
 		<input name="balance" type="radio" value="3" />3
 		<input name="balance" type="radio" value="4" />4
 		<input name="balance" type="radio" value="5" />5
-	</div>
-	<div>
-		Aftertaste: 
+	</div></div>
+	<div class="cf"><div class="label">Aftertaste:</div><div> 
 		<input name="aftertaste" type="radio" value="1" />1
 		<input name="aftertaste" type="radio" value="2" />2
 		<input name="aftertaste" type="radio" value="3" />3
 		<input name="aftertaste" type="radio" value="4" />4
 		<input name="aftertaste" type="radio" value="5" />5
-	</div>
+	</div></div>
 	<div>
 		Price: <input name="purchase_price" type="text" size="10" />
 		at <input name="purchase_place_name" type="text" size="40" />
 		<input type="hidden" id="purchase_place_name_id" name="purchase_place_id" />
 	</div>
 	<div>
-		Flavors: <table id="flavors_table"><?=output_flavors($flavors->flavors)?></table>
+		Flavors: WARNING NOT ALL FLAVORS ARE CURRENTLY SHOWING, NEED TO DISCUSS
+		<table id="flavors_table"><?=output_flavors($flavors->flavors)?></table>
 		<input type="hidden" name="flavors" value="" />
 	</div>
 	<div>
-		Comments:
+		<p>Comments:</p>
 		<textarea name="comments" rows="5" cols="80"></textarea>
 	</div>
 	
 	<input id="post_review_button" type="button" value="Post my review" />
 	<div id="review_result_msg"></div>
 </form>
+</div>
+<div id="sidebar">
+<h3>Photos</h3>
 
-<!-- <div id="reviewdata"></div> -->
+<?php foreach ($photoset->photos as $photo) :?>
+	<div class="photos">
+	<img src="<?=$photo->url?>?size=small" />
+	<a href="/user/<?=$photo->user_id?>"><?=$users[$photo->user_id]->name?></a> <span class="datestring"><?=date(BeerCrush::DATE_FORMAT,$photo->timestamp)?></span>
+	</div>
+<?php endforeach; ?>
 
+<div id="new_photos"></div>
+
+<input id="photo_upload" name="photo" type="file" />
+
+<p></p>
 <h3>Beer Edit History</h3>
+<div>Beer last modified: <span id="beer_lastmodified" class="datestring"><?=date('D, d M Y H:i:s O',$beerdoc->meta->mtime)?></span></div>
 <div id="history"></div>
 
 <?php
