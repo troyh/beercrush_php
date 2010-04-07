@@ -16,55 +16,59 @@ $header['js'][]='<script type="text/javascript" src="/js/swfobject.js"></script>
 
 include("../header.php");
 ?>
+<div id="main">
+
+<div id="mainwithright">
 
 <div id="brewery">
 	<input type="hidden" id="brewery_id" value="<?=$brewerydoc->id?>">
 	<h1 id="brewery_name"><?=$brewerydoc->name?></h1>
 
-	<div id="address">
-		<div>Street:<span id="brewery_address:street"><?=$brewerydoc->address->street?></span></div>
-		<div>City:<span id="brewery_address:city"><?=$brewerydoc->address->city?></span></div>
-		<div>State:<span id="brewery_address:state"><?=$brewerydoc->address->state?></span> </div>
-		<div>Zip:<span id="brewery_address:zip"><?=$brewerydoc->address->zip?></span> </div>
-		<div>Country:<span id="brewery_address:country"><?=$brewerydoc->address->country?></span></div>
-	</div>
+	<span id="address">
+		<div class="cl"><div class="label">Street:</div><div id="brewery_address:street"><?=$brewerydoc->address->street?></div></div>
+		<div class="cl"><div class="label">City:</div><div id="brewery_address:city"><?=$brewerydoc->address->city?></div></div>
+		<div class="cl"><div class="label">State:</div><div id="brewery_address:state"><?=$brewerydoc->address->state?></div></div>
+		<div class="cl"><div class="label">Zip:</div><div id="brewery_address:zip"><?=$brewerydoc->address->zip?></div></div>
+		<div class="cl"><div class="label">Country:</div><div id="brewery_address:country"><?=$brewerydoc->address->country?></div></div>
+	</span>
 
-	<div>Phone:<span id="brewery_phone"><?=$brewerydoc->phone?></span></div>
-	<div>Web site:<span id="brewery_uri"><?=$brewerydoc->uri?></span> <span><a href="<?=$brewerydoc->uri?>">Visit web site</a></span></div>
+	<div class="cl"><div class="label">Phone:</div><div id="brewery_phone"><?=$brewerydoc->phone?></div></div>
+	<div class="cl"><div class="label">Web site:</div><div><span id="brewery_uri"><?=$brewerydoc->uri?></span> <span><a href="<?=$brewerydoc->uri?>">Visit web site</a></span></div>
 
 	<div id="editable_save_msg"></div>
 	<input class="editable_savechanges_button hidden" type="button" value="Save Changes" />
 	<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
 
 </div>
+</div><!--weird extra div required, not sure i get it-->
 
-<div id="map" style="width:300px;height:300px"></div>
 
-<h3>Beers</h3>
+<h2>Beers Brewed</h2>
 <div id="beerlist">
 <?php foreach ($beerlistdoc->beers as $beer){ ?>
 	<div><a href="/<?=str_replace(':','/',$beer->beer_id)?>"><?=$beer->name?></a></div>
 <?php } ?>
 </div>
 
-<h3>Add a beer</h3>
-<p>
-	Give the new beer a name and press the Add button. The name of the beer should just be the name without the 
-	brewery&apos;s name. For example, "Pale Ale" rather than "Sierra Nevada Pale Ale".
-</p>
-
-<p>
-	Once it's added, you'll be able to give it a description and specify the details (style, IBUs, ABV, etc.) if 
-	you know them. If you don't know them, that's okay, someone else does and will eventually provide them.
-</p>
-
+<h3>Add to this list</h3>
 <form id="new_beer_form" method="post" action="/api/beer/edit">
 	<input type="hidden" name="brewery_id" value="<?=$brewerydoc->id?>" />
 	<input type="text" size="30" name="name" value="" />
-	<input type="submit" value="Add" />
+	<input type="submit" value="Add Beer" />
 	<div id="new_beer_msg"></div>
 </form>
+<div class="help">
+	<p>We already know the brewery, so just type the beer name, e.g. "Pale Ale" rather than "Sierra Nevada Pale Ale"</p>
+	<p>Go to the beer page to update that beer's data.</p>
+</div>
 
+</div>
+<div id="rightcol">
+	<div id="map"></div>
+</div>
+
+</div>
+<div id="leftcol">
 <h3>Photos</h3>
 
 <?php foreach ($photoset->photos as $photo) :?>
@@ -77,6 +81,7 @@ include("../header.php");
 <div id="new_photos"></div>
 
 <input id="photo_upload" name="photo" type="file" />
+</div>
 	
 <script type="text/javascript" src="/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript">

@@ -178,7 +178,7 @@ include("../header.php");
 	<div id="review_result_msg"></div>
 </form>
 </div>
-<div id="sidebar">
+<div id="leftcol">
 <h3>Photos</h3>
 
 <?php foreach ($photoset->photos as $photo) :?>

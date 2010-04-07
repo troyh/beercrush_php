@@ -274,11 +274,22 @@ img {
 	overflow: hidden;
 }
 
-#sidebar {
+#leftcol {
 	width: 250px;
 	float: right;
 	min-height: 1px;
 	overflow: hidden;
+}
+
+#mainwithright {
+	float: left;
+	width:380px;
+}
+
+#rightcol {
+	float:right;
+	width: 310px;
+	padding-left: 5px;
 }
 
 #footer_spacer {
@@ -305,13 +316,10 @@ img {
 }
 
 
-/* Page Specific
+/* Beer Page Specific
  ---------------------------------------------------------------------*/
 #beer_description {
 	min-height: 50px;
-}
-
-.editable_textarea {
 }
 
 #beer_og:hover {
@@ -347,13 +355,37 @@ div.label {
 #flavors_table td {
 	white-space: nowrap;
 }
+/* Brewery Page Specific
+ ---------------------------------------------------------------------*/
+#map {
+	width: 300px;
+	height: 300px;
+}
+#brewery div:hover {
+	background: #D0fbff;
+}
 
 /* Float Clearing
  ---------------------------------------------------------------------*/
 
-.clearfix:after, .cf:after
-{
+.clearfix:after, .cf:after {
 	clear: both;
+	content: ".";
+	display: block;
+	height: 0;
+	visibility: hidden;
+}
+
+.cl:after {
+	clear: left;
+	content: ".";
+	display: block;
+	height: 0;
+	visibility: hidden;
+}
+
+.cr:after {
+	clear: right;
 	content: ".";
 	display: block;
 	height: 0;
