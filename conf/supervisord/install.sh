@@ -26,3 +26,9 @@ if ../../tools/iamservertype -q couchdb-proxy; then
 	
 fi
 
+if ../../tools/iamservertype -q gitrepo; then
+
+	cp ../../spread/tools/listen /usr/local/beercrush/bin/listen;
+	sudo cp dbchanges2git.conf /etc/supervisor/conf.d/;
+	
+fi

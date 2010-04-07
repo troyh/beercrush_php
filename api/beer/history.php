@@ -7,9 +7,8 @@ $GIT_WORK_TREE="/var/local/BeerCrush/git";
 $beerdoc_path=str_replace(':','/',$_GET['beer_id']);
 
 if (isset($_GET['version'])) {
-	exec("git --work-tree=$GIT_WORK_TREE --git-dir=$GIT_WORK_TREE/.git/ show ".$_GET['version'],$git_output,$retcode);
 	header("Content-Type: application/json; charset=utf-8");
-	print join("\n",$git_output);
+	passthru("git --work-tree=$GIT_WORK_TREE --git-dir=$GIT_WORK_TREE/.git/ show ".$_GET['version']);
 }
 else {
 	exec("git --work-tree=$GIT_WORK_TREE --git-dir=$GIT_WORK_TREE/.git/ log --unified=0 --full-index $GIT_WORK_TREE/$beerdoc_path",$git_output,$retcode);

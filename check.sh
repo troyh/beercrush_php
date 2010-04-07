@@ -7,3 +7,9 @@
 # TODO: Verify servers are running (solr, nginx, fcgi, etc)
 # TODO: File permissions are correct
 
+UMASK=$(grep umask /etc/profile |awk '{print $2}');
+if [ $UMASK -ne "002" ]; then
+	echo "ERROR: umask is $UMASK, but must be 002. Edit /etc/profile.";
+	
+fi
+

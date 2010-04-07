@@ -2,60 +2,115 @@
 <?php
 require_once('OAK/oak.class.php');
 
-if (empty($argv[1]))
-{
-	print "Usage: ".$argv[0]." <directory>\n";
-	exit;
+$config_file=null;
+$dirname=null;
+
+$opts=getopt('C:d:si:');
+
+if (!empty($opts['C'])) {
+	$config_file=$opts['C'];
 }
 
-$dirname=$argv[1];
-if (!is_dir($dirname.'/_design/'))
-{
-	// Make the specified directory and the _design subdir that we know we'll need to have
-	if (mkdir($dirname.'/_design/',0770,true)==false)
-	{
-		exit;
+$dirname=null;
+if (!empty($opts['d'])) {
+	$dirname=$opts['d'];
+}
+
+$create_subdirs=false;
+if (isset($opts['s'])) {
+	$create_subdirs=true;
+}
+
+$docid=null;
+if (isset($opts['i'])) {
+	if (!empty($opts['i'])) {
+		$docid=$opts['i'];
+	}
+	else {
+		print "-i requires a document ID\n";
+		exit(1);
 	}
 }
 
-$oak=new OAK;
+if (empty($config_file)) {
+	print <<<EOF
+Usage: {$argv[0]} -C <conf file> [-d <directory> [-s]] [-i <document ID>]
 
-$view=new stdClass;
-if ($oak->get_document('_all_docs',$view)!==TRUE)
-{
+	-C	Path to webapp.conf file (required)
+	-d	Directory to put document files. If omitted, output is written to stdout. (optional)
+	-s	Create subdirectories for documents based on document ID.
+		The IDs are split at colons (:) and replaced with slashes (/). (optional)
+	-i	Specify a document ID to dump. Otherwise, all documents are dumped. (optional)
+
+EOF;
+	exit(1);
 }
-else
-{
-	$couchdb_nodes=$oak->get_config_info()->couchdb->nodes;
-	$dbname=$oak->get_config_info()->couchdb->database;
+
+
+$oak=new OAK($config_file);
+$couchdb_nodes=$oak->get_config_info()->couchdb->nodes;
+$dbname=$oak->get_config_info()->couchdb->database;
+
+if (!is_null($docid)) {
+	dump_doc($docid);
+}
+else { // Dump all docs
+	$view=new stdClass;
+	if ($oak->get_document('_all_docs',$view)!==TRUE) {
+	}
+	else {
+		foreach ($view->rows as $row)
+		{
+			dump_doc($row->id);
+		}
+	}
+}
+
+function dump_doc($id) {
+	global $oak;
+	global $couchdb_nodes;
+	global $dbname;
+	global $create_subdirs;
+	global $dirname;
 	
-	foreach ($view->rows as $row)
+	$ch=curl_init('http://'.$couchdb_nodes[rand()%count($couchdb_nodes)].'/'.$dbname.'/'.$id);
+	if ($ch===FALSE)
 	{
-		// print $row->id."\n";
-		$ch=curl_init('http://'.$couchdb_nodes[rand()%count($couchdb_nodes)].'/'.$dbname.'/'.$row->id);
-		if ($ch===FALSE)
-		{
-			print "Failed to get ".$row->id."\n";
-		}
-		else
-		{
-			curl_setopt($ch,CURLOPT_RETURNTRANSFER,TRUE);
-			
-			$answer=curl_exec($ch);
-			$fp=@fopen($dirname.'/'.$row->id,'w');
-			if (!$fp)
-			{
-				print "Unable to open ".$dirname.'/'.$row->id."\n";
-			}
-			else
-			{
-				fwrite($fp,$answer);
-				fclose($fp);
-			}
-			
-			curl_close($ch);
-		}
+		print "Failed to get ".$id."\n";
 	}
-}
+	else
+	{
+		curl_setopt($ch,CURLOPT_RETURNTRANSFER,TRUE);
+		$answer=curl_exec($ch);
+		$info=curl_getinfo($ch,CURLINFO_HTTP_CODE);
+		if ($info!=200) {
+			print "\n";
+		}
+		else {
+			if (is_null($dirname)) {
+				$docfilename="php://stdout";
+			}
+			else {
+				// Create filename
+				if ($create_subdirs) {
+					$docfilename=$dirname.'/'.str_replace(':','/',$id);
+					$d=dirname($docfilename);
+					if (!file_exists($d)) {
+						mkdir($d,0775,true);
+					}
+				}
+				else
+					$docfilename=$dirname.'/'.$id;
+				
+				print "$docfilename\n";
+			}
+			$doc=json_decode($answer);
+			$docstr=$oak->jsontidy($doc);
+			file_put_contents($docfilename,$docstr);
+		}
 
+		curl_close($ch);
+	}
+	
+}
 ?>

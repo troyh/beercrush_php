@@ -11,6 +11,7 @@ RECURSIVE_MAKE=@for MF in `find . -mindepth 2 -maxdepth 2 -type f -name Makefile
 
 # Get necessary BeerCrush config settings
 WWW_DIR:=$(shell php -r '$$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $$cfg->file_locations->WWW_DIR."\n";')
+BC_BIN_DIR:=/usr/local/beercrush/bin
 	
 ALL:
 

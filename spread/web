@@ -23,7 +23,7 @@ function handle_docchange($oaklistener,$docid) {
 		array('^user:([^:]+)$'     						, '/api/user/$1'),
 		array('^flavors'								, '/api/flavors'),
 		// API -> Pages
-		array('^/api/beer/([^/]+)/([^/]+)$'				, array('/beer/$1/$2','/brewery/$1/beerlist')),
+		array('^/api/beer/([^/]+)/([^/]+)$'				, array('/beer/$1/$2','/brewery/$1/beerlist','/api/history/beer/$1/$2')),
 		array('^/api/brewery/([^/]+)$'					, '/brewery/$1'),
 		array('^/api/brewery/([^/]+)/beerlist$'			, '/brewery/$1'),
 		array('^/api/photoset/beer/([^/]+)/([^/]+)$'	, '/beer/$1/$2'),

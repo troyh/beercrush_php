@@ -3,7 +3,16 @@
 require_once('beercrush/beercrush.php');
 require_once('OAK/listener.class.php');
 
-$oaklistener=new OAKListener($BC->oak,$argv[1]);
+$opts=getopt('p:');
+
+if (!empty($opts['p'])) {
+	file_put_contents($opts['p'],getmypid());
+	$groupname=$argv[3];
+}
+else 
+	$groupname=$argv[1];
+
+$oaklistener=new OAKListener($BC->oak,$groupname);
 $oaklistener->gimme_messages('message_callback');
 
 function message_callback($oaklistener,$msg) {

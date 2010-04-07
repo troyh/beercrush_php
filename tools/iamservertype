@@ -10,7 +10,7 @@ while getopts "qt" opt; do
 			shift;
 			;;
 		t)
-			for T in cgi couchdb couchdb-proxy memcached mgmt php-cgi solr solr-proxy web; do
+			for T in cgi couchdb couchdb-proxy gitrepo memcached mgmt php-cgi solr solr-proxy web; do
 				if $0 -q $T; then
 					echo $T
 				fi
@@ -31,6 +31,7 @@ case $1 in
 	php-cgi) ;;
 	cgi) ;;
 	couchdb) ;;
+	gitrepo) ;;
 	memcached) ;;
 	couchdb-proxy) ;;
 	solr-proxy) ;;
@@ -43,6 +44,7 @@ Recognized types:
 	cgi             FastCGI server (not a PHP5 FastCGI server)
 	couchdb         CouchDB database server
 	couchdb-proxy   NGiNX server acting as a proxy to a CouchDB server
+	gitrep          Git repository
 	memcached       memcached server
 	mgmt            management server
 	php-cgi         PHP FastCGI server

@@ -2,10 +2,6 @@
 
 . ../config.sh
 
-if [ ! -d /usr/local/beercrush ]; then \
-	sudo mkdir /usr/local/beercrush; \
-fi
-
 if ../tools/iamservertype -q php-cgi; then
 
 	sudo cp php-cgi /usr/local/beercrush/spread-php-cgi;

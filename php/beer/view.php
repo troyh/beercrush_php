@@ -308,29 +308,28 @@ function mydiff(a,b) {
 	return diffs;
 }
 
-function display_diffs_base(vindex,diffs) {
+var exclude_props=[ '_rev', 'meta' ];
+
+function display_diffs(vindex,diffs) {
 	for (var prop in diffs) {
-		if (typeof(diffs[prop].old) == 'undefined' && typeof(diffs[prop].new) == 'undefined') {
-			display_diffs_base(vindex,diffs[prop]);
-		}
-		else {
-			var s='<tr><td>'+prop+'</td><td>';
-			if (diffs[prop].old!=null)
-				s+=diffs[prop].old;
-			s+='</td><td>';
-			if (diffs[prop].new)
-				s+=diffs[prop].new;
-			s+='</td></tr>';
-			$('#version_'+vindex+' table').append(s);
+		if (jQuery.inArray(prop,exclude_props)==-1) {
+			if (typeof(diffs[prop].old) == 'undefined' && typeof(diffs[prop].new) == 'undefined') {
+				display_diffs_base(vindex,diffs[prop]);
+			}
+			else {
+				var s;
+				if (diffs[prop].old!=null && diffs[prop].old.length) {
+					s='Changed '+prop+' from <span class="version_change_from">'+diffs[prop].old+'</span> to <span class="version_change_to">'+diffs[prop].new+'</span>';
+				}
+				else {
+					s='Added '+prop+': <span class="version_change_new">'+diffs[prop].new+'</span>';
+				}
+				s='<div>'+s+'</div>';
+				$('#version_'+vindex).append(s);
+			}
 		}
 	}
 	
-}
-function display_diffs(vindex,diffs) {
-	$('#version_'+vindex).append('<table>');
-	// var proppath=new Array();
-	display_diffs_base(vindex,diffs);
-	$('#version_'+vindex).append('</table>');
 }
 
 function show_diff(a,b) {
@@ -367,20 +366,6 @@ function show_history() {
 				$('#version_'+data.changes[i].index).append('<a href="#" onclick="show_diff(\''+data.changes[i+1].index+'\',\''+data.changes[i].index+'\');return false;">Show Diff</a>');
 			}
 		}
-
-		// for (chg in data.changes) {
-		// 	$('#history').append('<div id="version_'+data.changes[chg].index+'">'+data.changes[chg].date+'</div>');
-		// 	$.getJSON('/api/history/'+path+'/'+data.changes[chg].index,function(doc,ts,xhr){
-		// 		var idx=this.url.match(/[a-z0-9]+$/);
-		// 		if (idx) {
-		// 			docversions[idx[0]]=doc;
-		// 			var i=jQuery.inArray(idx[0],dochistory);
-		// 			if (i > -1 && (i+1) < dochistory.length) {
-		// 				$('#version_'+idx).append('<a href="#" onclick="show_diff(\''+idx[0]+'\',\''+dochistory[i+1]+'\');return false;">Show Diff</a>');
-		// 			}
-		// 		}
-		// 	});
-		// }
 	});
 }
 
