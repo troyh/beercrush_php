@@ -58,7 +58,7 @@ function logout()
 
 function showusername()
 {
-	$('#login').html((login_data.avatar?'<img src="'+login_data.avatar+'" />':'')+'You are logged in as <a href="/user/'+$.cookie('userid')+'">'+login_data.name+'</a> <a href="javascript:logout();">Logout</a>');
+	$('#login').html((login_data.avatar?'<img src="'+login_data.avatar+'" />':'')+'Cheers, <a href="/user/'+$.cookie('userid')+'">'+login_data.name+'</a>! <a href="javascript:logout();">Logout</a>');
 }
 
 function showlogin()
