@@ -1,6 +1,6 @@
 include Makefile.rules
 
-.PHONY: install 
+.PHONY: install setup check
 
 ALL: SAFETY_CHECK /usr/local/include/jansson.h /usr/include/curl/curl.h /usr/bin/yui-compressor	/etc/supervisor/supervisord.conf
 	@for DIR in $(shell find . -maxdepth 1 -mindepth 1 -type d); do \
