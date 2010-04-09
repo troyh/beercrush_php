@@ -9,3 +9,6 @@ install: SAFETY_CHECK
 check:
 	sh ./check.sh
 	$(RECURSIVE_MAKE);
+
+setup:
+	$(RECURSIVE_MAKE);
