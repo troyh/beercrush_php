@@ -136,6 +136,7 @@ class OAK
 		list($this->config->couchdb->host,$this->config->couchdb->port)=preg_split('/:/',$node);
 		
 		$this->spread_id=null;
+		$this->memcached=null;
 	}
 	
 	function __destruct() 
@@ -202,12 +203,11 @@ class OAK
 
 	function login_is_trusted()
 	{
-		// TODO: use memcached or something quick so that we don't have to use couchdb on *every* authenticated request!
-		$user_doc=new OAKDocument('');
-		if ($this->get_document('user:'.$this->get_user_id(),$user_doc)!==true)
+		$secret=$this->memcached_get('loginsecret:'.$this->get_user_id());
+		if ($secret===false)
 			return false;
-		
-		$correct_key=md5($this->get_user_id().$user_doc->secret.$_SERVER['REMOTE_ADDR']);
+
+		$correct_key=md5($this->get_user_id().$secret.$_SERVER['REMOTE_ADDR']);
 		if ($correct_key!==$this->get_user_key())
 			return false;
 
@@ -1176,6 +1176,30 @@ class OAK
 			// }
 		}
 		return $success;
+	}
+	
+	public function memcached_set($key,$value,$expiration=0) {
+		if (is_null($this->memcached)) {
+			$this->memcached=new Memcached();
+			$this->memcached->addServers($this->config->memcached->servers);
+		}
+		return $this->memcached->set($key,$value,$expiration);
+	}
+	
+	public function memcached_delete($key,$time=0) {
+		if (is_null($this->memcached)) {
+			$this->memcached=new Memcached();
+			$this->memcached->addServers($this->config->memcached->servers);
+		}
+		return $this->memcached->delete($key,$time);
+	}
+
+	public function memcached_get($key) {
+		if (is_null($this->memcached)) {
+			$this->memcached=new Memcached();
+			$this->memcached->addServers($this->config->memcached->servers);
+		}
+		return $this->memcached->get($key);
 	}
 	
 };

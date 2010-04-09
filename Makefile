@@ -32,3 +32,6 @@ install: SAFETY_CHECK ALL
 check:
 	@sh ./check.sh
 	$(RECURSIVE_MAKE);
+
+setup:
+	$(RECURSIVE_MAKE);

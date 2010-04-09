@@ -11,7 +11,7 @@ function logout_failure($status_code,$reason='')
 	
 	header("HTTP/1.0 $status_code $reason");
 	header("Content-Type: application/javascript");
-	print json_encode($msg);
+	print json_encode($msg)."\n";
 }
 
 /*
@@ -24,23 +24,8 @@ $oak=new OAK();
 }
 else
 {
-	$user_doc=new OAKDocument('');
-	if ($oak->get_document('user:'.$oak->get_user_id(),&$user_doc)!==true)
-	{
-		logout_failure(403,'Unauthorized');
-	}
-	else
-	{
-		unset($user_doc->secret);
-		if ($oak->put_document($user_doc->getID(),$user_doc)!==true)
-		{
-			logout_failure(500,'Internal Error');
-		}
-		else
-		{
-			header("HTTP/1.0 200 OK");
-		}
-	}
+	$oak->memcached_delete('loginsecret:'.$oak->get_user_id());
+	header("HTTP/1.0 200 OK");
 }
 
 ?>

@@ -15,7 +15,7 @@ function login_failure($status_code,$reason='')
 	
 	header("HTTP/1.0 $status_code $reason");
 	header("Content-Type: application/javascript");
-	print json_encode($msg);
+	print json_encode($msg)."\n";
 }
 
 
@@ -88,40 +88,34 @@ else
 		else
 		{
 			// Create another secret
-			$user_doc->secret=rand();
+			$secret=rand();
+			$oak->memcached_set('loginsecret:'.$user_doc->userid,$secret);
 		
-			if ($oak->put_document($docid,$user_doc)!==true)
-			{
-				login_failure(500,'Internal error');
-			}
+			// Make and return userkey
+			$usrkey=md5($user_doc->userid.$secret.$_SERVER['REMOTE_ADDR']);
+
+			/*
+				Indicate success.
+			*/
+			$oak->log('Successful login:'.$user_doc->userid);
+
+			header("HTTP/1.0 200 OK");
+			header("Content-Type: application/json; charset=utf-8");
+		
+			$answer=array(
+				'userid'=>$user_doc->userid,
+				'usrkey'=>$usrkey,
+			);
+			
+			if (!empty($user_doc->name))
+				$answer['name']=$user_doc->name;
 			else
-			{
-				// Make and return userkey
-				$usrkey=md5($user_doc->userid.$user_doc->secret.$_SERVER['REMOTE_ADDR']);
-
-				/*
-					Indicate success.
-				*/
-				$oak->log('Login:'.$userid);
-
-				header("HTTP/1.0 200 OK");
-				header("Content-Type: application/json; charset=utf-8");
-			
-				$answer=array(
-					'userid'=>$user_doc->userid,
-					'usrkey'=>$usrkey,
-				);
+				$answer['name']="Anonymous";
+			if (!empty($user_doc->avatar))
+				$answer['avatar']=$user_doc->avatar;
 				
-				if (!empty($user_doc->name))
-					$answer['name']=$user_doc->name;
-				else
-					$answer['name']="Anonymous";
-				if (!empty($user_doc->avatar))
-					$answer['avatar']=$user_doc->avatar;
-					
-				print json_encode($answer);
-			
-			}
+			print json_encode($answer)."\n";
+		
 		}
 	}
 }

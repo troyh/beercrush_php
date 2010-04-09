@@ -1,16 +1,38 @@
 #!/usr/bin/php
 <?php
 
-if ($argc<2)
-{
+$line_by_line=true;
+
+$opts=getopt('1');
+if (isset($opts['1'])) {
+	$line_by_line=false;
+	array_splice($argv,1,1); // Remove that from argv
+	--$argc;
+}
+
+if ($argc<2) {
 	print "Usage: $argv[0] <json property> ...\n";
 	exit;
 }
 
-$input=fopen("php://stdin",'r');
-while (($line=fgets($input))!==FALSE) {
+if ($line_by_line) {
+	$input=fopen("php://stdin",'r');
+	while (($line=fgets($input))!==FALSE) {
+		$values=jsonpath(json_decode($line));
+		print join("\t",$values)."\n";
+	}
+	fclose($input);
+}
+else {
+	$values=jsonpath(json_decode(file_get_contents("php://stdin")));
+	print join("\t",$values)."\n";
+}
+
+function jsonpath($data) {
+	global $argc;
+	global $argv;
+
 	$values=array();
-	$data=json_decode($line);
 
 	for ($i=1;$i<$argc;++$i) {
 		$components=explode('.',$argv[$i]);
@@ -21,11 +43,12 @@ while (($line=fgets($input))!==FALSE) {
 			// print "Part:$p"; print_r($ref);print "\n";
 			$ref=$ref->$p;
 		}
-		$values[]=$ref;
+		if (is_scalar($ref))
+			$values[]=$ref;
+		else
+			$values[]=json_encode($ref);
 	}
 	
-	print join("\t",$values)."\n";
+	return $values;
 }
-fclose($input);
-
 ?>
