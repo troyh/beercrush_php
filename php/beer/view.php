@@ -11,8 +11,17 @@ $beerdoc   =BeerCrush::api_doc($oak,'beer/'.$api_beer_id);
 $brewerydoc=BeerCrush::api_doc($oak,'brewery/'.$brewery_id);
 $reviews   =BeerCrush::api_doc($oak,'review/beer/'.$api_beer_id.'/0');
 $flavors   =BeerCrush::api_doc($oak,'flavors');
+$styles    =BeerCrush::api_doc($oak,'beerstyles');
+$colors    =BeerCrush::api_doc($oak,'beercolors');
 $photoset  =BeerCrush::api_doc($oak,'photoset/beer/'.$api_beer_id);	
 
+if (empty($beerdoc->styles))
+	$beerdoc->styles=array();
+$styles_lookup=array();
+build_style_lookup_table($styles->styles);
+
+$color=get_color_rgb($beerdoc->srm);
+	
 // Build flavor id lookup table
 $flavor_lookup=array();
 build_flavor_lookup_table($flavors->flavors);
@@ -32,6 +41,26 @@ foreach ($reviews->reviews as $review)
 foreach ($photoset->photos as $photo) {
 	if (!isset($users[$photo->user_id])) {
 		$users[$photo->user_id]=BeerCrush::api_doc($oak,'user/'.$photo->user_id);
+	}
+}
+
+function build_style_lookup_table($styles) {
+	global $styles_lookup;
+	
+	foreach ($styles as $style) {
+		$styles_lookup[$style->id]=$style;//->name;
+		if (isset($style->styles))
+			build_style_lookup_table($style->styles);
+	}
+}
+
+function get_color_rgb($srm) {
+	global $colors;
+	foreach ($colors->colors as $color) {
+		if ($color->srmmin <= $srm && $srm <= $color->srmmax) {
+			return $color;
+			// return '#'.dechex($color->rgb[0]<<16 | $color->rgb[1]<<8 | $color->rgb[2]);
+		}
 	}
 }
 
@@ -95,6 +124,16 @@ include("../header.php");
 		<div class="cf"><div class="label">Grains: </div><div id="beer_grains"><?=$beerdoc->grains?></div></div>
 		<div class="cf"><div class="label">Yeast: </div><div id="beer_yeast"><?=$beerdoc->yeast?></div></div>
 		
+		<div class="cf"><div class="label">Style: </div>
+		<?foreach ($beerdoc->styles as $styleid):?>
+			<span><?=$styles_lookup[$styleid]->name?></span>
+		<?endforeach?>
+		</div>
+		
+		<div class="cf"><div class="label">Color: </div><div style="background:<?='#'.dechex($color->rgb[0]<<16 | $color->rgb[1]<<8 | $color->rgb[2])?>"><?=$color->name?></div></div>
+		
+		<div class="cf"><div class="label">Availability: </div><div><?=$beerdoc->availability?></div></div>
+
 		<div id="editable_save_msg"></div>
 		<input class="editable_savechanges_button hidden" type="button" value="Save Changes" />
 		<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />

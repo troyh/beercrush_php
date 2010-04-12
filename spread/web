@@ -52,6 +52,7 @@ function do_purges($url,$docmap,$idx) {
 		foreach ($to as $replacement) {
 			$new_url=preg_replace('/'.str_replace('/','\\/',$from).'/',$replacement,$url);
 			if ($new_url!=$url) {
+				$oaklistener->getOAK()->log('Attempting to purge: '.$new_url);
 				$oaklistener->getOAK()->purge_document_cache($new_url);
 				do_purges($new_url,$docmap,$idx+1);
 			}

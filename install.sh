@@ -41,6 +41,11 @@ if tools/iamservertype -q php-cgi || tools/iamservertype -q cgi; then
 		chmod g+rwX /var/local/BeerCrush/$D;
 	done
 	
+	# Make autocomplete_names.tsv file, if it doesn't already exist (and isn't zero-size)
+	if [ ! -s /var/local/BeerCrush/meta/autocomplete_names.tsv ]; then
+		scripts/misc/autocomplete_list > /var/local/BeerCrush/meta/autocomplete_names.tsv;
+	fi
+	
 fi
 
 if tools/iamservertype -q mgmt; then
