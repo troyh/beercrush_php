@@ -18,14 +18,8 @@ function logout_failure($status_code,$reason='')
 	Log the user out.
 */
 $oak=new OAK();
- if ($oak->login_is_trusted()==false)
-{
-	logout_failure(403,'Unauthorized');
-}
-else
-{
-	$oak->memcached_delete('loginsecret:'.$oak->get_user_id());
-	header("HTTP/1.0 200 OK");
-}
+
+$oak->memcached_delete('loginsecret:'.$oak->get_user_id());
+header("HTTP/1.0 200 OK");
 
 ?>

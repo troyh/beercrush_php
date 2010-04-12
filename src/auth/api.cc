@@ -1,183 +1,180 @@
 #include <fcgiapp.h>
 #include <stdlib.h>
 #include <string.h>
-#include <jansson.h>
-#include <curl/curl.h>
+#include <sys/stat.h>
 #include <openssl/md5.h>
+#include <libmemcached/memcached.h>
+#include <jansson.h>
 
 extern "C"
 {
 #include "../external/cgic/cgic.h"
 }
 
-char couchdb_userdoc_url[1024]="";
+size_t asshole_count=0;
+char* asshole_text=NULL;
+char** assholes=NULL;
 
+memcached_st* memcached_pool=NULL;
 
-size_t curl_response( void *ptr, size_t size, size_t nmemb, void *stream)
-{
-	char** mybuffer=(char**)stream;
-	if (*mybuffer==NULL)
-	{ // Alloc some memory for it
-		*mybuffer=(char*)calloc(nmemb,size);
+bool is_an_asshole(const char* userid) {
+	if (userid && userid[0]) {
+		// Binary search assholes for this userid
+		size_t lo=0,hi=asshole_count;
+		while (lo < hi) {
+			size_t mid=(hi-lo)/2;
+			int c=strcmp(userid,assholes[mid]);
+			if  (c==0)
+				return true;
+
+			if (c < 0)
+				hi=mid;
+			else
+				lo=mid+1;
+		}
 	}
 	
-	if (*mybuffer)
-	{
-		memcpy(*mybuffer,ptr,size*nmemb);
-		(*mybuffer)[size*nmemb]='\0'; // null-terminate it
-	}
-	
-	return size*nmemb;
+	return false;
 }
 
-bool login_is_trusted(/*FCGX_Stream* out*/)
+bool login_is_trusted(const char* userid)
 {
 	bool isTrusted=false;
 	
-	// if ($this->get_document('user:'.$this->get_user_id(),$user_doc)!==true)
-	// 	return false;
-	// 
-	// $correct_key=md5($this->get_user_id().$user_doc->secret.$_SERVER['REMOTE_ADDR']);
-	// if ($correct_key!==$this->get_user_key())
-	// 	return false;
-	
-	// Copy the base URL (that never changes)
-	char url[sizeof(couchdb_userdoc_url)];
-	strncpy(url,couchdb_userdoc_url,sizeof(url));
-	url[sizeof(url)-1]='\0';
-	size_t url_len=strlen(url);
-	
-	// Add the user_id
-	cgiFormString("userid",&url[url_len],sizeof(url)-url_len);
-	url[sizeof(url)-1]='\0';
-	
-	// Get user document from couchdb
-	CURL* ch=curl_easy_init();
-	if (ch)
-	{
-		char* userdoc=0;
-		
-		curl_easy_setopt(ch,CURLOPT_URL,url);
-		curl_easy_setopt(ch,CURLOPT_WRITEFUNCTION,curl_response);
-		curl_easy_setopt(ch,CURLOPT_WRITEDATA,&userdoc);
-		
-		if (curl_easy_perform(ch)==0)
-		{
-			// FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
-			// FCGX_FPrintF(out,"URL: %s\n",url);
-			// double t;
-			// curl_easy_getinfo(ch,CURLINFO_TOTAL_TIME,&t);
-			// FCGX_FPrintF(out,"CURLINFO_TOTAL_TIME=%f\n",t);
-			// curl_easy_getinfo(ch,CURLINFO_NAMELOOKUP_TIME,&t);
-			// FCGX_FPrintF(out,"CURLINFO_NAMELOOKUP_TIME=%f\n",t);
-			// curl_easy_getinfo(ch,CURLINFO_CONNECT_TIME,&t);
-			// FCGX_FPrintF(out,"CURLINFO_CONNECT_TIME=%f\n",t);
-			// curl_easy_getinfo(ch,CURLINFO_APPCONNECT_TIME,&t);
-			// FCGX_FPrintF(out,"CURLINFO_APPCONNECT_TIME=%f\n",t);
-			// curl_easy_getinfo(ch,CURLINFO_PRETRANSFER_TIME,&t);
-			// FCGX_FPrintF(out,"CURLINFO_PRETRANSFER_TIME=%f\n",t);
-			// curl_easy_getinfo(ch,CURLINFO_STARTTRANSFER_TIME,&t);
-			// FCGX_FPrintF(out,"CURLINFO_STARTTRANSFER_TIME=%f\n",t);
-			
-			
-			long status_code;
-			curl_easy_getinfo(ch,CURLINFO_RESPONSE_CODE,&status_code);
-			if (status_code==200)
-			{
-				// userdoc is a JSON doc, use Jansson to parse it...
-				json_error_t error;
-				json_t* jsondoc=json_loads(userdoc,&error);
-				
-				free(userdoc);
-				
-				// ...and then get the secret out of it
-				if (jsondoc)
-				{
-					json_t* secret=json_object_get(jsondoc,"secret");
-					if (json_is_integer(secret))
-					{
-						// Now get the MD5 sum of the user_id+secret+REMOTE_ADDR
-						char str[256];
-						snprintf(str,sizeof(str),"%s%d%s",&url[url_len],json_integer_value(secret),cgiRemoteAddr);
-						unsigned char md5sum[MD5_DIGEST_LENGTH];
-						MD5((unsigned char*)str,strlen(str),md5sum);
-						
-						// Convert MD5 to a 32-byte string
-						char md5sum_str[MD5_DIGEST_LENGTH * 2 + 1];
-						char hexchars[]="0123456789abcdef";
-						for (size_t i=0; i < MD5_DIGEST_LENGTH; ++i)
-						{
-							md5sum_str[i*2]=hexchars[(md5sum[i] & 0xf0) >> 4];
-							md5sum_str[i*2+1]=hexchars[md5sum[i] & 0x0f];
-						}
-						md5sum_str[sizeof(md5sum_str)-1]='\0';
-		
-						// Compare it to the CGI usr_key
-						char usrkey[MD5_DIGEST_LENGTH * 2 + 1];
-						cgiFormString("usrkey",usrkey,sizeof(usrkey));
+	// Get the secret from memcached
+	if (userid && userid[0] && memcached_pool) {
+		char mc_key[64]="loginsecret:";
+		strncat(mc_key,userid,sizeof(mc_key)-strlen(mc_key));
+		mc_key[sizeof(mc_key)-1]='\0';
 
-						if (!strcmp(usrkey,md5sum_str))
-						{
-							isTrusted=true;
-						}
-					}
-					
-					json_decref(jsondoc);
-				}
+		size_t vlen;
+		memcached_return r;
+		uint32_t flags=0;
+		char* secret=memcached_get(memcached_pool,mc_key,strlen(mc_key),&vlen,&flags,&r);
+		if (secret) {
+			// Now get the MD5 sum of the user_id+secret+REMOTE_ADDR
+			char str[256];
+			snprintf(str,sizeof(str),"%s%s%s",userid,secret,cgiRemoteAddr);
+			unsigned char md5sum[MD5_DIGEST_LENGTH];
+			MD5((unsigned char*)str,strlen(str),md5sum);
+			
+			// Convert MD5 to a 32-byte string
+			char md5sum_str[MD5_DIGEST_LENGTH * 2 + 1];
+			char hexchars[]="0123456789abcdef";
+			for (size_t i=0; i < MD5_DIGEST_LENGTH; ++i)
+			{
+				md5sum_str[i*2]=hexchars[(md5sum[i] & 0xf0) >> 4];
+				md5sum_str[i*2+1]=hexchars[md5sum[i] & 0x0f];
 			}
+			md5sum_str[sizeof(md5sum_str)-1]='\0';
+			
+			// Compare it to the CGI usr_key
+			char usrkey[MD5_DIGEST_LENGTH * 2 + 1];
+			usrkey[0]='\0';
+			cgiCookieString("usrkey",usrkey,sizeof(usrkey));
+			if (!strlen(usrkey))
+				cgiFormString("usrkey",usrkey,sizeof(usrkey));
+			
+			if (!strcmp(usrkey,md5sum_str))
+			{
+				isTrusted=true;
+			}
+			
+			free(secret);
 		}
-		
-		curl_easy_cleanup(ch);
 	}
-	
+					
 	return isTrusted;
 }
 
 extern "C" void fcgiInit() 
 {
-	curl_global_init(CURL_GLOBAL_ALL);
-	
-	srandom(time(0)); // Seed the random number generator for the use of random() below
-	
-	// Get the IP address of the couchdb server
-	char couchdb_server[32]="";
-	char couchdb_dbname[32]="";
-	
-	json_error_t error;
-	json_t* cfg=json_load_file("/etc/BeerCrush/webapp.conf",&error);
-	if (cfg)
-	{
-		json_t* couchdb=json_object_get(cfg,"couchdb");
-		if (json_is_object(couchdb))
-		{
-			json_t* nodes=json_object_get(couchdb,"nodes");
-			if (json_is_array(nodes))
-			{
-				// Just pick one at random
-				json_t* node=json_array_get(nodes,random() % json_array_size(nodes));
-				if (json_is_string(node))
-				{
-					strncpy(couchdb_server,json_string_value(node),sizeof(couchdb_server));
-					couchdb_server[sizeof(couchdb_server)-1]='\0'; // null-terminate it
-					
-					// Get the db name
-					json_t* dbname=json_object_get(couchdb,"database");
-					if (json_is_string(dbname))
-					{
-						strncpy(couchdb_dbname,json_string_value(dbname),sizeof(couchdb_dbname));
-						couchdb_dbname[sizeof(couchdb_dbname)-1]='\0'; // null-terminate it
-						
-						snprintf(couchdb_userdoc_url,sizeof(couchdb_userdoc_url),"http://%s/%s/user:",couchdb_server,couchdb_dbname);
+	// Get list of assholes (from /var/local/BeerCrush/assholes)
+	const char* ASSHOLE_FILENAME="/var/local/BeerCrush/assholes";
+
+	struct stat statinfo;
+	if (stat(ASSHOLE_FILENAME,&statinfo)==0 && statinfo.st_size) {
+		asshole_text=(char*)calloc(statinfo.st_size,sizeof(char));
+		if (asshole_text) {
+
+			FILE* fp=fopen(ASSHOLE_FILENAME,"r");
+			if (fp) {
+				size_t readlen=fread(asshole_text,sizeof(char),statinfo.st_size,fp);
+				fclose(fp);
+				
+				if (readlen) {
+					asshole_text[readlen-1]='\0';
+
+					//
+					// Make asshole list
+					//
+
+					// Count them first
+					size_t total=0;
+					char* pp,*p;
+					for (p=asshole_text;(pp=strchr(p,'\n'))!=NULL;p=pp+1) {
+						total++;
 					}
+					if (*p)
+						++total; // the last one wasn't ended by a newline
+
+					// Allocate space for the list
+					assholes=(char**)calloc(total,sizeof(*assholes));
+					if (assholes) {
+			
+						// Now start over, null-terminating them and make asshole list of them all
+						for (p=asshole_text;(pp=strchr(p,'\n'))!=NULL;p=pp+1) {
+							*pp='\0';
+							assholes[asshole_count++]=p;
+						}
+						if (*p)
+							assholes[asshole_count++]=p; // the last one wasn't ended by a newline
+					
+					}					
 				}
 			}
 		}
-		json_decref(cfg);
 	}
+	
+	// Create pool of memcache servers
+	memcached_pool=memcached_create(NULL);
+	if (memcached_pool) {
+		// Get memcached server list from config file
+
+		json_error_t error;
+		json_t* cfg=json_load_file("/etc/BeerCrush/webapp.conf",&error);
+		if (cfg) {
+	        json_t* memcached=json_object_get(cfg,"memcached");
+	        if (json_is_object(memcached)) {
+                json_t* nodes=json_object_get(memcached,"servers");
+                if (json_is_array(nodes)) {
+					for (size_t n=0,m=json_array_size(nodes);n < m; ++n) {
+                        json_t* node=json_array_get(nodes,n);
+                        if (json_is_array(node)) {
+							json_t* hostname=json_array_get(node,0);
+							json_t* port=json_array_get(node,1);
+							if (json_is_string(hostname) && json_is_integer(port)) {
+								memcached_server_add(memcached_pool,json_string_value(hostname),json_integer_value(port));
+							}
+						}
+					}
+				}
+			}
+
+			json_decref(cfg);
+		}
+	}
+	
 }
 
 extern "C" void fcgiUninit() 
 {
+	if (asshole_text)
+		free(asshole_text);
+	if (assholes)
+		free(assholes);
+	if (memcached_pool)
+		memcached_free(memcached_pool);
 }
 
 extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_ParamArray envp)
@@ -203,9 +200,92 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 	// FCGX_FPrintF(out,"cgiAccept=%s\n",cgiAccept);
 	// FCGX_FPrintF(out,"cgiUserAgent=%s\n",cgiUserAgent);
 	// FCGX_FPrintF(out,"cgiReferrer=%s\n",cgiReferrer);
-
-	const int CGIPATH_WISHLIST_LEN=14;
 	
+	const int CGIPATH_WISHLIST_LEN=14;
+
+	char user_id[256];
+	user_id[0]='\0';
+	cgiCookieString("userid",user_id,sizeof(user_id));
+	if (!strlen(user_id)) {
+		cgiFormString("userid",user_id,sizeof(user_id));
+	}
+
+	// TODO: all URLs (and their permission rules) should be read from a config file rather than hardcoded here
+	// 
+	// The config file could look something like this. May also want to consider writing a generic NGiNX module.
+	// 
+	// { "url": "/api/beer/edit"	, "validlogin": true},
+	// { "url": "/api/beer/review"	, "validlogin": true},
+	// { "url": "/api/brewery/edit", "validlogin": true},
+	// { "url": "/api/place/edit"	, "validlogin": true},
+	// { "url": "/api/place/review", "validlogin": true},
+	// { "url": "/api/logout"		, "validlogin": true},
+	// { "url": "/api/menu/edit"	, "validlogin": true},
+	// { "url": "/api/user/edit"	, "validlogin": true},
+	// { "url": "/api/user/fullinfo", "validlogin": true},
+	// { "url": "/api/wishlist/edit", "validlogin": true},
+	// { "url": "/api/beer/*"		},
+	// { "url": "/api/beercolors"},
+	// { "url": "/api/beers"},
+	// { "url": "/api/beerstyles"},
+	// { "url": "/api/breweries"},
+	// { "url": "/api/brewery/*"},
+	// { "url": "/api/createlogin"},
+	// { "url": "/api/flavors"},
+	// { "url": "/api/history/*"},
+	// { "url": "/api/login"},
+	// { "url": "/api/menu/*"},
+	// { "url": "/api/photoset/*"},
+	// { "url": "/api/place/*"},
+	// { "url": "/api/places"},
+	// { "url": "/api/restaurantcategories"},
+	// { "url": "/api/review/beer/*"},
+	// { "url": "/api/review/place/*"},
+	// { "url": "/api/image/*"},
+	// { "url": "/api/user/*"},
+	// { "url": "/api/users"},
+	// { "url": "/api/search"},
+	// { "urlregex": "/api/wishlist/([^/]+)", "validlogin": true, "authtest": "$userid==$1" }
+
+	const char* const valid_login_urls[]={
+		"/api/beer/edit",
+		"/api/beer/review",
+		"/api/brewery/edit",
+		"/api/place/edit",
+		"/api/place/review",
+		"/api/logout",
+		"/api/menu/edit",
+		"/api/user/edit",
+		"/api/user/fullinfo",
+		"/api/wishlist/edit"
+	};
+	
+	for (size_t i=0;i < (sizeof(valid_login_urls)/sizeof(valid_login_urls[0]));++i) {
+		if (!strcmp(valid_login_urls[i],cgiPathInfo)) {
+
+			// Reject assholes (users who are abusing their editing privileges)
+			if (is_an_asshole(user_id)) {
+				FCGX_FPrintF(out,"Status: 403 Permission denied\r\n");
+				FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
+				FCGX_FPrintF(out,"Access prohibited (NAR)\n"); // NAR=No Asshole Rule
+			}
+			else if (!login_is_trusted(user_id)) {
+				FCGX_FPrintF(out,"Status: 403 Permission denied\r\n");
+				FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
+				FCGX_FPrintF(out,"Login required\n");
+			}
+			else {
+				FCGX_FPrintF(out,"X-Accel-Redirect: /store%s%s%s\r\n",cgiPathInfo,(!strlen(cgiQueryString)?"":"?"),cgiQueryString);
+				FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
+			}
+
+			return 0;
+		}
+	}
+
+	/*
+		These URLs are publicly-accessible
+	*/
 	if (!strncmp(cgiPathInfo,"/api/beer/",10) ||
 		!strcmp(cgiPathInfo,"/api/beercolors") ||
 		!strcmp(cgiPathInfo,"/api/beers") ||
@@ -216,8 +296,6 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 		!strcmp(cgiPathInfo,"/api/flavors") ||
 		!strncmp(cgiPathInfo,"/api/history/",13) ||
 		!strcmp(cgiPathInfo,"/api/login") ||
-		!strcmp(cgiPathInfo,"/api/logout") ||
-		!strcmp(cgiPathInfo,"/api/menu/edit") ||
 		!strncmp(cgiPathInfo,"/api/menu/",10) ||
 		!strncmp(cgiPathInfo,"/api/photoset/",14) ||
 		!strncmp(cgiPathInfo,"/api/place/",11) ||
@@ -235,31 +313,17 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 	}
 	else if (!strncmp(cgiPathInfo,"/api/wishlist/",CGIPATH_WISHLIST_LEN))
 	{
-		if (login_is_trusted(/*out*/)!=true)
+		// Verify that the requesting user has access permissions to this wishlist (i.e., it's their own wishlist)
+		if (strcmp(user_id,cgiPathInfo+CGIPATH_WISHLIST_LEN))
 		{
-			// cgiHeaderStatus(403,"Login required");
-			// FCGX_FPrintF(out,"HTTP/1.0 403 Permission denied\r\n");
 			FCGX_FPrintF(out,"Status: 403 Permission denied\r\n");
 			FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
-			FCGX_FPrintF(out,"Login required\n");
+			FCGX_FPrintF(out,"Permission denied");
 		}
 		else
 		{
-			// Verify that the requesting user has access permissions to this wishlist (i.e., it's their own wishlist)
-			char user_id[256];
-			cgiFormString("userid",user_id,sizeof(user_id));
-			
-			if (strcmp(user_id,cgiPathInfo+CGIPATH_WISHLIST_LEN))
-			{
-				FCGX_FPrintF(out,"Status: 403 Permission denied\r\n");
-				FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
-				FCGX_FPrintF(out,"Permission denied");
-			}
-			else
-			{
-				FCGX_FPrintF(out,"X-Accel-Redirect: /store/api/wishlist/%s\r\n",cgiPathInfo+CGIPATH_WISHLIST_LEN);
-				FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
-			}
+			FCGX_FPrintF(out,"X-Accel-Redirect: /store/api/wishlist/%s\r\n",cgiPathInfo+CGIPATH_WISHLIST_LEN);
+			FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
 		}
 	}
 	else

@@ -72,87 +72,81 @@ function oakMain($oak)
 {
 	header("Cache-Control: no-cache"); // This page should never be cached, it's an API call
 	
-	if ($oak->login_is_trusted()!==true) // If the user is not logged in or we can't trust the login
+	global $cgi_fields;
+	
+	$user_id=$oak->get_user_id();
+	$beer_id=$oak->get_cgi_value('beer_id',$cgi_fields);
+	// Validate the beer_id
+	$beer=new OAKDocument('');
+	if ($oak->get_document($beer_id,&$beer)!==true)
+		throw new Exception('Invalid beer_id:'.$beer_id);
+
+	if (empty($beer_id))
+		throw new Exception('beer_id is empty');
+	if (empty($user_id))
+		throw new Exception('user_id is empty');
+
+	// TODO: verify that beer_id and user_id are valid IDs for existing documents
+	$review=new OAKDocument('review');
+	$review->beer_id=$beer_id;
+	$review->user_id=$user_id;
+	$review->setID('review:'.$review->beer_id.':'.$review->user_id);
+
+	// Get existing review, if there is one so that we can update just the parts added/changed in this request
+	$updating_review=false;
+	if ($oak->get_document($review->getID(),&$review)===true)
 	{
-		$oak->request_login();
+		// Do nothing, it doesn't matter
+		$oak->log('Updating review:'.$review->getID());
+		$updating_review=true;
 	}
 	else
+		$oak->log('New review:'.$review->getID());
+
+	// Give it this request's edits
+	$oak->assign_cgi_values(&$review,$cgi_fields);
+	
+	// Add flavors
+	if ($oak->cgi_value_exists('flavors',$cgi_fields))
 	{
-		global $cgi_fields;
+		// Separate them into an array and remove duplicates
+		$flavors=array_unique(preg_split('/[^a-zA-Z0-9]+/',$oak->get_cgi_value('flavors',$cgi_fields)));
 		
-		$user_id=$oak->get_user_id();
-		$beer_id=$oak->get_cgi_value('beer_id',$cgi_fields);
-		// Validate the beer_id
-		$beer=new OAKDocument('');
-		if ($oak->get_document($beer_id,&$beer)!==true)
-			throw new Exception('Invalid beer_id:'.$beer_id);
-
-		if (empty($beer_id))
-			throw new Exception('beer_id is empty');
-		if (empty($user_id))
-			throw new Exception('user_id is empty');
-
-		// TODO: verify that beer_id and user_id are valid IDs for existing documents
-		$review=new OAKDocument('review');
-		$review->beer_id=$beer_id;
-		$review->user_id=$user_id;
-		$review->setID('review:'.$review->beer_id.':'.$review->user_id);
-
-		// Get existing review, if there is one so that we can update just the parts added/changed in this request
-		$updating_review=false;
-		if ($oak->get_document($review->getID(),&$review)===true)
+		if (count($flavors))
 		{
-			// Do nothing, it doesn't matter
-			$oak->log('Updating review:'.$review->getID());
-			$updating_review=true;
-		}
-		else
-			$oak->log('New review:'.$review->getID());
+			$flavorslist=array();
+			load_flavors_data(&$flavorslist, $oak);
 
-		// Give it this request's edits
-		$oak->assign_cgi_values(&$review,$cgi_fields);
-		
-		// Add flavors
-		if ($oak->cgi_value_exists('flavors',$cgi_fields))
-		{
-			// Separate them into an array and remove duplicates
-			$flavors=array_unique(preg_split('/[^a-zA-Z0-9]+/',$oak->get_cgi_value('flavors',$cgi_fields)));
-			
-			if (count($flavors))
+			// Always remove all existing flavors if this is an edit of an existing review
+			$review->flavors=array();
+				
+			foreach ($flavors as $flavor)
 			{
-				$flavorslist=array();
-				load_flavors_data(&$flavorslist, $oak);
-
-				// Always remove all existing flavors if this is an edit of an existing review
-				$review->flavors=array();
-					
-				foreach ($flavors as $flavor)
+				// Make sure each flavor is valid
+				if (!empty($flavorslist[$flavor]))
 				{
-					// Make sure each flavor is valid
-					if (!empty($flavorslist[$flavor]))
-					{
-						$review->flavors[]=$flavor;
-					}
+					$review->flavors[]=$flavor;
 				}
 			}
 		}
-	
-		// Store in db
-		if ($oak->put_document($review->getID(),$review)!==true)
-		{
-			header("HTTP/1.0 500 Save failed");
-		}
-		else
-		{
-			$oak->broadcast_msg('newreviews',$review);
-			
-			header("Content-Type: application/json; charset=utf-8");
-			$review->id=$review->_id;
-			unset($review->_id);
-			unset($review->_rev);
-			print json_encode($review);
-		}
 	}
+
+	// Store in db
+	if ($oak->put_document($review->getID(),$review)!==true)
+	{
+		header("HTTP/1.0 500 Save failed");
+	}
+	else
+	{
+		$oak->broadcast_msg('newreviews',$review);
+		
+		header("Content-Type: application/json; charset=utf-8");
+		$review->id=$review->_id;
+		unset($review->_id);
+		unset($review->_rev);
+		print json_encode($review);
+	}
+
 }
 
 require_once('OAK/oak.php');

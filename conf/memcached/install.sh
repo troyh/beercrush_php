@@ -2,8 +2,6 @@
 
 . ../../config.sh
 
-if ../../tools/iamservertype -q memcached; then
-	
-
-	
-fi
+# if ../../tools/iamservertype -q memcached; then
+# 
+# fi

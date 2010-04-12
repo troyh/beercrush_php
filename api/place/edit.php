@@ -86,85 +86,79 @@ function oakMain($oak)
 {
 	global $cgi_fields;
 
-	if ($oak->login_is_trusted()!==true) // If the user is not logged in or we can't trust the login
+	$place=new OAKDocument('place');
+
+	if ($oak->cgi_value_exists('place_id',$cgi_fields)) // Editing existing place
 	{
-		$oak->request_login();
+		$place_id=$oak->get_cgi_value('place_id',$cgi_fields);
+		// Get existing place, if there is one so that we can update just the parts added/changed in this request
+		if ($oak->get_document($place_id,&$place)!==true)
+			throw new Exception("No existing place $place_id");
+	}
+	else  // Adding a new place
+	{
+		$name=$oak->get_cgi_value('name',$cgi_fields);
+
+		$bUniqueID=false;
+
+		for ($attempt=0;$attempt<20;++$attempt)
+		{
+			switch ($attempt)
+			{
+				case 0:
+					$id=makeID($name);
+					break;
+				case 1:
+					$id=makeID($name.' '.$oak->get_cgi_value('address:city',$cgi_fields));
+					break;
+				case 2:
+					$id=makeID($name.' '.$oak->get_cgi_value('address:city',$cgi_fields).' '.$oak->get_cgi_value('address:state',$cgi_fields));
+					break;
+				default:
+					$id=makeID($name.' '.$oak->get_cgi_value('address:city',$cgi_fields).' '.$oak->get_cgi_value('address:state',$cgi_fields).' '.$attempt);
+					break;
+			}
+
+			// See if this place already exists (use a temp variable so we don't overwrite our $place doc if this ID does already exist)
+			$tmp_place=new OAKDocument('');
+			if ($oak->get_document($id,&$tmp_place)===false)
+			{
+				$bUniqueID=true;
+				$place->setID($id);
+				$place->type='place';
+				break;
+			}
+		}
+		
+		if ($bUniqueID==false)
+		{
+			header("HTTP/1.0 409 Unable to create unique id");
+			exit;
+		}
+
+		$place->meta->cuser=$oak->get_user_id(); // Record user who created this place
+	}
+
+	// Give it this request's edits
+	$oak->assign_cgi_values(&$place,$cgi_fields);
+
+	// Store in db
+	if ($oak->put_document($place->getID(),$place)!==true)
+	{
+		header("HTTP/1.0 500 Save failed");
 	}
 	else
 	{
-		$place=new OAKDocument('place');
-
-		if ($oak->cgi_value_exists('place_id',$cgi_fields)) // Editing existing place
-		{
-			$place_id=$oak->get_cgi_value('place_id',$cgi_fields);
-			// Get existing place, if there is one so that we can update just the parts added/changed in this request
-			if ($oak->get_document($place_id,&$place)!==true)
-				throw new Exception("No existing place $place_id");
-		}
-		else  // Adding a new place
-		{
-			$name=$oak->get_cgi_value('name',$cgi_fields);
-
-			$bUniqueID=false;
-
-			for ($attempt=0;$attempt<20;++$attempt)
-			{
-				switch ($attempt)
-				{
-					case 0:
-						$id=makeID($name);
-						break;
-					case 1:
-						$id=makeID($name.' '.$oak->get_cgi_value('address:city',$cgi_fields));
-						break;
-					case 2:
-						$id=makeID($name.' '.$oak->get_cgi_value('address:city',$cgi_fields).' '.$oak->get_cgi_value('address:state',$cgi_fields));
-						break;
-					default:
-						$id=makeID($name.' '.$oak->get_cgi_value('address:city',$cgi_fields).' '.$oak->get_cgi_value('address:state',$cgi_fields).' '.$attempt);
-						break;
-				}
-
-				// See if this place already exists (use a temp variable so we don't overwrite our $place doc if this ID does already exist)
-				$tmp_place=new OAKDocument('');
-				if ($oak->get_document($id,&$tmp_place)===false)
-				{
-					$bUniqueID=true;
-					$place->setID($id);
-					$place->type='place';
-					break;
-				}
-			}
-			
-			if ($bUniqueID==false)
-			{
-				header("HTTP/1.0 409 Unable to create unique id");
-				exit;
-			}
-
-			$place->meta->cuser=$oak->get_user_id(); // Record user who created this place
-		}
-
-		// Give it this request's edits
-		$oak->assign_cgi_values(&$place,$cgi_fields);
-	
-		// Store in db
-		if ($oak->put_document($place->getID(),$place)!==true)
-		{
-			header("HTTP/1.0 500 Save failed");
-		}
-		else
-		{
-			$oak->log('Edited:'.$place->getID());
-			
-			header('Content-Type: application/json; charset=utf-8');
-			$place->id=$place->_id;
-			unset($place->_id);
-			unset($place->_rev);
-			unset($place->{"@attributes"});
-			print json_encode($place);
-		}
+		$oak->log('Edited:'.$place->getID());
+		
+		header('Content-Type: application/json; charset=utf-8');
+		$place->id=$place->_id;
+		unset($place->_id);
+		unset($place->_rev);
+		unset($place->{"@attributes"});
+		print json_encode($place);
 	}
+
 }
 
 require_once 'OAK/oak.php';

@@ -80,109 +80,102 @@ $cgi_fields=array(
 
 function oakMain($oak)
 {
-	if ($oak->login_is_trusted()!==true) // If the user is not logged in or we can't trust the login
+	global $cgi_fields;
+	
+	$beer=new OAKDocument('beer');
+
+	if ($oak->cgi_value_exists('beer_id',$cgi_fields)) // Editing existing beer
 	{
-		$oak->request_login();
+		$beer_id=$oak->get_cgi_value('beer_id',$cgi_fields);
+		// Get existing beer, if there is one so that we can update just the parts added/changed in this request
+		if ($oak->get_document($beer_id,&$beer)!==true)
+			throw new Exception("No existing beer $beer_id");
+	}
+	else  // Adding a new beer
+	{
+		$brewery_id=$oak->get_cgi_value('brewery_id',$cgi_fields);
+		if (empty($brewery_id))
+		{
+			header('HTTP/1.0 400 Missing brewery_id');
+			exit;
+		}
+
+		if ($oak->cgi_value_exists('name',$cgi_fields)==FALSE)
+		{
+			header('HTTP/1.0 400 Missing name');
+			exit;
+		}
+		
+		// Create an ID based on brewery_id and name
+		$id=preg_replace('/[^a-zA-Z0-9]+/','-',$oak->get_cgi_value('name',$cgi_fields));
+		$id=preg_replace('/-+/','-',$id); // Condense multiple hyphens
+		$id=preg_replace('/^-+/','',$id); // Remove hyphens from start
+		$id=preg_replace('/-+$/','',$id); // Remove hyphens from end
+
+		// Strip off the 'brewery:' part of the brewery_id
+
+		if (substr($brewery_id,0,8)==='brewery:')
+			$brewery_id=substr($brewery_id,8);
+		$beer->setID('beer:'.$brewery_id.':'.$id);
+
+		// See if this beer already exists
+		if ($oak->get_document($beer->getID(),&$beer)===true)
+		{
+			header('HTTP/1.0 409 Duplicate');
+			exit;
+		}
+
+		$beer->meta->cuser=$oak->get_user_id(); // Record user who created this beer
+	}
+
+	/* 
+	Calculate OG and FG, which are kinda fuzzy. We store Specific Gravity, so we have to convert from Degrees Plato, if necessary
+	*/
+	if ($oak->cgi_value_exists('og',$cgi_fields))
+	{
+		$og=get_specific_gravity($oak->get_cgi_value('og',$cgi_fields));
+		if (is_null($og))
+			throw new Exception("OG value (".$oak->get_cgi_value('og',$cgi_fields).") is invalid");
+		$oak->set_cgi_value('og',$cgi_fields,$og);
+	}
+
+	if ($oak->cgi_value_exists('fg',$cgi_fields))
+	{
+		$fg=get_specific_gravity($oak->get_cgi_value('fg',$cgi_fields));
+		if (is_null($fg))
+			throw new Exception("FG value (".$oak->get_cgi_value('fg',$cgi_fields).") is invalid");
+		$oak->set_cgi_value('fg',$cgi_fields,$fg);
+	}
+	
+	// Give it this request's edits
+	$oak->assign_cgi_values(&$beer,$cgi_fields);
+	
+	$beer->name			=trim(preg_replace('/\s\s+/',' ',$beer->name));
+	$beer->description	=trim(preg_replace('/\s\s+/',' ',$beer->description));
+	$beer->grains		=trim(preg_replace('/\s\s+/',' ',$beer->grains));
+	$beer->yeast		=trim(preg_replace('/\s\s+/',' ',$beer->yeast));
+	
+	// Set styles too
+	if ($oak->cgi_value_exists('styles',$cgi_fields))
+	{
+		// Could be more than one...
+		$beer->styles=preg_split('/\s+/',$oak->get_cgi_value('styles',$cgi_fields));
+	}
+	
+	// Store in db
+	if ($oak->put_document($beer->getID(),$beer)!==true)
+	{
+		header("HTTP/1.0 500 Save failed");
 	}
 	else
 	{
-		global $cgi_fields;
-		
-		$beer=new OAKDocument('beer');
+		$oak->log('Edited:'.$beer->getID());
 
-		if ($oak->cgi_value_exists('beer_id',$cgi_fields)) // Editing existing beer
-		{
-			$beer_id=$oak->get_cgi_value('beer_id',$cgi_fields);
-			// Get existing beer, if there is one so that we can update just the parts added/changed in this request
-			if ($oak->get_document($beer_id,&$beer)!==true)
-				throw new Exception("No existing beer $beer_id");
-		}
-		else  // Adding a new beer
-		{
-			$brewery_id=$oak->get_cgi_value('brewery_id',$cgi_fields);
-			if (empty($brewery_id))
-			{
-				header('HTTP/1.0 400 Missing brewery_id');
-				exit;
-			}
-
-			if ($oak->cgi_value_exists('name',$cgi_fields)==FALSE)
-			{
-				header('HTTP/1.0 400 Missing name');
-				exit;
-			}
-			
-			// Create an ID based on brewery_id and name
-			$id=preg_replace('/[^a-zA-Z0-9]+/','-',$oak->get_cgi_value('name',$cgi_fields));
-			$id=preg_replace('/-+/','-',$id); // Condense multiple hyphens
-			$id=preg_replace('/^-+/','',$id); // Remove hyphens from start
-			$id=preg_replace('/-+$/','',$id); // Remove hyphens from end
-
-			// Strip off the 'brewery:' part of the brewery_id
-
-			if (substr($brewery_id,0,8)==='brewery:')
-				$brewery_id=substr($brewery_id,8);
-			$beer->setID('beer:'.$brewery_id.':'.$id);
-
-			// See if this beer already exists
-			if ($oak->get_document($beer->getID(),&$beer)===true)
-			{
-				header('HTTP/1.0 409 Duplicate');
-				exit;
-			}
-
-			$beer->meta->cuser=$oak->get_user_id(); // Record user who created this beer
-		}
-
-		/* 
-		Calculate OG and FG, which are kinda fuzzy. We store Specific Gravity, so we have to convert from Degrees Plato, if necessary
-		*/
-		if ($oak->cgi_value_exists('og',$cgi_fields))
-		{
-			$og=get_specific_gravity($oak->get_cgi_value('og',$cgi_fields));
-			if (is_null($og))
-				throw new Exception("OG value (".$oak->get_cgi_value('og',$cgi_fields).") is invalid");
-			$oak->set_cgi_value('og',$cgi_fields,$og);
-		}
-
-		if ($oak->cgi_value_exists('fg',$cgi_fields))
-		{
-			$fg=get_specific_gravity($oak->get_cgi_value('fg',$cgi_fields));
-			if (is_null($fg))
-				throw new Exception("FG value (".$oak->get_cgi_value('fg',$cgi_fields).") is invalid");
-			$oak->set_cgi_value('fg',$cgi_fields,$fg);
-		}
-		
-		// Give it this request's edits
-		$oak->assign_cgi_values(&$beer,$cgi_fields);
-		
-		$beer->name			=trim(preg_replace('/\s\s+/',' ',$beer->name));
-		$beer->description	=trim(preg_replace('/\s\s+/',' ',$beer->description));
-		$beer->grains		=trim(preg_replace('/\s\s+/',' ',$beer->grains));
-		$beer->yeast		=trim(preg_replace('/\s\s+/',' ',$beer->yeast));
-		
-		// Set styles too
-		if ($oak->cgi_value_exists('styles',$cgi_fields))
-		{
-			// Could be more than one...
-			$beer->styles=preg_split('/\s+/',$oak->get_cgi_value('styles',$cgi_fields));
-		}
-		
-		// Store in db
-		if ($oak->put_document($beer->getID(),$beer)!==true)
-		{
-			header("HTTP/1.0 500 Save failed");
-		}
-		else
-		{
-			$oak->log('Edited:'.$beer->getID());
-
-			$beer->id=$beer->_id;
-			unset($beer->_id);
-			unset($beer->_rev);
-			header('Content-Type: application/json; charset=utf-8');
-			print json_encode($beer);
-		}
+		$beer->id=$beer->_id;
+		unset($beer->_id);
+		unset($beer->_rev);
+		header('Content-Type: application/json; charset=utf-8');
+		print json_encode($beer);
 	}
 }
 

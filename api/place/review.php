@@ -13,39 +13,32 @@ function oakMain($oak)
 {
 	global $cgi_fields;
 	
-	if ($oak->login_is_trusted()!==true) // If the user is not logged in or we can't trust the login
+	$review=new OAKDocument('review');
+	$review->user_id=$oak->get_user_id();
+	$review->setID($review->type.':'.$oak->get_cgi_value('place_id',&$cgi_fields).':'.$review->user_id);
+
+	// Get existing review, if there is one so that we can update just the parts added/changed in this request
+	if ($oak->get_document($review->getID(),&$review)===true)
 	{
-		$oak->request_login();
+		// Do nothing, it doesn't matter
+	}
+
+	// Give it this request's edits
+	$oak->assign_cgi_values(&$review,$cgi_fields);
+
+	// Store in db
+	if ($oak->put_document($review->getID(),$review)!==true)
+	{
+		header("HTTP/1.0 500 Save failed");
 	}
 	else
 	{
-		$review=new OAKDocument('review');
-		$review->user_id=$oak->get_user_id();
-		$review->setID($review->type.':'.$oak->get_cgi_value('place_id',&$cgi_fields).':'.$review->user_id);
-
-		// Get existing review, if there is one so that we can update just the parts added/changed in this request
-		if ($oak->get_document($review->getID(),&$review)===true)
-		{
-			// Do nothing, it doesn't matter
-		}
-
-		// Give it this request's edits
-		$oak->assign_cgi_values(&$review,$cgi_fields);
-	
-		// Store in db
-		if ($oak->put_document($review->getID(),$review)!==true)
-		{
-			header("HTTP/1.0 500 Save failed");
-		}
-		else
-		{
-			header("HTTP/1.0 200 OK");
-			header("Content-Type: application/json; charset=utf-8");
-			$review->id=$review->_id;
-			unset($review->_id);
-			unset($review->_rev);
-			print json_encode($review);
-		}
+		header("HTTP/1.0 200 OK");
+		header("Content-Type: application/json; charset=utf-8");
+		$review->id=$review->_id;
+		unset($review->_id);
+		unset($review->_rev);
+		print json_encode($review);
 	}
 
 }
