@@ -7,6 +7,12 @@ ALL: $(FCGI_PROGS)
 api.fcgi: api.o ../external/cgic/libcgic.a
 	g++ $^ -lfcgi -lcurl -ljansson -lmemcached -o $@
 
+api.o: api.cc /usr/include/libmemcached/memcached.h
+	g++ -c -o api.o api.cc
+
+/usr/include/libmemcached/memcached.h:
+	sudo apt-get install libmemcached-dev
+
 ../external/cgic/libcgic.a:
 	$(MAKE) -C external/cgic/ libcgic.a
 	
