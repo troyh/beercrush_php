@@ -1,57 +1,56 @@
 #!/usr/bin/php
 <?php
 require_once('OAK/oak.class.php');
+require_once('OAK/solr.class.php');
 
-$oak=new OAK;
+$opts=getopt('C:h');
 
-$total_docs_added=0;
+if (isset($opts['h']) || empty($opts['C'])) {
+	$cmdname=basename($argv[0]);
+	print <<<EOF
+Usage: $cmdname -C <conf file>
 
-if ($argc<2)
-{
-	// Update ALL docs
-	add_all_docs('beer/all','beer_doc');
-	add_all_docs('brewery/all','brewery_doc');
-	add_all_docs('place/all','place_doc');
-}
-else
-{
-	$xmlwriter=start_add();
-	
-	$doc=new OAKDocument('');
-	$oak->get_document($argv[1],$doc);
-	switch ($doc->type)
-	{
-		case 'beer':
-			beer_doc($doc,$xmlwriter);
-			break;
-		case 'brewery':
-			brewery_doc($doc,$xmlwriter);
-			break;
-		case 'place':
-			place_doc($doc,$xmlwriter);
-			break;
-		default:
-			break;
-	}
-	
-	end_add($xmlwriter);
-}
+	-C Specify path to .conf file
 
-$status_code=$oak->solr_post('/update','<optimize/>');
-if ($status_code!=200)
-{
-	print "<optimize> failed: $status_code\n";
+
+EOF;
 	exit(2);
 }
 
-print "$total_docs_added document(s) added/updated.\n";
-exit(0); // OK
+$docid=$argv[3];
 
+try {
+	$oak=new OAK($opts['C']);
+}
+catch (Exception $x) {
+	print $x->getMessage()."\n";
+	exit;
+}
 
+$schema=json_decode(file_get_contents(dirname($opts['C'])."/schema.json"));
+$solridx=new OAKSolrIndexer($oak,$schema);
 
-function add_all_docs($view,$func,$max=100)
+$total_docs_added=0;
+
+if (empty($docid)) {
+	// Update ALL docs
+	add_all_docs('beer/all');
+	add_all_docs('brewery/all');
+	add_all_docs('place/all');
+	
+	$solridx->optimize();
+}
+else
+{
+	$doc=new OAKDocument('');
+	$oak->get_document($docid,$doc);
+	$solridx->index_doc($doc);
+}
+
+function add_all_docs($view,$max=100)
 {
 	global $oak;
+	global $solridx;
 	
 	$startkey="";
 	$startkey_docid="";
@@ -59,8 +58,6 @@ function add_all_docs($view,$func,$max=100)
 
 	do
 	{
-		$xmlwriter=start_add();
-	
 		$alldocs=new stdClass;
 		/*
 		We have to use startkey, startkey_docid and skip to propertly paginate through all documents without repeating any docs.
@@ -68,6 +65,8 @@ function add_all_docs($view,$func,$max=100)
 		iteration because, without it, the first document would be the last document from the previous iteration.
 		*/
 		$oak->get_view($view.'?limit='.$max.'&startkey='.urlencode('"'.$startkey.'"').'&startkey_docid='.$startkey_docid.'&skip='.($count?1:0),$alldocs);
+		
+		$xmlwriter=$solridx->batch_index_doc_start();
 
 		foreach ($alldocs->rows as $row)
 		{
@@ -76,13 +75,13 @@ function add_all_docs($view,$func,$max=100)
 		
 			$doc=new OAKDocument('');
 			$oak->get_document($row->id,$doc);
-			call_user_func($func,$doc,$xmlwriter);
+			$solridx->batch_index_doc($doc,$xmlwriter);
 			
 			++$count;
 		}
+		
+		$solridx->batch_index_doc_end($xmlwriter);
 	
-		end_add($xmlwriter);
-
 		if (count($alldocs->rows)<$max)
 			$startkey=null; // We're done!
 
@@ -92,134 +91,5 @@ function add_all_docs($view,$func,$max=100)
 	while (!is_null($startkey));
 	
 }
-
-function start_add()
-{
-	$xmlwriter=new XMLWriter;
-	$xmlwriter->openMemory();
-	$xmlwriter->startDocument();
-	$xmlwriter->startElement('add');
-
-	return $xmlwriter;
-}
-
-function end_add($xmlwriter)
-{
-	global $oak;
-	
-	$xmlwriter->endElement();
-	$xmlwriter->endDocument();
-	$xmldoc=$xmlwriter->outputMemory();
-
-	// Submit to Solr
-	$status_code=$oak->solr_post('/update',$xmldoc);
-	if ($status_code!=200)
-	{
-		print "Solr update failed: $status_code\n";
-	}
-	else
-	{
-		$status_code=$oak->solr_post('/update','<commit/>');
-		if ($status_code!=200)
-		{
-			exit(1);
-		}
-	}
-}
-
-/*
-	Beers
-*/
-function beer_doc($beer,$xmlwriter)
-{
-	global $oak;
-	global $total_docs_added;
-	
-	$xmlwriter->startElement('doc');
-
-	writeTextValue('id',$beer->getID(),$xmlwriter);
-	writeTextValue('doctype',$beer->type,$xmlwriter);
-	writeTextValue('name',$beer->name,$xmlwriter);
-	writeTextValue('description',$beer->description,$xmlwriter);
-
-	$brewery=new OAKDocument('');
-	$oak->get_document($beer->brewery_id,$brewery);
-	
-	writeTextValue('brewery',$brewery->name,$xmlwriter);
-
-	$xmlwriter->endElement();
-
-	$total_docs_added++;
-}
-
-/*
-	Breweries
-*/
-function brewery_doc($brewery,$xmlwriter)
-{
-	global $total_docs_added;
-
-	$xmlwriter->startElement('doc');
-
-	writeTextValue('id',$brewery->getID(),$xmlwriter);
-	writeTextValue('doctype',$brewery->type,$xmlwriter);
-	writeTextValue('name',$brewery->name,$xmlwriter);
-	writeTextValue('description',$brewery->description,$xmlwriter);
-	writeTextValue('address_street',$brewery->address->street,$xmlwriter);
-	writeTextValue('address_city',$brewery->address->city,$xmlwriter);
-	writeTextValue('address_state',$brewery->address->state,$xmlwriter);
-
-	$xmlwriter->endElement();
-
-	$total_docs_added++;
-}
-
-/*
-	Places
-*/
-function place_doc($place,$xmlwriter)
-{
-	global $total_docs_added;
-	
-	$xmlwriter->startElement('doc');
-
-	writeTextValue('id',$place->getID(),$xmlwriter);
-	writeTextValue('doctype',$place->type,$xmlwriter);
-	writeTextValue('placetype',$place->placetype,$xmlwriter);
-	writeTextValue('name',$place->name,$xmlwriter);
-	writeTextValue('description',$place->description,$xmlwriter);
-	writeTextValue('address_street',$place->address->street,$xmlwriter);
-	writeTextValue('address_city',$place->address->city,$xmlwriter);
-	writeTextValue('address_state',$place->address->state,$xmlwriter);
-
-	$xmlwriter->endElement();
-
-	$total_docs_added++;
-}
-
-
-function writeTextValue($k,$v,$xmlwriter)
-{
-	$v=trim($v);
-	if (!empty($v))
-		writeValue($k,$v,'text',$xmlwriter);
-}
-
-function writeIntegerValue($k,$v,$xmlwriter)
-{
-	writeValue($k,$v,'integer',$xmlwriter);
-}
-
-function writeValue($k,$v,$type,$xmlwriter)
-{
-	$xmlwriter->startElement('field');
-	
-	$xmlwriter->writeAttribute('name',$k);
-	$xmlwriter->writeAttribute('type',$type);
-	$xmlwriter->text($v);
-	
-	$xmlwriter->endElement();
-}
-
 
 ?>

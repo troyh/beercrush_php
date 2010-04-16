@@ -1,0 +1,28 @@
+{
+	"doc_id": "_id",
+	"doctypes": {
+		"beer": {
+			"doctype": { "fieldtype":"text", "propname": "type" },
+			"name": "text",
+			"description": "text",
+			"brewery": "text"
+		},
+		"brewery": {
+			"doctype": { "fieldtype":"text", "propname": "type" },
+			"name": "text",
+			"description": "text",
+			"address_street": { "fieldtype": "text", "propname": "address.street" },
+			"address_city": { "fieldtype": "text", "propname": "address.city" },
+			"address_state": { "fieldtype": "text", "propname": "address.state" }
+		},
+		"place": {
+			"doctype": { "fieldtype":"text", "propname": "type" },
+			"placetype": "text",
+			"name": "text",
+			"description": "text",
+			"address_street": { "fieldtype": "text", "propname": "address.street" },
+			"address_city": { "fieldtype": "text", "propname": "address.city" },
+			"address_state": { "fieldtype": "text", "propname": "address.state" }
+		}
+	}
+}

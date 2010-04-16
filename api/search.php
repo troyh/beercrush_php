@@ -55,7 +55,7 @@ function oakMain($oak)
 		{
 			$url.=$k.'='.$v.'&';
 		}
-		// print "Solr URL:$url";
+		// print "Solr URL:$url";exit;
 
 		$ch=curl_init($url);
 		curl_setopt($ch,CURLOPT_RETURNTRANSFER,TRUE);

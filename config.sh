@@ -8,6 +8,7 @@ if [ -z "$WWW_DIR" ]; then
 fi
 
 BEERCRUSH_ETC_DIR="/etc/BeerCrush/"
+BEERCRUSH_BIN_DIR="/usr/local/beercrush/bin/"
 BEERCRUSH_PHPINC_DIR="/usr/share/php/beercrush/"
 BEERCRUSH_SOURCE_DIR="$HOME/beercrush/"
 BEERCRUSH_APPSERVER_USER=www-data

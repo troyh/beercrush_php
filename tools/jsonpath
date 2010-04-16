@@ -11,7 +11,14 @@ if (isset($opts['1'])) {
 }
 
 if ($argc<2) {
-	print "Usage: $argv[0] <json property> ...\n";
+	print <<<EOF
+Usage: $argv[0] [-1] <json property> ...
+
+   -1   Input is a single document
+
+
+EOF;
+
 	exit;
 }
 
@@ -35,17 +42,21 @@ function jsonpath($data) {
 	$values=array();
 
 	for ($i=1;$i<$argc;++$i) {
-		$components=explode('.',$argv[$i]);
-		// print "Components:".join(' ',$components)."\n";
+		$components=preg_split('/[.\[\]]/',$argv[$i],-1,PREG_SPLIT_NO_EMPTY);
+		// print "Components:".join('.',$components)."\n";exit;
 		$ref=$data;
 		// print "ref=";print_r($ref);print "\n";
 		foreach ($components as $p) {
 			// print "Part:$p"; print_r($ref);print "\n";
-			$ref=$ref->$p;
+			if (is_array($ref) && is_numeric($p)) {
+				$ref=$ref[$p];
+			}
+			else
+				$ref=$ref->$p;
 		}
 		if (is_scalar($ref))
 			$values[]=$ref;
-		else
+		else if (!is_null($ref))
 			$values[]=json_encode($ref);
 	}
 	
