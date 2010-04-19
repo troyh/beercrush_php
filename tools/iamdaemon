@@ -1,0 +1,34 @@
+#!/bin/sh
+
+QUIET=0;
+ISTYPE=0;
+
+while getopts "qt" opt; do
+	case $opt in 
+		q)
+			QUIET=1;
+			shift;
+			;;
+		t)
+			ls /etc/BeerCrush/daemons/;
+			exit;
+			;;
+		\?)
+			# echo "Invalid option: -$OPTARG" >&2
+			exit;
+			;;
+	esac
+done
+
+if ls /etc/BeerCrush/daemons/ | grep $1 > /dev/null; then
+	if [ $QUIET -eq 0 ]; then
+		echo "Yes";
+	fi
+	exit 0; # Yes
+fi
+
+if [ $QUIET -eq 0 ]; then
+	echo "No";
+fi
+
+exit 1; # No

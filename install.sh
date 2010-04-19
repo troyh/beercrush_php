@@ -2,7 +2,7 @@
 
 . ./config.sh;
 
-for DIR in $BEERCRUSH_ETC_DIR /usr/local/beercrush/bin; do 
+for DIR in $BEERCRUSH_ETC_DIR $BEERCRUSH_ETC_DIR/daemons /usr/local/beercrush/bin; do 
 	mkdir -p $DIR;
 done
 
@@ -10,6 +10,9 @@ if [ ! -f $BEERCRUSH_ETC_DIR/webapp.conf ]; then
 	echo "$BEERCRUSH_ETC_DIR/webapp.conf doesn't exist. You can get a sample from svn://beercrush/conf/appserver/webapp.conf.";
 	exit 1;
 fi
+
+cp tools/iamservertype /usr/local/beercrush/bin/;
+cp tools/iamdaemon /usr/local/beercrush/bin/;
 
 
 if tools/iamservertype -q php-cgi || tools/iamservertype -q web; then
