@@ -24,13 +24,13 @@ ALL: SAFETY_CHECK /usr/local/include/jansson.h /usr/include/curl/curl.h /usr/bin
 	sudo apt-get install supervisor
 
 install: SAFETY_CHECK ALL
-	@sh ./supervisord.sh stop;
-	@sh ./install.sh
+	@bash ./supervisord.sh stop;
+	@bash ./install.sh
 	$(RECURSIVE_MAKE);
 	@./supervisord.sh start;
 
 check:
-	@sh ./check.sh
+	@bash ./check.sh
 	$(RECURSIVE_MAKE);
 
 setup:

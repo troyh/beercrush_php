@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Require that PHP 5.3 is installed before doing anything.
+PHP_VER=$(php --version|head -n 1);
+if [[ ! "$PHP_VER" =~ PHP[[:space:]]+5\.3\. ]]; then
+	echo "ERROR: PHP must be version 5.3.x. Installed version: $PHP_VER";
+	exit 1;
+fi
+
 . ./config.sh;
 
 for DIR in $BEERCRUSH_ETC_DIR $BEERCRUSH_ETC_DIR/daemons /usr/local/beercrush/bin; do 
