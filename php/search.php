@@ -1,5 +1,5 @@
 <?php
-require_once('OAK/oak.class.php');
+require_once('beercrush/beercrush.php');
 
 function my_var_dump($data)
 {
@@ -7,8 +7,6 @@ function my_var_dump($data)
 	var_dump($data);
 	print "</pre>";
 }
-
-include("header.php");
 
 switch ($_GET['dt'])
 {
@@ -19,13 +17,16 @@ case 'place':
 	$doctypes=array('place');
 	break;
 default:
-	$doctypes=null;
+	$doctypes=array();
 	break;
 }
 
-$oak=new OAK;
-$results=$oak->query($_GET['q'],true,$doctypes);
+$oak=new OAK(BeerCrush::CONF_FILE);
+$url='search?q='.$_GET['q'].'&dataset='.join(' ',$doctypes);
+$results=BeerCrush::api_doc($oak,$url);
 // my_var_dump($results);exit;
+
+include("header.php");
 ?>
 
 <div id="searchresults">

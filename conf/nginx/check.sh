@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Test the config
-if ! sudo /etc/init.d/nginx configtest; then
+if [ ! sudo /etc/init.d/nginx configtest 2> /dev/null ]; then
 	echo "Please fix NGiNX config errors above.";
 	exit 1;
 fi

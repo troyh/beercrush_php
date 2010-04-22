@@ -13,7 +13,12 @@ class OAKJobs {
 	public function __construct($oak,$group) {
 		$this->oak=$oak;
 		$my_name='OAK-'.getmypid();
-		$this->msg_group=$group;
+
+		if (!is_array($group))
+			$this->msg_group=array($group);
+		else
+			$this->msg_group=$group;
+
 		$this->job_group=basename($_SERVER['PHP_SELF']).'-jobq';
 		
 		if ($this->oak && $this->oak->spread_connect(4803,$my_name,TRUE)!==TRUE) {
@@ -22,21 +27,28 @@ class OAKJobs {
 		else if ($this->oak->spread_join($this->job_group)!==TRUE) {
 			// TODO: do something
 		}
-		else if ($this->oak->spread_join($this->msg_group)!==TRUE) {
-			// TODO: do something
+		else {
+			foreach ($this->msg_group as $g) {
+				if ($this->oak->spread_join($g)!==TRUE) {
+					// TODO: do something
+					$this->oak->log('Unable to join Spread group '.$g,OAK::LOGPRI_ERR);
+				}
+			}
 		}
 	}
 
 	public function __destruct() {
 		if ($this->oak) {
 			$this->oak->spread_leave($this->job_group);
-			$this->oak->spread_leave($this->msg_group);
+			foreach ($this->msg_group as $g) {
+				$this->oak->spread_leave($g);
+			}
 			$this->oak->spread_disconnect();
 		}
 	}
 	
 	public function getOAK() { return $this->oak; }
-	
+
 	private function message_loop($timeout=null) {
 		while (($newmsg=$this->oak->spread_receive($timeout))!=FALSE) {
 			if (OAK::IS_MEMBERSHIP_MESS($newmsg['service_type'])) { // A Spread membership message
@@ -46,7 +58,7 @@ class OAKJobs {
 					$this->my_spread_name=$newmsg['group_members'][$newmsg['current_index']];
 				}
 			}
-			else if (in_array($this->msg_group,$newmsg['groups'])) { // A regular message
+			else if ($this->is_our_msg_group($newmsg['groups'])) { // A regular message
 				$job=json_decode($newmsg['message']);
 				if (is_null($job))
 					$job=$newmsg['message'];
@@ -55,7 +67,7 @@ class OAKJobs {
 					call_user_func($this->message_callback,$this,$job,$newmsg);
 				}
 				
-				$this->create_job($job);
+				$this->create_job($job,$newmsg);
 			}
 			else if (in_array($this->job_group,$newmsg['groups'])) { // A job control message
 				$job_queue_msg=json_decode($newmsg['message']);
@@ -107,12 +119,13 @@ class OAKJobs {
 		}
 	}
 	
-	public function create_job($job)
+	public function create_job($job,$msg)
 	{
 		if (!is_string($job))
 			$job=json_encode($job);
 			
 		$job_msg=new stdClass;
+		$job_msg->msg=$msg;
 		$job_msg->ctime=time();
 		$job_msg->sha1key=sha1($job);
 		$job_msg->job=$job;
@@ -125,7 +138,16 @@ class OAKJobs {
 		
 		$this->update_job($job_msg);
 	}
-	
+
+	private function is_our_msg_group($groups) {
+		foreach ($this->msg_group as $g) {
+			if (in_array($g,$groups)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private function bid_winner_is_me($job_queue_item) {
 		if ($this->all_potential_bidders_have_bid($job_queue_item)===FALSE)
 			return FALSE; // We can't determine yet
@@ -171,9 +193,9 @@ class OAKJobs {
 					if (!$job_queue_item->completed) {
 						// Note: I may be giving it out again to myself because job_done() was never called.
 						$job=json_decode($job_queue_item->job);
-						if (is_null($job))
-							return $job_queue_item->job;
-						return $job;
+						if (!is_null($job))
+							$job_queue_item->job=$job;
+						return $job_queue_item;
 					}
 				}
 				else if (!$job_queue_item->ihavebid) {
@@ -205,6 +227,9 @@ class OAKJobs {
 	
 	public function gimme_jobs($callback,$signal_handler=null) {
 
+		if (!is_array($callback))
+			$callback=array($callback);
+			
 		if (is_null($signal_handler))
 			$signal_handler=array($this,'gimme_jobs_default_sig_handler');
 			
@@ -219,10 +244,19 @@ class OAKJobs {
 			$job=$this->next_job();
 				
 			if ($job !== FALSE) {
-				if (call_user_func($callback,$this,$job))
-					$this->job_done($job);
+				// Figure out which callback to call
+				for ($i=0,$j=count($this->msg_group);$i < $j;++$i) {
+					if (in_array($this->msg_group[$i],$job->msg->groups)) {
+						break;
+					}
+				}
+			
+				$i=min($i,count($callback)-1); // Call the last function in the array if the array is smaller than count($this->msg_group)
+			
+				if ($i < count($callback) && call_user_func($callback[$i],$this,$job->job))
+					$this->job_done($job->job);
 				else
-					$this->clear_my_bid($job); // Gives someone else a chance at it
+					$this->clear_my_bid($job->job); // Gives someone else a chance at it
 			}
 			else {
 				usleep(250000); // Don't monopolize the CPU, sleep for 1/4th of a second

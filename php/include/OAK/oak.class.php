@@ -517,7 +517,7 @@ class OAK
 		if (empty($name))
 			throw new Exception('$name cannot be empty');
 
-		$parts=split(OAK::CGI_NAME_SEP,$name);
+		$parts=explode(OAK::CGI_NAME_SEP,$name);
 		
 		if ($cgi_fields[$parts[0]]['type']==OAK::DATATYPE_OBJ)
 		{
@@ -1075,7 +1075,7 @@ class OAK
 		// Pick a node
 		$node=$this->config->solr->nodes[rand()%count($this->config->solr->nodes)];
 		$url='http://'.$node.$this->config->solr->url.'/select/?'.$fq_param.'wt=json&rows=20&qt=dismax&mm=1&q='.urlencode($query_string);
-		$results=@file_get_contentset_contents($url);
+		$results=@file_get_contents($url);
 		if ($return_json)
 			return json_decode($results);
 		return $results;

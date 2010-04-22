@@ -2,7 +2,7 @@
 
 extern "C"
 {
-#include "external/cgic/cgic.h"
+#include "../src/external/cgic/cgic.h"
 }
 
 
@@ -21,7 +21,7 @@ extern "C"
 
 using namespace std;
 
-const char* const dataFilename="/var/local/BeerCrush/meta/autocomplete_names.tsv";
+const char* const dataFilename="/var/local/BeerCrush/meta/autocomplete_db.tsv";
 static time_t datafile_last_read=0;
 
 // Searchable data structures

@@ -1,0 +1,42 @@
+#!/usr/bin/php
+<?php
+require_once('OAK/listener.class.php');
+
+$opts=getopt('C:h');
+
+if (isset($opts['h'])) {
+	$cmdname=basename($argv[0]);
+	print <<<EOF
+Usage: $cmdname -C <conf file>
+
+	-C Specify path to .conf file
+
+
+EOF;
+	exit;
+}
+
+try {
+	$oak=new OAK($opts['C']);
+}
+catch (Exception $x) {
+	print $x->getMessage()."\n";
+	exit;
+}
+
+$oaklistener=new OAKListener($oak,'searchhits');
+$oaklistener->gimme_messages('searchhits');
+
+function searchhits($oaklistener,$msg) {
+	if (strlen($msg->query_params->q)) {
+		$f=fopen("/var/local/BeerCrush/meta/autocomplete_searches","a");
+		if ($f) {
+			fprintf($f,$msg->query_params->q."\n");
+			fclose($f);
+
+			$oaklistener->getOAK()->log('Added search hit: '.$msg->query_params->q);
+		}
+	}
+}
+
+?>

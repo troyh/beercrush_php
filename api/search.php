@@ -66,6 +66,14 @@ function oakMain($oak)
 			print "Internal error";
 			exit;
 		}
+		
+		// If we have results, broadcast to searchhits
+		if (count($results->response->docs)) {
+			$searchhits=array(
+				'query_params' => $params,
+			);
+			$oak->broadcast_msg('searchhits',$searchhits);
+		}
 
 		// Add in brewery info for beers
 		foreach ($results->response->docs as &$doc)

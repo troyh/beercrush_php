@@ -2,7 +2,18 @@
 <?php
 require_once 'OAK/oak.class.php';
 
-$oak=new OAK();
-$oak->broadcast_msg($argv[1],$argv[2]);
+$opts=getopt('C:');
+try {
+	$oak=new OAK($opts['C']);
+	$msg=json_decode($argv[4]);
+	if (is_null($msg)) {
+		$msg=$argv[4];
+	}
+
+	$oak->broadcast_msg($argv[3],$msg);
+}
+catch (Exception $x) {
+	print $x->getMessage()."\n";
+}
 
 ?>

@@ -1,0 +1,38 @@
+#!/bin/bash
+
+PATH=$PATH:/usr/local/beercrush/bin
+
+THRESHOLD=1;
+
+DATESTAMP=`date +%Y%m%d%H%M%S`;
+DIR="/var/local/BeerCrush/meta";
+
+if [ -s /var/local/BeerCrush/meta/autocomplete_searches ]; then
+	# Timestamp it
+	mv $DIR/autocomplete_searches $DIR/autocomplete_searches.$DATESTAMP;
+fi
+
+# Remove all files older than 1 month
+OLDDATESTAMP=`date +%Y%m%d%H%M%S -d '1 month ago'`;
+for F in $DIR/autocomplete_searches.[0-9]*; do
+	D=$(echo $F | sed -e 's/^.*\.\([0-9]\{14\}\)$/\1/');
+	if [ $D ]; then
+		if [ "$D" -lt "$OLDDATESTAMP" ]; then
+			rm -f "$F";
+		fi
+	fi
+done
+
+sort $DIR/autocomplete_searches.[0-9]* | uniq -c | sort -nr |
+while read N TERM; do
+	if [ $N -lt $THRESHOLD ]; then
+		break;
+	elif [ -n "$TERM" ]; then
+		echo "$TERM	search";
+	fi
+done > $DIR/autocomplete_searches.new
+
+# Add in the beer, brewery and place names
+autocomplete_list > $DIR/autocomplete_names.tsv
+
+cat $DIR/autocomplete_searches.new $DIR/autocomplete_names.tsv | sort > $DIR/autocomplete_db.tsv 
