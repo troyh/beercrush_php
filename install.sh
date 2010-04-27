@@ -9,7 +9,7 @@ fi
 
 . ./config.sh;
 
-for DIR in $BEERCRUSH_ETC_DIR $BEERCRUSH_ETC_DIR/daemons /usr/local/beercrush/bin; do 
+for DIR in $BEERCRUSH_ETC_DIR $BEERCRUSH_ETC_DIR/daemons $BEERCRUSH_ETC_DIR/cron /usr/local/beercrush/bin; do 
 	mkdir -p $DIR;
 done
 
@@ -102,3 +102,7 @@ if tools/iamservertype -q gitrepo; then
 fi
 
 # TODO: make autocompletenames.txt and latlonpairs.txt in /var/local/BeerCrush/meta
+
+# TODO: the stop and start should wrap all installs for children directories
+# bash ./supervisord.sh stop;
+# bash ./supervisord.sh start;

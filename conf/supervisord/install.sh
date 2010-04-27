@@ -37,10 +37,8 @@ fi
 
 # Copy all .conf files for daemons that will run on this host
 for D in $(iamdaemon -t); do
-	if [ ! -f $D.conf ]; then
-		echo "ERROR: No such .conf file for $D daemon";
-		exit 1;
+	if [ -f $D.conf ]; then
+		sudo cp $D.conf /etc/supervisor/conf.d/;
 	fi
-	sudo cp $D.conf /etc/supervisor/conf.d/;
 done
 

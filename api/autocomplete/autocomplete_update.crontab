@@ -1,0 +1,2 @@
+# m h dom mon dow user    command
+0 */1 * * * www-data autocomplete_update -C /etc/BeerCrush/webapp.conf

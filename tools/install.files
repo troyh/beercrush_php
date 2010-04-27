@@ -1,0 +1,3 @@
+BIN db_dump
+BIN jsonpath
+BIN dbchanges2git

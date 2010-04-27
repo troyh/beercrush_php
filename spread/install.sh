@@ -25,7 +25,7 @@ fi
 # Copy oaklog to all machine types so it's always available
 sudo cp oaklog /usr/local/bin/
 
-for D in solr_indexer autocomplete_watch; do
+for D in solr_indexer; do
 	
 	if iamdaemon -q $D; then
 		sudo cp $D /usr/local/beercrush/bin;

@@ -10,7 +10,3 @@ mini/:
 
 mini/%.js: %.js
 	yui-compressor $< > $@
-
-install: SAFETY_CHECK
-	@./install.sh 
-	$(RECURSIVE_MAKE);
