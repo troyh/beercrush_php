@@ -24,6 +24,7 @@ install: SAFETY_CHECK
 	@bash $(TOPDIR)install_recursively.sh
 
 check:
-	@if [ -f check.sh ]; then bash check.sh; fi
 	@bash $(TOPDIR)make_recursively.sh local_check
 
+local_check:
+	if [ -f check.sh ]; then bash check.sh; fi
