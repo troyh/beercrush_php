@@ -104,5 +104,5 @@ fi
 # TODO: make autocompletenames.txt and latlonpairs.txt in /var/local/BeerCrush/meta
 
 # TODO: the stop and start should wrap all installs for children directories
-# bash ./supervisord.sh stop;
-# bash ./supervisord.sh start;
+bash ./supervisord.sh stop;
+bash ./supervisord.sh start;

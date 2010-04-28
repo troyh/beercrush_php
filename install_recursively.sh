@@ -24,32 +24,28 @@ install_file() {
 	else
 		echo "ERROR: $2 is neither a file or a directory. Can't install into it.";
 	fi
+
+	if [ ! -f $DEST ]; then
+		touch $DEST; # Make zero-length file just so the md5sum doesn't error...
+	fi
 	
 	md5sum $1 $DEST | cut -f 1 -d ' ' | paste - - | if read A B; then
 		if [[ $A != $B ]]; then
 			if cp $1 $DEST; then
 				echo "Installed $DEST";
-				exit 0;
+				return 1;
 			else
 				echo "ERROR: Unable to install $DEST";
 			fi
 		fi
 	fi
 
-	exit 1;
+	return 0;
 }
 
 install_routine() {
 	
 	SUBDIR=$1;
-
-	#################################
-	# Do a make install
-	#################################
-	if [ -f $SUBDIR/Makefile ]; then
-		echo make install $SUBDIR;
-		make --silent -C $SUBDIR install;
-	fi
 
 	#################################
 	# Install files from install.files
@@ -61,8 +57,14 @@ install_routine() {
 				DIR)
 					if [ ! -d $FNAME ]; then
 						if [ ! -d $FNAME ]; then
-							if mkdir $FNAME; then
+							if mkdir $FNAME 2> /dev/null; then
 								echo "Made directory $FNAME";
+								sudo chgrp $BEERCRUSH_APPSERVER_USER $FNAME;
+						        sudo chmod -R ug+rwX $FNAME;
+							elif sudo mkdir $FNAME 2> /dev/null; then
+								echo "Made directory $FNAME (as sudo)";
+								sudo chgrp $BEERCRUSH_APPSERVER_USER $FNAME;
+						        sudo chmod -R ug+rwX $FNAME;
 							else
 								echo "Failed to make directory $FNAME";
 							fi
@@ -71,7 +73,9 @@ install_routine() {
 					;;
 				BIN) 
 					if install_file $FNAME $BEERCRUSH_BIN_DIR; then
-						chmod +x $BEERCRUSH_BIN_DIR/$FNAME;
+						if ! chmod +x $BEERCRUSH_BIN_DIR/$FNAME; then
+							echo "ERROR: Unable to make $BEERCRUSH_BIN_DIR/$FNAME executable.";
+						fi
 					fi
 					;;
 				ETC)
@@ -91,25 +95,7 @@ install_routine() {
 				*)
 					if [[ $LOC =~ ^/ ]]; then
 						# Explicit path
-						
-						if [ -d "$LOC" ]; then
-							DEST="$LOC/$FNAME";
-						else
-							DEST=$LOC;
-						fi
-
-						md5sum $FNAME $DEST | cut -f 1 -d ' ' | paste - - | if read A B; then
-							if [[ $A != $B ]]; then
-								if cp $FNAME "$DEST" 2> /dev/null; then
-									echo "Installed $DEST";
-								elif sudo cp $FNAME "$DEST"; then
-									echo "Installed $DEST (as sudo)";
-								else
-									echo "ERROR: Unable to install $DEST";
-								fi
-							fi
-						fi
-						
+						install_file "$FNAME" "$LOC";
 					else
 						echo "ERROR: Invalid install.files location $LOC (must be an absolute path or a predefined identifier)";
 					fi
@@ -157,9 +143,18 @@ install_routine() {
 			fi
 		done
 	fi
+
+	#################################
+	# Run install.sh (if exists)
+	#################################
+	if [ -f install.sh ]; then
+		bash install.sh;
+	fi
 }
 
-for SUBDIR in $(find . -mindepth 2 -maxdepth 2 -type d ! -name '.*' | sort | grep -v -e '/\.' | sed -e 's/^\.\///'); do
+install_routine .;
+
+for SUBDIR in $(find . -type d ! -name '.*' | sort | grep -v -e '/\.' | sed -e 's/^\.\///'); do
 
 	# Special-case src/3rdparty and don't do a make in there
 	if [[ $(basename $(pwd))/$SUBDIR =~ ^src/3rdparty/ ]]; then

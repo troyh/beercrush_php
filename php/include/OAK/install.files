@@ -1,0 +1,8 @@
+DIR /usr/share/php/OAK/
+/usr/share/php/OAK/ jobs.class.php
+/usr/share/php/OAK/ jsondiff.php
+/usr/share/php/OAK/ listener.class.php
+/usr/share/php/OAK/ oak.class.php
+/usr/share/php/OAK/ oak_defines.php
+/usr/share/php/OAK/ oak.php
+/usr/share/php/OAK/ solr.class.php

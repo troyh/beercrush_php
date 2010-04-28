@@ -10,12 +10,6 @@ if iamservertype -q cgi || iamservertype -q php-cgi; then
 	
 fi
 
-if iamservertype -q php-cgi; then
-
-	sudo cp php-cgi.conf /etc/supervisor/conf.d/;
-	
-fi
-
 if iamservertype -q web; then
 
 	sudo cp web.conf /etc/supervisor/conf.d/;

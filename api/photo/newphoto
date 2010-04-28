@@ -2,6 +2,7 @@
 <?php
 require_once('beercrush/beercrush.php');
 require_once('OAK/jobs.class.php');
+require_once('OAK/S3/S3.php');
 
 $oak=new OAK(BeerCrush::CONF_FILE);
 $oakjobs=new OAKJobs($oak,'newphotos');
@@ -81,10 +82,22 @@ function process_new_photo($oakjobs,$photoinfo) {
 			// OAK will log the error, we don't need to log it too
 		}
 	}
+
+	//
+	// Backup photo to S3
+	//
+	$oakcfg=$oakjobs->getOAK()->get_config_info();
+	$s3=new S3($oakcfg->webservices->S3->accesskey,$oakcfg->webservices->S3->secretkey);
+	$s3data=array(
+		'file' => $photoinfo->filename,
+	);
+	if ($s3->putObject($s3data,$oakcfg->webservices->S3->photobucket,$photoinfo->uuid)!==true) {
+		$oakjobs->getOAK()->log('Failed to put photo in S3: '.$photoinfo->filename,OAK::LOGPRI_ERR);
+	}
+	else
+		$oakjobs->getOAK()->log('Put photo in S3: '.$photoinfo->filename);
 	
-	$oakjobs->job_done($photoinfo);
-	
-	// TODO: backup photo to S3 or somewhere permanent
+	return TRUE;
 }
 
 ?>

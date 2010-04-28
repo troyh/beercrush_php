@@ -1,0 +1,5 @@
+[program:newphoto]
+command=/usr/local/beercrush/bin/newphoto
+autostart=true
+redirect_stderr=true
+user=www-data

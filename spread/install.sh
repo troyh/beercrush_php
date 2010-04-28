@@ -4,12 +4,6 @@
 
 PATH=$PATH:$BEERCRUSH_BIN_DIR
 
-if iamservertype -q php-cgi; then
-
-	sudo cp php-cgi /usr/local/beercrush/spread-php-cgi;
-	
-fi
-
 if iamservertype -q web; then
 
 	sudo cp web /usr/local/beercrush/spread-web;
