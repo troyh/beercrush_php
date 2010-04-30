@@ -1,0 +1,8 @@
+{
+	"language": "javascript",
+	"views": {
+		"typeless": {
+			"map": "function(doc) {\n  if (doc.type=='') emit(null, null);\n}"
+		}
+	}
+}

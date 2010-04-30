@@ -1,0 +1,13 @@
+{
+	"views": {
+		"all": {
+			"map": "function(doc) { if (doc.type=='beer') emit(doc.name,null); }"
+		},
+		"made_by": {
+			"map": "function (doc) { if (doc.type=='beer') emit(doc.brewery_id,doc.name); }"
+		},
+		"timestamp": {
+			"map": "function (doc) { if (doc.type=='beer') emit(doc.meta.timestamp,doc.name); }"
+		}
+	}
+}

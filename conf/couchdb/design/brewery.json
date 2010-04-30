@@ -1,0 +1,10 @@
+{
+	"views": {
+		"all": {
+			"map": "function(doc) { if (doc.type=='brewery') emit(doc.name,null); }"
+		},
+		"gps_coords": {
+			"map": "function (doc) { if (doc.type=='brewery' && doc.address.latitude && doc.address.longitude) emit (doc.name,{\"lat\":doc.address.latitude,\"lon\":doc.address.longitude}); }"
+		}
+	}
+}

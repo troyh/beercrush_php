@@ -1,0 +1,10 @@
+{
+	"views": {
+		"all": {
+			"map": "function(doc) { if (doc.type=='place') emit(doc.name,null); }"
+		},
+		"gps_coords": {
+			"map": "function (doc) { if (doc.type=='place' && doc.address.latitude && doc.address.longitude) emit (doc.name,{\"lat\":doc.address.latitude,\"lon\":doc.address.longitude}); }"
+		}
+	}
+}

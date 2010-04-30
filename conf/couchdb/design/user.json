@@ -1,0 +1,10 @@
+{
+	"views": {
+		"all": {
+			"map": "function(doc) { if (doc.type=='user') emit(doc.name,null); }"
+		},
+		"email": {
+			"map": "function(doc) { if (doc.type=='user' && doc.email) emit(doc.email,doc.password);    }"
+		}
+	}
+}

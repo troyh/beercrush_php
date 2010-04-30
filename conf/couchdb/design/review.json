@@ -1,0 +1,10 @@
+{
+	"views": {
+		"all": {
+			"map": "function(doc) { if (doc.type=='review') emit(null,null); }"
+		},
+		"by_user": {
+			"map": "function(doc) { if (doc.type=='review') emit(doc.user_id,doc); }"
+		}
+	}
+}

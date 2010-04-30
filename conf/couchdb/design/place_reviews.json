@@ -1,0 +1,13 @@
+{
+	"views": {
+		"all": {
+			"map": "function(doc) { if (doc.type=='review' && doc._id.substring(0,13)=='review:place:') emit(doc.place_id,null); }"
+		},
+		"by_user_id": {
+			"map": "function(doc) { if (doc.type=='review' && doc._id.substring(0,13)=='review:place:') emit(doc.user_id,doc); }"
+		},
+		"by_place_id": {
+			"map": "function(doc) { if (doc.type=='review' && doc._id.substring(0,13)=='review:place:') emit(doc.place_id,doc); }"
+		}
+	}
+}
