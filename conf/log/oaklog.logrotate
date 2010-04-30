@@ -1,0 +1,8 @@
+/var/log/oak.log {
+    daily
+    rotate 7
+    copytruncate
+    missingok
+    compress
+    notifempty
+}

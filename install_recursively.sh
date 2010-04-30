@@ -51,7 +51,7 @@ install_routine() {
 	# Install files from install.files
 	#################################
 	if [ -f install.files ]; then
-		cat install.files | while read LOC FNAME; do
+		cat install.files |sed -e '/^ *$/d' | while read LOC FNAME; do
 			FNAME=$(eval "echo $FNAME");
 			case $LOC in 
 				DIR)

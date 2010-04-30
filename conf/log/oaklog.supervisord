@@ -1,0 +1,5 @@
+[program:oaklog]
+command=/usr/local/beercrush/bin/oaklog --config=/etc/BeerCrush/webapp.conf --output=/var/log/oak.log
+autostart=true
+redirect_stderr=true
+user=root

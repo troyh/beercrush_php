@@ -1,0 +1,83 @@
+#!/usr/bin/php
+<?php
+require_once('OAK/jobs.class.php');
+
+$opts=getopt('o::cC:h',array(
+	'output::',
+	'color',
+	'config:',
+	'help',
+));
+
+if (isset($opts['h']) || isset($opts['help'])) {
+	$cmdname=basename($argv[0]);
+	print <<<EOF
+Usage: $cmdname [-o/--output [logfile]] [-c/--color] -C/--config <conf file>
+
+	-o/--output Output log messages (stdout if no filename specified)
+	-c/--color  Use color in output
+	-C/--config Specify path to .conf file
+
+
+EOF;
+	exit;
+}
+
+$output_file=null;
+if (isset($opts['o']) || isset($opts['output'])) {
+	if (!empty($opts['output']))
+		$output_file=fopen($opts['output'],'a');
+	else if (!empty($opts['o']))
+		$output_file=fopen($opts['o'],'a');
+	else
+		$output_file=fopen("php://stdout",'a');
+}
+$bColorOutput=(isset($opts['c'])||isset($opts['color']));
+
+try {
+	$oak=new OAK(isset($opts['config'])?$opts['config']:$opts['C']);
+}
+catch (Exception $x) {
+	print $x->getMessage()."\n";
+	exit;
+}
+
+$oakjobs=new OAKJobs($oak,'oaklog');
+$oakjobs->set_message_callback('log_message');
+$oakjobs->gimme_jobs('log_job');
+
+function log_job($oakjobs,$msg) {
+	// Send ERRs and CRITs to somewhere where they'll be seen
+	list($priority,$ident,$logmsg)=preg_split('/:/',$msg,3);
+	if ($priority=='CRIT' || $priority=='ERR') {
+		// TODO: If on a production server, send email to email address in config
+	}
+
+	return true;
+}
+
+function log_message($oakjobs,$msg) {
+	global $output_file;
+	global $bColorOutput;
+	
+	if ($output_file) {
+		// Parse message
+		list($priority,$ident,$logmsg)=preg_split('/:/',$msg,3);
+		if ($bColorOutput) {
+			// See man console_codes for console escape codes
+			if ($priority=='CRIT')
+				fprintf($output_file,"\7\033[37;41m"); // Bell w/ white on red
+			else if ($priority=='ERR')
+				fprint($output_file,"\033[31m"); // Red on white
+			else
+				fprintf($output_file,"\033[32m"); // Green on white
+		}
+		
+		fprintf($output_file,$priority.' '.date('Y-m-d H:i:s').' '.$ident.' '.$logmsg."\n");
+		
+		if ($bColorOutput) {
+			fprintf($output_file,"\033[0m");
+		}
+	}
+}
+?>
