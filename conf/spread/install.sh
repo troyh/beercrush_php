@@ -23,7 +23,7 @@ fi;
 #
 # Make sure that the PHP Spread extension is installed
 #
-if php -c /etc/php5/cgi/php.ini -r 'if (function_exists(spread_connect)) exit(1);' || php -c /etc/php5/cli/php.ini -r 'if (function_exists(spread_connect)) exit(1);'; then 
+if php -c /etc/php5/cgi/php.ini -r 'if (function_exists("spread_connect")) exit(1);' || php -c /etc/php5/cli/php.ini -r 'if (function_exists(spread_connect)) exit(1);'; then 
 	cat - <<EOF
 The Spread PHP extension must be installed. To do that:
 

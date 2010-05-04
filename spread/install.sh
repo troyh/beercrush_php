@@ -16,9 +16,6 @@ if iamservertype -q couchdb-proxy; then
 	
 fi
 
-# Copy oaklog to all machine types so it's always available
-sudo cp oaklog /usr/local/bin/
-
 for D in solr_indexer; do
 	
 	if iamdaemon -q $D; then

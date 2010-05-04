@@ -21,12 +21,15 @@ install_file() {
 		DEST=$2/$1;
 	elif [ -f $2 ]; then
 		DEST=$2
+	elif [ -d $(dirname $2) ]; then
+		DEST=$2
 	else
 		echo "ERROR: $2 is neither a file or a directory. Can't install into it.";
 	fi
 
 	if [ ! -f $DEST ]; then
-		touch $DEST; # Make zero-length file just so the md5sum doesn't error...
+		sudo touch $DEST; # Make zero-length file just so the md5sum doesn't error...
+		sudo chown $USER $DEST;
 	fi
 	
 	md5sum $1 $DEST | cut -f 1 -d ' ' | paste - - | if read A B; then
