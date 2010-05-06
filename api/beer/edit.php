@@ -46,7 +46,7 @@ function get_specific_gravity($n)
 	{
 		return $n/1000; // Correct the casual form to the correct form
 	}
-	else if ($n < 100) // It's a Degrees Plato value
+	else if ($n < 200) // It's a Degrees Plato value
 	{
 		return ($n/(258.6-($n/258.2)*227.1))+1; // From http://plato.montanahomebrewers.org/
 	}
@@ -86,7 +86,7 @@ function oakMain($oak)
 
 	if ($oak->cgi_value_exists('beer_id',$cgi_fields)) // Editing existing beer
 	{
-		$beer_id=$oak->get_cgi_value('beer_id',$cgi_fields);
+		$beer_id=trim($oak->get_cgi_value('beer_id',$cgi_fields));
 		// Get existing beer, if there is one so that we can update just the parts added/changed in this request
 		if ($oak->get_document($beer_id,&$beer)!==true)
 			throw new Exception("No existing beer $beer_id");
