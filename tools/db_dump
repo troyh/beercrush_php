@@ -92,15 +92,15 @@ function dump_doc($id) {
 			}
 			else {
 				// Create filename
-				if ($create_subdirs) {
+				if ($create_subdirs)
 					$docfilename=$dirname.'/'.str_replace(':','/',$id);
-					$d=dirname($docfilename);
-					if (!file_exists($d)) {
-						mkdir($d,0775,true);
-					}
-				}
 				else
 					$docfilename=$dirname.'/'.$id;
+
+				$d=dirname($docfilename);
+				if (!file_exists($d)) {
+					mkdir($d,0775,true);
+				}
 				
 				print "$docfilename\n";
 			}
