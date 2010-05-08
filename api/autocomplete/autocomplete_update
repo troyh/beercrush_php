@@ -24,14 +24,16 @@ for F in $DIR/autocomplete_searches.[0-9]*; do
 	fi
 done
 
-sort $DIR/autocomplete_searches.[0-9]* | uniq -c | sort -nr |
-while read N TERM; do
-	if [ $N -lt $THRESHOLD ]; then
-		break;
-	elif [ -n "$TERM" ]; then
-		echo "$TERM	search";
-	fi
-done > $DIR/autocomplete_searches.new
+if [ -f $DIR/autocomplete_searches.[0-9]* ]; then
+	sort $DIR/autocomplete_searches.[0-9]* | uniq -c | sort -nr |
+	while read N TERM; do
+		if [ $N -lt $THRESHOLD ]; then
+			break;
+		elif [ -n "$TERM" ]; then
+			echo "$TERM	search";
+		fi
+	done > $DIR/autocomplete_searches.new
+fi
 
 # Add in the beer, brewery and place names
 autocomplete_list > $DIR/autocomplete_names.tsv
