@@ -1,20 +1,45 @@
 <?php
 // header("Cache-Control: none"); // Debug only
 
+define(PAGE_SIZE,50);
 $GIT_WORK_TREE="/var/local/BeerCrush/git";
 
 
-$beerdoc_path=str_replace(':','/',$_GET['beer_id']);
+$doc_path=str_replace(':','/',$_GET['doc_id']);
 
 if (isset($_GET['version'])) {
 	header("Content-Type: application/json; charset=utf-8");
 	passthru("git --work-tree=$GIT_WORK_TREE --git-dir=$GIT_WORK_TREE/.git/ show ".$_GET['version']);
 }
 else {
-	exec("git --work-tree=$GIT_WORK_TREE --git-dir=$GIT_WORK_TREE/.git/ log --unified=0 --full-index $GIT_WORK_TREE/$beerdoc_path",$git_output,$retcode);
+	if (empty($_GET['after']) && empty($_GET['before'])) { // Both are unspecified
+		$after_time=date('U',strtotime(date('Y/m/d 00:00:00')));
+		$before_time=time();
+	}
+	else if (empty($_GET['after'])) { // Only before is specified
+		$before_time=strtotime($_GET['before']);
+		$after_time=$before_time-(60*60*24);
+	}
+	else { // Only after is specified
+		$after_time=strtotime($_GET['after']);
+		$before_time=$after_time+(60*60*24);
+	}
+	
+	$after=date('Y/m/d H:i:s',$after_time);
+	$before=date('Y/m/d H:i:s',$before_time);
+	
+	if (empty($_GET['pg']) || !is_numeric($_GET['pg']))
+		$skip=0;
+	else
+		$skip=($_GET['pg']-1)*PAGE_SIZE;
+		
+	// print "After=$after Before=$before Skip=$skip";
+	
+	exec("git --work-tree=$GIT_WORK_TREE --git-dir=$GIT_WORK_TREE/.git/ log --unified=0 --full-index --after='".$after."' --before='".$before."' --max-count=".PAGE_SIZE." --skip=$skip $GIT_WORK_TREE/$doc_path",$git_output,$retcode);
+	// print "<pre>";print_r($git_output);print "</pre>";exit;
 
 	$output=new stdClass;
-	$output->id=$_GET['beer_id'];
+	$output->id=$_GET['doc_id'];
 	$output->changes=array();
 	$commit=null;
 
@@ -35,6 +60,10 @@ else {
 			else if (preg_match('/^index\s([a-z0-9]+)\.\.([a-z0-9]+)/',$ln,$matches)) {
 				if (!is_null($commit))
 					$commit->index=$matches[2];
+			}
+			else if (preg_match('/^---\sa\/(.*)$/',$ln,$matches)) {
+				if (!is_null($commit))
+					$commit->docid=str_replace('/',':',$matches[1]);
 			}
 			else if (preg_match('/^([+-])\s(.*)$/',$ln,$matches)) {
 				if (!is_null($commit)) {

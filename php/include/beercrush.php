@@ -13,6 +13,7 @@ class BeerCrush
 	
 	static function api_doc($oak,$url)
 	{
+		$url=urlencode($url);
 		if (!isset(BeerCrush::$api_doc_cache[$url])) {
 			BeerCrush::$api_doc_cache[$url]=json_decode(@file_get_contents($oak->get_config_info()->api->base_uri.'/'.ltrim($url,'/')));
 		}
@@ -31,6 +32,11 @@ class BeerCrush
 	static function beer_id_to_brewery_id($id) {
 		$parts=explode(':',$id);
 		return 'brewery:'.$parts[1];
+	}
+
+	static public function brewery_name_from_beerdoc($oak,$doc) {
+		$brewerydoc=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl($doc->brewery_id));
+		return trim($brewerydoc->name);
 	}
 
 	public $oak;

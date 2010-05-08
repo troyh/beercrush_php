@@ -9,6 +9,16 @@ class OAKSolrIndexer {
 	function __construct(OAK $oak,stdClass $schema) {
 		$this->oak=$oak;
 		$this->schema=$schema;
+		
+		// Include any PHP includes
+		if (!empty($this->schema->phpincludes)) {
+			if (!is_array($this->schema->phpincludes))
+				$this->schema->phpincludes=array($this->schema->phpincludes);
+				
+			foreach ($this->schema->phpincludes as $inc) {
+				include_once($inc);
+			}
+		}
 	}
 	
 	function index_doc($doc) {
@@ -73,8 +83,15 @@ class OAKSolrIndexer {
 
 		// Write all other fields in the schema
 		foreach ($this->schema->doctypes->{$doc->type} as $field=>$info) {
+			$propname=null;
+			$funcname=null;
 			if (is_object($info)) {
-				$propname=$info->propname;
+				if (!empty($info->propname)) {
+					$propname=$info->propname;
+				}
+				else if (!empty($info->php_function)) {
+					$funcname=$info->php_function;
+				}
 				$datatype=$info->fieldtype;
 			}
 			else if (is_string($info)) {
@@ -87,13 +104,24 @@ class OAKSolrIndexer {
 		
 			switch ($datatype) {
 				case "text":
-					$v=$this->get_property_value($doc,$propname);
+					if (!is_null($propname))
+						$v=$this->get_property_value($doc,$propname);
+					else if (!is_null($funcname))
+						$v=$this->get_property_value_from_function($doc,$funcname);
+					else
+						throw new Exception('No property name or function specified in schema for '.$field);
 					$v=trim($v);
 					if (!empty($v))
 						$this->writeValue($field,$v,'text',$xmlwriter);
 					break;
 				case "integer":
-					$this->writeValue($field,$this->get_property_value($doc,$propname),'integer',$xmlwriter);
+					if (!is_null($propname))
+						$v=$this->get_property_value($doc,$propname);
+					else if (!is_null($funcname))
+						$v=$this->get_property_value_from_function($doc,$funcname);
+					else
+						throw new Exception('No property name or function specified in schema for '.$field);
+					$this->writeValue($field,$v,'integer',$xmlwriter);
 					break;
 				default:
 					throw new Exception('Unknown datatype: $datatype');
@@ -123,6 +151,10 @@ class OAKSolrIndexer {
 			$ref=$ref->$part;
 		}
 		return $ref;
+	}
+	
+	private function get_property_value_from_function($doc,$function_name) {
+		return call_user_func($function_name,$this->oak,$doc);
 	}
 	
 	private function solr_post($url,$xmldoc)

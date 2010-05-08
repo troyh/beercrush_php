@@ -496,7 +496,7 @@ class OAK
 		if (empty($name))
 			throw new Exception('$name cannot be empty');
 
-		$parts=split(OAK::CGI_NAME_SEP,$name);
+		$parts=explode(OAK::CGI_NAME_SEP,$name);
 		
 		if ($cgi_fields[$parts[0]]['type']==OAK::DATATYPE_OBJ)
 		{

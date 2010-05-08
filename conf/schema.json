@@ -1,11 +1,12 @@
 {
+	"phpincludes": ["beercrush/beercrush.php"],
 	"doc_id": "_id",
 	"doctypes": {
 		"beer": {
 			"doctype": { "fieldtype":"text", "propname": "type" },
 			"name": "text",
 			"description": "text",
-			"brewery": "text"
+			"brewery": { "fieldtype": "text", "php_function": "BeerCrush::brewery_name_from_beerdoc" }
 		},
 		"brewery": {
 			"doctype": { "fieldtype":"text", "propname": "type" },
