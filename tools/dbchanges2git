@@ -15,15 +15,19 @@ GIT_DIR=$LOCAL_DIR/git;
 BINDIR=/usr/local/beercrush/bin
 
 $BINDIR/listen -p /var/run/BeerCrush/dbchanges2git.pid dbchanges |
-	$BINDIR/jsonpath id rev oldrev couchdb.host couchdb.port couchdb.db |
-	while read DOCID NEWREV OLDREV COUCHDB_HOST COUCHDB_PORT COUCHDB_DBNAME; do
+	$BINDIR/jsonpath id rev oldrev couchdb.host couchdb.port couchdb.db user_id |
+	while read DOCID NEWREV OLDREV COUCHDB_HOST COUCHDB_PORT COUCHDB_DBNAME USER_ID; do
 		# Get the new doc into the git working tree
 		$BINDIR/db_dump -C $1 -d $GIT_DIR -s -i $DOCID
 		if [ $? -eq 0 ]; then
 			# Commit it
+			if [[ $USER_ID == "null" ]]; then
+				USER_ID="Anonymous";
+			fi
+			MSG="User:$USER_ID";
 			FNAME=$(echo $DOCID | sed -e 's/:/\//g');
 			git --work-tree=$GIT_DIR --git-dir=$GIT_DIR/.git add $FNAME;
-			git --work-tree=$GIT_DIR --git-dir=$GIT_DIR/.git commit -m 'Auto-commit by dbchanges2git' "$FNAME";
+			git --work-tree=$GIT_DIR --git-dir=$GIT_DIR/.git commit -m "$MSG" "$FNAME";
 			echo Committed $FNAME;
 		fi
 		

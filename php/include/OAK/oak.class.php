@@ -634,6 +634,7 @@ class OAK
 		if ($status==201)
 		{
 			$body=$rsp->getBody(true);
+			$body->user_id=$this->get_user_id();
 			$body->oldrev=$doc->_rev;
 			$body->couchdb=array(
 				'host'=>$this->config->couchdb->host,

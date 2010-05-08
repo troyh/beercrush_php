@@ -57,6 +57,10 @@ else {
 				if (!is_null($commit))
 					$commit->date=$matches[1];
 			}
+			else if (preg_match('/^\s*User:\s*(.*)$/',$ln,$matches)) {
+				if (!is_null($commit))
+					$commit->user_id=$matches[1];
+			}
 			else if (preg_match('/^index\s([a-z0-9]+)\.\.([a-z0-9]+)/',$ln,$matches)) {
 				if (!is_null($commit))
 					$commit->index=$matches[2];

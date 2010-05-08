@@ -26,8 +26,10 @@ foreach ($doc->changes as $change) {
 	print "<div>".$change->date."</div>";
 
 	$changed_doc=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl($change->docid));
+	$user_doc=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl('user:'.$change->user_id));
 	
-	print "<div><a href=\"/".BeerCrush::docid_to_docurl($change->docid)."\">".$changed_doc->name."</a></div>";
+	print "<div><a href=\"/".BeerCrush::docid_to_docurl($change->docid)."\">".$changed_doc->name."</a>";
+	print " changed by <a href=\"/user/".BeerCrush::docid_to_docurl($change->user_id)."\">".$user_doc->name."</a></div>";
 	// print_r($change->change);
 	
 	// Show changes
