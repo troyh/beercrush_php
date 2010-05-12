@@ -1,4 +1,4 @@
-.PHONY: SAFETY_CHECK ROOT_SAFETY_CHECK ALL clean install check setup build
+.PHONY: SAFETY_CHECK ROOT_SAFETY_CHECK ALL clean install check setup build local_install
 .DEFAULT: ALL
 	
 TOPDIR := $(dir $(lastword $(MAKEFILE_LIST)))

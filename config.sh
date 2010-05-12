@@ -20,3 +20,31 @@ MGMT_SERVER=`php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/setup.co
 SITE_DOMAIN_NAME=`php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $cfg->domainname."\n";'`;
 WWW_DIR=`php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $cfg->file_locations->WWW_DIR."\n";'`;
 LOCALDATA_DIR=`php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $cfg->file_locations->LOCAL_DIR."\n";'`;
+
+iamcron() {
+	if ls $BEERCRUSH_ETC_DIR/cron/ | grep $1 > /dev/null; then
+		return 0;
+	fi
+	return 1;
+}
+
+iamdaemon() {
+	if ls $BEERCRUSH_ETC_DIR/daemons/ | grep $1 > /dev/null; then
+		return 0;
+	fi
+	return 1;
+}
+
+files_are_identical() {
+	if [ ! -f $1 -o ! -f $2 ]; then
+		return 1;
+	fi
+	
+	N=$(md5sum $1 $2 | cut -f 1 -d ' ' | sort -u | wc -l);
+	if [[ $N != 1 ]]; then
+		return 1;
+	fi
+	
+	return 0; # The files are identical
+}
+

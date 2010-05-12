@@ -1,0 +1,5 @@
+[program:uncache]
+command=/usr/local/beercrush/bin/uncache -C /etc/BeerCrush/daemons/uncache
+autostart=true
+redirect_stderr=true
+user=www-data

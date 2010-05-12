@@ -2,20 +2,6 @@
 
 . $(dirname $0)/config.sh
 
-iamcron() {
-	if ls $BEERCRUSH_ETC_DIR/cron/ | grep $1 > /dev/null; then
-		return 0;
-	fi
-	return 1;
-}
-
-iamdaemon() {
-	if ls $BEERCRUSH_ETC_DIR/daemons/ | grep $1 > /dev/null; then
-		return 0;
-	fi
-	return 1;
-}
-
 install_file() {
 	if [ -d $2 ]; then
 		DEST=$2/$1;
@@ -138,6 +124,9 @@ install_routine() {
 			if iamdaemon $DAEMON_NAME; then
 				if [ ! -f /etc/supervisor/conf.d/$DAEMON_NAME.conf ]; then
 					echo "Installing supervisord program: $DAEMON_NAME.conf";
+					sudo cp $SUP /etc/supervisor/conf.d/$DAEMON_NAME.conf;
+				elif ! files_are_identical $SUP /etc/supervisor/conf.d/$DAEMON_NAME.conf; then
+					echo "Updating supervisord config file: $DAEMON_NAME.conf";
 					sudo cp $SUP /etc/supervisor/conf.d/$DAEMON_NAME.conf;
 				fi
 			elif [ -f /etc/supervisord/conf.d/$DAEMON_NAME.conf ]; then

@@ -13,9 +13,9 @@ class BeerCrush
 	
 	static function api_doc($oak,$url)
 	{
-		$url=urlencode($url);
+		$url=$oak->get_config_info()->api->base_uri.'/'.ltrim($url,'/');
 		if (!isset(BeerCrush::$api_doc_cache[$url])) {
-			BeerCrush::$api_doc_cache[$url]=json_decode(@file_get_contents($oak->get_config_info()->api->base_uri.'/'.ltrim($url,'/')));
+			BeerCrush::$api_doc_cache[$url]=json_decode($oak->get_http_document($url));
 		}
 		return BeerCrush::$api_doc_cache[$url];
 	}

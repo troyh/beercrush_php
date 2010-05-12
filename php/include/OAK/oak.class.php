@@ -602,6 +602,21 @@ class OAK
 			$obj->$key=$value;
 		}
 		
+		$couchdb_url='http://'.$this->config->couchdb->host.':'.$this->config->couchdb->port.'/'.$this->config->couchdb->database.'/'.$id;
+		$msg=array(
+			'url' => $couchdb_url,
+			'doc_id' => $id
+		);
+		$this->broadcast_msg('dependency',$msg);
+
+		if (is_null($rev) && ($_SERVER['REQUEST_METHOD']=="GET") && !empty($_SERVER['REQUEST_URI'])) {
+			$msg=array(
+				'url' => 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].$_SERVER['REQUEST_URI'],
+				'doc_id' => $couchdb_url
+			);
+			$this->broadcast_msg('dependency',$msg);
+		}
+
 		return true;
 	}
 	
@@ -609,6 +624,15 @@ class OAK
 	{
 		list($designname,$viewname)=preg_split("/\//",$url,2);
 		return $this->get_document('_design/'.$designname.'/_view/'.$viewname,$obj);
+	}
+	
+	public function get_http_document($url) {
+		$msg=array(
+			'url' => 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].$_SERVER['REQUEST_URI'],
+			'doc_url' => $url
+		);
+		$this->broadcast_msg('dependency',$msg);
+		return @file_get_contents($url);
 	}
 	
 	function put_document($id,$doc)
