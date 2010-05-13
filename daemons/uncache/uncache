@@ -32,10 +32,10 @@ $oak=new OAK(BeerCrush::CONF_FILE);
 $dependencies=array();
 
 $oakjobs=new OAKJobs($oak,array('dbchanges','docchanges','dependency'));
-// Every instance gets handle_dbchange() called
+// Every instance gets handle_message() called
 $oakjobs->set_message_callback('handle_message');
-// Only one instance of couchdb-proxy gets announce_docchange() called
-$oakjobs->gimme_jobs('announce_docchange');
+// Only one instance of couchdb-proxy gets handle_job() called
+$oakjobs->gimme_jobs('handle_job');
 
 
 
@@ -124,12 +124,7 @@ function ignored_dependency($source_url,$dep_url) {
 function handle_message($oakjobs,$job,$msg) {
 	global $dependencies;
 
-	// print_r($msg);
-
 	if (in_array('dependency',$msg['groups'])) {
-		// print "dependency:-----\n";
-		// print_r($job);
-		// print "-----------------\n";
 
 		if (isset($job->doc_id))
 			$source_url=$job->doc_id;
@@ -141,97 +136,65 @@ function handle_message($oakjobs,$job,$msg) {
 		$url_parts=parse_url($job->url);
 		if (!ignored_dependency($source_url,$url_parts['path']))
 			add_dependency($source_url,$job->url);
-			
-		// print_dependencies($dependencies);
-		// print_dependencies_size($dependencies);
 	}
 	else if (in_array('docchanges',$msg['groups'])) {
-		// print "docchanges:-----\n";
-		// print $job."\n";
-		// print "-----------------\n";
-		// print_dependencies($dependencies);
-		// print "-----------------\n";
-
-		purge_doc($job);
+		foreach_dependency($job,'purge_url');
 	}
 	else if (in_array('dbchanges',$msg['groups'])) {
-		// print "dbchanges:-------\n";
-		// print_r($job);
-		// print "-----------------\n";
-		// print_dependencies($dependencies);
-		// print "-----------------\n";
-
-		purge_doc($job->id);
+		foreach_dependency($job->id,'purge_url');
 	}
-		
-	// $oakjobs->getOAK()->log('Document changed: '.$docid);
-	// do_purges($docid,$docmap,0);
 }
 
-function purge_doc($url) {
-	global $oak;
+function handle_job($oakjobs,$job) {
+	/*
+	$job could be from any of the groups: dependency, dbchanges or docchanges. So we need
+	to verify
+	*/
+	if (isset($job->url)) { // It's a dependency message
+		// Ignore it
+	}
+	else if (isset($job->id)) { // It's a dbchanges message
+		foreach_dependency($job->id,'announce_docchange');
+	}
+	else { // It's a docchanges message
+		foreach_dependency($job,'announce_docchange');
+	}
+
+	return true;
+}
+
+function foreach_dependency($url,$func) {
 	global $dependencies;
 	
-	$url=(string)$url;
+	$url=(string)$url; // Not sure why this is necessary, but array_key_exists() doesn't match it if it's not done.
 	if (array_key_exists($url,$dependencies)) {
 		foreach (array_keys($dependencies[$url]) as $uncache_url) {
-			$url_parts=parse_url($uncache_url);
-			// $purge_url=$url_parts['scheme'].'://'.$url_parts['host'].':'.$url_parts['port'].'/purge'.$url_parts['path'];
-
-			$path=$url_parts['path'];
-			if (!empty($url_parts['query']))
-				$path.='?'.$url_parts['query'];
-			
-			if (empty($url_parts['port']))
-				$port=80;
-			else
-				$port=$url_parts['port'];
-
-			print "Purging: $path (port $port)\n";
-
-			$oak->purge_document_cache($path,$port);
-
-			// Announce the change on docchanges for each purged doc
-			$oak->broadcast_msg('docchanges',$uncache_url);
+			call_user_func($func,$uncache_url);
 		}
 	}
-	// else {
-	// 	print "I don't know what to purge for $url\n";
-	// 	foreach (array_keys($dependencies) as $durl) {
-	// 		if ($url === $durl) {
-	// 			print "WTF!: [$durl] == [$url]\n";
-	// 			if (isset($dependencies[$durl])) {
-	// 				print "More WTF?!\n";
-	// 			}
-	// 		}
-	// 	}
-	// }
 }
 
-function do_purges($url,$docmap,$idx) {
-	global $oaklistener;
+function purge_url($uncache_url) {
+	global $oak;
 	
-	for ($max=count($docmap);$idx<$max;++$idx) {
-		$from=$docmap[$idx][0];
-		$to=$docmap[$idx][1];
+	$url_parts=parse_url($uncache_url);
 
-		if (!is_array($to))
-			$to=array($to);
-			
-		foreach ($to as $replacement) {
-			$new_url=preg_replace('/'.str_replace('/','\\/',$from).'/',$replacement,$url);
-			if ($new_url!=$url) {
-				$oaklistener->getOAK()->log('Attempting to purge: '.$new_url);
-				$oaklistener->getOAK()->purge_document_cache($new_url);
-				do_purges($new_url,$docmap,$idx+1);
-			}
-		}
-	}
+	$path=$url_parts['path'];
+	if (!empty($url_parts['query']))
+		$path.='?'.$url_parts['query'];
+	
+	if (empty($url_parts['port']))
+		$port=80;
+	else
+		$port=$url_parts['port'];
+
+	$oak->purge_document_cache($path,$port);
+	
 }
 
-function announce_docchange($oakjobs,$change) {
-	// $oakjobs->getOAK()->broadcast_msg('docchanges',$change->id);
-	return TRUE;
+function announce_docchange($job) {
+	global $oak;
+	$oak->broadcast_msg('docchanges',$job);
 }
 
 ?>
