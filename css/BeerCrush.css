@@ -19,7 +19,7 @@ black:		000000
  */
 html, body {
 	font:13px/1.231em arial,helvetica,clean,sans-serif;
-	line-height: 24px;
+	line-height: 20px;
 	font-style: normal;
 	font-variant: normal;
 	font-weight: normal;
@@ -29,7 +29,7 @@ html > body {
 	font:13px/1.231em arial,helvetica,clean,sans-serif; /*16px/1.515 */
 	*font-size:small; /* for IE */
 	*font:x-small; /* for IE in quirks mode */
-	line-height: 24px;
+	line-height: 20px;
 }
 /**
  * Nudge down to get to 13px equivalent for these form elements
@@ -47,25 +47,24 @@ table {
 }
 
 h1 {
-	font-size:2em;  
+	font-size:2.5em;  
 	color: #6f0014;
 	line-height: 1em;
-	margin: .75em 0 .25em 0;
+	margin: .25em 0 0 0;
 }
 
 h2 {
 	color: #1371aa;
 	font-size: 1.2em;
 	line-height: 1em;
-	margin: .75em 0 .25em 0;
+	margin: .25em 0 .25em 0;
 }
 
 h3 {
 	color: #1371aa;
-	font-weight: bold;
 	font-size: 1.2em;
 	line-height: 1em;
-	margin: .75em 0 .25em 0;
+	margin: .25em 0 .25em 0;
 }
 
 .tiny {
@@ -143,6 +142,7 @@ ul li, ol li
 
 img {
 	border: 0;
+	margin: 0;
 }
 
 .hidden {
@@ -268,31 +268,34 @@ img {
 #login_msg {
 }
 #page_content {
+	padding: 5px 0;
 }
 #main {
-	width: 714px;
+	width: 710px;
 	float: right;
-	padding: 0 5px;
 	min-height: 1px;
 	overflow: hidden;
 }
 
 #leftcol {
-	width: 250px;
 	float: right;
+	width: 250px;
+	margin-right: 10px;
 	min-height: 1px;
 	overflow: hidden;
 }
 
 #mainwithright {
 	float: left;
-	width:380px;
+	width:390px;
+	margin-right: 10px;
 }
 
 #rightcol {
 	float:right;
-	width: 310px;
-	padding-left: 5px;
+	width: 300px;
+	min-height: 1px;
+	overflow: hidden;
 }
 
 #footer_spacer {
@@ -317,8 +320,6 @@ img {
 	right:5px;
 	bottom:0px;
 }
-
-
 /* Beer Page Specific
  ---------------------------------------------------------------------*/
 #beer_description {
@@ -333,10 +334,6 @@ img {
 	font-size:8pt;
 }
 
-.photos img {
-	border: 1px solid grey;
-	padding: 3px;	
-}
 #beer div:hover {
 	background: #D0fbff;
 }
@@ -344,20 +341,215 @@ img {
 div.label {
 	float: left;
 	text-align: right;
-	width: 15%; /*41% and 55% for values if in left column */
+	width: 110px; /*41% and 55% for values if in left column */
 	padding-right: 3px;
 }
 .label {
 	color: #666;
 }
-#beer_og, #beer_fg, #beer_abv, #beer_ibu, #beer_hops, #beer_grains, #beer_yeast {
-	float: right;
-	width: 84%;
+#beer_og, #beer_fg, #beer_abv, #beer_ibu, #beer_hops, #beer_grains, #beer_yeast, #beer_style {
+	float: left;
+	width: auto;
 }
 
 #flavors_table td {
 	white-space: nowrap;
 }
+
+#ratings_section {
+	position: relative;
+	width: 350px;
+}
+#ratingcount {
+	display: block;
+	position: absolute;
+	left: 160px;
+	top: 5px;
+}
+
+.star_rating {
+	width: 150px;
+	height: 29px;
+	background: grey url("/img/star.png") repeat-x;
+	margin-bottom: 10px; 
+}
+
+#avgrating {
+	height: inherit;
+	background: #38bdec url("/img/star.png") repeat-x;
+}
+#ratings_section p {
+	text-align: center;
+	font-size: 1em;
+	color: grey;
+	width: 280px;
+	height: .5em;
+	margin-top: -5px;
+}
+#body, #balance, #aftertaste {
+	background: url("/img/meter.png") no-repeat;
+	height: 34px;
+	width: 280px;
+	position: relative;
+}
+#body {
+	background-position: -70px 0;
+}
+#balance {
+	background-position: -70px -34px;
+}
+#aftertaste {
+	background-position: -70px -68px;
+}
+.meter {
+	height: 7px;
+	width: 150px;
+	background: #d9d9d9;
+	left: 64px;
+	top: 13px;
+	position: absolute;
+}
+#body .meter div {
+	height: inherit;
+	background: #137aa1;
+}
+#balance .meter div {
+	height: inherit;
+	background: #c49a6c;
+}
+#aftertaste .meter div {
+	height: inherit;
+	background: #6f0014;
+}
+.flavors span {
+	color: #137aa1;
+}
+.flavors .size5 {
+	font-size: 2em;
+	font-weight: 600;
+}
+.flavors .size4 {
+	font-size: 1.6em;
+	font-weight: 600;
+}
+.flavors .size3 {
+	font-size: 1.2em;
+	font-weight: 400;
+}
+.flavors .size2 {
+	font-size: 1em;
+	font-weight: 200;
+}
+.flavors .size1 {
+	font-size: .8em;
+}
+
+.triangle-border {
+	position:relative;
+	padding:15px;
+	margin:1em 0 3em;
+	border:2px solid #137aa1;
+	color:#333;
+	background:#fff;
+	
+	/* css3 
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	border-radius:10px;*/
+}
+
+/* creates the larger triangle */
+.triangle-border:before {
+	content:"\00a0";
+	display:block; /* reduce the damage in FF3.0 */
+	position:absolute;
+	bottom:-40px; /* value = - border-top-width - border-bottom-width */
+	left:40px; /* controls horizontal position */
+	width:0;
+	height:0;
+	border:20px solid transparent;
+	border-top-color:#5a8f00;
+}
+
+/* creates the smaller  triangle */
+.triangle-border:after {
+	content:"\00a0";
+	display:block; /* reduce the damage in FF3.0 */
+	position:absolute;
+	bottom:-26px; /* value = - border-top-width - border-bottom-width */
+	left:47px; /* value = (:before left) + (:before border-left) - (:after border-left) */
+	width:0;
+	height:0;
+	border:13px solid transparent;
+	border-top-color:#fff;
+}
+
+
+
+
+/* Bubble with a border rather than solid colour
+------------------------------------------ */
+
+/* creates the larger triangle */
+.triangle-border.top:before {
+	top:-23px; /* value = - border-top-width - border-bottom-width */
+	left:40px; /* controls horizontal position */
+	bottom:auto;
+	left:auto;
+	border:11px solid transparent;
+	border-bottom-color:#137aa1;
+}
+
+/* creates the smaller  triangle */
+.triangle-border.top:after {
+	top:-20px; /* value = - border-top-width - border-bottom-width */
+	left:48px; /* value = (:before right) + (:before border-right) - (:after border-right) */
+	bottom:auto;
+	left:auto;
+	border:11px solid transparent;
+	border-bottom-color:#fff;
+}
+
+.areview {
+}
+.areview img {
+	width:30px;
+	height:30px;
+	margin: -5px 5px 0 0;
+	vertical-align: middle;
+}
+
+.photo {
+	margin: 0 auto 5px auto;
+	
+}
+.caption {
+	font-size:80%;
+	color: 666;
+	text-align:right;
+	line-height: 1em;
+	margin:0;
+}
+
+.photo img {
+	display: block;
+	margin: 0 auto;
+}
+
+.command {
+	margin: 0;
+	padding: 0;
+}
+
+.command li {
+	vertical-align: middle;
+	background-position: 0 5px;
+	padding: 10px 0 0 35px;
+	list-style: none;
+	background-repeat: no-repeat;
+	min-height: 35px;
+}
+	
 /* Brewery Page Specific
  ---------------------------------------------------------------------*/
 #map {

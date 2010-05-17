@@ -107,62 +107,77 @@ include("../header.php");
 ?>
 <div id="main">
 
-<div>
+<div id="mainwithright">
 	<h2><a id="brewery_link" href="/brewery/<?=preg_replace('/^.*:/','',$brewerydoc->id)?>"><?=$brewerydoc->name?>'s</a></h2>
-	<h1 id="beer_name"><?=$beerdoc->name?></h1>
-
-	<div id="beer">
-		<input type="hidden" id="beer_id" value="<?=$beerdoc->id?>" />
-		<div><span class="label">Brewer's description:</span>
-		<p id="beer_description" class="editable_textarea"><?=$beerdoc->description?></p></div>
+	<h1><?=$beerdoc->name?></h1>
+	<div id="ratings_section" class="cf">
+		<div class="star_rating"><div id="avgrating" style="width: 50%"></div></div>
+		<a href="#ratings" id="ratingcount"><?=count($reviews->reviews)?> ratings</a>
+		<div class="flavors">
+			<span class="size5">Hoppy, </span>
+			<span class="size5">Citrus, </span>
+			<span class="size4">Pine, </span>
+			<span class="size3">Green Apple, </span>
+			<span class="size2">Nutmeg, </span>
+			<span class="size1">Black Pepper, </span>
+			<span class="size1">Cut Green Grass</span>
+		</div>
+		<p>Body</p>
+		<div id="body"><div class="meter"><div style="width: 77%"></div></div></div>
+		<p>Balance</p>
+		<div id="balance"><div class="meter"><div style="width: 90%"></div></div></div>
+		<p>Aftertaste</p>
+		<div id="aftertaste"><div class="meter"><div style="width: 70%"></div></div></div>
+	</div>
 	
+	<span class="label">Brewer's description:</span>
+	<div id="beer" class="triangle-border top">
+		<input type="hidden" id="beer_id" value="<?=$beerdoc->id?>" />
+		<div id="beer_description" class="editable_textarea"><?=$beerdoc->description?></div>
+		<div class="cf"><div class="label">Style: </div><div id="beer_style"><?foreach ($beerdoc->styles as $styleid):?><?=$styles_lookup[$styleid]->name?> <?endforeach?></div></div>
+		
+		<div class="cf"><div class="label">Color: </div><div id="beer_color"><div style="background:<?='#'.dechex($color->rgb[0]<<16 | $color->rgb[1]<<8 | $color->rgb[2])?>"></div><?=$color->name?></div></div>
+		
+		<div class="cf"><div class="label">Alcohol (abv): </div><div id="beer_abv"><?=$beerdoc->abv?>&#37;</div></div>
+		<div class="cf"><div class="label">Bitterness (IBUs): </div><div id="beer_ibu"><?=$beerdoc->ibu?></div></div>
 		<div class="cf"><div class="label">Original Gravity: </div><div id="beer_og"><?=$beerdoc->og?></div></div>
 		<div class="cf"><div class="label">Final Gravity: </div><div id="beer_fg"><?=$beerdoc->fg?></div></div>
-		<div class="cf"><div class="label">Alcohol (abv): </div><div id="beer_abv"><?=$beerdoc->abv?></div></div>
-		<div class="cf"><div class="label">Bitterness (IBUs): </div><div id="beer_ibu"><?=$beerdoc->ibu?></div></div>
+		<div class="cf"><div class="label">Name: </div><div id="beer_name"><?=$beerdoc->name?></div></div>
 		<div class="cf"><div class="label">Hops: </div><div id="beer_hops"><?=$beerdoc->hops?></div></div>
 		<div class="cf"><div class="label">Grains: </div><div id="beer_grains"><?=$beerdoc->grains?></div></div>
 		<div class="cf"><div class="label">Yeast: </div><div id="beer_yeast"><?=$beerdoc->yeast?></div></div>
 		
-		<div class="cf"><div class="label">Style: </div>
-		<?foreach ($beerdoc->styles as $styleid):?>
-			<span><?=$styles_lookup[$styleid]->name?></span>
-		<?endforeach?>
-		</div>
-		
-		<div class="cf"><div class="label">Color: </div><div style="background:<?='#'.dechex($color->rgb[0]<<16 | $color->rgb[1]<<8 | $color->rgb[2])?>"><?=$color->name?></div></div>
 		
 		<div class="cf"><div class="label">Availability: </div><div><?=$beerdoc->availability?></div></div>
-
 		<div id="editable_save_msg"></div>
 		<input class="editable_savechanges_button hidden" type="button" value="Save Changes" />
 		<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
+		
 	</div>
 
-</div>
 <h3><?=count($reviews->reviews)?> Reviews</h3>
 
 <?php foreach ($reviews->reviews as $review) :?>
-<div>
-	<div>User: <a href="/user/<?=$review->user_id?>"><?=$users[$review->user_id]->name?></a></div>
-	<div>Posted: <span class="datestring"><?=date('D, d M Y H:i:s O',$review->meta->timestamp)?></span></div>
-	<div>Date Drank: <span class="datestring"><?=!empty($review->date_drank)?date('D, d M Y H:i:s O',strtotime($review->date_drank)):''?></span></div>
-	<div>Rating: <?=$review->rating?></div>
-	<div>Body: <?=$review->body?></div>
-	<div>Balance: <?=$review->balance?></div>
-	<div>Aftertaste: <?=$review->aftertaste?></div>
-	<div>Flavors: <?php
-		$flavor_titles=array();
-		if (isset($review->flavors))
-		{
-			foreach ($review->flavors as $flavor){$flavor_titles[]=$flavor_lookup[$flavor];}
-		}
-		print join(', ',$flavor_titles);
-	?>
+<div class="areview">
+	<img src="/img/default_avatar.gif" style="width:30px"><span class="label"><a href="/user/<?=$review->user_id?>"><?=$users[$review->user_id]->name?>User Name</a> posted <span class="datestring"><?=date('D, d M Y H:i:s O',$review->meta->timestamp)?></span></span>
+	<div class="triangle-border top">
+		<div class="star_rating"><div id="avgrating" style="width: <?=$review->rating?>0%"></div></div>
+		<div><?php
+			$flavor_titles=array();
+			if (isset($review->flavors))
+			{
+				foreach ($review->flavors as $flavor){$flavor_titles[]=$flavor_lookup[$flavor];}
+			}
+			print join(', ',$flavor_titles);
+		?></div>
+		<div><?=$review->comments?></div>
+		<div class="cf"><div class="label">Body: </div><?=$review->body?></div>
+		<div class="cf"><div class="label">Balance: </div><?=$review->balance?></div>
+		<div class="cf"><div class="label">Aftertaste: </div><?=$review->aftertaste?></div>
+		<div class="cf"><div class="label">Date Drank: </div><span class="datestring"><?=!empty($review->date_drank)?date('D, d M Y H:i:s O',strtotime($review->date_drank)):''?></span></div>
+		<div class="cf"><div class="label">Price: </div>$<?=$review->purchase_price?> at <a href="/<?=str_replace(':','/',$review->purchase_place_id)?>"><?=$places[$review->purchase_place_id]->name?></a></div>
+		<div class="cf"><div class="label">Poured: </div><?=$review->poured_from?></div>
 	</div>
-	<div>Price: $<?=$review->purchase_price?> at <a href="/<?=str_replace(':','/',$review->purchase_place_id)?>"><?=$places[$review->purchase_place_id]->name?></a></div>
-	<div>Poured: <?=$review->poured_from?></div>
-	<div>Comments: <?=$review->comments?></div>
 </div>
 <?php endforeach; ?>
 <!-- <div id="reviewdata"></div> -->
@@ -205,7 +220,7 @@ include("../header.php");
 	</div>
 	<div>
 		Flavors: WARNING NOT ALL FLAVORS ARE CURRENTLY SHOWING, NEED TO DISCUSS
-		<table id="flavors_table"><?=output_flavors($flavors->flavors)?></table>
+		<table id="flavors_table"><!--FLAVORS TABLE HIDDEN HERE <?=output_flavors($flavors->flavors)?>--></table>
 		<input type="hidden" name="flavors" value="" />
 	</div>
 	<div>
@@ -217,21 +232,49 @@ include("../header.php");
 	<div id="review_result_msg"></div>
 </form>
 </div>
-<div id="leftcol">
-<h3>Photos</h3>
 
-<?php foreach ($photoset->photos as $photo) :?>
-	<div class="photos">
-	<img src="<?=$photo->url?>?size=small" />
-	<a href="/user/<?=$photo->user_id?>"><?=$users[$photo->user_id]->name?></a> <span class="datestring"><?=date(BeerCrush::DATE_FORMAT,$photo->timestamp)?></span>
+	<div id="rightcol">
+	<h2>People Who Like This Beer, Also Like</h2>
+	<ul>
+		<li>Beer</li>
+		<li>Beer</li>
+		<li>Beer</li>
+		<li>Beer</li>
+	</ul>
+	<h2>Other <?foreach ($beerdoc->styles as $styleid):?><?=$styles_lookup[$styleid]->name?><?endforeach?>s</h2>
+	<ul>
+		<li>Beer</li>
+		<li>Beer</li>
+		<li>Beer</li>
+		<li>Beer</li>
+	</ul>
+	<h2>More from <?=$brewerydoc->name?></h2>	
+	<ul>
+		<li>Beer</li>
+		<li>Beer</li>
+		<li>Beer</li>
+		<li>Beer</li>
+	</ul>
 	</div>
-<?php endforeach; ?>
+</div>
+<div id="leftcol">
+	<?php foreach ($photoset->photos as $photo) :?>
+	<div class="photo">
+		<img src="<?=$photo->url?>?size=small" /><p class="caption">by <a href="/user/<?=$photo->user_id?>">User Name<?=$users[$photo->user_id]->name?></a> <span class="datestring"><?=date(BeerCrush::DATE_FORMAT,$photo->timestamp)?></span></p>
+	</div>
+	<?php endforeach; ?>
 
 <div id="new_photos"></div>
 
 <input id="photo_upload" name="photo" type="file" />
 
 <p></p>
+<ul class="command">
+	<li style="background-image: url('/img/wishlist.png')"><a href="">Add to My Wishlist</a></li>
+	<li style="background-image: url('/img/ratebeer.png')"><a href="">Rate this Beer</a></li>
+	<li style="background-image: url('/img/nearby.png')">Find this Nearby<br />
+	Zip <input size="10"> <button>Find</button></li>
+</ul>
 <h3>Beer Edit History</h3>
 <div>Beer last modified: <span id="beer_lastmodified" class="datestring"><?=date('D, d M Y H:i:s O',$beerdoc->meta->mtime)?></span></div>
 <div id="history"></div>
@@ -441,8 +484,9 @@ function pageMain()
 		'fileDataName': 'photo',
 		'fileDesc'	: 'Upload a photo',
 		'fileExt'	: '*.jpg;*.jpeg;*.png',
-		'buttonText': "Upload a photo", 
-		'sizeLimit' : 5000000, 
+		'buttonText': "POST A PHOTO", 
+		'sizeLimit' : 20000000,
+		'width' : 230,  
 		'scriptData': {
 			'beer_id': $('#beer_id').val(),
 			'userid': $.cookie('userid')
