@@ -33,7 +33,8 @@ include("../header.php");
 	</span>
 
 	<div class="cl"><div class="label">Phone:</div><div id="brewery_phone"><?=$brewerydoc->phone?></div></div>
-	<div class="cl"><div class="label">Web site:</div><div><span id="brewery_uri"><?=$brewerydoc->uri?></span> <span><a href="<?=$brewerydoc->uri?>">Visit web site</a></span></div>
+	<div class="cl"><div class="label">Web site:</div><div><span id="brewery_uri"><?=$brewerydoc->uri?></span> <span><a href="<?=$brewerydoc->uri?>">Visit web site</a></span></div></div>
+	<div class="cl"><div class="label">About us:</div><div><span id="brewery_description"><?=$brewerydoc->description?></span></div></div>
 
 	<div id="editable_save_msg"></div>
 	<input class="editable_savechanges_button hidden" type="button" value="Save Changes" />
@@ -43,38 +44,41 @@ include("../header.php");
 </div><!--weird extra div required, not sure i get it-->
 
 
-<h2>Beers Brewed</h2>
-<div id="beerlist">
+<h2>[Count] Beers Brewed</h2>
+<ul id="beerlist">
 <?php foreach ($beerlistdoc->beers as $beer){ ?>
-	<div><a href="/<?=str_replace(':','/',$beer->beer_id)?>"><?=$beer->name?></a></div>
+	<li><a href="/<?=str_replace(':','/',$beer->beer_id)?>"><?=$beer->name?></a></li>
 <?php } ?>
-</div>
+</ul>
 
-<h3>Add to this list</h3>
+<h3>Missing Beer?  Add it</h3>
 <form id="new_beer_form" method="post" action="/api/beer/edit">
 	<input type="hidden" name="brewery_id" value="<?=$brewerydoc->id?>" />
 	<input type="text" size="30" name="name" value="" />
-	<input type="submit" value="Add Beer" />
-	<div id="new_beer_msg"></div>
-</form>
+	<input type="submit" value="Add Beer" /><div id="new_beer_msg" class="hidden"></div></form>
 <div class="help">
-	<p>We already know the brewery, so just type the beer name, e.g. "Pale Ale" rather than "Sierra Nevada Pale Ale"</p>
-	<p>Go to the beer page to update that beer's data.</p>
+	<p>We already know the brewery, so just type the beer name, e.g. "Pale Ale" rather than "Sierra Nevada Pale Ale."  Go to the beer page to update that beer's data.</p>
 </div>
 
 </div>
 <div id="rightcol">
 	<div id="map"></div>
+	<h3>Visiting</h3>
+	<div class="cl"><div class="label">Hours:</div><div id="brewery_hours"><?=$brewerydoc->hours?></div></div>
+	<div class="cl"><div class="label">Tasting:</div><div id="brewery_tasting"><?=$brewerydoc->tasting?></div></div>
+	<div class="cl"><div class="label">Tours:</div><div id="brewery_tours"><?=$brewerydoc->tours?></div></div>
+	<div class="cl"><div class="label">Bottles to go:</div><div id="brewery_bottles"><?=$brewerydoc->bottles?></div></div>
+	<div class="cl"><div class="label">Growlers to go:</div><div id="brewery_growlers"><?=$brewerydoc->growlers?></div></div>
+	<div class="cl"><div class="label">Kegs to go:</div><div id="brewery_kegs"><?=$brewerydoc->kegs?></div></div>
+	
 </div>
 
 </div>
 <div id="leftcol">
-<h3>Photos</h3>
-
 <?php foreach ($photoset->photos as $photo) :?>
-	<div>
+	<div class="photo">
 	<img src="<?=$photo->url?>?size=small" />
-	<a href="/user/<?=$photo->user_id?>"><?=$BC->docobj('user/'.$photo->user_id)->name?></a> <span class="datestring"><?=date(BeerCrush::DATE_FORMAT,$photo->timestamp)?></span>
+	<p class="caption"><a href="/user/<?=$photo->user_id?>"><?=$BC->docobj('user/'.$photo->user_id)->name?></a> <span class="datestring"><?=date(BeerCrush::DATE_FORMAT,$photo->timestamp)?></span></p>
 	</div>
 <?php endforeach; ?>
 
@@ -155,6 +159,8 @@ function pageMain()
 		$('#new_beer_form').ajaxError(function(e,xhr,options,exception) {
 			if (options.url=='/api/beer/edit') {
 				if (xhr.status==409) { // Duplicate beer
+					$('#new_beer_msg').removeClass('hidden feedback_success');
+					$('#new_beer_msg').addClass('feedback_error');
 					$('#new_beer_msg').html("There's already a beer with that name.");
 				}
 			}
@@ -164,7 +170,9 @@ function pageMain()
 			$(this).attr('action'),
 			$('#new_beer_form').serialize(),
 			function(data,status,xhr){
-				$('#new_beer_msg').html(data.name+' added! <a href="/'+data.id.replace(/:/g,'/')+'">Edit it</a>');
+				$('#new_beer_msg').removeClass('hidden feedback_error');
+				$('#new_beer_msg').addClass('feedback_success');
+				$('#new_beer_msg').html('Beer added! <a href="/'+data.id.replace(/:/g,'/')+'">Add more details or rate <b>"'+data.name+'"</b></a>');
 				
 				$('#beerlist').append('<div><a href="/'+data.id.replace(/:/g,'/')+'">'+data.name+'</a></div>');
 			},
@@ -182,7 +190,7 @@ function pageMain()
 		'fileDataName': 'photo',
 		'fileDesc'	: 'Upload a photo',
 		'fileExt'	: '*.jpg;*.jpeg;*.png',
-		'buttonText': "Upload a photo", 
+		'buttonText': "POST A PHOTO", 
 		'sizeLimit' : 5000000, 
 		'scriptData': {
 			'brewery_id': $('#brewery_id').val(),

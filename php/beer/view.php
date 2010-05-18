@@ -159,7 +159,7 @@ include("../header.php");
 
 <?php foreach ($reviews->reviews as $review) :?>
 <div class="areview">
-	<img src="/img/default_avatar.gif" style="width:30px"><span class="label"><a href="/user/<?=$review->user_id?>"><?=$users[$review->user_id]->name?>User Name</a> posted <span class="datestring"><?=date('D, d M Y H:i:s O',$review->meta->timestamp)?></span></span>
+	<img src="/img/default_avatar.gif" style="width:30px"><span class="label"><a href="/user/<?=$review->user_id?>"><?=$users[$review->user_id]->name?></a> posted <span class="datestring"><?=date('D, d M Y H:i:s O',$review->meta->timestamp)?></span></span>
 	<div class="triangle-border top">
 		<div class="star_rating"><div id="avgrating" style="width: <?=$review->rating?>0%"></div></div>
 		<div><?php
@@ -229,7 +229,7 @@ include("../header.php");
 	</div>
 	
 	<input id="post_review_button" type="button" value="Post my review" />
-	<div id="review_result_msg"></div>
+	<div id="review_result_msg" class="hidden"></div><p></p>
 </form>
 </div>
 
@@ -260,7 +260,7 @@ include("../header.php");
 <div id="leftcol">
 	<?php foreach ($photoset->photos as $photo) :?>
 	<div class="photo">
-		<img src="<?=$photo->url?>?size=small" /><p class="caption">by <a href="/user/<?=$photo->user_id?>">User Name<?=$users[$photo->user_id]->name?></a> <span class="datestring"><?=date(BeerCrush::DATE_FORMAT,$photo->timestamp)?></span></p>
+		<img src="<?=$photo->url?>?size=small" /><p class="caption">by <a href="/user/<?=$photo->user_id?>"><?=$users[$photo->user_id]->name?></a> <span class="datestring"><?=date(BeerCrush::DATE_FORMAT,$photo->timestamp)?></span></p>
 	</div>
 	<?php endforeach; ?>
 
@@ -459,6 +459,8 @@ function pageMain()
 		$(this).ajaxError(function(evt,xhr,options,err) {
 			if (options.url=='/api/beer/review') {
 				doc=$.parseJSON(xhr.responseText);
+				$('#review_result_msg').removeClass('hidden feedback_error');
+				$('#review_result_msg').addClass('feedback_success');
 				$('#review_result_msg').text(doc.exception.message);
 			}
 		});
@@ -470,6 +472,9 @@ function pageMain()
 		$.post('/api/beer/review',$('#review_form').serialize(),function(data){
 			$('#reviewdata').text(data)
 		});
+		$('#review_result_msg').removeClass('hidden feedback_error');
+		$('#review_result_msg').addClass('feedback_success');
+		$('#review_result_msg').html('Your rating was posted and will appear here in a few hours.');
 	});
 	
 	// Make the beer doc editable

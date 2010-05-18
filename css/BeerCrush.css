@@ -320,14 +320,29 @@ img {
 	right:5px;
 	bottom:0px;
 }
+.help p {
+	color: grey;
+	font-size: .8em;
+}
+.feedback_success {
+	border: 3px solid #137aa1;
+	color: #137aa1;
+	padding: 3px;
+	margin: 5px 0;
+}
+.feedback_error {
+	border: 3px solid #ee3124;
+	color: #ee3124;
+	padding: 3px;
+	margin: 5px 0;
+}
+.hidden {
+	display: none;
+}
 /* Beer Page Specific
  ---------------------------------------------------------------------*/
-#beer_description {
+#beer_description, #brewery_description {
 	min-height: 50px;
-}
-
-#beer_og:hover {
-	background: aqua;
 }
 
 #flavors_table {
@@ -537,7 +552,7 @@ div.label {
 }
 
 .command {
-	margin: 0;
+	margin: 0 0 20px 0;
 	padding: 0;
 }
 
@@ -558,6 +573,12 @@ div.label {
 }
 #brewery div:hover {
 	background: #D0fbff;
+}
+
+#beerlist li {
+	list-style: none;
+	margin-bottom: 5px;
+	font-size: 1.2em;
 }
 
 /* Float Clearing
