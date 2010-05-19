@@ -28,144 +28,166 @@ $header['css'][]='<link href="/css/uploadify.css" rel="stylesheet" type="text/cs
 include("../header.php");
 ?>
 
-<div id="editable_save_msg"></div>
+<div id="main">
+
+<div id="mainwithright">
+
 <div id="place">
 	<input class="editable_savechanges_button hidden" type="button" value="Save Changes" />
 	<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
 
 	<input type="hidden" value="<?=$place->id?>" id="place_id">
 	<h1 id="place_name"><?=$place->name?></h1>
-	<div>Type: <?=$place->placetype?></div>
+	<div class="cl"><div class="label">Type: </div><div id="place_type"><?=$place->placetype?></div></div>
 
-	<div id="address">
-		<div>Street:<span id="place_address:street"><?=$place->address->street?></span></div>
-		<div>City:<span id="place_address:city"><?=$place->address->city?></span></div>
-		<div>State:<span id="place_address:state"><?=$place->address->state?></span> </div>
-		<div>Zip:<span id="place_address:zip"><?=$place->address->zip?></span> </div>
-		<div>Country:<span id="place_address:country"><?=$place->address->country?></span></div>
+	<span id="address">
+		<div class="cl"><div class="label">Street:</div><div id="place_address:street"><?=$place->address->street?></div></div>
+		<div class="cl"><div class="label">City:</div><div id="place_address:city"><?=$place->address->city?></div></div>
+		<div class="cl"><div class="label">State:</div><div id="place_address:state"><?=$place->address->state?></div></div>
+		<div class="cl"><div class="label">Zip:</div><div id="place_address:zip"><?=$place->address->zip?></div></div>
+		<div class="cl"><div class="label">Country:</div><div id="place_address:country"><?=$place->address->country?></div></div>
 		<input type="hidden" name="latitude" value="<?=$place->address->latitude?>" />
 		<input type="hidden" name="longitude" value="<?=$place->address->longitude?>" />
-	</div>
-	
-	<div>Phone:<span id="place_phone"><?=$place->phone?></span></div>
-	
-	<div>Web site:
-		<span id="place_uri" href="<?=$place->uri?>"><?=$place->uri?></span>
-		<a href="<?=$place->uri?>">Visit web site</a>
-	</div>
-
-	<div>Description:<span id="place_description"><?=$place->description?></span></div>
-
-	<div id="map" style="width:300px;height:300px"></div>
-
-	<h2>Details</h2>
-	<div>Kid-Friendly: <?php echo isset($place->kid_friendly)?($place->kid_friendly?'Yes':'No'):'Unknown'; ?></div>
-	<div>Outdoor seating: <?php echo isset($place->restaurant->outdoor_seating)?($place->restaurant->outdoor_seating?'Yes':'No'):'Unknown'; ?></div>
-	<div>Wi-Fi: <?php echo isset($place->wifi)?($place->wifi?'Yes':'No'):'Unknown'; ?></div>
-
+	</span>
+	<div class="cl"><div class="label">Phone:</div><div id="place_phone"><?=$place->phone?></div></div>
+	<div class="cl"><div class="label">Web site:</div><div id="place_uri" href="<?=$place->uri?>"><?=$place->uri?> <a href="<?=$place->uri?>">Visit web site</a></div></div>
+	<div class="cl"><div class="label">Description:</div><div id="place_description"><?=$place->description?></div></div>
+	<div class="cl"><div class="label">Kid-Friendly: </div><div id="place_kid-friendly"><?php echo isset($place->restaurant->kid_friendly)?($place->restaurant->kid_friendly?'Yes':'No'):'Unknown'; ?></div></div>
+	<div class="cl"><div class="label">Outdoor seating: </div><div id="place_outdoor-seating"><?php echo isset($place->restaurant->outdoor_seating)?($place->restaurant->outdoor_seating?'Yes':'No'):'Unknown'; ?></div></div>
+	<div class="cl"><div class="label">Wi-Fi: </div><div id="place_wi-fi"><?php echo isset($place->wifi)?($place->wifi?'Yes':'No'):'Unknown'; ?></div></div>
+	<div class="cl"><div class="label">Bottles to go: </div><div id="place_bottles"><?php echo isset($place->bottles)?($place->bottles?'Yes':'No'):'Unknown'; ?></div></div>
+	<div class="cl"><div class="label">Growlers to go: </div><div id="place_growlers"><?php echo isset($place->growlers)?($place->growlers?'Yes':'No'):'Unknown'; ?></div></div>
+	<div class="cl"><div class="label">Kegs to go: </div><div id="place_kegs"><?php echo isset($place->kegs)?($place->kegs?'Yes':'No'):'Unknown'; ?></div></div>
+		
 	<input class="editable_savechanges_button hidden" type="button" value="Save Changes" />
 	<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
-	
+	<div id="editable_save_msg"></div>
+
 </div>
 
-<h2><?=count($beerlist->items)?> Beers Available</h2>
-<div id="beerlist">
-	<table>
-		<tr>
-			<th>Brewery</th>
-			<th>Beer</th>
-			<th>Price</th>
-			<th>Tap</th>
-			<th>Cask</th>
-			<th>Bottle (12 fl. oz.)</th>
-			<th>Bottle (22 fl. oz.)</th>
-			<th>Can</th>
-		</tr>
+<h2><?=count($beerlist->items)?> Beers on the Menu</h2>
+
+<ul id="beerlist">
 	<?foreach ($beerlist->items as $item) :?>
-	<tr>
-		<td><a href="/<?=str_replace(':','/',$item->brewery->id)?>"><?=$item->brewery->name?></a></td>
-		<td><a href="/<?=str_replace(':','/',$item->id)?>"><?=$item->name?></a> <input type="button" onclick="beerlist_delete('<?=$item->id?>',event);" value="Delete" /></td>
-		<td><?=$item->price?'$'.number_format($item->price,2):''?></td>
-
-		<td><input <?=$item->ontap     ?'checked="checked"':''?> type="checkbox" value="tap"      name="serving_<?=$item->id?>" /></td>
-		<td><input <?=$item->oncask    ?'checked="checked"':''?> type="checkbox" value="cask"     name="serving_<?=$item->id?>" /></td>
-		<td><input <?=$item->inbottle  ?'checked="checked"':''?> type="checkbox" value="bottle"   name="serving_<?=$item->id?>" /></td>
-		<td><input <?=$item->inbottle22?'checked="checked"':''?> type="checkbox" value="bottle22" name="serving_<?=$item->id?>" /></td>
-		<td><input <?=$item->incan     ?'checked="checked"':''?> type="checkbox" value="can"      name="serving_<?=$item->id?>" /></td>
-
-	</tr>
+	<li>
+		<div class="<?=$item->ontap     ?'ontap':''?> <?=$item->oncask    ?'oncask':''?> <?=$item->inbottle  ?'inbottle':''?> <?=$item->inbottle22?'inbottle22':''?> <?=$item->incan     ?'incan':''?>" title="Served <?=$item->ontap     ?'On Tap':''?> <?=$item->oncask    ?'On Cask':''?> <?=$item->inbottle  ?'In Bottles':''?> <?=$item->inbottle22?'In Large Bottles':''?> <?=$item->incan     ?'In Cans':''?>"></div>
+		<span class="brewery"><?=$item->brewery->name?></span><br />
+		<a href="/<?=str_replace(':','/',$item->id)?>"><?=$item->name?></a>
+		<span class="price"><?=$item->price?'$'.number_format($item->price,2):'$?'?></span> <a href="" onclick="beerlist_delete('<?=$item->id?>',event);return false;" class="cmd">Delete</a>
+	</li>
 	<?endforeach;?>
+</ul>
 
-	<tr>
-		<td colspan="8">Add a beer:</td>
-	</tr>
-	<tr>
-		<td>
-			<input id="beerlist_new_brewery"    type="text" size="20" name="beerlist_new_brewery" />
-			<input id="beerlist_new_brewery_id" type="hidden" name="beerlist_new_brewery_id" />
-		</td>
-		<td>
-			<input id="beerlist_new_beer"    type="text" size="20" name="beerlist_new_beer" />
-			<input id="beerlist_new_beer_id" type="hidden" name="beerlist_new_beer_id" />
-		</td>
-		<td><input id="beerlist_new_price" type="text" size="4" name="beerlist_new_price" /></td>
-		<td><input type="button" onclick="beerlist_add(event,$('#beerlist_new_brewery').val(),$('#beerlist_new_beer').val(),$('#beerlist_new_price').val());" value="Add" /></td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td></td>
-	</tr>
-	</table>
+<div>Update the Beer Menu:
+	<div>Brewery: <input id="beerlist_new_brewery"    type="text" size="20" name="beerlist_new_brewery" /><input id="beerlist_new_brewery_id" type="hidden" name="beerlist_new_brewery_id" /></div>
+	<div>Beer: <input id="beerlist_new_beer"    type="text" size="20" name="beerlist_new_beer" /><input id="beerlist_new_beer_id" type="hidden" name="beerlist_new_beer_id" /></div>
+	<div>Price: $<input id="beerlist_new_price" type="text" size="4" name="beerlist_new_price" /></div>
+	<div>Served:
+	<select name="serving_<?=$item->id?>" size="1">
+		<option value="tap" selected>On Tap</option>
+		<option value="bottle">In Bottle</option>
+		<option value="bottle22">In Large Bottle</option>
+		<option value="can">In Can</option>
+		<option value="cask">On Cask</option>
+	</select>
+	</div>
+	<input type="button" onclick="beerlist_add(event,$('#beerlist_new_brewery').val(),$('#beerlist_new_beer').val(),$('#beerlist_new_price').val());" value="Add Beer" />
+
 </div>
 
-<h2>Photos</h2>
+<h3><?=count($reviews->reviews)?> Reviews</h3>
+<?php foreach($reviews->reviews as $review):?>
+<div class="areview">
+	<img src="<?=$BC->docobj('user/'.$review->user_id)->avatar?>" /><span class="label"><a href="/user/<?=$review->user_id?>"><?=$BC->docobj('user/'.$review->user_id)->name?></a> posted <span class="datestring"><?=date('D, d M Y H:i:s O',$review->meta->timestamp)?></span></span>
+	<div class="triangle-border top">
+		<div class="star_rating"><div id="avgrating" style="width: <?=$review->rating?>0%"></div></div>
+		<div><?=$review->comments?></div>
+	</div>
+</div>
+<?php endforeach?>
 
+<h3>Add your review</h3>
+<form id="review_form" method="post" action="/api/place/review">
+	<input type="hidden" name="place_id" value="<?=$place->id?>">
+	<div>Rating:
+		<input type="radio" name="rating" value="1" />1 
+		<input type="radio" name="rating" value="2" />2
+		<input type="radio" name="rating" value="3" />3
+		<input type="radio" name="rating" value="4" />4
+		<input type="radio" name="rating" value="5" />5
+	</div>
+	<div>Service:
+		
+		<input type="radio" name="kidfriendly" value="1" />1 
+		<input type="radio" name="kidfriendly" value="2" />2
+		<input type="radio" name="kidfriendly" value="3" />3
+		<input type="radio" name="kidfriendly" value="4" />4
+		<input type="radio" name="kidfriendly" value="5" />5
+	</div>
+	<div>Atmosphere:
+		
+		<input type="radio" name="kidfriendly" value="1" />1 
+		<input type="radio" name="kidfriendly" value="2" />2
+		<input type="radio" name="kidfriendly" value="3" />3
+		<input type="radio" name="kidfriendly" value="4" />4
+		<input type="radio" name="kidfriendly" value="5" />5
+	</div>
+	<div>Food:
+		
+		<input type="radio" name="kidfriendly" value="1" />1 
+		<input type="radio" name="kidfriendly" value="2" />2
+		<input type="radio" name="kidfriendly" value="3" />3
+		<input type="radio" name="kidfriendly" value="4" />4
+		<input type="radio" name="kidfriendly" value="5" />5
+	</div>
+	<div>Comments:</div>
+	<div><textarea name="comments" rows="5" cols="60"></textarea></div>
+	
+	<input type="submit" value="Post Rating" />
+</form>
+</div>
+<div id="rightcol">
+	<div id="map"></div>
+	<h2>People Who Like This Place, Also Like</h2>
+	<ul>
+		<li>Place in same city</li>
+		<li>Place in same city</li>
+		<li>Place in same city</li>
+		<li>Place in same city</li>
+	</ul>
+	<h2>Other <?=$place->placetype?>s Nearby</h2>
+	<ul>
+		<li>Nearby Place</li>
+		<li>Nearby Place</li>
+		<li>Nearby Place</li>
+		<li>Nearby Place</li>
+	</ul>
+</div>
+</div>
+<div id="leftcol">
 <?php foreach ($photoset->photos as $photo) :?>
-	<div>
+	<div class="photo">
 	<img src="<?=$photo->url?>?size=small" />
-	<a href="/user/<?=$photo->user_id?>"><?=$BC->docobj('user/'.$photo->user_id)->name?></a> <span class="datestring"><?=date(BeerCrush::DATE_FORMAT,$photo->timestamp)?></span>
+	<p class="caption"><a href="/user/<?=$photo->user_id?>"><?=$BC->docobj('user/'.$photo->user_id)->name?></a> <span class="datestring"><?=date(BeerCrush::DATE_FORMAT,$photo->timestamp)?></span></p>
 	</div>
 <?php endforeach; ?>
 
 <div id="new_photos"></div>
 
 <input id="photo_upload" name="photo" type="file" />
+<p></p>
+<ul class="command">
+	<li style="background-image: url('/img/wishlist.png')"><a href="">Bookmark this Place</a></li>
+	<li style="background-image: url('/img/ratebeer.png')"><a href="">Rate this Place</a></li>
+</ul>
 
-<h2><?=count($reviews->reviews)?> Reviews</h2>
-<div id="reviewlist">
-	<?foreach($reviews->reviews as $review):?>
-	<div>
-		<div><img src="<?=$BC->docobj('user/'.$review->user_id)->avatar?>" /><a href="/user/<?=$review->user_id?>"><?=$BC->docobj('user/'.$review->user_id)->name?></a></div>
-		<div>Rating: <?=str_repeat("&#9829;",$review->rating)?></div>
-		<div>Kid-Friendly: <?=str_repeat("&#9829;",$review->kidfriendly)?></div>
-		<div><?=$review->comments?></div>
-	</div>
-	<?endforeach?>
+<h3>Place Edit History</h3>
+<div>Beer last modified: <span id="beer_lastmodified" class="datestring"><?=date('D, d M Y H:i:s O',$beerdoc->meta->mtime)?></span></div>
+<div id="history"></div>
+
+
 </div>
 
-<h3>Add your review</h3>
-<form id="review_form" method="post" action="/api/place/review">
-	<input type="hidden" name="place_id" value="<?=$place->id?>">
-	<div>Rating:
-		(Hated)<input type="radio" name="rating" value="1" />1 
-		<input type="radio" name="rating" value="2" />2
-		<input type="radio" name="rating" value="3" />3
-		<input type="radio" name="rating" value="4" />4
-		<input type="radio" name="rating" value="5" />5 (Loved)
-	</div>
-	<div>Kid-Friendly-ness:
-		
-		(Don't take kids here)<input type="radio" name="kidfriendly" value="1" />1 
-		<input type="radio" name="kidfriendly" value="2" />2
-		<input type="radio" name="kidfriendly" value="3" />3
-		<input type="radio" name="kidfriendly" value="4" />4
-		<input type="radio" name="kidfriendly" value="5" />5 (Your kids will love it)
-	</div>
-	<div>Comments:</div>
-	<div><textarea name="comments" rows="5" cols="60"></textarea></div>
-	
-	<input type="submit" value="Post" />
-</form>
 
 <script type="text/javascript" src="/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript">
@@ -219,7 +241,7 @@ function beerlist_delete(beer_id,evt) {
 		"del_item": beer_id
 	},
 	function(data) {
-		$(evt.target).parents().filter('tr').first().remove();
+		$(evt.target).parents().filter('li').first().remove();
 	},
 	'json'
 	);
@@ -352,9 +374,9 @@ function pageMain()
 		'auto'      : true,
 		'multi'     : true,
 		'fileDataName': 'photo',
-		'fileDesc'	: 'Upload a photo',
+		'fileDesc'	: 'POST A PHOTO',
 		'fileExt'	: '*.jpg;*.jpeg;*.png',
-		'buttonText': "Upload a photo", 
+		'buttonText': "POST A PHOTO", 
 		'sizeLimit' : 5000000, 
 		'scriptData': {
 			'place_id': $('#place_id').val(),

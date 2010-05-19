@@ -341,7 +341,7 @@ img {
 }
 /* Beer Page Specific
  ---------------------------------------------------------------------*/
-#beer_description, #brewery_description {
+#beer_description{
 	min-height: 50px;
 }
 
@@ -567,6 +567,9 @@ div.label {
 	
 /* Brewery Page Specific
  ---------------------------------------------------------------------*/
+#brewery_description{
+	min-height: 50px;
+}
 #map {
 	width: 300px;
 	height: 300px;
@@ -581,6 +584,66 @@ div.label {
 	font-size: 1.2em;
 }
 
+/* place Page Specific
+ ---------------------------------------------------------------------*/
+#beerlist a.brewery {
+	font-size: .8em;
+	color: maroon;
+	border: none;
+}
+
+#place div:hover {
+	background: #D0fbff;
+}
+ul#beerlist {
+	padding: 0;
+}
+#beerlist li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	line-height: 1.1em;
+	min-height: 45px;
+}
+#beerlist li div {
+	background: 0 0 url("/img/servingicons.png") no-repeat;
+	width: 30px;
+	height: 30px;
+	float: left;
+	margin: 5px 10px 0 0;
+}
+#beerlist li div.ontap {
+	background-position: -58px 0;
+}
+#beerlist li div.inbottle {
+	background-position: 0 0;
+}
+#beerlist li div.inbottle22 {
+	background-position: -118px 0;
+}
+#beerlist li div.incan {
+	background-position: -28px 0;
+}
+#beerlist li div.oncask {
+	background-position: -88px 0;
+}
+#beerlist .cmd {
+	border-color: white;
+	font-size: x-small;
+	color: #6f0014;
+}
+#beerlist .cmd:hover {
+	border-bottom: 1px solid #6f0014;
+}
+#beerlist span.brewery {
+	font-size: .8em;
+	border: 0 white none;
+	color: #6f0014;
+}
+
+#beerlist .price {
+	font-size: .8em;
+}
 /* Float Clearing
  ---------------------------------------------------------------------*/
 
