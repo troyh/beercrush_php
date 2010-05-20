@@ -98,10 +98,13 @@ include("../header.php");
 <h3><?=count($reviews->reviews)?> Reviews</h3>
 <?php foreach($reviews->reviews as $review):?>
 <div class="areview">
-	<img src="<?=$BC->docobj('user/'.$review->user_id)->avatar?>" /><span class="label"><a href="/user/<?=$review->user_id?>"><?=$BC->docobj('user/'.$review->user_id)->name?></a> posted <span class="datestring"><?=date('D, d M Y H:i:s O',$review->meta->timestamp)?></span></span>
+	<img src="<?=$BC->docobj('user/'.$review->user_id)->avatar?>" /><span class="user"><a href="/user/<?=$review->user_id?>"><?=$BC->docobj('user/'.$review->user_id)->name?></a> posted <span class="datestring"><?=date('D, d M Y H:i:s O',$review->meta->timestamp)?></span></span>
 	<div class="triangle-border top">
 		<div class="star_rating"><div id="avgrating" style="width: <?=$review->rating?>0%"></div></div>
 		<div><?=$review->comments?></div>
+		<div class="cf"><div class="label">Service: </div><!--TROY TODO--></div>
+		<div class="cf"><div class="label">Atmosphere: </div><!--TROY TODO--></div>
+		<div class="cf"><div class="label">Food: </div><!--TROY TODO--></div>
 	</div>
 </div>
 <?php endforeach?>

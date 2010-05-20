@@ -525,7 +525,8 @@ div.label {
 	border-bottom-color:#fff;
 }
 
-.areview {
+.areview .user {
+	color: #666666;
 }
 .areview img {
 	width:30px;
@@ -643,6 +644,30 @@ ul#beerlist {
 
 #beerlist .price {
 	font-size: .8em;
+}
+/* Member Page Specific
+ ---------------------------------------------------------------------*/
+#avatar {
+	text-align: right;
+}
+.areview .type  {
+	font-size: 1.2em;
+}
+.type .place, .type .beer {
+	width: 30px;
+	height: 30px;
+	float: left;
+	margin: 5px 5px 5px 0;
+	background: url("/img/beerplace.png") no-repeat;
+}
+.type .place {
+	background-position-y: -30px;
+}
+.areview .brewery {
+	font-size: .8em;
+	border: 0 white none;
+	color: #6f0014;
+	display: block;
 }
 /* Float Clearing
  ---------------------------------------------------------------------*/

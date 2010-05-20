@@ -159,7 +159,7 @@ include("../header.php");
 
 <?php foreach ($reviews->reviews as $review) :?>
 <div class="areview">
-	<img src="/img/default_avatar.gif" style="width:30px"><span class="label"><a href="/user/<?=$review->user_id?>"><?=$users[$review->user_id]->name?></a> posted <span class="datestring"><?=date('D, d M Y H:i:s O',$review->meta->timestamp)?></span></span>
+	<img src="/img/default_avatar.gif" style="width:30px"><span class="user"><a href="/user/<?=$review->user_id?>"><?=$users[$review->user_id]->name?></a> posted <span class="datestring"><?=date('D, d M Y H:i:s O',$review->meta->timestamp)?></span></span>
 	<div class="triangle-border top">
 		<div class="star_rating"><div id="avgrating" style="width: <?=$review->rating?>0%"></div></div>
 		<div><?php
@@ -310,6 +310,7 @@ if ($history) {
 	}
 }
 ?>
+</div>
 
 <script type="text/javascript" src="/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript" src="/js/jquery.uploadify.v2.1.0.js"></script>
