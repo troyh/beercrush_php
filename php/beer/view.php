@@ -14,6 +14,7 @@ $flavors   =BeerCrush::api_doc($oak,'flavors');
 $styles    =BeerCrush::api_doc($oak,'beerstyles');
 $colors    =BeerCrush::api_doc($oak,'beercolors');
 $photoset  =BeerCrush::api_doc($oak,'photoset/beer/'.$api_beer_id);	
+$recommends=BeerCrush::api_doc($oak,'recommend/beer/'.$api_beer_id);	
 
 if (empty($beerdoc->styles))
 	$beerdoc->styles=array();
@@ -41,6 +42,14 @@ foreach ($reviews->reviews as $review)
 foreach ($photoset->photos as $photo) {
 	if (!isset($users[$photo->user_id])) {
 		$users[$photo->user_id]=BeerCrush::api_doc($oak,'user/'.$photo->user_id);
+	}
+}
+
+if (isset($recommends->beer)) {
+	foreach ($recommends->beer as &$rec_beer) {
+		$rec_beer=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl($rec_beer));
+		$rec_beer->brewery=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl($rec_beer->brewery_id));
+		// print_r($rec_beer);exit;
 	}
 }
 
@@ -181,6 +190,15 @@ include("../header.php");
 </div>
 <?php endforeach; ?>
 <!-- <div id="reviewdata"></div> -->
+
+<?php if (isset($recommends->beer)):?>
+<h3>People who liked this, also liked...</h3>
+<div>
+	<?php foreach($recommends->beer as $recommend) :?>
+		<div><a href="/<?=BeerCrush::docid_to_docurl($recommend->id)?>"><?=$recommend->name?></a> by <a href="/<?=BeerCrush::docid_to_docurl($recommend->brewery->id)?>"><?=$recommend->brewery->name?></a></div>
+	<?php endforeach; ?>
+</div>
+<?php endif; ?>
 
 <h3>Post a review</h3>
 <form id="review_form">

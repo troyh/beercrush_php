@@ -1,0 +1,4 @@
+MAILTO=troy@beercrush.com
+
+# m h dom mon dow user    command
+30 1 * * * www-data /usr/local/beercrush/bin/recommend -C /etc/BeerCrush/webapp.conf -e troy.hakala@gmail.com -p blah

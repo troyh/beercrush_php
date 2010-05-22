@@ -1,0 +1,14 @@
+#!/usr/bin/php
+<?php
+
+array_shift($argv);
+$obj=new stdClass;
+foreach ($argv as $arg) {
+	if (preg_match('/(.+)-(.+)\.js$/',basename($arg),$matches)) {
+		$obj->views->$matches[1]->$matches[2]=file_get_contents($arg);
+	}
+}
+
+print json_encode($obj)."\n";
+
+?>

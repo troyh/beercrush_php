@@ -1,0 +1,29 @@
+#!/bin/bash
+
+function get_password() {
+	PASSWORD=$(echo $1 | sed -e 's/@.*$//');
+}
+
+IFS='	';
+while read NAME EMAIL DESC; do
+	get_password $EMAIL;
+	# echo "$EMAIL $PASSWORD";
+	# continue;
+	# Login as user
+	LOGIN_ANSWER=$(curl --fail --silent -X POST -d email=$EMAIL -d password=$PASSWORD http://duff/api/login);
+	if [ $? != 0 ]; then
+		echo "Login failed: $EMAIL $PASSWORD";
+	elif ! read USERID USRKEY <<<"$(echo $LOGIN_ANSWER | /usr/local/beercrush/bin/jsonpath userid usrkey)"; then
+		echo "No credentials";
+	else
+		# echo "USERID=$USERID USRKEY=$USRKEY";
+		# Edit name and description
+		EDIT_ANSWER=$(curl  --silent -X POST -d name="$NAME" -d aboutme="$DESC" -d user_id=$USERID -d userid=$USERID -d usrkey=$USRKEY http://duff/api/user/edit);
+		if [ $? != 0 ]; then
+			echo "Failed to edit user $USERID";
+		else
+			echo "OK";
+		fi
+	fi
+
+done <<<"$(xmlstarlet sel -t -m '//person' -v name -o '&#09;' -v email -o '&#09;' -v desc -n simpsons.xml)"

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cat $1 | xmlstarlet sel -t -m '/people/person' -v email -n | while read EMAIL; do
+	PASSWORD=$(echo $EMAIL | sed -e 's/@.*$//');
+	# echo $EMAIL $PASSWORD;
+	if ! curl --silent --fail -X POST -d email=$EMAIL -d password=$PASSWORD http://duff/api/createlogin > newuser.json; then
+		echo "Failed to create user $EMAIL";
+	else
+		USER_ID=$(cat newuser.json | /usr/local/beercrush/bin/jsonpath userid);
+		# echo "Created $EMAIL ($USER_ID)";
+	fi
+done

@@ -1,0 +1,337 @@
+#!/bin/bash
+
+debug=0;
+email=;
+password=;
+
+while getopts "C:de:p:" opt; do
+	case $opt in
+		C)
+			conf_file=$OPTARG;
+			;;
+		d)
+			debug=1;
+			;;
+		e)
+			email=$OPTARG;
+			;;
+		p)
+			password=$OPTARG;
+			;;
+		\?)
+			# echo "Invalid option: -$OPTARG" >&2
+			exit 1;
+			;;
+	esac
+done
+
+if [ -z "$conf_file" -o -z "$email" -o -z "$password" ]; then
+	cat <<EOF
+Usage: ${0##*/} -C <config file> -e <email> -p <password>
+
+   -C   Path to config file
+   -e   Email for admin user (to log into Beer Crush)
+   -p   Password for admin user (to log into Beer Crush)
+
+EOF
+	exit 1;
+fi
+
+if [ ! -f $conf_file ]; then
+	echo "$conf_file doesn't exist";
+	exit 1;
+fi
+
+data_dir="/var/local/BeerCrush/recommend";
+
+if [ ! -d $data_dir ]; then mkdir $data_dir; fi
+
+beer_reviews_file="$data_dir/beer_reviews.tsv";
+correlations_file="$data_dir/correlations.tab";
+pairs_file="$data_dir/pairs.tab";
+stats_file="$data_dir/stats.tsv";
+xproduct_file="$data_dir/xproduct.tab";
+zscores_file="$data_dir/zscores.tab";
+correlated_pairs_file="$data_dir/correlated_pairs.tab";
+recommend_file="$data_dir/recommend.tab";
+
+read couchdb_host couchdb_db <<<$(/usr/local/beercrush/bin/jsonpath -1 "couchdb.nodes[0]" couchdb.database < $conf_file);
+read api_url <<<$(/usr/local/beercrush/bin/jsonpath -1 api.base_uri < $conf_file);
+
+if [ $debug -eq 1 ]; then
+	echo "Debug mode. Not deleting existing files first.";
+else
+	for F in $beer_reviews_file $correlations_file $pairs_file  $stats_file  $xproduct_file  $zscores_file $correlated_pairs_file $recommend_file; do
+		if [ -f $F ]; then
+			rm -f $F;
+		fi
+	done
+fi
+
+if [ ! -f $beer_reviews_file ]; then
+	echo "Making $beer_reviews_file";
+	curl --silent http://$couchdb_host/$couchdb_db/_design/beer_reviews/_view/by_user | 
+		sed -e '1d' -e '$d' -e 's/,\s*$//' | 
+		/usr/local/beercrush/bin/jsonpath id | 
+		sed -e 's/^review:beer://' -e 's/:/\t/g' | 
+		awk '{print $3"\t"$1":"$2}' > $beer_reviews_file;
+fi
+
+if [ ! -f $zscores_file ]; then
+	echo "Making $zscores_file";
+
+	if [ ! -f $stats_file ]; then
+		curl --silent "http://$couchdb_host/$couchdb_db/_design/beer_reviews/_view/stats_per_beer?group=true" | 
+			sed -e '1d' -e '$d' -e 's/,\s*$//' |
+			../../tools/jsonpath key value.avg value.stddev value.count > $stats_file;
+	fi
+
+	curl --silent http://$couchdb_host/$couchdb_db/_design/beer_reviews/_view/by_user | 
+		sed -e '1d' -e '$d' -e 's/,\s*$//' |
+		/usr/local/beercrush/bin/jsonpath id value.rating |
+		php -r '
+		$stats=array();
+		$f=fopen($argv[1],"r");
+		if ($f) {
+			while ($line=fgets($f)) {
+				$line=substr(rtrim($line),5); // Strip off "beer:" and newline
+				list($beer_id,$avg,$stddev,$count)=explode("\t",$line);
+				$stats[$beer_id]=array(
+					"avg" => $avg,
+					"stddev" => $stddev,
+					"count" => $count,
+				);
+			}
+			fclose($f);
+		}
+	
+		$f=fopen("php://stdin","r");
+		if ($f) {
+			while ($line=fgets($f)) {
+				$line=substr(rtrim($line),12); // Strip off "review:beer:" and newline
+				list($review_id,$rating)=explode("\t",$line);
+				$beer_id=preg_replace("/:[^:]*$/","",$review_id); // Strip off user_id part
+				$s=$stats[$beer_id];
+				if ($s["stddev"]==0)
+					$zscore=0;
+				else
+					$zscore=($rating-$s["avg"])/$s["stddev"];
+				print "review:beer:$review_id $zscore\n";
+			}
+			fclose($f);
+		}
+' $stats_file > $zscores_file;
+		
+fi
+
+if [ ! -f $pairs_file ]; then
+	echo "Making $pairs_file";
+
+	LC_ALL=C sort $beer_reviews_file |
+	while read user_id beer_id; do
+		grep -e "^$user_id[[:space:]]" $beer_reviews_file | cut -f 2 | sed -e "s/^/$user_id $beer_id /" ; 
+	done > xxx;
+	
+	#
+	# xxx lists the user_id with every pair of beers that the user has reviewed
+	#
+	
+	# Now we need to sort each pair of beer IDs so that we don't have duplicate pairs
+	cat xxx| php -R '
+	
+	$argn=rtrim($argn);
+	list($user_id,$beer_id1,$beer_id2)=explode(" ",$argn);
+	$c=strcmp($beer_id1,$beer_id2);
+	if ($c < 0)
+		print "$beer_id1 $beer_id2 $user_id\n";
+	else if ($c)
+		print "$beer_id2 $beer_id1 $user_id\n";
+	
+	' > yyy;
+	
+	LC_ALL=C sort -u yyy > $pairs_file;
+	
+	rm -f xxx yyy;
+	
+fi
+
+#
+# pairs.tab is the list of unique pairs of beers (that have been reviewed by each user)
+#
+
+if [ ! -f $xproduct_file ]; then
+	echo "Making $xproduct_file";
+
+	# PHP is *much* faster (seconds versus many minutes!) in doing this than Bash was
+	# so it's written in PHP.
+	
+	cat $pairs_file |
+	php -r '
+
+	$zscores=array();
+	$f=fopen($argv[1],"r");
+	if ($f) {
+		while ($line=fgets($f)) {
+			$line=substr(rtrim($line),12); // Strip off "review:beer:" and newline
+			list($review_id,$zscore)=explode(" ",$line);
+			$zscores[$review_id]=$zscore;
+		}
+		fclose($f);
+	}
+	
+	$f=fopen("php://stdin","r");
+	if ($f) {
+		while ($line=fgets($f)) {
+			$line=rtrim($line);
+			list($beer_id1,$beer_id2,$user_id)=explode(" ",$line);
+			$zscore1=$zscores[$beer_id1.":".$user_id];
+			$zscore2=$zscores[$beer_id2.":".$user_id];
+			if ($zscore1==0 || $zscore2==0)
+				$xp=0; // Avoid the PHP negative zero result
+			else
+				$xp=$zscore1 * $zscore2;
+			print "$beer_id1 $beer_id2 $user_id $xp\n";
+		}
+		fclose($f);
+	}
+' $zscores_file > $xproduct_file;
+
+fi
+
+#
+# xproduct.tab has all the cross-product for each pair of reviews by each user
+#
+# Now, just go through the list and sum the cross-products of each distinct pair of beer IDs
+# while counting the number of distinct pairs.
+#
+
+if [ ! -f $correlations_file ]; then
+	echo "Making $correlations_file";
+
+	cat $xproduct_file |
+	php -B '
+	$last_beer_id1=null;
+	$last_beer_id2=null;
+	$sum=0;
+	$count=0;
+' -R '
+	list($beer_id1,$beer_id2,$user_id,$product)=explode(" ",rtrim($argn));
+
+	if ($last_beer_id1 != $beer_id1 || $last_beer_id2 != $beer_id2) {
+		if ($count > 0) {
+			print "$last_beer_id1 $last_beer_id2 $count ".($sum / $count)."\n";
+		}
+		$count=0;
+		$sum=0;
+		$last_beer_id1=$beer_id1;
+		$last_beer_id2=$beer_id2;
+	}
+
+	$sum=$sum + $product;
+	$count++;
+' -E '
+	// The final one...
+	print "$beer_id1 $beer_id2 $count ".($sum / $count)."\n";
+' > $correlations_file;
+
+
+fi
+
+#
+# correlations.tab has the correlation-coefficients. 
+#
+# Now, run through the file and if it meets the threshold for significance, each
+# beer is a recommendation for the other.
+#
+
+if [ ! -f $correlated_pairs_file ]; then
+	cat $correlations_file |
+	php -B '
+	$thresholds=array(
+	2 	=> .88,
+	3 	=> .63,
+	4 	=> .51,
+	5 	=> .44,
+	6 	=> .40,
+	7 	=> .38,
+	8 	=> .26,
+	9 => 	.20,
+	);
+	' -R '
+	list($beer_id1,$beer_id2,$count,$stddev)=explode(" ",$argn);
+	foreach ($thresholds as $s=>$m) {
+		if ($count >= $s && $stddev >= $m) {
+			print "$beer_id1 $beer_id2\n";
+			print "$beer_id2 $beer_id1\n";
+			break;
+		}
+	}
+' > $correlated_pairs_file;
+
+fi
+
+if [ ! -f $recommend_file ]; then
+
+	LC_ALL=C sort $correlated_pairs_file | 
+	php -B '
+	$last_beer_id=null;
+	$doc=new stdClass;
+' -R '
+	list($beer_id,$other_beer_id)=explode(" ",rtrim($argn));
+	if ($beer_id != $last_beer_id) {
+		if ($doc->_id)
+			print $doc->_id."\n".join("\n",$doc->beer)."\n\n";
+		$last_beer_id=$beer_id;
+
+		$doc->_id="recommend:beer:".$beer_id;
+		$doc->beer=array();
+	}
+	$doc->beer[]="beer:".$other_beer_id;
+' -E '
+	print $doc->_id."\n".join("\n",$doc->beer)."\n\n";
+' > $recommend_file;
+
+fi
+
+if [ -f $recommend_file ]; then
+
+	# Log in
+	logininfo=$(curl --silent --fail -d email=$email -d password=$password $api_url/login);
+	if [ $? != 0 ]; then
+		echo "Unable to login";
+		exit;
+	fi
+
+	read userid usrkey <<<$(echo $logininfo | /usr/local/beercrush/bin/jsonpath userid usrkey);
+	
+	recommend_id=;
+	if [ -f $data_dir/postdata ]; then
+		rm -f $data_dir/postdata;
+	fi
+
+	fails=0;
+	successes=0;
+	
+	while read line; do
+		if [ -z $line ]; then
+			if [ -n $recommend_id ]; then
+				RESPONSE=$(curl --silent --fail -X POST -d userid=$userid -d usrkey=$usrkey --data-urlencode recommended@$data_dir/postdata "$api_url/recommend/edit?id=${recommend_id}");
+				if [ $? -ne 0 ]; then
+					echo "Failed to post recommendations: $recommend_id";
+					fails=$((fails + 1));
+				else
+					successes=$((successes + 1));
+				fi
+			fi
+			rm -f $data_dir/postdata;
+			recommend_id=;
+		elif [ -z $recommend_id ]; then
+			recommend_id=$line;
+		else
+			echo $line >> $data_dir/postdata;
+		fi
+	done < $recommend_file;
+	
+	echo "Recommendations completed. $successes successes, $fails failures.";
+
+fi

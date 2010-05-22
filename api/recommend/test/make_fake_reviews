@@ -1,0 +1,103 @@
+#!/bin/bash
+
+function login_random_user() {
+
+	USERS_COUNT=$(xmlstarlet sel -t -v "count(//person)" -n simpsons.xml);
+	# echo There are $USERS_COUNT users;
+
+	# Randomly pick user from list
+	pick_random_number $USERS_COUNT;
+	RANDOM_EMAIL=$(xmlstarlet sel -t -m "//person[$RANDOM_NUMBER]" -v email -n simpsons.xml);
+	get_password $RANDOM_EMAIL;
+	# echo $RANDOM_EMAIL:$PASSWORD;
+
+	# Login
+	LOGIN_ANSWER=$(curl --silent --fail -d email=$RANDOM_EMAIL -d password=$PASSWORD http://duff/api/login);
+	if [ $? != 0 ]; then
+		echo "Failed to login";
+		exit;
+	else
+		if ! read USERID USRKEY <<<"$(echo $LOGIN_ANSWER | /usr/local/beercrush/bin/jsonpath userid usrkey)"; then
+			echo "Don't know USERID and/or USRKEY";
+			exit;
+		fi
+	fi
+
+}
+
+function review_random_beer() {
+	# Randomly pick beers from list
+	BEER_COUNT=$(xmlstarlet sel -t -v 'count(//beer)' -n  beers.xml);
+	# echo "$BEER_COUNT beers";
+	pick_random_number $BEER_COUNT;
+	BEER_ID=$(xmlstarlet sel -t -m "//beer[$RANDOM_NUMBER]" -v id -n  beers.xml);
+	# echo $RANDOM_NUMBER;
+	# echo $RANDOM_EMAIL;
+	# echo $BEER_ID;
+
+	#
+	# Post a randomly-generated review of the beer
+	#
+
+	# Pick a random number of random flavors
+	FLAVORS_COUNT=$(xmlstarlet sel -t -v 'count(//flavor)' flavors.xml);
+	# echo $FLAVORS_COUNT flavors;
+	N=$(( $RANDOM % 5 ));
+	for (( X=0; X < $N; X++)) do
+		pick_random_number $FLAVORS_COUNT;
+		FLAVOR_ID=$(xmlstarlet sel -t -m "//flavor[$RANDOM_NUMBER]" -v id -n  flavors.xml);
+		FLAVORS=$FLAVORS" "$FLAVOR_ID;
+	done;
+
+	declare -a POURED_OPTIONS;
+	POURED_OPTIONS=(cask bottle bottle22 tap can);
+	POURED_FROM=${POURED_OPTIONS[$RANDOM % 5]};
+	# echo POURED_FROM=$POURED_FROM;
+
+	PLACES_COUNT=$(xmlstarlet sel -t -v 'count(//place)' places.xml);
+	RANDOM_PLACE=$(xmlstarlet sel -t -m //place[$(($RANDOM % $PLACES_COUNT))] -v id places.xml);
+
+	REVIEW_ANSWER=$(curl --fail --silent  -X POST \
+		-d userid=$USERID \
+		-d usrkey=$USRKEY \
+		-d beer_id=$BEER_ID \
+		-d rating=$(($RANDOM % 5 + 1)) \
+		-d body=$(($RANDOM % 5 + 1)) \
+		-d balance=$(($RANDOM % 5 + 1)) \
+		-d aftertaste=$(($RANDOM % 5 + 1)) \
+		-d flavors="$FLAVORS" \
+		-d purchase_price=$(($RANDOM % 30))"."$(($RANDOM % 100)) \
+		-d purchase_place_id=$RANDOM_PLACE \
+		-d poured_from=$POURED_FROM \
+		-d date_drank="$(date -d "$(( $RANDOM % 800 )) days ago")" \
+		http://duff/api/beer/review);
+	
+	if [ $? != 0 ]; then
+		echo "Failed to post review ($?)";
+		echo $REVIEW_ANSWER;
+	else
+		REVIEW_ID=$(echo $REVIEW_ANSWER | /usr/local/beercrush/bin/jsonpath id);
+		# echo $REVIEW_ID;
+	fi
+}
+
+function get_password() {
+	PASSWORD=$(echo $1 | sed -e 's/@.*$//');
+}
+
+function pick_random_number() {
+	RANDOM_NUMBER=$(( $RANDOM % $1 ));
+	# echo picked $RANDOM_NUMBER;
+}
+
+for U in {1..3}; do
+
+	login_random_user;
+	# echo USERID=$USERID;
+	# echo USRKEY=$USRKEY;
+
+	for R in {1..100}; do
+		review_random_beer;
+	done
+
+done

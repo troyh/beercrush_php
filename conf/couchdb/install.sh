@@ -12,6 +12,12 @@ fi
 COUCHDB_HOST=$(php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $cfg->couchdb->nodes[0];');
 COUCHDB_DBNAME=$(php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $cfg->couchdb->database;');
 
+for F in $(find design/ -maxdepth 1 -mindepth 1 -type d ! -name ".*"); do
+
+	./make_json $F/*.js > $F.json;
+
+done
+
 # Put design docs in couchdb
 for D in design/*.json; do
 	DD=$(basename $D .json);

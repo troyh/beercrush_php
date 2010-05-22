@@ -1,0 +1,7283 @@
+<?xml version="1.0"?>
+<places>
+  <place>
+    <id>place:123-Place</id>
+    <name>123 Place</name>
+  </place>
+  <place>
+    <id>place:21st-Amendment</id>
+    <name>21st Amendment</name>
+  </place>
+  <place>
+    <id>place:3-Monkeys-Pub</id>
+    <name>3 Monkeys Pub</name>
+  </place>
+  <place>
+    <id>place:41st-Avenue-Liquors-Inc</id>
+    <name>41st Avenue Liquors Inc.</name>
+  </place>
+  <place>
+    <id>place:4th-Street-Brewing-Co</id>
+    <name>4th Street Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:515-Kitchen-And-Cocktails</id>
+    <name>515 Kitchen And Cocktails</name>
+  </place>
+  <place>
+    <id>place:55-Degree-Wine</id>
+    <name>55 Degree Wine</name>
+  </place>
+  <place>
+    <id>place:6740</id>
+    <name>6740</name>
+  </place>
+  <place>
+    <id>place:6th-Street-Grill</id>
+    <name>6th Street Grill</name>
+  </place>
+  <place>
+    <id>place:7-Eleven</id>
+    <name>7-Eleven</name>
+  </place>
+  <place>
+    <id>place:74th-St-Ale-House</id>
+    <name>74th St Ale House</name>
+  </place>
+  <place>
+    <id>place:99-Bottles</id>
+    <name>99 Bottles</name>
+  </place>
+  <place>
+    <id>place:99-Bottles-Of-Beer-On-The-Wall</id>
+    <name>99 Bottles Of Beer On The Wall</name>
+  </place>
+  <place>
+    <id>place:ber-Tavern</id>
+    <name>&#xDC;ber Tavern</name>
+  </place>
+  <place>
+    <id>place:A-D-Portland-Street-Market</id>
+    <name>A &amp; D Portland Street Market</name>
+  </place>
+  <place>
+    <id>place:A-J-Liquor</id>
+    <name>A &amp; J Liquor</name>
+  </place>
+  <place>
+    <id>place:ABC-Liquor</id>
+    <name>ABC Liquor</name>
+  </place>
+  <place>
+    <id>place:abrillo-Liquors</id>
+    <name>abrillo Liquors</name>
+  </place>
+  <place>
+    <id>place:Acme-Chophouse</id>
+    <name>Acme Chophouse</name>
+  </place>
+  <place>
+    <id>place:Aero-Club-The</id>
+    <name>Aero Club, The</name>
+  </place>
+  <place>
+    <id>place:Albatross-Pub</id>
+    <name>Albatross Pub</name>
+  </place>
+  <place>
+    <id>place:Albertsons</id>
+    <name>Albertsons</name>
+  </place>
+  <place>
+    <id>place:Alcatraz-Brewing-Co</id>
+    <name>Alcatraz Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Ale-House-Pub-Eatery</id>
+    <name>Ale House Pub &amp; Eatery</name>
+  </place>
+  <place>
+    <id>place:Alehouse-Pub</id>
+    <name>Alehouse Pub</name>
+  </place>
+  <place>
+    <id>place:Alisal-Cellars</id>
+    <name>Alisal Cellars</name>
+  </place>
+  <place>
+    <id>place:Alpine-Delicatessen</id>
+    <name>Alpine Delicatessen</name>
+  </place>
+  <place>
+    <id>place:Alpine-Village</id>
+    <name>Alpine Village</name>
+  </place>
+  <place>
+    <id>place:Altitude-Chophouse-and-Brewery</id>
+    <name>Altitude Chophouse and Brewery</name>
+  </place>
+  <place>
+    <id>place:American-Flatbread</id>
+    <name>American Flatbread</name>
+  </place>
+  <place>
+    <id>place:Amerisports-Brew-Pub</id>
+    <name>Amerisports Brew Pub</name>
+  </place>
+  <place>
+    <id>place:Ammiratis-Market</id>
+    <name>Ammiratis Market</name>
+  </place>
+  <place>
+    <id>place:Amnesia-Bar</id>
+    <name>Amnesia Bar</name>
+  </place>
+  <place>
+    <id>place:Amnesia-Brewing</id>
+    <name>Amnesia Brewing</name>
+  </place>
+  <place>
+    <id>place:Anacapa-Brewing-Company</id>
+    <name>Anacapa Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Anacortes-Brewery-and-Rockfish-Grill</id>
+    <name>Anacortes Brewery and Rockfish Grill</name>
+  </place>
+  <place>
+    <id>place:Andronico-s</id>
+    <name>Andronico's</name>
+  </place>
+  <place>
+    <id>place:Andronico-s-Palo-Alto</id>
+    <name>Andronico's</name>
+  </place>
+  <place>
+    <id>place:Angelica-s-Bistro</id>
+    <name>Angelica's Bistro</name>
+  </place>
+  <place>
+    <id>place:Angelo-s-Liquor-Store</id>
+    <name>Angelo's Liquor Store</name>
+  </place>
+  <place>
+    <id>place:Angry-Minnow-Brewpub</id>
+    <name>Angry Minnow Brewpub</name>
+  </place>
+  <place>
+    <id>place:Anthill-Pub-Grill</id>
+    <name>Anthill Pub &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Archer-Ale-House</id>
+    <name>Archer Ale House</name>
+  </place>
+  <place>
+    <id>place:Arroyo-Liquor</id>
+    <name>Arroyo Liquor</name>
+  </place>
+  <place>
+    <id>place:asdf</id>
+    <name>asdf</name>
+  </place>
+  <place>
+    <id>place:asdf-10</id>
+    <name>asdf</name>
+  </place>
+  <place>
+    <id>place:asdf-11</id>
+    <name>asdf</name>
+  </place>
+  <place>
+    <id>place:asdf-3</id>
+    <name>asdf</name>
+  </place>
+  <place>
+    <id>place:asdf-4</id>
+    <name>asdf</name>
+  </place>
+  <place>
+    <id>place:asdf-5</id>
+    <name>asdf</name>
+  </place>
+  <place>
+    <id>place:asdf-6</id>
+    <name>asdf</name>
+  </place>
+  <place>
+    <id>place:asdf-7</id>
+    <name>asdf</name>
+  </place>
+  <place>
+    <id>place:asdf-8</id>
+    <name>asdf</name>
+  </place>
+  <place>
+    <id>place:asdf-9</id>
+    <name>asdf</name>
+  </place>
+  <place>
+    <id>place:Ashbury-Market</id>
+    <name>Ashbury Market</name>
+  </place>
+  <place>
+    <id>place:Asheville-Pizza-and-Brewing</id>
+    <name>Asheville Pizza and Brewing</name>
+  </place>
+  <place>
+    <id>place:Ashur-Liquor</id>
+    <name>Ashur Liquor</name>
+  </place>
+  <place>
+    <id>place:Assets-Grill-Brewing</id>
+    <name>Assets Grill &amp; Brewing</name>
+  </place>
+  <place>
+    <id>place:Astoria-Brewing-Company-Wet-Dog-Cafe</id>
+    <name>Astoria Brewing Company/Wet Dog Cafe</name>
+  </place>
+  <place>
+    <id>place:Atomic-Ale-Brewpub-and-Eatery</id>
+    <name>Atomic Ale Brewpub and Eatery</name>
+  </place>
+  <place>
+    <id>place:Auburn-Alehouse-Brewery-Restaurant</id>
+    <name>Auburn Alehouse Brewery &amp; Restaurant</name>
+  </place>
+  <place>
+    <id>place:Auld-Dubliner-The</id>
+    <name>Auld Dubliner, The</name>
+  </place>
+  <place>
+    <id>place:Babe-s-Bar-B-Que-And-Brewery</id>
+    <name>Babe's Bar-B-Que And Brewery</name>
+  </place>
+  <place>
+    <id>place:Babe-s-Slim-Pig-N-s</id>
+    <name>Babe's Slim Pig N's</name>
+  </place>
+  <place>
+    <id>place:Baby-Bar</id>
+    <name>Baby Bar</name>
+  </place>
+  <place>
+    <id>place:Back-Abbey</id>
+    <name>Back Abbey</name>
+  </place>
+  <place>
+    <id>place:Back-Street-Brewery</id>
+    <name>Back Street Brewery</name>
+  </place>
+  <place>
+    <id>place:Back-Street-Brewery-La-Quinta</id>
+    <name>Back Street Brewery</name>
+  </place>
+  <place>
+    <id>place:Back-Street-Brewery-Ladera-Ranch</id>
+    <name>Back Street Brewery</name>
+  </place>
+  <place>
+    <id>place:Back-Street-Brewery-Vista</id>
+    <name>Back Street Brewery</name>
+  </place>
+  <place>
+    <id>place:Bad-Albert-s-Tap-And-Grill</id>
+    <name>Bad Albert's Tap And Grill</name>
+  </place>
+  <place>
+    <id>place:Bagdad-Theater-Pub-McMenamins</id>
+    <name>Bagdad Theater &amp; Pub (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Bailey-s-Taproom</id>
+    <name>Bailey's Taproom</name>
+  </place>
+  <place>
+    <id>place:Bar-Crudo</id>
+    <name>Bar Crudo</name>
+  </place>
+  <place>
+    <id>place:Barbarella</id>
+    <name>Barbarella</name>
+  </place>
+  <place>
+    <id>place:Barbur-World-Foods</id>
+    <name>Barbur World Foods</name>
+  </place>
+  <place>
+    <id>place:Barca</id>
+    <name>Barca</name>
+  </place>
+  <place>
+    <id>place:Barclay-s-On-College</id>
+    <name>Barclay's On College</name>
+  </place>
+  <place>
+    <id>place:Bare-Bones-Grill-and-Brewery-1</id>
+    <name>Bare Bones Grill and Brewery #1</name>
+  </place>
+  <place>
+    <id>place:Bare-Bones-Grill-and-Brewery-2</id>
+    <name>Bare Bones Grill and Brewery #2</name>
+  </place>
+  <place>
+    <id>place:Barking-Dog-Alehouse</id>
+    <name>Barking Dog Alehouse</name>
+  </place>
+  <place>
+    <id>place:Barley-Hops-Olde-World-Family-Tavern</id>
+    <name>Barley &amp; Hops - Olde World Family Tavern</name>
+  </place>
+  <place>
+    <id>place:Barley-And-Hops</id>
+    <name>Barley And Hops</name>
+  </place>
+  <place>
+    <id>place:Barley-and-Hops-Grill-and-Microbrewery</id>
+    <name>Barley and Hops Grill and Microbrewery</name>
+  </place>
+  <place>
+    <id>place:Barley-Brothers-Brewery-and-Grill</id>
+    <name>Barley Brothers Brewery and Grill</name>
+  </place>
+  <place>
+    <id>place:Barley-Brown-s-Brewpub</id>
+    <name>Barley Brown's Brewpub</name>
+  </place>
+  <place>
+    <id>place:Barley-John-s-Brewpub</id>
+    <name>Barley John's Brewpub</name>
+  </place>
+  <place>
+    <id>place:Barley-Mill-Pub-McMenamins</id>
+    <name>Barley Mill Pub (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Barley-s-2-Smokehouse-and-Brewpub</id>
+    <name>Barley's #2 Smokehouse and Brewpub</name>
+  </place>
+  <place>
+    <id>place:Barley-s-Casino-Brewing-Company</id>
+    <name>Barley's Casino &amp; Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Barney-s-Beanery</id>
+    <name>Barney's Beanery</name>
+  </place>
+  <place>
+    <id>place:Barney-s-Beanery-Santa-Monica</id>
+    <name>Barney's Beanery</name>
+  </place>
+  <place>
+    <id>place:Barneys-Limited</id>
+    <name>Barneys Limited</name>
+  </place>
+  <place>
+    <id>place:Barons-Marketplace</id>
+    <name>Barons Marketplace</name>
+  </place>
+  <place>
+    <id>place:Basil-T-s-Brew-Pub-and-Italian-Grill</id>
+    <name>Basil T's Brew Pub and Italian Grill</name>
+  </place>
+  <place>
+    <id>place:Bay-Street-Ale-House</id>
+    <name>Bay Street Ale House</name>
+  </place>
+  <place>
+    <id>place:Baycrest-Wines-Spirits</id>
+    <name>Baycrest Wines &amp; Spirits</name>
+  </place>
+  <place>
+    <id>place:Bayho-Liquor-And-Deli</id>
+    <name>Bayho Liquor And Deli</name>
+  </place>
+  <place>
+    <id>place:BC-s-Pizza-And-Beer</id>
+    <name>BC's Pizza And Beer</name>
+  </place>
+  <place>
+    <id>place:Beach-Chalet-Brewery-and-Restaurant</id>
+    <name>Beach Chalet Brewery and Restaurant</name>
+  </place>
+  <place>
+    <id>place:Beachcomber-Bottle-Shop-Brew-Wear</id>
+    <name>Beachcomber Bottle Shop &amp; Brew Wear</name>
+  </place>
+  <place>
+    <id>place:Beachwood-BBQ</id>
+    <name>Beachwood BBQ</name>
+  </place>
+  <place>
+    <id>place:Bear-Republic-Brewing-Co</id>
+    <name>Bear Republic Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Bear-s-Lair</id>
+    <name>Bear's Lair</name>
+  </place>
+  <place>
+    <id>place:Beaumont-Market</id>
+    <name>Beaumont Market</name>
+  </place>
+  <place>
+    <id>place:Beaver-Inn</id>
+    <name>Beaver Inn</name>
+  </place>
+  <place>
+    <id>place:Beckett-s</id>
+    <name>Beckett's</name>
+  </place>
+  <place>
+    <id>place:Beechwood</id>
+    <name>Beechwood</name>
+  </place>
+  <place>
+    <id>place:Beermann-s-Beerwerks</id>
+    <name>Beermann's Beerwerks</name>
+  </place>
+  <place>
+    <id>place:Belmont-Brewing-Company</id>
+    <name>Belmont Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Beltramo-s</id>
+    <name>Beltramo's</name>
+  </place>
+  <place>
+    <id>place:Ben-n-Nick-s-Bar</id>
+    <name>Ben 'n Nick's Bar</name>
+  </place>
+  <place>
+    <id>place:Bend-Brewing-Company</id>
+    <name>Bend Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Bennidito-s-Pizza</id>
+    <name>Bennidito's Pizza</name>
+  </place>
+  <place>
+    <id>place:Berkeley-Alehouse-Pyramid-Breweries</id>
+    <name>Berkeley Alehouse (Pyramid Breweries)</name>
+  </place>
+  <place>
+    <id>place:Berkeley-Bowl</id>
+    <name>Berkeley Bowl</name>
+  </place>
+  <place>
+    <id>place:Bert-s-Pub</id>
+    <name>Bert's Pub</name>
+  </place>
+  <place>
+    <id>place:Bertram-s-Salmon-Valley-Brewery-and-Restaurant</id>
+    <name>Bertram's Salmon Valley Brewery and Restaurant</name>
+  </place>
+  <place>
+    <id>place:Best-Buy-Liquor</id>
+    <name>Best Buy Liquor</name>
+  </place>
+  <place>
+    <id>place:Beverage-Warehouse</id>
+    <name>Beverage Warehouse</name>
+  </place>
+  <place>
+    <id>place:Beverages-more</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Albany</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Brea</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Burbank</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Canoga-Park</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Chino-Hills</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Colma</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Corona</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Costa-Mesa</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Cypress</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Danville</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Elk-Grove</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Encinitas</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Fremont</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Fresno</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Gilroy</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Huntington-Beach</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-La-Jolla</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-La-Mesa</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Lake-Forest</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Milpitas</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Mira-Loma</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Mountain-View</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Northridge</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Novato</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Oakland</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Oceanside</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Orange</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Orinda</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Palmdale</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Pasadena</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Pinole</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Pleasanton</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Rancho-Cucamonga</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Redlands</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Redwood-City</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Roseville</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Sacramento</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Sacramento-California</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-San-Diego</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-San-Diego-California</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-San-Francisco</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-San-Francisco-California</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-San-Jose</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-San-Jose-California</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-San-Luis-Obispo</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-San-Mateo</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Santa-Clara</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Santa-Rosa</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Sunnyvale</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Temecula</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Thousand-Oaks</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Torrance</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Van-Nuys</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-Walnut-Creek</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-more-West-Hollywood</id>
+    <name>Beverages &amp; more!</name>
+  </place>
+  <place>
+    <id>place:Beverages-More</id>
+    <name>Beverages &amp; More!</name>
+  </place>
+  <place>
+    <id>place:Beverages-More-Capitola</id>
+    <name>Beverages &amp; More!</name>
+  </place>
+  <place>
+    <id>place:Beverages-More-Glendora</id>
+    <name>Beverages &amp; More!</name>
+  </place>
+  <place>
+    <id>place:Beverages-More-Long-Beach</id>
+    <name>Beverages &amp; More!</name>
+  </place>
+  <place>
+    <id>place:Beverages-More-San-Diego</id>
+    <name>Beverages &amp; More!</name>
+  </place>
+  <place>
+    <id>place:Beverages-More-Solana-Beach</id>
+    <name>Beverages &amp; More!</name>
+  </place>
+  <place>
+    <id>place:Beverages-4-Less</id>
+    <name>Beverages 4 Less</name>
+  </place>
+  <place>
+    <id>place:Beverages-4-Less-Ince</id>
+    <name>Beverages 4 Less, Ince</name>
+  </place>
+  <place>
+    <id>place:Beverages-And-More</id>
+    <name>Beverages And More</name>
+  </place>
+  <place>
+    <id>place:Beverages-And-More-San-Jose</id>
+    <name>Beverages And More!</name>
+  </place>
+  <place>
+    <id>place:Beverages-And-More-San-Rafael</id>
+    <name>Beverages And More!</name>
+  </place>
+  <place>
+    <id>place:Beverages-And-More-Lake-Forest</id>
+    <name>Beverages And More! Lake Forest</name>
+  </place>
+  <place>
+    <id>place:Beverages-Etc-Marine-Corp-Base-Camp-Pendleton</id>
+    <name>Beverages Etc. ( Marine Corp Base Camp Pendleton)</name>
+  </place>
+  <place>
+    <id>place:Beveridge-Place-Pub</id>
+    <name>Beveridge Place Pub</name>
+  </place>
+  <place>
+    <id>place:Bier-One</id>
+    <name>Bier One</name>
+  </place>
+  <place>
+    <id>place:Bier-Stein-Bottleshop-Pub</id>
+    <name>Bier Stein Bottleshop &amp; Pub</name>
+  </place>
+  <place>
+    <id>place:Big-Bear-Mountain-Brewery</id>
+    <name>Big Bear Mountain Brewery</name>
+  </place>
+  <place>
+    <id>place:Big-Bubba-s-Bad-BBQ</id>
+    <name>Big Bubba's Bad BBQ</name>
+  </place>
+  <place>
+    <id>place:Big-E-Wine-Liquor</id>
+    <name>Big E Wine &amp; Liquor</name>
+  </place>
+  <place>
+    <id>place:Big-Horn-Brewing</id>
+    <name>Big Horn Brewing</name>
+  </place>
+  <place>
+    <id>place:Big-Horn-Brewing-Seattle</id>
+    <name>Big Horn Brewing</name>
+  </place>
+  <place>
+    <id>place:Big-Horn-Brewing-The-RAM</id>
+    <name>Big Horn Brewing @ The RAM</name>
+  </place>
+  <place>
+    <id>place:Big-Horn-Brewing-The-RAM-2</id>
+    <name>Big Horn Brewing @ The RAM 2</name>
+  </place>
+  <place>
+    <id>place:Big-Horn-Brewing-Company</id>
+    <name>Big Horn Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Big-Horse-Brew-Pub-Horse-Feathers-Co</id>
+    <name>Big Horse Brew Pub/Horse Feathers &amp; Co.</name>
+  </place>
+  <place>
+    <id>place:Big-Rock-Chop-Brew-House</id>
+    <name>Big Rock Chop &amp; Brew House</name>
+  </place>
+  <place>
+    <id>place:Big-Star</id>
+    <name>Big Star</name>
+  </place>
+  <place>
+    <id>place:Big-Time-Brewing</id>
+    <name>Big Time Brewing</name>
+  </place>
+  <place>
+    <id>place:Big-Value</id>
+    <name>Big Value</name>
+  </place>
+  <place>
+    <id>place:Big-Willy-s-Market</id>
+    <name>Big Willy's Market</name>
+  </place>
+  <place>
+    <id>place:Biggs-Beer-Wine-and-Tobacco</id>
+    <name>Biggs Beer Wine and Tobacco</name>
+  </place>
+  <place>
+    <id>place:Bilbo-s-Pizza</id>
+    <name>Bilbo's Pizza</name>
+  </place>
+  <place>
+    <id>place:Bill-s-Off-Broadway</id>
+    <name>Bill's Off Broadway</name>
+  </place>
+  <place>
+    <id>place:Bill-s-Tavern-Brewhouse</id>
+    <name>Bill's Tavern &amp; Brewhouse</name>
+  </place>
+  <place>
+    <id>place:Billco-s-Billiard-Parlor</id>
+    <name>Billco's Billiard Parlor</name>
+  </place>
+  <place>
+    <id>place:Billy-Goat-s-Tavern</id>
+    <name>Billy Goat's Tavern</name>
+  </place>
+  <place>
+    <id>place:Birdsview-Brewing-Company</id>
+    <name>Birdsview Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Bison-Creek-Pizza</id>
+    <name>Bison Creek Pizza</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Pizza-Grill</id>
+    <name>BJ's Pizza &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Pizza-Grill-and-Brewery</id>
+    <name>BJ's Pizza, Grill and Brewery</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Pizza-Grill-and-Brewery-Jantzen-Beach</id>
+    <name>BJ's Pizza, Grill and Brewery - Jantzen Beach</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Pizza-Grill-and-Brewery-Reno</id>
+    <name>BJ's Pizza, Grill and Brewery - Reno</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Arcadia</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Bakersfield</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Corona</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Cupertino</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Elk-Grove</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Fresno</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Glendale</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Huntington-Beach</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Huntington-Beach-California</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Irvine</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-La-Jolla</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-La-Mesa</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Laguna-Beach</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Moreno-Valley</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Palmdale</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Rancho-Cucamonga</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Sacramento</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-San-Bernardino</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-San-Jose</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-San-Mateo</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Temecula</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Torrance</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Vacaville</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Westlake-Village</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Westwood</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Woodland-Hills</id>
+    <name>BJ's Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Brewery</id>
+    <name>BJ's Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Brewery-Laguna-Hills</id>
+    <name>BJ's Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Brewery-Oxnard</id>
+    <name>BJ's Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Brewery-Roseville</id>
+    <name>BJ's Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Brewery-West-Covina</id>
+    <name>BJ's Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Brewery-Chandler</id>
+    <name>BJ's Restaurant &amp; Brewery - Chandler</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Brewhouse</id>
+    <name>BJ's Restaurant &amp; Brewhouse</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-and-Brewery</id>
+    <name>BJ's Restaurant and Brewery</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-and-Brewery-Boulder</id>
+    <name>BJ's Restaurant and Brewery - Boulder</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-and-Brewery-Webster</id>
+    <name>BJ's Restaurant and Brewery - Webster</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Tukwila</id>
+    <name>BJ&#x2019;s Restaurant</name>
+  </place>
+  <place>
+    <id>place:BJ-s-Restaurant-Brewery-Portland</id>
+    <name>BJ&#x2019;s Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Black-Sheep-Bar-And-Grill</id>
+    <name>Black Sheep Bar And Grill</name>
+  </place>
+  <place>
+    <id>place:Blackstone-Restaurant-Brewery</id>
+    <name>Blackstone Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Blackwell-s-Wine-Spirits</id>
+    <name>Blackwell's Wine &amp; Spirits</name>
+  </place>
+  <place>
+    <id>place:Blind-Lady-Ale-House</id>
+    <name>Blind Lady Ale House</name>
+  </place>
+  <place>
+    <id>place:Block-15-Brewery-Restaurant</id>
+    <name>Block 15 Brewery &amp; Restaurant</name>
+  </place>
+  <place>
+    <id>place:Blue-Caf</id>
+    <name>Blue Caf&#xE9;</name>
+  </place>
+  <place>
+    <id>place:Blue-Cat-Brew-Pub</id>
+    <name>Blue Cat Brew Pub</name>
+  </place>
+  <place>
+    <id>place:Blue-Corn-Caf-and-Brewery-South-Side</id>
+    <name>Blue Corn Caf&#xE9; and Brewery - South Side</name>
+  </place>
+  <place>
+    <id>place:Blue-Fin-Cafe-Billiards</id>
+    <name>Blue Fin Cafe &amp; Billiards</name>
+  </place>
+  <place>
+    <id>place:Blue-Frog-Grog-Grill</id>
+    <name>Blue Frog Grog &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Blue-House-Mediterranean-Cafe</id>
+    <name>Blue House Mediterranean Cafe</name>
+  </place>
+  <place>
+    <id>place:Blue-Moon-Tavern-Grill-McMenamins</id>
+    <name>Blue Moon Tavern &amp; Grill (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Blue-Palms-BrewHouse</id>
+    <name>Blue Palms BrewHouse</name>
+  </place>
+  <place>
+    <id>place:Blue-Star-Cafe-And-Pub-Eggs-Ceteras</id>
+    <name>Blue Star Cafe And Pub Eggs Ceteras</name>
+  </place>
+  <place>
+    <id>place:Bo-s-Brewery-and-Bistro</id>
+    <name>Bo's Brewery and Bistro</name>
+  </place>
+  <place>
+    <id>place:Bo-s-Barbecue</id>
+    <name>Bo&#x2019;s Barbecue</name>
+  </place>
+  <place>
+    <id>place:Boathouse-Brewpub-Restaurant</id>
+    <name>Boathouse Brewpub &amp; Restaurant</name>
+  </place>
+  <place>
+    <id>place:Bob-s-Keg-Cork</id>
+    <name>Bob's Keg &amp; Cork</name>
+  </place>
+  <place>
+    <id>place:Bobby-G-s-Pizzeria</id>
+    <name>Bobby G's Pizzeria</name>
+  </place>
+  <place>
+    <id>place:Bohemian-Brewery-and-Grill</id>
+    <name>Bohemian Brewery and Grill</name>
+  </place>
+  <place>
+    <id>place:Boiler-Room-Brewpub</id>
+    <name>Boiler Room Brewpub</name>
+  </place>
+  <place>
+    <id>place:Bonaventure-Brewing</id>
+    <name>Bonaventure Brewing</name>
+  </place>
+  <place>
+    <id>place:Boneyard-Bistro</id>
+    <name>Boneyard Bistro</name>
+  </place>
+  <place>
+    <id>place:Bonfare</id>
+    <name>Bonfare</name>
+  </place>
+  <place>
+    <id>place:Boon-s-Treasury-McMenamins</id>
+    <name>Boon's Treasury (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Bottle-Barn</id>
+    <name>Bottle Barn</name>
+  </place>
+  <place>
+    <id>place:Bottle-Liquor</id>
+    <name>Bottle Liquor</name>
+  </place>
+  <place>
+    <id>place:Bottle-Rack</id>
+    <name>Bottle Rack</name>
+  </place>
+  <place>
+    <id>place:Bottle-Trek</id>
+    <name>Bottle Trek</name>
+  </place>
+  <place>
+    <id>place:BottleRock</id>
+    <name>BottleRock</name>
+  </place>
+  <place>
+    <id>place:Bottles</id>
+    <name>Bottles</name>
+  </place>
+  <place>
+    <id>place:Bottles-N-Bins-Liquors-Deli</id>
+    <name>Bottles N Bins Liquors &amp; Deli</name>
+  </place>
+  <place>
+    <id>place:Bottleworks</id>
+    <name>Bottleworks</name>
+  </place>
+  <place>
+    <id>place:Boulder-Creek-Brewing</id>
+    <name>Boulder Creek Brewing</name>
+  </place>
+  <place>
+    <id>place:Boundary-Bay-Brewery-and-Bistro</id>
+    <name>Boundary Bay Brewery and Bistro</name>
+  </place>
+  <place>
+    <id>place:Bradley-s-Fine-Wine-Spirits</id>
+    <name>Bradley's Fine Wine &amp; Spirits</name>
+  </place>
+  <place>
+    <id>place:Branagan-s-Irish-Pub-Restaurant</id>
+    <name>Branagan's Irish Pub &amp; Restaurant</name>
+  </place>
+  <place>
+    <id>place:Brass-Restaurant-Brewery</id>
+    <name>Brass Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Bray-s-Brewpub-Eatery</id>
+    <name>Bray's Brewpub &amp; Eatery</name>
+  </place>
+  <place>
+    <id>place:Breakwater-Brewing</id>
+    <name>Breakwater Brewing</name>
+  </place>
+  <place>
+    <id>place:Breckenridge-Brewery-BBQ</id>
+    <name>Breckenridge Brewery &amp; BBQ</name>
+  </place>
+  <place>
+    <id>place:Breckenridge-Brewery-and-Pub</id>
+    <name>Breckenridge Brewery and Pub</name>
+  </place>
+  <place>
+    <id>place:Breckenridge-Brewery-of-Denver</id>
+    <name>Breckenridge Brewery of Denver</name>
+  </place>
+  <place>
+    <id>place:Brew-House-at-EastLake</id>
+    <name>Brew House at EastLake</name>
+  </place>
+  <place>
+    <id>place:Brew-It-Up</id>
+    <name>Brew It Up</name>
+  </place>
+  <place>
+    <id>place:Brew-Kettle-Taproom-Smokehouse-BOP</id>
+    <name>Brew Kettle Taproom &amp; Smokehouse BOP</name>
+  </place>
+  <place>
+    <id>place:brew-moon-restaurant-and-microbrewery-6</id>
+    <name>brew moon restaurant and microbrewery #6</name>
+  </place>
+  <place>
+    <id>place:Brew-Wizards</id>
+    <name>Brew Wizards</name>
+  </place>
+  <place>
+    <id>place:Brewbakers-Brewing</id>
+    <name>Brewbakers Brewing</name>
+  </place>
+  <place>
+    <id>place:Brewers-Union-Local-180</id>
+    <name>Brewers Union Local 180</name>
+  </place>
+  <place>
+    <id>place:Brewery-At-Lake-Tahoe-The</id>
+    <name>Brewery At Lake Tahoe, The</name>
+  </place>
+  <place>
+    <id>place:Brewhouse-The</id>
+    <name>Brewhouse, The</name>
+  </place>
+  <place>
+    <id>place:Brewsky-s-Broiler</id>
+    <name>Brewsky's Broiler</name>
+  </place>
+  <place>
+    <id>place:Brewtal-Brewing</id>
+    <name>Brewtal Brewing</name>
+  </place>
+  <place>
+    <id>place:Brewzzi-Brewing-Boca-Raton</id>
+    <name>Brewzzi Brewing - Boca Raton</name>
+  </place>
+  <place>
+    <id>place:Brewzzi-Brewing-City-Place</id>
+    <name>Brewzzi Brewing - City Place</name>
+  </place>
+  <place>
+    <id>place:Brick-House-Pizza</id>
+    <name>Brick House Pizza</name>
+  </place>
+  <place>
+    <id>place:Bricktown-Brewery</id>
+    <name>Bricktown Brewery</name>
+  </place>
+  <place>
+    <id>place:Bricktown-Brewery-Oklahoma-City</id>
+    <name>Bricktown Brewery</name>
+  </place>
+  <place>
+    <id>place:BridgePort-Ale-House</id>
+    <name>BridgePort Ale House</name>
+  </place>
+  <place>
+    <id>place:BridgePort-Brewing-Company-BridgePort-Brewpub-Bakery</id>
+    <name>BridgePort Brewing Company / BridgePort Brewpub + Bakery</name>
+  </place>
+  <place>
+    <id>place:Bridgetown-BeerHouse</id>
+    <name>Bridgetown BeerHouse</name>
+  </place>
+  <place>
+    <id>place:Bristol-Farms</id>
+    <name>Bristol Farms</name>
+  </place>
+  <place>
+    <id>place:Bristol-Farms-Manhattan-Beach</id>
+    <name>Bristol Farms</name>
+  </place>
+  <place>
+    <id>place:Bristol-Farms-San-Diego</id>
+    <name>Bristol Farms</name>
+  </place>
+  <place>
+    <id>place:Bristol-Farms-Valencia</id>
+    <name>Bristol Farms</name>
+  </place>
+  <place>
+    <id>place:Britannia</id>
+    <name>Britannia</name>
+  </place>
+  <place>
+    <id>place:Britannia-Arms-Pub-Restaurant</id>
+    <name>Britannia Arms Pub &amp; Restaurant</name>
+  </place>
+  <place>
+    <id>place:Broadway-Grill-Brewery</id>
+    <name>Broadway Grill &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Broadway-Wine-Spirits</id>
+    <name>Broadway Wine &amp; Spirits</name>
+  </place>
+  <place>
+    <id>place:Broken-Drum-Brewery-And-Wood-Grill</id>
+    <name>Broken Drum Brewery And Wood Grill</name>
+  </place>
+  <place>
+    <id>place:Brooklyn-Seafood-Steak-Oyster-House</id>
+    <name>Brooklyn Seafood, Steak &amp; Oyster House</name>
+  </place>
+  <place>
+    <id>place:Brouwer-s-Cafe</id>
+    <name>Brouwer's Cafe</name>
+  </place>
+  <place>
+    <id>place:Brussels-Bistro</id>
+    <name>Brussels Bistro</name>
+  </place>
+  <place>
+    <id>place:Buckhorn-Saloon</id>
+    <name>Buckhorn Saloon</name>
+  </place>
+  <place>
+    <id>place:Buckingham-WIne-Spirits</id>
+    <name>Buckingham WIne &amp; Spirits</name>
+  </place>
+  <place>
+    <id>place:Buffalo-Bill-s-Brewery</id>
+    <name>Buffalo Bill's Brewery</name>
+  </place>
+  <place>
+    <id>place:Buhrmaster-Baking-Co</id>
+    <name>Buhrmaster Baking Co.</name>
+  </place>
+  <place>
+    <id>place:Bulldog-British-Pub</id>
+    <name>Bulldog British Pub</name>
+  </place>
+  <place>
+    <id>place:By-The-Bottle</id>
+    <name>By The Bottle</name>
+  </place>
+  <place>
+    <id>place:C-B-Potts-of-Broomfield</id>
+    <name>C.B. &amp; Potts of Broomfield</name>
+  </place>
+  <place>
+    <id>place:C-B-Potts-of-Englewood</id>
+    <name>C.B. &amp; Potts of Englewood</name>
+  </place>
+  <place>
+    <id>place:C-B-Potts-of-Fort-Collins</id>
+    <name>C.B. &amp; Potts of Fort Collins</name>
+  </place>
+  <place>
+    <id>place:C-B-Potts-of-Highlands-Ranch</id>
+    <name>C.B. &amp; Potts of Highlands Ranch</name>
+  </place>
+  <place>
+    <id>place:C-B-Potts-of-Highlands-Ranch-Highlands-Ranch</id>
+    <name>C.B. &amp; Potts of Highlands Ranch</name>
+  </place>
+  <place>
+    <id>place:C-B-Potts-of-Westminster</id>
+    <name>C.B. &amp; Potts of Westminster</name>
+  </place>
+  <place>
+    <id>place:C-I-Shenanigans</id>
+    <name>C.I. Shenanigans</name>
+  </place>
+  <place>
+    <id>place:Cabin-Tavern</id>
+    <name>Cabin Tavern</name>
+  </place>
+  <place>
+    <id>place:Cabin-Tavern-Bellingham</id>
+    <name>Cabin Tavern</name>
+  </place>
+  <place>
+    <id>place:Cafe-Biere</id>
+    <name>Cafe Biere</name>
+  </place>
+  <place>
+    <id>place:Cafe-Boogaloo</id>
+    <name>Cafe Boogaloo</name>
+  </place>
+  <place>
+    <id>place:Caf-Lucca</id>
+    <name>Caf&#xE9; Lucca</name>
+  </place>
+  <place>
+    <id>place:Calapooia-Brewing-Company</id>
+    <name>Calapooia Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Calhoun-s-Restaurant-Brewing</id>
+    <name>Calhoun's Restaurant &amp; Brewing</name>
+  </place>
+  <place>
+    <id>place:Calistoga-Inn-Restaurant-Brewery</id>
+    <name>Calistoga Inn Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Callahan-s-Pub-Brewery</id>
+    <name>Callahan's Pub &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Cambridge-House-Brew-Pub</id>
+    <name>Cambridge House Brew Pub</name>
+  </place>
+  <place>
+    <id>place:Cameron-s-Restaurant-Inn</id>
+    <name>Cameron's Restaurant &amp; Inn</name>
+  </place>
+  <place>
+    <id>place:Campus-Bottle-Shoppe</id>
+    <name>Campus Bottle Shoppe</name>
+  </place>
+  <place>
+    <id>place:Canyon-Club-Sports-Cafe</id>
+    <name>Canyon Club Sports Cafe</name>
+  </place>
+  <place>
+    <id>place:Canyons-Restaurant-Canyon-Park</id>
+    <name>Canyons Restaurant @ Canyon Park</name>
+  </place>
+  <place>
+    <id>place:Canyons-Restaurant-Mountlake</id>
+    <name>Canyons Restaurant @ Mountlake</name>
+  </place>
+  <place>
+    <id>place:Canyons-Restaurant-Redmond</id>
+    <name>Canyons Restaurant @ Redmond</name>
+  </place>
+  <place>
+    <id>place:Cap-N-Cork</id>
+    <name>Cap N Cork</name>
+  </place>
+  <place>
+    <id>place:Capital-Market</id>
+    <name>Capital Market</name>
+  </place>
+  <place>
+    <id>place:Capitol-Garage</id>
+    <name>Capitol Garage</name>
+  </place>
+  <place>
+    <id>place:Captain-Ankeny-s-Well</id>
+    <name>Captain Ankeny's Well</name>
+  </place>
+  <place>
+    <id>place:Carolina-Brewery</id>
+    <name>Carolina Brewery</name>
+  </place>
+  <place>
+    <id>place:Carolina-Brewing</id>
+    <name>Carolina Brewing</name>
+  </place>
+  <place>
+    <id>place:Cascade-Lakes-Brewing-Company-Lodge</id>
+    <name>Cascade Lakes Brewing Company Lodge</name>
+  </place>
+  <place>
+    <id>place:Cascade-West-Grub-Alehouse</id>
+    <name>Cascade West Grub &amp; Alehouse</name>
+  </place>
+  <place>
+    <id>place:Cascade-West-Grub-Alehouse-3</id>
+    <name>Cascade West Grub &amp; Alehouse</name>
+  </place>
+  <place>
+    <id>place:Cashmere-Brewing-Company</id>
+    <name>Cashmere Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Cat-Fiddle</id>
+    <name>Cat &amp; Fiddle</name>
+  </place>
+  <place>
+    <id>place:Cato-s-Ale-House</id>
+    <name>Cato's Ale House</name>
+  </place>
+  <place>
+    <id>place:Cave-Mountain-Brewing-Company</id>
+    <name>Cave Mountain Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Cecil-s-Steak-Brew</id>
+    <name>Cecil's Steak &amp; Brew</name>
+  </place>
+  <place>
+    <id>place:Central-Liquor</id>
+    <name>Central Liquor</name>
+  </place>
+  <place>
+    <id>place:Central-Market</id>
+    <name>Central Market</name>
+  </place>
+  <place>
+    <id>place:Central-Market-Poulsbo</id>
+    <name>Central Market</name>
+  </place>
+  <place>
+    <id>place:Central-Market-Shoreline</id>
+    <name>Central Market</name>
+  </place>
+  <place>
+    <id>place:Central-Saloon</id>
+    <name>Central Saloon</name>
+  </place>
+  <place>
+    <id>place:Central-Waters-Brewing-Company</id>
+    <name>Central Waters Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Central-Waters-Brewpub</id>
+    <name>Central Waters Brewpub</name>
+  </place>
+  <place>
+    <id>place:Chalet-Edelweiss</id>
+    <name>Chalet Edelweiss</name>
+  </place>
+  <place>
+    <id>place:Chalet-Gourmet</id>
+    <name>Chalet Gourmet</name>
+  </place>
+  <place>
+    <id>place:Chapel-Pub-McMenamins</id>
+    <name>Chapel Pub (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Charlie-Jewell-s</id>
+    <name>Charlie Jewell's</name>
+  </place>
+  <place>
+    <id>place:Cheese-Plus</id>
+    <name>Cheese Plus</name>
+  </place>
+  <place>
+    <id>place:Chris-Liquor</id>
+    <name>Chris Liquor</name>
+  </place>
+  <place>
+    <id>place:Chuckanut-Brewery-Kitchen</id>
+    <name>Chuckanut Brewery &amp; Kitchen</name>
+  </place>
+  <place>
+    <id>place:Chula-Vista-Brewery-Restaurant</id>
+    <name>Chula Vista Brewery Restaurant</name>
+  </place>
+  <place>
+    <id>place:Church-Key</id>
+    <name>Church Key</name>
+  </place>
+  <place>
+    <id>place:Churchill-s-Pub-Grille</id>
+    <name>Churchill's Pub &amp; Grille</name>
+  </place>
+  <place>
+    <id>place:Ciao-Italian-Restaurant</id>
+    <name>Ciao Italian Restaurant</name>
+  </place>
+  <place>
+    <id>place:City-Beer-Store</id>
+    <name>City Beer Store</name>
+  </place>
+  <place>
+    <id>place:City-Pub</id>
+    <name>City Pub</name>
+  </place>
+  <place>
+    <id>place:Claim-Jumper</id>
+    <name>Claim Jumper</name>
+  </place>
+  <place>
+    <id>place:Clem-s-Bottle-House-Deli</id>
+    <name>Clem's Bottle House &amp; Deli</name>
+  </place>
+  <place>
+    <id>place:Clinton-Street-Brewing</id>
+    <name>Clinton Street Brewing</name>
+  </place>
+  <place>
+    <id>place:Clocktower-Cellar-Pub</id>
+    <name>Clocktower Cellar Pub</name>
+  </place>
+  <place>
+    <id>place:Clubhouse-Liquor</id>
+    <name>Clubhouse Liquor</name>
+  </place>
+  <place>
+    <id>place:Coeur-D-Alene-Brewing</id>
+    <name>Coeur D'Alene Brewing</name>
+  </place>
+  <place>
+    <id>place:Coffee-Table-Lounge</id>
+    <name>Coffee Table Lounge</name>
+  </place>
+  <place>
+    <id>place:Coit-Liquor</id>
+    <name>Coit Liquor</name>
+  </place>
+  <place>
+    <id>place:Cole-s-Pacific-Electric-Buffet</id>
+    <name>Cole's Pacific Electric Buffet</name>
+  </place>
+  <place>
+    <id>place:Collins-Pub</id>
+    <name>Collins Pub</name>
+  </place>
+  <place>
+    <id>place:Colony-Pub-Eatery</id>
+    <name>Colony Pub-Eatery</name>
+  </place>
+  <place>
+    <id>place:Columbia-City-Alehouse</id>
+    <name>Columbia City Alehouse</name>
+  </place>
+  <place>
+    <id>place:Concordia-Ale-House</id>
+    <name>Concordia Ale House</name>
+  </place>
+  <place>
+    <id>place:Conor-Byrne-s-Pub</id>
+    <name>Conor Byrne's Pub</name>
+  </place>
+  <place>
+    <id>place:Cooke-s-Family-Market</id>
+    <name>Cooke's Family Market</name>
+  </place>
+  <place>
+    <id>place:Cooper-s-International-Ale-House</id>
+    <name>Cooper's International Ale House</name>
+  </place>
+  <place>
+    <id>place:CooperSmith-s-Pub-and-Brewing</id>
+    <name>CooperSmith's Pub and Brewing</name>
+  </place>
+  <place>
+    <id>place:Copper-Cavern-Grille-Tavern</id>
+    <name>Copper Cavern Grille &amp; Tavern</name>
+  </place>
+  <place>
+    <id>place:Cork-A-Bottle-Shop-Eastside</id>
+    <name>Cork - A Bottle Shop (Eastside)</name>
+  </place>
+  <place>
+    <id>place:Cork-A-Bottle-Shop-Westside</id>
+    <name>Cork - A Bottle Shop (Westside)</name>
+  </place>
+  <place>
+    <id>place:Cork-N-Bottle</id>
+    <name>Cork 'N Bottle</name>
+  </place>
+  <place>
+    <id>place:Cork-Bottle</id>
+    <name>Cork &amp; Bottle</name>
+  </place>
+  <place>
+    <id>place:Cornelius-Pass-Roadhouse</id>
+    <name>Cornelius Pass Roadhouse</name>
+  </place>
+  <place>
+    <id>place:Cornelius-Pass-Roadhouse-Imbrie-Hall-McMenamins</id>
+    <name>Cornelius Pass Roadhouse &amp; Imbrie Hall (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Corner-Cafe-Brewery</id>
+    <name>Corner Cafe &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Corner-Liquor-Smoke-Shop</id>
+    <name>Corner Liquor &amp; Smoke Shop</name>
+  </place>
+  <place>
+    <id>place:Cornucopia</id>
+    <name>Cornucopia</name>
+  </place>
+  <place>
+    <id>place:Coronado-Brewing-Company</id>
+    <name>Coronado Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Corti-Brothers</id>
+    <name>Corti Brothers</name>
+  </place>
+  <place>
+    <id>place:Cosentino-s-Market</id>
+    <name>Cosentino's Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Brea</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Corona</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Davis</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Fremont</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Keizer</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Los-Angeles</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Mountain-View</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Oakland</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Ontario</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Orange</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Oxnard</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Redlands</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Riverside</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-San-Jose</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-San-Jose-California</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-San-Jose-California-3</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Santa-Barbara</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Sherman-Oaks</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Silverdale</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Spokane</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Temecula</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Visalia</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Westlake-Village</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Whittier</id>
+    <name>Cost Plus World Market</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Lynnwood</id>
+    <name>Cost Plus World Market - Lynnwood</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Redmond</id>
+    <name>Cost Plus World Market - Redmond</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Seattle</id>
+    <name>Cost Plus World Market - Seattle</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Woodinville</id>
+    <name>Cost Plus World Market - Woodinville</name>
+  </place>
+  <place>
+    <id>place:Cost-Plus-World-Market-Tukwila</id>
+    <name>Cost Plus World Market: Tukwila</name>
+  </place>
+  <place>
+    <id>place:Country-Club-Liquors</id>
+    <name>Country Club Liquors</name>
+  </place>
+  <place>
+    <id>place:County-Cork-Public-House</id>
+    <name>County Cork Public House</name>
+  </place>
+  <place>
+    <id>place:County-Cork-Wine-Spirit</id>
+    <name>County Cork Wine &amp; Spirit</name>
+  </place>
+  <place>
+    <id>place:Covey-Restaurant-Brewery</id>
+    <name>Covey Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Crabby-Larry-s-Brewpub-Steak-Crab-House</id>
+    <name>Crabby Larry's Brewpub Steak &amp; Crab House</name>
+  </place>
+  <place>
+    <id>place:Creekside-Brewing-Company</id>
+    <name>Creekside Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Croll-s</id>
+    <name>Croll's</name>
+  </place>
+  <place>
+    <id>place:Crossroads-Liquor-Deli</id>
+    <name>Crossroads Liquor &amp; Deli</name>
+  </place>
+  <place>
+    <id>place:Crown-Anchor</id>
+    <name>Crown &amp; Anchor</name>
+  </place>
+  <place>
+    <id>place:Cuvee-Restaurant</id>
+    <name>Cuvee Restaurant</name>
+  </place>
+  <place>
+    <id>place:Dad-Watson-s-Brewery-and-Restaurant</id>
+    <name>Dad Watson's Brewery and Restaurant</name>
+  </place>
+  <place>
+    <id>place:Daily-Pint-The</id>
+    <name>Daily Pint, The</name>
+  </place>
+  <place>
+    <id>place:Dargan-s-Irish-Pub-Restaurant</id>
+    <name>Dargan's Irish Pub &amp; Restaurant</name>
+  </place>
+  <place>
+    <id>place:Dargan-s-Irish-Pub-Restaurant-Ventura</id>
+    <name>Dargan's Irish Pub &amp; Restaurant</name>
+  </place>
+  <place>
+    <id>place:Davidson-Brothers-Restaurant-and-Brewery</id>
+    <name>Davidson Brothers Restaurant and Brewery</name>
+  </place>
+  <place>
+    <id>place:Davis-Food-Co-op</id>
+    <name>Davis Food Co-op</name>
+  </place>
+  <place>
+    <id>place:Del-Cerro-Liquor</id>
+    <name>Del Cerro Liquor</name>
+  </place>
+  <place>
+    <id>place:Deluxe-Foods-Of-Aptos</id>
+    <name>Deluxe Foods Of Aptos</name>
+  </place>
+  <place>
+    <id>place:Dempsey-s-Brewery-Pub-and-Restaurant</id>
+    <name>Dempsey's Brewery, Pub and Restaurant</name>
+  </place>
+  <place>
+    <id>place:Dempsey-s-Restaurant-And-Brewery</id>
+    <name>Dempsey's Restaurant And Brewery</name>
+  </place>
+  <place>
+    <id>place:Denver-ChopHouse-and-Brewery</id>
+    <name>Denver ChopHouse and Brewery</name>
+  </place>
+  <place>
+    <id>place:Deschutes-Brewery-Public-House</id>
+    <name>Deschutes Brewery &amp; Public House</name>
+  </place>
+  <place>
+    <id>place:Deschutes-Brewery-Public-House-Portland</id>
+    <name>Deschutes Brewery &amp; Public House</name>
+  </place>
+  <place>
+    <id>place:Desert-Vuew-Superette</id>
+    <name>Desert Vuew Superette</name>
+  </place>
+  <place>
+    <id>place:Destination-Grill-At-The-Depot</id>
+    <name>Destination Grill At The Depot</name>
+  </place>
+  <place>
+    <id>place:DFH-Brewings-Eats</id>
+    <name>DFH Brewings &amp; Eats</name>
+  </place>
+  <place>
+    <id>place:Diamond-Knot-B2</id>
+    <name>Diamond Knot B2</name>
+  </place>
+  <place>
+    <id>place:Diamond-Knot-Brewery-Alehouse</id>
+    <name>Diamond Knot Brewery &amp; Alehouse</name>
+  </place>
+  <place>
+    <id>place:Dick-s-Brewing-Company</id>
+    <name>Dick's Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Die-Bierstube</id>
+    <name>Die Bierstube</name>
+  </place>
+  <place>
+    <id>place:Dimension-Liquor</id>
+    <name>Dimension Liquor</name>
+  </place>
+  <place>
+    <id>place:District-ChopHouse-and-Brewery</id>
+    <name>District ChopHouse and Brewery</name>
+  </place>
+  <place>
+    <id>place:Dodging-Duck-Brewhaus</id>
+    <name>Dodging Duck Brewhaus</name>
+  </place>
+  <place>
+    <id>place:Dog-And-Pony-Ale-House-And-Grill-The</id>
+    <name>Dog And Pony Ale House And Grill, The</name>
+  </place>
+  <place>
+    <id>place:Dogfish-Head-Brewings-and-Eats</id>
+    <name>Dogfish Head Brewings and Eats</name>
+  </place>
+  <place>
+    <id>place:Dogfish-Head-Craft-Brewery</id>
+    <name>Dogfish Head Craft Brewery</name>
+  </place>
+  <place>
+    <id>place:Dolores-River-Brewpub</id>
+    <name>Dolores River Brewpub</name>
+  </place>
+  <place>
+    <id>place:Double-Mountain-Brewery-Taproom</id>
+    <name>Double Mountain Brewery &amp; Taproom</name>
+  </place>
+  <place>
+    <id>place:Downey-Brewing-Company</id>
+    <name>Downey Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Downtown-Brewing-Co</id>
+    <name>Downtown Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Downtown-Brewing-Co-San-Luis-Obispo</id>
+    <name>Downtown Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Downtown-Grill-Brewery</id>
+    <name>Downtown Grill &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Downtown-Joe-s-American-Bar-And-Grill</id>
+    <name>Downtown Joe's American Bar And Grill</name>
+  </place>
+  <place>
+    <id>place:Downtown-Johnny-Brown-s</id>
+    <name>Downtown Johnny Brown's</name>
+  </place>
+  <place>
+    <id>place:Downtwown-Brewing</id>
+    <name>Downtwown Brewing</name>
+  </place>
+  <place>
+    <id>place:Doyle-s-Public-House</id>
+    <name>Doyle's Public House</name>
+  </place>
+  <place>
+    <id>place:Draeger-s</id>
+    <name>Draeger's</name>
+  </place>
+  <place>
+    <id>place:Draeger-s-Los-Altos</id>
+    <name>Draeger's</name>
+  </place>
+  <place>
+    <id>place:Draeger-s-Menlo-Park</id>
+    <name>Draeger's</name>
+  </place>
+  <place>
+    <id>place:Draft-Picks-Pizza-Pub</id>
+    <name>Draft Picks Pizza Pub</name>
+  </place>
+  <place>
+    <id>place:Draught-House-Pub-and-Brewery</id>
+    <name>Draught House Pub and Brewery</name>
+  </place>
+  <place>
+    <id>place:Dublin-Pub-The</id>
+    <name>Dublin Pub, The</name>
+  </place>
+  <place>
+    <id>place:Dublin-Square-Irish-Pub-Resturant</id>
+    <name>Dublin Square Irish Pub &amp; Resturant</name>
+  </place>
+  <place>
+    <id>place:Dubliner</id>
+    <name>Dubliner</name>
+  </place>
+  <place>
+    <id>place:Duck-Blind-The</id>
+    <name>Duck Blind, The</name>
+  </place>
+  <place>
+    <id>place:Duck-Island-Saloon</id>
+    <name>Duck Island Saloon</name>
+  </place>
+  <place>
+    <id>place:Duke-Of-Bourbon</id>
+    <name>Duke Of Bourbon</name>
+  </place>
+  <place>
+    <id>place:Dutch-Garden-Restaurant</id>
+    <name>Dutch Garden Restaurant</name>
+  </place>
+  <place>
+    <id>place:E-O-Trading-Company</id>
+    <name>E &amp; O Trading Company</name>
+  </place>
+  <place>
+    <id>place:E-J-Phair-Alehouse</id>
+    <name>E.J. Phair Alehouse</name>
+  </place>
+  <place>
+    <id>place:Earth-Bread-Brewery</id>
+    <name>Earth Bread + Brewery</name>
+  </place>
+  <place>
+    <id>place:East-19th-Street-Cafe-McMenamins</id>
+    <name>East 19th Street Cafe (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:EB-s-Beer-Wine-Bar</id>
+    <name>EB's Beer &amp; Wine Bar</name>
+  </place>
+  <place>
+    <id>place:Eddie-McStiff-s-Brewpub</id>
+    <name>Eddie McStiff's Brewpub</name>
+  </place>
+  <place>
+    <id>place:Edelweiss-Brewery-Restaurant</id>
+    <name>Edelweiss Brewery &amp; Restaurant</name>
+  </place>
+  <place>
+    <id>place:Edelweiss-Sausage-Delicatessen</id>
+    <name>Edelweiss Sausage &amp; Delicatessen</name>
+  </place>
+  <place>
+    <id>place:Edgefield-Brewery-McMenamins</id>
+    <name>Edgefield Brewery (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Edgefield-Brewery-Powerstation-Theatre-and-Pub</id>
+    <name>Edgefield Brewery / Powerstation Theatre and Pub</name>
+  </place>
+  <place>
+    <id>place:Eel-River-Brewing-Co</id>
+    <name>Eel River Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:EJ-Phair-Brewing-Company-and-Alehouse</id>
+    <name>EJ Phair Brewing Company and Alehouse</name>
+  </place>
+  <place>
+    <id>place:Elephant-Castle</id>
+    <name>Elephant &amp; Castle</name>
+  </place>
+  <place>
+    <id>place:Elevator-Brewpub-Restaurant</id>
+    <name>Elevator Brewpub &amp; Restaurant</name>
+  </place>
+  <place>
+    <id>place:Elk-Head-Brewing-Company</id>
+    <name>Elk Head Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Elk-Public-House</id>
+    <name>Elk Public House</name>
+  </place>
+  <place>
+    <id>place:Ellensburg-WineWorks</id>
+    <name>Ellensburg WineWorks</name>
+  </place>
+  <place>
+    <id>place:Ellersick-Brewing-Company</id>
+    <name>Ellersick Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Elliot-Bay-Brewhouse-Pub</id>
+    <name>Elliot Bay Brewhouse &amp; Pub</name>
+  </place>
+  <place>
+    <id>place:Elliot-Bay-Brewing-Co</id>
+    <name>Elliot Bay Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Elliot-Glacier-Public-House</id>
+    <name>Elliot Glacier Public House</name>
+  </place>
+  <place>
+    <id>place:Elysian-Brewery-Public-House</id>
+    <name>Elysian Brewery &amp; Public House</name>
+  </place>
+  <place>
+    <id>place:Elysian-Brewing-TangleTown</id>
+    <name>Elysian Brewing - TangleTown</name>
+  </place>
+  <place>
+    <id>place:Elysian-Fields-Brewery</id>
+    <name>Elysian Fields Brewery</name>
+  </place>
+  <place>
+    <id>place:Embers-Brewhouse</id>
+    <name>Embers Brewhouse</name>
+  </place>
+  <place>
+    <id>place:Emmett-s-Ale-House</id>
+    <name>Emmett's Ale House</name>
+  </place>
+  <place>
+    <id>place:Emmett-s-Ale-House-Palatine</id>
+    <name>Emmett's Ale House</name>
+  </place>
+  <place>
+    <id>place:Emmett-s-Tavern-and-Brewery</id>
+    <name>Emmett's Tavern and Brewery</name>
+  </place>
+  <place>
+    <id>place:Empire-Grill-And-Tap-Room</id>
+    <name>Empire Grill And Tap Room</name>
+  </place>
+  <place>
+    <id>place:Encinal-Market</id>
+    <name>Encinal Market</name>
+  </place>
+  <place>
+    <id>place:Engfer-Pizza-Works</id>
+    <name>Engfer Pizza Works</name>
+  </place>
+  <place>
+    <id>place:Engine-House-9</id>
+    <name>Engine House #9</name>
+  </place>
+  <place>
+    <id>place:English-Ales-Brewery</id>
+    <name>English Ales Brewery</name>
+  </place>
+  <place>
+    <id>place:Ernie-s-Liquors</id>
+    <name>Ernie's Liquors</name>
+  </place>
+  <place>
+    <id>place:Ernie-s-Wines-And-Liquors</id>
+    <name>Ernie's Wines And Liquors</name>
+  </place>
+  <place>
+    <id>place:Eske-s-Brew-Pub-and-Restaurant</id>
+    <name>Eske's Brew Pub and Restaurant</name>
+  </place>
+  <place>
+    <id>place:Etna-Brewery</id>
+    <name>Etna Brewery</name>
+  </place>
+  <place>
+    <id>place:Eugene-City-Brewery</id>
+    <name>Eugene City Brewery</name>
+  </place>
+  <place>
+    <id>place:Everett-Grand-Roaster-And-Ale-House</id>
+    <name>Everett Grand Roaster And Ale House</name>
+  </place>
+  <place>
+    <id>place:Fad-Irish-Pub</id>
+    <name>Fad&#xF3; Irish Pub</name>
+  </place>
+  <place>
+    <id>place:Fagan-s-Irish-Merrow-Pub</id>
+    <name>Fagan's Irish Merrow Pub</name>
+  </place>
+  <place>
+    <id>place:Far-West-Billiards</id>
+    <name>Far West Billiards</name>
+  </place>
+  <place>
+    <id>place:Fast-Easy-Mart</id>
+    <name>Fast &amp; Easy Mart</name>
+  </place>
+  <place>
+    <id>place:Father-s-Office</id>
+    <name>Father's Office</name>
+  </place>
+  <place>
+    <id>place:Father-s-Office-II</id>
+    <name>Father's Office II</name>
+  </place>
+  <place>
+    <id>place:Faultline-Brewing-Comany</id>
+    <name>Faultline Brewing Comany</name>
+  </place>
+  <place>
+    <id>place:Fearless-Brewing-Company</id>
+    <name>Fearless Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Feierabend</id>
+    <name>Feierabend</name>
+  </place>
+  <place>
+    <id>place:Fiddler-s-Inn</id>
+    <name>Fiddler's Inn</name>
+  </place>
+  <place>
+    <id>place:Field-The</id>
+    <name>Field, The</name>
+  </place>
+  <place>
+    <id>place:FiftyFifty-Brewing-Co</id>
+    <name>FiftyFifty Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Fine-Wine-And-Cigars</id>
+    <name>Fine Wine And Cigars</name>
+  </place>
+  <place>
+    <id>place:Finn-McCool-s</id>
+    <name>Finn McCool's</name>
+  </place>
+  <place>
+    <id>place:Finn-McCool-s-Irish-Pub</id>
+    <name>Finn McCool's Irish Pub</name>
+  </place>
+  <place>
+    <id>place:Fiori-s-Pizza-Deli</id>
+    <name>Fiori's Pizza &amp; Deli</name>
+  </place>
+  <place>
+    <id>place:Firefly-Grill-Wine-Bar</id>
+    <name>Firefly Grill &amp; Wine Bar</name>
+  </place>
+  <place>
+    <id>place:Firehouse-Grill-Brewery</id>
+    <name>Firehouse Grill &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:FireHouse-Grill-Brewrery</id>
+    <name>FireHouse Grill &amp; Brewrery</name>
+  </place>
+  <place>
+    <id>place:Fireside-Cellars</id>
+    <name>Fireside Cellars</name>
+  </place>
+  <place>
+    <id>place:Firestone-Walker-Brewing-Co-Paso-Robles-Taproom</id>
+    <name>Firestone Walker Brewing Co. / Paso Robles Taproom</name>
+  </place>
+  <place>
+    <id>place:First-Street-Ale-House</id>
+    <name>First Street Ale House</name>
+  </place>
+  <place>
+    <id>place:Fish-Brewing-Fish-Tail-Brewpub</id>
+    <name>Fish Brewing &amp; Fish Tail Brewpub</name>
+  </place>
+  <place>
+    <id>place:Fish-Brewing-Company-Fishbowl-Brewpub</id>
+    <name>Fish Brewing Company / Fishbowl Brewpub</name>
+  </place>
+  <place>
+    <id>place:Fitger-s-Brewhouse-Brewery-and-Grill</id>
+    <name>Fitger's Brewhouse, Brewery and Grill</name>
+  </place>
+  <place>
+    <id>place:Five-Seasons-Brewpub</id>
+    <name>Five Seasons Brewpub</name>
+  </place>
+  <place>
+    <id>place:Flat-Street-Brew-Pub</id>
+    <name>Flat Street Brew Pub</name>
+  </place>
+  <place>
+    <id>place:Flatlander-s-Restaurant-Brewery</id>
+    <name>Flatlander's Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Flavor-Bistro</id>
+    <name>Flavor Bistro</name>
+  </place>
+  <place>
+    <id>place:Florian-s-Fine-Wines-Specialty-Foods</id>
+    <name>Florian's Fine Wines &amp; Specialty Foods</name>
+  </place>
+  <place>
+    <id>place:Florida-Beer-Company</id>
+    <name>Florida Beer Company</name>
+  </place>
+  <place>
+    <id>place:Florida-Beer-Company-Melbourne</id>
+    <name>Florida Beer Company</name>
+  </place>
+  <place>
+    <id>place:Fly-Bar</id>
+    <name>Fly Bar</name>
+  </place>
+  <place>
+    <id>place:Flyers-Restaurant-and-Brewery</id>
+    <name>Flyers Restaurant and Brewery</name>
+  </place>
+  <place>
+    <id>place:Flying-Pig-Brewing-Co</id>
+    <name>Flying Pig Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Fort-George-Brewery-Public-House</id>
+    <name>Fort George Brewery + Public House</name>
+  </place>
+  <place>
+    <id>place:Fourth-Street-Bar-And-Deli</id>
+    <name>Fourth Street Bar And Deli</name>
+  </place>
+  <place>
+    <id>place:Fox-And-Hounds-The</id>
+    <name>Fox And Hounds, The</name>
+  </place>
+  <place>
+    <id>place:Frank-s-Wine-Shoppe</id>
+    <name>Frank's Wine Shoppe</name>
+  </place>
+  <place>
+    <id>place:Fratellos-Restaurant-and-Brewery</id>
+    <name>Fratellos Restaurant and Brewery</name>
+  </place>
+  <place>
+    <id>place:Fred-Meyer</id>
+    <name>Fred Meyer</name>
+  </place>
+  <place>
+    <id>place:Fred-s-Market</id>
+    <name>Fred's Market</name>
+  </place>
+  <place>
+    <id>place:Fred-s-Rivertown-Alehouse</id>
+    <name>Fred's Rivertown Alehouse</name>
+  </place>
+  <place>
+    <id>place:Freeway-Liquor</id>
+    <name>Freeway Liquor</name>
+  </place>
+  <place>
+    <id>place:Fremont-Bistro-The-Tudor-Pub</id>
+    <name>Fremont Bistro / The Tudor Pub</name>
+  </place>
+  <place>
+    <id>place:Front-Street-Ale-House</id>
+    <name>Front Street Ale House</name>
+  </place>
+  <place>
+    <id>place:Full-Circle-Brewing-Co</id>
+    <name>Full Circle Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Full-Sail-Brewery-at-Riverplace-The-Pilsner-Room</id>
+    <name>Full Sail Brewery at Riverplace / The Pilsner Room</name>
+  </place>
+  <place>
+    <id>place:Full-Sail-Brewing-Company-Tasting-Room-and-Pub</id>
+    <name>Full Sail Brewing Company / Tasting Room and Pub</name>
+  </place>
+  <place>
+    <id>place:Full-Throttle-Bottles</id>
+    <name>Full Throttle Bottles</name>
+  </place>
+  <place>
+    <id>place:Fulton-Pub-Brewery-McMenamins</id>
+    <name>Fulton Pub &amp; Brewery (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Galco-s-Old-World-Grocery</id>
+    <name>Galco's Old World Grocery</name>
+  </place>
+  <place>
+    <id>place:Gardner-Ale-House</id>
+    <name>Gardner Ale House</name>
+  </place>
+  <place>
+    <id>place:Garguile-s-Red-Apple</id>
+    <name>Garguile's Red Apple</name>
+  </place>
+  <place>
+    <id>place:Gella-s-Diner-Lb-Brewing-Company</id>
+    <name>Gella's Diner &amp; Lb. Brewing Company</name>
+  </place>
+  <place>
+    <id>place:General-Lafayette-Inn-and-Brewery</id>
+    <name>General Lafayette Inn and Brewery</name>
+  </place>
+  <place>
+    <id>place:George-Dragon-Pub</id>
+    <name>George &amp; Dragon Pub</name>
+  </place>
+  <place>
+    <id>place:George-s-Market</id>
+    <name>George's Market</name>
+  </place>
+  <place>
+    <id>place:Gerrard-s-Market</id>
+    <name>Gerrard's Market</name>
+  </place>
+  <place>
+    <id>place:Gestalt-Haus</id>
+    <name>Gestalt Haus</name>
+  </place>
+  <place>
+    <id>place:Getaway-Cafe</id>
+    <name>Getaway Cafe</name>
+  </place>
+  <place>
+    <id>place:Glenn-s-Market</id>
+    <name>Glenn's Market</name>
+  </place>
+  <place>
+    <id>place:Globe-Deli</id>
+    <name>Globe Deli</name>
+  </place>
+  <place>
+    <id>place:Goat-Hill-Tavern</id>
+    <name>Goat Hill Tavern</name>
+  </place>
+  <place>
+    <id>place:Golden-Valley-Brewery-and-Pub</id>
+    <name>Golden Valley Brewery and Pub</name>
+  </place>
+  <place>
+    <id>place:Good-Microbrew-and-Grill</id>
+    <name>Good Microbrew and Grill</name>
+  </place>
+  <place>
+    <id>place:Good-Times-Cafe-Bar</id>
+    <name>Good Times Cafe &amp; Bar</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch</id>
+    <name>Gordon Biersch</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-Burbank</id>
+    <name>Gordon Biersch</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-Pasadena</id>
+    <name>Gordon Biersch</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-Pasadena-California</id>
+    <name>Gordon Biersch</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-San-Diego</id>
+    <name>Gordon Biersch</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-San-Francisco</id>
+    <name>Gordon Biersch</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-San-Jose</id>
+    <name>Gordon Biersch</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-Brewery-Restaurant-Group</id>
+    <name>Gordon Biersch Brewery Restaurant Group</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-Brewing</id>
+    <name>Gordon Biersch Brewing</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-Brewing-Atlanta</id>
+    <name>Gordon Biersch Brewing</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-Brewing-Broomfield</id>
+    <name>Gordon Biersch Brewing</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-Brewing-Columbus</id>
+    <name>Gordon Biersch Brewing</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-Brewing-Gilbert</id>
+    <name>Gordon Biersch Brewing</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-Brewing-Honolulu</id>
+    <name>Gordon Biersch Brewing</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-Brewing-Kansas-City</id>
+    <name>Gordon Biersch Brewing</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-Brewing-Las-Vegas</id>
+    <name>Gordon Biersch Brewing</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-Brewing-McLean</id>
+    <name>Gordon Biersch Brewing</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-Brewing-Miami</id>
+    <name>Gordon Biersch Brewing</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-Brewing-Tempe</id>
+    <name>Gordon Biersch Brewing</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-Brewing-Virginia-Beach</id>
+    <name>Gordon Biersch Brewing</name>
+  </place>
+  <place>
+    <id>place:Gordon-Biersch-Brewing-Washington</id>
+    <name>Gordon Biersch Brewing</name>
+  </place>
+  <place>
+    <id>place:Gottberg-Brew-Pub</id>
+    <name>Gottberg Brew Pub</name>
+  </place>
+  <place>
+    <id>place:Gourmet-Haus-Staudt</id>
+    <name>Gourmet Haus Staudt</name>
+  </place>
+  <place>
+    <id>place:Gourmet-Pizza-Shoppe</id>
+    <name>Gourmet Pizza Shoppe</name>
+  </place>
+  <place>
+    <id>place:Granary-Brewpub</id>
+    <name>Granary Brewpub</name>
+  </place>
+  <place>
+    <id>place:Grand-Liquors</id>
+    <name>Grand Liquors</name>
+  </place>
+  <place>
+    <id>place:Granite-City-Food-Brewery-Cedar-Rapids</id>
+    <name>Granite City Food &amp; Brewery &#x2014; Cedar Rapids</name>
+  </place>
+  <place>
+    <id>place:Granite-City-Food-Brewery-Clive</id>
+    <name>Granite City Food &amp; Brewery &#x2014; Clive</name>
+  </place>
+  <place>
+    <id>place:Granite-City-Food-Brewery-Davenport</id>
+    <name>Granite City Food &amp; Brewery &#x2014; Davenport</name>
+  </place>
+  <place>
+    <id>place:Granite-City-Food-Brewery-Eagan</id>
+    <name>Granite City Food &amp; Brewery &#x2014; Eagan</name>
+  </place>
+  <place>
+    <id>place:Granite-City-Food-Brewery-Fargo</id>
+    <name>Granite City Food &amp; Brewery &#x2014; Fargo</name>
+  </place>
+  <place>
+    <id>place:Granite-City-Food-Brewery-Lincoln</id>
+    <name>Granite City Food &amp; Brewery &#x2014; Lincoln</name>
+  </place>
+  <place>
+    <id>place:Granite-City-Food-Brewery-Madison</id>
+    <name>Granite City Food &amp; Brewery &#x2014; Madison</name>
+  </place>
+  <place>
+    <id>place:Granite-City-Food-Brewery-Maple-Grove</id>
+    <name>Granite City Food &amp; Brewery &#x2014; Maple Grove</name>
+  </place>
+  <place>
+    <id>place:Granite-City-Food-Brewery-Omaha</id>
+    <name>Granite City Food &amp; Brewery &#x2014; Omaha</name>
+  </place>
+  <place>
+    <id>place:Granite-City-Food-Brewery-Saint-Cloud</id>
+    <name>Granite City Food &amp; Brewery &#x2014; Saint Cloud</name>
+  </place>
+  <place>
+    <id>place:Granite-City-Food-Brewery-Sioux-Falls</id>
+    <name>Granite City Food &amp; Brewery &#x2014; Sioux Falls</name>
+  </place>
+  <place>
+    <id>place:Granite-City-Food-Brewery-Speedway</id>
+    <name>Granite City Food &amp; Brewery &#x2014; Speedway</name>
+  </place>
+  <place>
+    <id>place:Granite-City-Food-Brewery-St-Louis-Park</id>
+    <name>Granite City Food &amp; Brewery &#x2014; St. Louis Park</name>
+  </place>
+  <place>
+    <id>place:Granite-City-Food-Brewery-Wichita</id>
+    <name>Granite City Food &amp; Brewery &#x2014; Wichita</name>
+  </place>
+  <place>
+    <id>place:Granite-City-Food-Brewery-Zona-Rosa</id>
+    <name>Granite City Food &amp; Brewery &#x2014; Zona Rosa</name>
+  </place>
+  <place>
+    <id>place:Grant-s-Brewery-Pub</id>
+    <name>Grant&#x2019;s Brewery Pub</name>
+  </place>
+  <place>
+    <id>place:Grapevine-Liquors</id>
+    <name>Grapevine Liquors</name>
+  </place>
+  <place>
+    <id>place:Gravity-Beer-Market</id>
+    <name>Gravity Beer Market</name>
+  </place>
+  <place>
+    <id>place:Great-Adirondack-Steak-Seafood-Company</id>
+    <name>Great Adirondack Steak &amp; Seafood Company</name>
+  </place>
+  <place>
+    <id>place:Great-Dane-Pub-and-Brewing-1</id>
+    <name>Great Dane Pub and Brewing #1</name>
+  </place>
+  <place>
+    <id>place:Great-Dane-Pub-and-Brewing-2</id>
+    <name>Great Dane Pub and Brewing #2</name>
+  </place>
+  <place>
+    <id>place:Great-Pacific-Wine-and-Coffee-Company</id>
+    <name>Great Pacific Wine and Coffee Company</name>
+  </place>
+  <place>
+    <id>place:Greater-Trumps-McMenamins</id>
+    <name>Greater Trumps (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Green-Dog-Grill</id>
+    <name>Green Dog Grill</name>
+  </place>
+  <place>
+    <id>place:Green-Dragon-Bistro-Brewpub</id>
+    <name>Green Dragon Bistro &amp; Brewpub</name>
+  </place>
+  <place>
+    <id>place:Green-Frog-Cafe</id>
+    <name>Green Frog Cafe</name>
+  </place>
+  <place>
+    <id>place:Green-House-Restaurant-Brewery</id>
+    <name>Green House Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Green-Jug</id>
+    <name>Green Jug</name>
+  </place>
+  <place>
+    <id>place:Gritty-McDuff-s-Brewpub-Freeport</id>
+    <name>Gritty McDuff's Brewpub - Freeport</name>
+  </place>
+  <place>
+    <id>place:Gritty-McDuff-s-Brewpub-Portland</id>
+    <name>Gritty McDuff's Brewpub - Portland</name>
+  </place>
+  <place>
+    <id>place:Gustav-s-German-Pub-Grill</id>
+    <name>Gustav's German Pub &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Gustav-s-German-Pub-Grill-Tigard</id>
+    <name>Gustav's German Pub &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Gustav-s-German-Pub-And-Grill</id>
+    <name>Gustav's German Pub And Grill</name>
+  </place>
+  <place>
+    <id>place:Habits</id>
+    <name>Habits</name>
+  </place>
+  <place>
+    <id>place:Hacienda-Liquor</id>
+    <name>Hacienda Liquor</name>
+  </place>
+  <place>
+    <id>place:Haggen-Tualatin</id>
+    <name>Haggen - Tualatin</name>
+  </place>
+  <place>
+    <id>place:Haggen-Tanasbourne-Town-Center</id>
+    <name>Haggen Tanasbourne Town Center</name>
+  </place>
+  <place>
+    <id>place:Haggen-s-Food-And-Drug</id>
+    <name>Haggen's Food And Drug</name>
+  </place>
+  <place>
+    <id>place:Hal-and-Mal-s-Restaurant-and-Brewery</id>
+    <name>Hal and Mal's Restaurant and Brewery</name>
+  </place>
+  <place>
+    <id>place:Hale-s-Ales-3</id>
+    <name>Hale's Ales #3</name>
+  </place>
+  <place>
+    <id>place:Half-Moon-Bay-Brewing-Company</id>
+    <name>Half Moon Bay Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Hamilton-s-Tavern</id>
+    <name>Hamilton's Tavern</name>
+  </place>
+  <place>
+    <id>place:Happy-s-Market</id>
+    <name>Happy's Market</name>
+  </place>
+  <place>
+    <id>place:Harmon-Restaurant-Brewery</id>
+    <name>Harmon Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Harvest-Moon-Brewery-Cafe</id>
+    <name>Harvest Moon Brewery / Cafe</name>
+  </place>
+  <place>
+    <id>place:Hazel-Dell-Brewpub</id>
+    <name>Hazel Dell Brewpub</name>
+  </place>
+  <place>
+    <id>place:Healthy-Spirits</id>
+    <name>Healthy Spirits</name>
+  </place>
+  <place>
+    <id>place:Heartland-Brewery-Rotisserie</id>
+    <name>Heartland Brewery &amp; Rotisserie</name>
+  </place>
+  <place>
+    <id>place:Heartland-Brewery-and-Chop-House</id>
+    <name>Heartland Brewery and Chop House</name>
+  </place>
+  <place>
+    <id>place:Heartland-Brewery-at-South-Street-Seaport</id>
+    <name>Heartland Brewery at South Street Seaport</name>
+  </place>
+  <place>
+    <id>place:Heartland-Brewery-Radio-City</id>
+    <name>Heartland Brewery Radio City</name>
+  </place>
+  <place>
+    <id>place:Heartland-Brewery-Union-Square</id>
+    <name>Heartland Brewery Union Square</name>
+  </place>
+  <place>
+    <id>place:Heathman-Restaurant-And-Bar</id>
+    <name>Heathman Restaurant And Bar</name>
+  </place>
+  <place>
+    <id>place:Hedge-House-New-Old-Lompoc</id>
+    <name>Hedge House (New Old Lompoc)</name>
+  </place>
+  <place>
+    <id>place:Heinold-s-First-Last-Chance-Saloon</id>
+    <name>Heinold's First &amp; Last Chance Saloon</name>
+  </place>
+  <place>
+    <id>place:Hennessey-s-Tavern</id>
+    <name>Hennessey's Tavern</name>
+  </place>
+  <place>
+    <id>place:Henry-s-12th-Street-Tavern</id>
+    <name>Henry's 12th Street Tavern</name>
+  </place>
+  <place>
+    <id>place:Henry-s-Pub</id>
+    <name>Henry's Pub</name>
+  </place>
+  <place>
+    <id>place:Hereford-Hops-Restaurant-and-Brewpub-1</id>
+    <name>Hereford &amp; Hops Restaurant and Brewpub #1</name>
+  </place>
+  <place>
+    <id>place:Herkimer-Pub-Brewery</id>
+    <name>Herkimer Pub &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Heroe-s-Bar-Grill</id>
+    <name>Heroe's Bar &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Heroe-s-Bar-Grill-Fullerton</id>
+    <name>Heroe's Bar &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Hi-Time-Wine-Cellars</id>
+    <name>Hi-Time Wine Cellars</name>
+  </place>
+  <place>
+    <id>place:Higgins-Restaurant-And-Bar</id>
+    <name>Higgins Restaurant And Bar</name>
+  </place>
+  <place>
+    <id>place:High-Street-Brewery-Cafe-McMenamins</id>
+    <name>High Street Brewery &amp; Cafe (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Highland-Pub-Brewery-McMenamins</id>
+    <name>Highland Pub &amp; Brewery (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Highland-Stillhouse-Pub</id>
+    <name>Highland Stillhouse Pub</name>
+  </place>
+  <place>
+    <id>place:Hill-s-Restaurant-And-Lounge</id>
+    <name>Hill's Restaurant And Lounge</name>
+  </place>
+  <place>
+    <id>place:Hillsdale-Brewery-Public-House-McMenamins</id>
+    <name>Hillsdale Brewery &amp; Public House (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Hilltop-Ale-House</id>
+    <name>Hilltop Ale House</name>
+  </place>
+  <place>
+    <id>place:Holiday-Wine-Cellar</id>
+    <name>Holiday Wine Cellar</name>
+  </place>
+  <place>
+    <id>place:Hollingshead-s-Delicatessen</id>
+    <name>Hollingshead's Delicatessen</name>
+  </place>
+  <place>
+    <id>place:Hollister-Brewing-Co</id>
+    <name>Hollister Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Holt-s-Quick-Check-Market</id>
+    <name>Holt's Quick Check Market</name>
+  </place>
+  <place>
+    <id>place:Home-Brew-Mart</id>
+    <name>Home Brew Mart</name>
+  </place>
+  <place>
+    <id>place:Hood-Canal-Brewing</id>
+    <name>Hood Canal Brewing</name>
+  </place>
+  <place>
+    <id>place:Hoodland-Thriftway</id>
+    <name>Hoodland Thriftway</name>
+  </place>
+  <place>
+    <id>place:Hoover-s-101-Cafe</id>
+    <name>Hoover's 101 Cafe</name>
+  </place>
+  <place>
+    <id>place:Hooverville-Bar</id>
+    <name>Hooverville Bar</name>
+  </place>
+  <place>
+    <id>place:Hop-Valley-Brewing-Company</id>
+    <name>Hop Valley Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Hopmonk-Tavern</id>
+    <name>Hopmonk Tavern</name>
+  </place>
+  <place>
+    <id>place:Hoppy-Brewing-Co</id>
+    <name>Hoppy Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Hops-Grillhouse-Brewery-Alexandria</id>
+    <name>Hops Grillhouse &amp; Brewery - Alexandria</name>
+  </place>
+  <place>
+    <id>place:Hops-Grillhouse-Brewery-Bradenton</id>
+    <name>Hops Grillhouse &amp; Brewery - Bradenton</name>
+  </place>
+  <place>
+    <id>place:Hops-Grillhouse-Brewery-Carrollwood</id>
+    <name>Hops Grillhouse &amp; Brewery - Carrollwood</name>
+  </place>
+  <place>
+    <id>place:Hops-Grillhouse-Brewery-Fort-Myers</id>
+    <name>Hops Grillhouse &amp; Brewery - Fort Myers</name>
+  </place>
+  <place>
+    <id>place:Hops-Grillhouse-Brewery-Gainesville</id>
+    <name>Hops Grillhouse &amp; Brewery - Gainesville</name>
+  </place>
+  <place>
+    <id>place:Hops-Grillhouse-Brewery-Golden</id>
+    <name>Hops Grillhouse &amp; Brewery - Golden</name>
+  </place>
+  <place>
+    <id>place:Hops-Grillhouse-Brewery-Littleton</id>
+    <name>Hops Grillhouse &amp; Brewery - Littleton</name>
+  </place>
+  <place>
+    <id>place:Hops-Grillhouse-Brewery-Miami</id>
+    <name>Hops Grillhouse &amp; Brewery - Miami</name>
+  </place>
+  <place>
+    <id>place:Hops-Grillhouse-Brewery-Newington</id>
+    <name>Hops Grillhouse &amp; Brewery - Newington</name>
+  </place>
+  <place>
+    <id>place:Hops-Grillhouse-Brewery-Northglenn</id>
+    <name>Hops Grillhouse &amp; Brewery - Northglenn</name>
+  </place>
+  <place>
+    <id>place:Hops-Grillhouse-Brewery-Ocala</id>
+    <name>Hops Grillhouse &amp; Brewery - Ocala</name>
+  </place>
+  <place>
+    <id>place:Hops-Grillhouse-Brewery-Palm-Harbor</id>
+    <name>Hops Grillhouse &amp; Brewery - Palm Harbor</name>
+  </place>
+  <place>
+    <id>place:Hops-Grillhouse-Brewery-Pompano-Beach</id>
+    <name>Hops Grillhouse &amp; Brewery - Pompano Beach</name>
+  </place>
+  <place>
+    <id>place:Hops-Grillhouse-Brewery-Richmond</id>
+    <name>Hops Grillhouse &amp; Brewery - Richmond</name>
+  </place>
+  <place>
+    <id>place:Hops-Grillhouse-Brewery-Sanford</id>
+    <name>Hops Grillhouse &amp; Brewery - Sanford</name>
+  </place>
+  <place>
+    <id>place:Hops-Grillhouse-Brewery-Spartanburg</id>
+    <name>Hops Grillhouse &amp; Brewery - Spartanburg</name>
+  </place>
+  <place>
+    <id>place:Hops-Grillhouse-Brewery-Pembroke-Pines</id>
+    <name>Hops Grillhouse &amp; Brewery &#x2014; Pembroke Pines</name>
+  </place>
+  <place>
+    <id>place:Hopvine-Pub</id>
+    <name>Hopvine Pub</name>
+  </place>
+  <place>
+    <id>place:Hopworks-Urban-Brewery</id>
+    <name>Hopworks Urban Brewery</name>
+  </place>
+  <place>
+    <id>place:Hopyard-The</id>
+    <name>Hopyard, The</name>
+  </place>
+  <place>
+    <id>place:Hopyard-The-San-Ramon</id>
+    <name>Hopyard, The</name>
+  </place>
+  <place>
+    <id>place:Horse-And-Cow-Bar-Grill</id>
+    <name>Horse And Cow Bar &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Horse-Brass-Pub</id>
+    <name>Horse Brass Pub</name>
+  </place>
+  <place>
+    <id>place:Hotel-Oregon-McMenamins</id>
+    <name>Hotel Oregon (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:HotShots-Billiards-Family-Entertainment</id>
+    <name>HotShots Billiards &amp; Family Entertainment</name>
+  </place>
+  <place>
+    <id>place:Howard-s-Market</id>
+    <name>Howard's Market</name>
+  </place>
+  <place>
+    <id>place:Howard-s-Mini-Mart-Liquor</id>
+    <name>Howard's Mini Mart &amp; Liquor</name>
+  </place>
+  <place>
+    <id>place:Huckleberry-s-Natural-Market</id>
+    <name>Huckleberry's Natural Market</name>
+  </place>
+  <place>
+    <id>place:Humperdink-s-Restaurant-Brewery-Richardson</id>
+    <name>Humperdink's Restaurant &amp; Brewery &#x2014; Richardson</name>
+  </place>
+  <place>
+    <id>place:Humperdinks-of-Arlington</id>
+    <name>Humperdinks of Arlington</name>
+  </place>
+  <place>
+    <id>place:Humperdinks-of-Dallas-Greenville</id>
+    <name>Humperdinks of Dallas - Greenville</name>
+  </place>
+  <place>
+    <id>place:Humperdinks-of-Dallas-Northwest</id>
+    <name>Humperdinks of Dallas - Northwest</name>
+  </place>
+  <place>
+    <id>place:Humperdinks-Restaurant-Brewery-Addison</id>
+    <name>Humperdinks Restaurant &amp; Brewery &#x2014; Addison</name>
+  </place>
+  <place>
+    <id>place:Huntington-Beach-Beer-Company</id>
+    <name>Huntington Beach Beer Company</name>
+  </place>
+  <place>
+    <id>place:Ice-Axe-Grill-Mt-Hood-Brewing-Co</id>
+    <name>Ice Axe Grill/Mt. Hood Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Ice-Harbor-The-Marina</id>
+    <name>Ice Harbor @ The Marina</name>
+  </place>
+  <place>
+    <id>place:Ice-Harbor-Brewing</id>
+    <name>Ice Harbor Brewing</name>
+  </place>
+  <place>
+    <id>place:Il-Vicino-Brewery</id>
+    <name>Il Vicino Brewery</name>
+  </place>
+  <place>
+    <id>place:Il-Vicino-Pizzeria-and-Brewery-Colorado-Springs</id>
+    <name>Il Vicino Pizzeria and Brewery (Colorado Springs)</name>
+  </place>
+  <place>
+    <id>place:Il-Vicino-Pizzeria-and-Brewery-Nob-Hill</id>
+    <name>Il Vicino Pizzeria and Brewery (Nob Hill)</name>
+  </place>
+  <place>
+    <id>place:International-Food-Market</id>
+    <name>International Food &amp; Market</name>
+  </place>
+  <place>
+    <id>place:Iron-Hill-Brewery-North-Wales</id>
+    <name>Iron Hill Brewery - North Wales</name>
+  </place>
+  <place>
+    <id>place:Iron-Hill-Brewery-Wilmingon</id>
+    <name>Iron Hill Brewery - Wilmingon</name>
+  </place>
+  <place>
+    <id>place:Iron-Hill-Brewery-Media</id>
+    <name>Iron Hill Brewery &#x2014; Media</name>
+  </place>
+  <place>
+    <id>place:Iron-Hill-Brewery-Newark</id>
+    <name>Iron Hill Brewery &#x2014; Newark</name>
+  </place>
+  <place>
+    <id>place:Iron-Hill-Brewery-West-Chester</id>
+    <name>Iron Hill Brewery &#x2014; West Chester</name>
+  </place>
+  <place>
+    <id>place:Iron-Hill-Brewery-Restaurant-Lancaster</id>
+    <name>Iron Hill Brewery &amp; Restaurant &#x2014; Lancaster</name>
+  </place>
+  <place>
+    <id>place:Iron-Horse-Brewery</id>
+    <name>Iron Horse Brewery</name>
+  </place>
+  <place>
+    <id>place:Iron-Springs-Pub-Brewery</id>
+    <name>Iron Springs Pub &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Island-Brewing-Company</id>
+    <name>Island Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Issaquah-Brewhouse</id>
+    <name>Issaquah Brewhouse</name>
+  </place>
+  <place>
+    <id>place:J-S-Market</id>
+    <name>J &amp; S Market</name>
+  </place>
+  <place>
+    <id>place:J-T-Ramirez-Liquor</id>
+    <name>J &amp; T Ramirez Liquor</name>
+  </place>
+  <place>
+    <id>place:J-J-Brewsky-s</id>
+    <name>J.J. Brewsky's</name>
+  </place>
+  <place>
+    <id>place:J-ce-G-ce</id>
+    <name>J&#xE1;ce G&#xE1;ce</name>
+  </place>
+  <place>
+    <id>place:Jack-London-s-Bar-Grill</id>
+    <name>Jack London's Bar &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Jack-Tar-Bar-Grill-Cathedral-Hill-Hotel</id>
+    <name>Jack Tar Bar &amp; Grill @ Cathedral Hill Hotel</name>
+  </place>
+  <place>
+    <id>place:Jack-s-Brewing-Company</id>
+    <name>Jack's Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Jack-s-Cannery-Bar</id>
+    <name>Jack's Cannery Bar</name>
+  </place>
+  <place>
+    <id>place:Jackson-Wine-And-Spirits</id>
+    <name>Jackson Wine And Spirits</name>
+  </place>
+  <place>
+    <id>place:Jacob-Leinenkugel-Brewing-1</id>
+    <name>Jacob Leinenkugel Brewing #1</name>
+  </place>
+  <place>
+    <id>place:Jaipur-Restaurant-and-Brewpub</id>
+    <name>Jaipur Restaurant and Brewpub</name>
+  </place>
+  <place>
+    <id>place:Jake-s-Bar-And-Bistro</id>
+    <name>Jake's Bar And Bistro</name>
+  </place>
+  <place>
+    <id>place:Jasper-Murdock-s-Ale-House</id>
+    <name>Jasper Murdock's Ale House</name>
+  </place>
+  <place>
+    <id>place:Jasper-s-BBQ-Smokehouse</id>
+    <name>Jasper's BBQ Smokehouse</name>
+  </place>
+  <place>
+    <id>place:JaXon-Brew-Haus</id>
+    <name>JaXon Brew Haus</name>
+  </place>
+  <place>
+    <id>place:Jaxon-s-Restaurants-Brewing-Company-El-Paso</id>
+    <name>Jaxon's Restaurants &amp; Brewing Company - El Paso</name>
+  </place>
+  <place>
+    <id>place:Jaxon-s-Restaurants-Brewing-Company-2</id>
+    <name>Jaxon's Restaurants &amp; Brewing Company #2</name>
+  </place>
+  <place>
+    <id>place:JB-s-Foods</id>
+    <name>JB's Foods</name>
+  </place>
+  <place>
+    <id>place:Jensen-s</id>
+    <name>Jensen's</name>
+  </place>
+  <place>
+    <id>place:Jerry-s-Wine-Liquor</id>
+    <name>Jerry's Wine &amp; Liquor</name>
+  </place>
+  <place>
+    <id>place:JF-Walleye-s-Eatery-and-Brewery</id>
+    <name>JF Walleye's Eatery and Brewery</name>
+  </place>
+  <place>
+    <id>place:Joe-Jost-s</id>
+    <name>Joe Jost's</name>
+  </place>
+  <place>
+    <id>place:Johansson-s-Dining-House-Microbrewery</id>
+    <name>Johansson's Dining House &amp; Microbrewery</name>
+  </place>
+  <place>
+    <id>place:John-And-Pete-s</id>
+    <name>John And Pete's</name>
+  </place>
+  <place>
+    <id>place:John-Barleycorns-McMenamins</id>
+    <name>John Barleycorns (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:John-Harvard-s-Brew-House-Framingham</id>
+    <name>John Harvard's Brew House - Framingham</name>
+  </place>
+  <place>
+    <id>place:John-Harvard-s-Brew-House-Harvard-Square</id>
+    <name>John Harvard's Brew House - Harvard Square</name>
+  </place>
+  <place>
+    <id>place:John-Harvard-s-Brew-House-Lake-Grove</id>
+    <name>John Harvard's Brew House - Lake Grove</name>
+  </place>
+  <place>
+    <id>place:John-Harvard-s-Brew-House-Manchester</id>
+    <name>John Harvard's Brew House - Manchester</name>
+  </place>
+  <place>
+    <id>place:John-Harvard-s-Brew-House-Providence</id>
+    <name>John Harvard's Brew House - Providence</name>
+  </place>
+  <place>
+    <id>place:John-S-Rhodell-Brewery</id>
+    <name>John S. Rhodell Brewery</name>
+  </place>
+  <place>
+    <id>place:John-s-Marketplace</id>
+    <name>John's Marketplace</name>
+  </place>
+  <place>
+    <id>place:Journeys-Beer-Wine-Bites</id>
+    <name>Journeys - Beer, Wine, Bites</name>
+  </place>
+  <place>
+    <id>place:JT-Schmid-s</id>
+    <name>JT Schmid's</name>
+  </place>
+  <place>
+    <id>place:JT-Schmid-s-Restaurant-Brewery</id>
+    <name>JT Schmid's Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:JT-Schmid-s-Restaurant-Brewery-Anaheim</id>
+    <name>JT Schmid's Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:JT-Whitney-s-Brewpub-and-Eatery</id>
+    <name>JT Whitney's Brewpub and Eatery</name>
+  </place>
+  <place>
+    <id>place:Jules-Maes-Saloon-Georgetown</id>
+    <name>Jules Maes Saloon (Georgetown)</name>
+  </place>
+  <place>
+    <id>place:Jupiter</id>
+    <name>Jupiter</name>
+  </place>
+  <place>
+    <id>place:JV-Wine-Spirits</id>
+    <name>JV Wine &amp; Spirits</name>
+  </place>
+  <place>
+    <id>place:K-L-Wine-Merchants</id>
+    <name>K &amp; L Wine Merchants</name>
+  </place>
+  <place>
+    <id>place:K-Wine-Spirits</id>
+    <name>K Wine &amp; Spirits</name>
+  </place>
+  <place>
+    <id>place:K-B-Wine-Cellar</id>
+    <name>K&amp;B Wine Cellar</name>
+  </place>
+  <place>
+    <id>place:K-L-Wine-Merchants-San-Francisco</id>
+    <name>K&amp;L Wine Merchants</name>
+  </place>
+  <place>
+    <id>place:Kaiserhof</id>
+    <name>Kaiserhof</name>
+  </place>
+  <place>
+    <id>place:Kalama-Shopping-Center</id>
+    <name>Kalama Shopping Center</name>
+  </place>
+  <place>
+    <id>place:Kaleidoscope-Lounge</id>
+    <name>Kaleidoscope Lounge</name>
+  </place>
+  <place>
+    <id>place:Kaleidoscope-Pizzeria-Pub</id>
+    <name>Kaleidoscope Pizzeria &amp; Pub</name>
+  </place>
+  <place>
+    <id>place:Karl-Strauss-Brewery-Restaurant</id>
+    <name>Karl Strauss Brewery &amp; Restaurant</name>
+  </place>
+  <place>
+    <id>place:Karl-Strauss-Brewery-Gardens-Sorrento-Mesa</id>
+    <name>Karl Strauss Brewery Gardens, Sorrento Mesa</name>
+  </place>
+  <place>
+    <id>place:Karl-Strauss-Brewery-Restaurant-Costa-Mesa</id>
+    <name>Karl Strauss Brewery Restaurant</name>
+  </place>
+  <place>
+    <id>place:Karl-Strauss-Brewery-Restaurant-Carlsbad</id>
+    <name>Karl Strauss Brewery Restaurant, Carlsbad</name>
+  </place>
+  <place>
+    <id>place:Karl-Strauss-Brewery-Restaurant-La-Jolla</id>
+    <name>Karl Strauss Brewery Restaurant, La Jolla</name>
+  </place>
+  <place>
+    <id>place:Karl-Strauss-Brewing-Company</id>
+    <name>Karl Strauss Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Keg-N-Bottle</id>
+    <name>Keg 'N Bottle</name>
+  </place>
+  <place>
+    <id>place:Keg-N-Bottle-Goleta</id>
+    <name>Keg N' Bottle</name>
+  </place>
+  <place>
+    <id>place:Kell-s-Irish-Restaurant-And-Pub</id>
+    <name>Kell's Irish Restaurant And Pub</name>
+  </place>
+  <place>
+    <id>place:Kelley-Brothers-Brewing-Company</id>
+    <name>Kelley Brothers Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Kelleys-Island-Brew-Pub</id>
+    <name>Kelleys Island Brew Pub</name>
+  </place>
+  <place>
+    <id>place:Kells-Irish-Restaurant-And-Pub</id>
+    <name>Kells Irish Restaurant And Pub</name>
+  </place>
+  <place>
+    <id>place:Kelly-s-Brewery-and-BYOB</id>
+    <name>Kelly's Brewery and BYOB</name>
+  </place>
+  <place>
+    <id>place:Kelly-s-Caribbean-Bar-and-Grill</id>
+    <name>Kelly's Caribbean Bar and Grill</name>
+  </place>
+  <place>
+    <id>place:Kelly-s-Olympian</id>
+    <name>Kelly's Olympian</name>
+  </place>
+  <place>
+    <id>place:Kennebec-River-Pub-Brewery</id>
+    <name>Kennebec River Pub &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Kennebunkport-Brewing-Co-Federal-Jack-s-Brewpub-Restaurant</id>
+    <name>Kennebunkport Brewing Co. / Federal Jack's Brewpub &amp; Restaurant</name>
+  </place>
+  <place>
+    <id>place:Kennedy-School-McMenamins</id>
+    <name>Kennedy School (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Kennedy-s-Irish-Pub-And-Curry-House</id>
+    <name>Kennedy's Irish Pub And Curry House</name>
+  </place>
+  <place>
+    <id>place:Kern-River-Brewing-Company</id>
+    <name>Kern River Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Kimo-s-Sports-Bar</id>
+    <name>Kimo&#x2019;s Sports Bar</name>
+  </place>
+  <place>
+    <id>place:King-Arthurs-Steakhouse-Brew-Pub</id>
+    <name>King Arthurs Steakhouse &amp; Brew Pub</name>
+  </place>
+  <place>
+    <id>place:King-s-Hardware</id>
+    <name>King's Hardware</name>
+  </place>
+  <place>
+    <id>place:Kiss-Cafe</id>
+    <name>Kiss Cafe</name>
+  </place>
+  <place>
+    <id>place:Klamath-Basin-Brewing-Co-The-Creamery-Brew-Pub-And-Grill</id>
+    <name>Klamath Basin Brewing Co. - The Creamery Brew Pub And Grill</name>
+  </place>
+  <place>
+    <id>place:Knob-Hill-Foods</id>
+    <name>Knob Hill Foods</name>
+  </place>
+  <place>
+    <id>place:Kohnen-s-Country-Bakery</id>
+    <name>Kohnen's Country Bakery</name>
+  </place>
+  <place>
+    <id>place:Krogh-s-Restaurant-and-Brewpub</id>
+    <name>Krogh's Restaurant and Brewpub</name>
+  </place>
+  <place>
+    <id>place:La-Bella-Pizza-Garden</id>
+    <name>La Bella Pizza Garden</name>
+  </place>
+  <place>
+    <id>place:La-Bodega-Wines-Spirits</id>
+    <name>La Bodega Wines &amp; Spirits</name>
+  </place>
+  <place>
+    <id>place:La-Creperie-Bohemian-Bistro-Bar</id>
+    <name>La Creperie Bohemian Bistro &amp; Bar</name>
+  </place>
+  <place>
+    <id>place:La-Jolla-Brew-House</id>
+    <name>La Jolla Brew House</name>
+  </place>
+  <place>
+    <id>place:La-Mesa-Market-Liquor</id>
+    <name>La Mesa Market &amp; Liquor</name>
+  </place>
+  <place>
+    <id>place:La-Trappe</id>
+    <name>La Trappe</name>
+  </place>
+  <place>
+    <id>place:LaConner-Brewing-Company</id>
+    <name>LaConner Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Laht-Neppur-Brewing</id>
+    <name>Laht Neppur Brewing</name>
+  </place>
+  <place>
+    <id>place:Lake-Placid-Pub-and-Brewery</id>
+    <name>Lake Placid Pub and Brewery</name>
+  </place>
+  <place>
+    <id>place:Lanesplitter-Pub-Pizza</id>
+    <name>Lanesplitter Pub &amp; Pizza</name>
+  </place>
+  <place>
+    <id>place:Lanesplitter-Pub-Pizza-Oakland</id>
+    <name>Lanesplitter Pub &amp; Pizza</name>
+  </place>
+  <place>
+    <id>place:Larry-s-Markets</id>
+    <name>Larry's Markets</name>
+  </place>
+  <place>
+    <id>place:Larry-s-Markets-Tukwila</id>
+    <name>Larry's Markets</name>
+  </place>
+  <place>
+    <id>place:Latona-Pub</id>
+    <name>Latona Pub</name>
+  </place>
+  <place>
+    <id>place:Laurel-Tavern</id>
+    <name>Laurel Tavern</name>
+  </place>
+  <place>
+    <id>place:Laurelhurst-Theater</id>
+    <name>Laurelhurst Theater</name>
+  </place>
+  <place>
+    <id>place:Laurelwood-at-Portland-International-Airport-PDX</id>
+    <name>Laurelwood at Portland International Airport (PDX)</name>
+  </place>
+  <place>
+    <id>place:Laurelwood-NW-Public-House</id>
+    <name>Laurelwood NW Public House</name>
+  </place>
+  <place>
+    <id>place:Laurelwood-Pizza-Company</id>
+    <name>Laurelwood Pizza Company</name>
+  </place>
+  <place>
+    <id>place:Laurelwood-Public-House-Brewery</id>
+    <name>Laurelwood Public House &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Lava-Lounge</id>
+    <name>Lava Lounge</name>
+  </place>
+  <place>
+    <id>place:Lazy-Acres</id>
+    <name>Lazy Acres</name>
+  </place>
+  <place>
+    <id>place:Lazy-Dog-Cafe</id>
+    <name>Lazy Dog Cafe</name>
+  </place>
+  <place>
+    <id>place:Ledger-s-Liquors</id>
+    <name>Ledger's Liquors</name>
+  </place>
+  <place>
+    <id>place:Lee-s-Video-Liquor</id>
+    <name>Lee's Video &amp; Liquor</name>
+  </place>
+  <place>
+    <id>place:Lengthwise-Brewing-Company</id>
+    <name>Lengthwise Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Leo-s-Liqour-And-Deli</id>
+    <name>Leo's Liqour And Deli</name>
+  </place>
+  <place>
+    <id>place:Liberty-Steakhouse-and-Brewery</id>
+    <name>Liberty Steakhouse and Brewery</name>
+  </place>
+  <place>
+    <id>place:Library-Ale-House</id>
+    <name>Library Ale House</name>
+  </place>
+  <place>
+    <id>place:Library-Bar</id>
+    <name>Library Bar</name>
+  </place>
+  <place>
+    <id>place:Lighthouse-Brewpub-McMenamins</id>
+    <name>Lighthouse Brewpub (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Lily-s-Seafood-Grill-Brewery</id>
+    <name>Lily's Seafood Grill &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Limericks-Irish-Pub-Eatery</id>
+    <name>Limericks Irish Pub &amp; Eatery</name>
+  </place>
+  <place>
+    <id>place:Lincoln-Market-Deli</id>
+    <name>Lincoln Market &amp; Deli</name>
+  </place>
+  <place>
+    <id>place:Linguini-s-Pizza-Brew</id>
+    <name>Linguini's Pizza &amp; Brew</name>
+  </place>
+  <place>
+    <id>place:Liquid-Solutions</id>
+    <name>Liquid Solutions</name>
+  </place>
+  <place>
+    <id>place:Liquid-Wine-And-Spirits</id>
+    <name>Liquid Wine And Spirits</name>
+  </place>
+  <place>
+    <id>place:Liquor-Barn</id>
+    <name>Liquor Barn</name>
+  </place>
+  <place>
+    <id>place:Liquor-Emporium</id>
+    <name>Liquor Emporium</name>
+  </place>
+  <place>
+    <id>place:Liquor-Plus</id>
+    <name>Liquor Plus</name>
+  </place>
+  <place>
+    <id>place:Liquor-Warehouse</id>
+    <name>Liquor Warehouse</name>
+  </place>
+  <place>
+    <id>place:Liquorama</id>
+    <name>Liquorama</name>
+  </place>
+  <place>
+    <id>place:Live-Wire-The</id>
+    <name>Live Wire, The</name>
+  </place>
+  <place>
+    <id>place:Lloyd-s-Liquor</id>
+    <name>Lloyd's Liquor</name>
+  </place>
+  <place>
+    <id>place:Lodi-Beer-Company</id>
+    <name>Lodi Beer Company</name>
+  </place>
+  <place>
+    <id>place:London-Bridge-Pub</id>
+    <name>London Bridge Pub</name>
+  </place>
+  <place>
+    <id>place:Lone-Hill-Liquors</id>
+    <name>Lone Hill Liquors</name>
+  </place>
+  <place>
+    <id>place:Long-Valley-Pub-Brewery</id>
+    <name>Long Valley Pub &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Looney-s-Smokehouse-BBQ</id>
+    <name>Looney's Smokehouse BBQ</name>
+  </place>
+  <place>
+    <id>place:Los-Gatos-Brewing-Company</id>
+    <name>Los Gatos Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Lost-Coast-Brewery-and-Cafe</id>
+    <name>Lost Coast Brewery and Cafe</name>
+  </place>
+  <place>
+    <id>place:Lucky-13</id>
+    <name>Lucky 13</name>
+  </place>
+  <place>
+    <id>place:Lucky-13-San-Francisco</id>
+    <name>Lucky 13</name>
+  </place>
+  <place>
+    <id>place:Lucky-Baldwin-s</id>
+    <name>Lucky Baldwin's</name>
+  </place>
+  <place>
+    <id>place:Lucky-Baldwins-Delirium-Cafe</id>
+    <name>Lucky Baldwins Delirium Cafe</name>
+  </place>
+  <place>
+    <id>place:Lucky-Devils</id>
+    <name>Lucky Devils</name>
+  </place>
+  <place>
+    <id>place:Lucky-Devils-Hollywood</id>
+    <name>Lucky Devils</name>
+  </place>
+  <place>
+    <id>place:Lucky-Labrador-Beer-Hall</id>
+    <name>Lucky Labrador Beer Hall</name>
+  </place>
+  <place>
+    <id>place:Lucky-Labrador-Brewing-Company</id>
+    <name>Lucky Labrador Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Lucky-Labrador-Public-House</id>
+    <name>Lucky Labrador Public House</name>
+  </place>
+  <place>
+    <id>place:Luigi-s-At-The-Beach</id>
+    <name>Luigi's At The Beach</name>
+  </place>
+  <place>
+    <id>place:Luka-s-Taproom-Lounge</id>
+    <name>Luka's Taproom &amp; Lounge</name>
+  </place>
+  <place>
+    <id>place:Lumber-Barons-Charcoal-Grill-Brewpub</id>
+    <name>Lumber Barons' Charcoal Grill &amp; Brewpub</name>
+  </place>
+  <place>
+    <id>place:LumberYard-Brewing-Co</id>
+    <name>LumberYard Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Mad-Anthony-Tap-Room</id>
+    <name>Mad Anthony Tap Room</name>
+  </place>
+  <place>
+    <id>place:Mad-Boar-Restaurant-and-Brewery</id>
+    <name>Mad Boar Restaurant and Brewery</name>
+  </place>
+  <place>
+    <id>place:Madison-Bear-Garden</id>
+    <name>Madison Bear Garden</name>
+  </place>
+  <place>
+    <id>place:Madison-Brewing-Company-Pub-and-Restaurant</id>
+    <name>Madison Brewing Company Pub and Restaurant</name>
+  </place>
+  <place>
+    <id>place:Madison-River-Brewing</id>
+    <name>Madison River Brewing</name>
+  </place>
+  <place>
+    <id>place:Madison-Station-Brewery-Cafe</id>
+    <name>Madison Station Brewery &amp; Cafe</name>
+  </place>
+  <place>
+    <id>place:Maggie-s-Pub</id>
+    <name>Maggie's Pub</name>
+  </place>
+  <place>
+    <id>place:Magnolia-Pub-Brewery</id>
+    <name>Magnolia Pub &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Main-Street-Ale-House</id>
+    <name>Main Street Ale House</name>
+  </place>
+  <place>
+    <id>place:Main-Street-Ale-House-Bothell</id>
+    <name>Main Street Ale House</name>
+  </place>
+  <place>
+    <id>place:Main-Street-Brewery</id>
+    <name>Main Street Brewery</name>
+  </place>
+  <place>
+    <id>place:Main-Street-Brewery-Lamppost-Pizza</id>
+    <name>Main Street Brewery &amp; Lamppost Pizza</name>
+  </place>
+  <place>
+    <id>place:Main-Street-Station-Casino-Brewery-and-Hotel</id>
+    <name>Main Street Station Casino, Brewery and Hotel</name>
+  </place>
+  <place>
+    <id>place:Main-Tap-Tavern</id>
+    <name>Main Tap Tavern</name>
+  </place>
+  <place>
+    <id>place:Malt-Vine</id>
+    <name>Malt &amp; Vine</name>
+  </place>
+  <place>
+    <id>place:Mammoth-Liquor</id>
+    <name>Mammoth Liquor</name>
+  </place>
+  <place>
+    <id>place:Manayunk-Brewery-and-Restaurant</id>
+    <name>Manayunk Brewery and Restaurant</name>
+  </place>
+  <place>
+    <id>place:Manderes</id>
+    <name>Manderes</name>
+  </place>
+  <place>
+    <id>place:Manette-Saloon</id>
+    <name>Manette Saloon</name>
+  </place>
+  <place>
+    <id>place:Mangrove-Bottle-Shop</id>
+    <name>Mangrove Bottle Shop</name>
+  </place>
+  <place>
+    <id>place:Manhattan-Beach-Brewing</id>
+    <name>Manhattan Beach Brewing</name>
+  </place>
+  <place>
+    <id>place:Manor-Market</id>
+    <name>Manor Market</name>
+  </place>
+  <place>
+    <id>place:Manzanita-Fresh-Foods</id>
+    <name>Manzanita Fresh Foods</name>
+  </place>
+  <place>
+    <id>place:Maple-Valley-Market</id>
+    <name>Maple Valley Market</name>
+  </place>
+  <place>
+    <id>place:Marin-Beverage-Outlet</id>
+    <name>Marin Beverage Outlet</name>
+  </place>
+  <place>
+    <id>place:Marin-Brewing-Company</id>
+    <name>Marin Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Maritime-Pacific-Brewing-Company</id>
+    <name>Maritime Pacific Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Market-Cross-Pub-Brewery</id>
+    <name>Market Cross Pub &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Market-Of-Choice</id>
+    <name>Market Of Choice</name>
+  </place>
+  <place>
+    <id>place:Market-Of-Choice-Ashland</id>
+    <name>Market Of Choice</name>
+  </place>
+  <place>
+    <id>place:Market-Of-Choice-West-Linn</id>
+    <name>Market Of Choice</name>
+  </place>
+  <place>
+    <id>place:Market-Of-Choice-Delta-Oaks</id>
+    <name>Market Of Choice (Delta Oaks)</name>
+  </place>
+  <place>
+    <id>place:Market-Of-Choice-Franklin</id>
+    <name>Market Of Choice (Franklin)</name>
+  </place>
+  <place>
+    <id>place:Market-Of-Choice-Willakenzie</id>
+    <name>Market Of Choice (Willakenzie)</name>
+  </place>
+  <place>
+    <id>place:Market-Of-Choice-Willamette</id>
+    <name>Market Of Choice (Willamette)</name>
+  </place>
+  <place>
+    <id>place:Market-Street-Pub-McMenamins</id>
+    <name>Market Street Pub (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Marquette-Harbor-Brewery-and-Restaurant</id>
+    <name>Marquette Harbor Brewery and Restaurant</name>
+  </place>
+  <place>
+    <id>place:Martha-s-Exchange-Restaurant-and-Brewing</id>
+    <name>Martha's Exchange Restaurant and Brewing</name>
+  </place>
+  <place>
+    <id>place:Mary-s-Pizza-Shack</id>
+    <name>Mary's Pizza Shack</name>
+  </place>
+  <place>
+    <id>place:Marzoni-s-Brick-Oven-and-Brewery</id>
+    <name>Marzoni's Brick Oven and Brewery</name>
+  </place>
+  <place>
+    <id>place:Mash-House-Restaurant-and-Brewery</id>
+    <name>Mash House Restaurant and Brewery</name>
+  </place>
+  <place>
+    <id>place:Matchbox</id>
+    <name>Matchbox</name>
+  </place>
+  <place>
+    <id>place:Matt-Denny-s-Ale-House-Restaurant</id>
+    <name>Matt Denny's Ale House Restaurant</name>
+  </place>
+  <place>
+    <id>place:Mattern-Sausage-Meats</id>
+    <name>Mattern Sausage &amp; Meats</name>
+  </place>
+  <place>
+    <id>place:Matts-Rotisserie-Oyster-Lounge</id>
+    <name>Matts' Rotisserie &amp; Oyster Lounge</name>
+  </place>
+  <place>
+    <id>place:Maui-Brewing-Co</id>
+    <name>Maui Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Max-s-Fanno-Creek-Brew-Pub</id>
+    <name>Max's Fanno Creek Brew Pub</name>
+  </place>
+  <place>
+    <id>place:Mazara-Italian-Restaurant-Pizzaria</id>
+    <name>Mazara Italian Restaurant &amp; Pizzaria</name>
+  </place>
+  <place>
+    <id>place:MCAS-Marine-Mart</id>
+    <name>MCAS Marine Mart</name>
+  </place>
+  <place>
+    <id>place:McCann-s-Food-and-Brew</id>
+    <name>McCann's Food and Brew</name>
+  </place>
+  <place>
+    <id>place:McCormick-Schmick</id>
+    <name>McCormick &amp; Schmick</name>
+  </place>
+  <place>
+    <id>place:McCoy-s-Public-House-Minneapolis</id>
+    <name>McCoy's Public House - Minneapolis</name>
+  </place>
+  <place>
+    <id>place:McCoy-s-Public-House-and-Brewkitchen</id>
+    <name>McCoy's Public House and Brewkitchen</name>
+  </place>
+  <place>
+    <id>place:McG-s-Irish-Pub-Grill</id>
+    <name>McG's Irish Pub &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:McGee-s-Bar-Grill</id>
+    <name>McGee's Bar &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:McGlinn-s-Public-House</id>
+    <name>McGlinn's Public House</name>
+  </place>
+  <place>
+    <id>place:McKenzie-Brew-House-Chadds-Ford</id>
+    <name>McKenzie Brew House - Chadds Ford</name>
+  </place>
+  <place>
+    <id>place:McKenzie-Brew-House-Malvern</id>
+    <name>McKenzie Brew House - Malvern</name>
+  </place>
+  <place>
+    <id>place:McMenamins</id>
+    <name>McMenamins</name>
+  </place>
+  <place>
+    <id>place:McMenamins-East-Vancouver</id>
+    <name>McMenamins - East Vancouver</name>
+  </place>
+  <place>
+    <id>place:McMenamins-Olympic-Club</id>
+    <name>McMenamins - Olympic Club</name>
+  </place>
+  <place>
+    <id>place:McMenamins-Six-Arms</id>
+    <name>McMenamins - Six Arms</name>
+  </place>
+  <place>
+    <id>place:McMenamins-Spar-Cafe</id>
+    <name>McMenamins - Spar Cafe</name>
+  </place>
+  <place>
+    <id>place:McMenamins-Cedar-Hills</id>
+    <name>McMenamins Cedar Hills</name>
+  </place>
+  <place>
+    <id>place:McMenamins-Corvallis</id>
+    <name>McMenamins Corvallis</name>
+  </place>
+  <place>
+    <id>place:McMenamins-Crystal-Ballroom-Brewery</id>
+    <name>McMenamins Crystal Ballroom Brewery</name>
+  </place>
+  <place>
+    <id>place:McMenamins-Grand-Lodge</id>
+    <name>McMenamins Grand Lodge</name>
+  </place>
+  <place>
+    <id>place:McMenamins-Greenway-Pub</id>
+    <name>McMenamins Greenway Pub</name>
+  </place>
+  <place>
+    <id>place:McMenamins-Hotel-Oregon</id>
+    <name>McMenamins Hotel Oregon</name>
+  </place>
+  <place>
+    <id>place:McMenamins-Mall-205</id>
+    <name>McMenamins Mall 205</name>
+  </place>
+  <place>
+    <id>place:McMenamins-Mill-Creek</id>
+    <name>McMenamins Mill Creek</name>
+  </place>
+  <place>
+    <id>place:McMenamins-Old-St-Francis-School</id>
+    <name>McMenamins Old St. Francis School</name>
+  </place>
+  <place>
+    <id>place:McMenamins-On-Broadway</id>
+    <name>McMenamins On Broadway</name>
+  </place>
+  <place>
+    <id>place:McMenamins-On-Monroe</id>
+    <name>McMenamins On Monroe</name>
+  </place>
+  <place>
+    <id>place:McMenamins-on-the-Columbia</id>
+    <name>McMenamins on the Columbia</name>
+  </place>
+  <place>
+    <id>place:McMenamins-Oregon-City</id>
+    <name>McMenamins Oregon City</name>
+  </place>
+  <place>
+    <id>place:McMenamins-Pub-and-Brewery</id>
+    <name>McMenamins Pub and Brewery</name>
+  </place>
+  <place>
+    <id>place:McMenamins-Riverwood-Pub</id>
+    <name>McMenamins Riverwood Pub</name>
+  </place>
+  <place>
+    <id>place:McMenamins-Tavern-Pool</id>
+    <name>McMenamins Tavern &amp; Pool</name>
+  </place>
+  <place>
+    <id>place:McMenamins-West-Linn</id>
+    <name>McMenamins West Linn</name>
+  </place>
+  <place>
+    <id>place:McP-s-Irish-Pub-Grill</id>
+    <name>McP's Irish Pub &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Mendocino-Brewing-Company-The-Hopland-Brewery</id>
+    <name>Mendocino Brewing Company / The Hopland Brewery</name>
+  </place>
+  <place>
+    <id>place:Meridian-International-Sports-Bar-And-Cafe</id>
+    <name>Meridian International Sports Bar And Cafe</name>
+  </place>
+  <place>
+    <id>place:Mesa-Liquor</id>
+    <name>Mesa Liquor</name>
+  </place>
+  <place>
+    <id>place:Methow-Valley-Brewing</id>
+    <name>Methow Valley Brewing</name>
+  </place>
+  <place>
+    <id>place:Metropolitan-Market</id>
+    <name>Metropolitan Market</name>
+  </place>
+  <place>
+    <id>place:Mia-Pia-s-Pizzeria-And-Brewhouse</id>
+    <name>Mia &amp; Pia's Pizzeria And Brewhouse</name>
+  </place>
+  <place>
+    <id>place:Mickey-Finn-s-Brew-Pub</id>
+    <name>Mickey Finn's Brew Pub</name>
+  </place>
+  <place>
+    <id>place:Minute-Shops-Liquor-Deli</id>
+    <name>Minute Shops Liquor &amp; Deli</name>
+  </place>
+  <place>
+    <id>place:Mission-Bay-Liquor</id>
+    <name>Mission Bay Liquor</name>
+  </place>
+  <place>
+    <id>place:Mission-Liquor-Wines</id>
+    <name>Mission Liquor &amp; Wines</name>
+  </place>
+  <place>
+    <id>place:Mission-Liquors</id>
+    <name>Mission Liquors</name>
+  </place>
+  <place>
+    <id>place:Mission-Liquors-Fremont</id>
+    <name>Mission Liquors</name>
+  </place>
+  <place>
+    <id>place:Mission-Pizza-Pub</id>
+    <name>Mission Pizza &amp; Pub</name>
+  </place>
+  <place>
+    <id>place:Mission-Theater-McMenamins</id>
+    <name>Mission Theater (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Misty-s-Steakhouse-Brewery</id>
+    <name>Misty's Steakhouse &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Moat-Mountain-Smoke-House-and-Brewing</id>
+    <name>Moat Mountain Smoke House and Brewing</name>
+  </place>
+  <place>
+    <id>place:Moffat-Station-Restaurant-Brewery</id>
+    <name>Moffat Station Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Monarch-Beach-Market</id>
+    <name>Monarch Beach Market</name>
+  </place>
+  <place>
+    <id>place:Mondo</id>
+    <name>Mondo</name>
+  </place>
+  <place>
+    <id>place:Monterey-Coast-Brewing</id>
+    <name>Monterey Coast Brewing</name>
+  </place>
+  <place>
+    <id>place:Montgomery-Brewing-The-Brew-Pub</id>
+    <name>Montgomery Brewing &#x2014; The Brew Pub</name>
+  </place>
+  <place>
+    <id>place:Monument-Wines-Spirits</id>
+    <name>Monument Wines &amp; Spirits</name>
+  </place>
+  <place>
+    <id>place:Moosejaw-Pizza-Dells-Brewing-Company</id>
+    <name>Moosejaw Pizza &amp; Dells Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Moraga-Wines-And-Spirits</id>
+    <name>Moraga Wines And Spirits</name>
+  </place>
+  <place>
+    <id>place:MoreBeer</id>
+    <name>MoreBeer!</name>
+  </place>
+  <place>
+    <id>place:Morrison-Hotel</id>
+    <name>Morrison Hotel</name>
+  </place>
+  <place>
+    <id>place:Morro-Bay-Brewing-Company</id>
+    <name>Morro Bay Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Morry-s-Of-Naples</id>
+    <name>Morry's Of Naples</name>
+  </place>
+  <place>
+    <id>place:Mount-St-Helena-Brewing-Company</id>
+    <name>Mount St. Helena Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Mountain-Sun-Pub-Brewery</id>
+    <name>Mountain Sun Pub &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Mountain-Town-Station-Brew-Pub-and-Steakhouse</id>
+    <name>Mountain Town Station Brew Pub and Steakhouse</name>
+  </place>
+  <place>
+    <id>place:Moylan-s-Brewery</id>
+    <name>Moylan's Brewery</name>
+  </place>
+  <place>
+    <id>place:Mr-Kegs</id>
+    <name>Mr. Kegs</name>
+  </place>
+  <place>
+    <id>place:MSM-Deli</id>
+    <name>MSM Deli</name>
+  </place>
+  <place>
+    <id>place:Mt-Emily-Ale-House</id>
+    <name>Mt. Emily Ale House</name>
+  </place>
+  <place>
+    <id>place:Mt-Hood-Country-Store</id>
+    <name>Mt. Hood Country Store</name>
+  </place>
+  <place>
+    <id>place:Mucky-Duck</id>
+    <name>Mucky Duck</name>
+  </place>
+  <place>
+    <id>place:Murphy-s-Irish-Pub-Patio</id>
+    <name>Murphy's Irish Pub &amp; Patio</name>
+  </place>
+  <place>
+    <id>place:Murphy-s-Pub</id>
+    <name>Murphy's Pub</name>
+  </place>
+  <place>
+    <id>place:Mystic-Vine</id>
+    <name>Mystic Vine</name>
+  </place>
+  <place>
+    <id>place:Naja-s-Place</id>
+    <name>Naja's Place</name>
+  </place>
+  <place>
+    <id>place:Naked-City-Brewery-Taproom</id>
+    <name>Naked City Brewery &amp; Taproom</name>
+  </place>
+  <place>
+    <id>place:Naked-City-Taphouse</id>
+    <name>Naked City Taphouse</name>
+  </place>
+  <place>
+    <id>place:Natty-Greene-s-Pub-Brewing-Co</id>
+    <name>Natty Greene's Pub &amp; Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Neighborhood</id>
+    <name>Neighborhood</name>
+  </place>
+  <place>
+    <id>place:New-Holland-Brewing-Company-1</id>
+    <name>New Holland Brewing Company #1</name>
+  </place>
+  <place>
+    <id>place:New-Holland-Brewing-Company-Restaurant-and-Pub</id>
+    <name>New Holland Brewing Company Restaurant and Pub</name>
+  </place>
+  <place>
+    <id>place:New-Holland-Brewing-Company-Restaurant-and-Pub-Holland</id>
+    <name>New Holland Brewing Company Restaurant and Pub</name>
+  </place>
+  <place>
+    <id>place:New-Old-Lompoc-5th-Quadrant</id>
+    <name>New Old Lompoc 5th Quadrant</name>
+  </place>
+  <place>
+    <id>place:New-Old-Lompoc-Brewery</id>
+    <name>New Old Lompoc Brewery</name>
+  </place>
+  <place>
+    <id>place:New-Seasons-Arbor-Lodge</id>
+    <name>New Seasons Arbor Lodge</name>
+  </place>
+  <place>
+    <id>place:New-Seasons-Cedar-Hills-Crossing</id>
+    <name>New Seasons Cedar Hills Crossing</name>
+  </place>
+  <place>
+    <id>place:New-Seasons-Concordia</id>
+    <name>New Seasons Concordia</name>
+  </place>
+  <place>
+    <id>place:New-Seasons-Happy-Valley</id>
+    <name>New Seasons Happy Valley</name>
+  </place>
+  <place>
+    <id>place:New-Seasons-Mountain-Park</id>
+    <name>New Seasons Mountain Park</name>
+  </place>
+  <place>
+    <id>place:New-Seasons-Orenco-Station</id>
+    <name>New Seasons Orenco Station</name>
+  </place>
+  <place>
+    <id>place:New-Seasons-Raleigh-Hills</id>
+    <name>New Seasons Raleigh Hills</name>
+  </place>
+  <place>
+    <id>place:New-Seasons-Sellwood</id>
+    <name>New Seasons Sellwood</name>
+  </place>
+  <place>
+    <id>place:New-Seasons-Seven-Corners</id>
+    <name>New Seasons Seven Corners</name>
+  </place>
+  <place>
+    <id>place:New-Star-Ell-Liquor</id>
+    <name>New Star-Ell Liquor</name>
+  </place>
+  <place>
+    <id>place:Newport-Avenue-Market</id>
+    <name>Newport Avenue Market</name>
+  </place>
+  <place>
+    <id>place:Newport-Beach-Brewing-Company</id>
+    <name>Newport Beach Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Newport-Pizza-Ale-House</id>
+    <name>Newport Pizza &amp; Ale House</name>
+  </place>
+  <place>
+    <id>place:Nikki-s-Bar-And-Grill</id>
+    <name>Nikki's Bar And Grill</name>
+  </place>
+  <place>
+    <id>place:Noc-Noc</id>
+    <name>Noc Noc</name>
+  </place>
+  <place>
+    <id>place:Nodding-Head-Brewpub</id>
+    <name>Nodding Head Brewpub</name>
+  </place>
+  <place>
+    <id>place:Nona-s-Italian-Deli-Sidewalk-Market</id>
+    <name>Nona's Italian Deli (Sidewalk Market)</name>
+  </place>
+  <place>
+    <id>place:Noonan-s-Bar-And-Grill</id>
+    <name>Noonan's Bar And Grill</name>
+  </place>
+  <place>
+    <id>place:Norm-s-Eatery-Ale-House</id>
+    <name>Norm's Eatery &amp; Ale House</name>
+  </place>
+  <place>
+    <id>place:North-Bend-Bar-Grill</id>
+    <name>North Bend Bar &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:North-Coast-Brewing-Co-Taproom-Grill</id>
+    <name>North Coast Brewing Co. Taproom &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:North-Coast-Co-op</id>
+    <name>North Coast Co-op</name>
+  </place>
+  <place>
+    <id>place:North-End-Tavern</id>
+    <name>North End Tavern</name>
+  </place>
+  <place>
+    <id>place:North-Fork-Brewers</id>
+    <name>North Fork Brewers</name>
+  </place>
+  <place>
+    <id>place:Northern-Ales-Inc</id>
+    <name>Northern Ales, Inc.</name>
+  </place>
+  <place>
+    <id>place:Northern-Lights-Brewing-Co</id>
+    <name>Northern Lights Brewing  Co.</name>
+  </place>
+  <place>
+    <id>place:Northern-Maine-Restaurant-Brewing-Company</id>
+    <name>Northern Maine Restaurant &amp; Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Northlake-Tavern-And-Pizza</id>
+    <name>Northlake Tavern And Pizza</name>
+  </place>
+  <place>
+    <id>place:Northwoods-Brewpub-Grill</id>
+    <name>Northwoods Brewpub Grill</name>
+  </place>
+  <place>
+    <id>place:NOVO-Restaurant-Lounge</id>
+    <name>NOVO Restaurant &amp; Lounge</name>
+  </place>
+  <place>
+    <id>place:Nugget-Market</id>
+    <name>Nugget Market</name>
+  </place>
+  <place>
+    <id>place:Number-One-Liquor-Mart</id>
+    <name>Number One Liquor Mart</name>
+  </place>
+  <place>
+    <id>place:Nuts-Brew</id>
+    <name>Nuts &amp; Brew</name>
+  </place>
+  <place>
+    <id>place:O-Brien-s-Pub</id>
+    <name>O'Brien's Pub</name>
+  </place>
+  <place>
+    <id>place:O-Griff-s-Irish-Pub-Grill-Brew-House</id>
+    <name>O'Griff's Irish Pub Grill &amp; Brew House</name>
+  </place>
+  <place>
+    <id>place:O-Shea-Brewing</id>
+    <name>O'Shea Brewing</name>
+  </place>
+  <place>
+    <id>place:Oak-Creek-Brewery-and-Grill</id>
+    <name>Oak Creek Brewery and Grill</name>
+  </place>
+  <place>
+    <id>place:Oak-Hills-Brewpub-McMenamins</id>
+    <name>Oak Hills Brewpub (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Oak-Knoll-Liquor</id>
+    <name>Oak Knoll Liquor</name>
+  </place>
+  <place>
+    <id>place:Oaks-Bottom-Public-House-New-Old-Lompoc</id>
+    <name>Oaks Bottom Public House (New Old Lompoc)</name>
+  </place>
+  <place>
+    <id>place:Ocean-Brewing-Company</id>
+    <name>Ocean Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Oggi-s-Pizza-Brewing-Co</id>
+    <name>Oggi's Pizza &amp; Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Oggi-s-Pizza-Brewing-Co-Apple-Valley</id>
+    <name>Oggi's Pizza &amp; Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Oggi-s-Pizza-Brewing-Co-Chula-Vista</id>
+    <name>Oggi's Pizza &amp; Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Oggi-s-Pizza-Brewing-Co-Corona</id>
+    <name>Oggi's Pizza &amp; Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Oggi-s-Pizza-Brewing-Co-Encinitas</id>
+    <name>Oggi's Pizza &amp; Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Oggi-s-Pizza-Brewing-Co-Escondido</id>
+    <name>Oggi's Pizza &amp; Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Oggi-s-Pizza-Brewing-Co-Huntington-Beach</id>
+    <name>Oggi's Pizza &amp; Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Oggi-s-Pizza-Brewing-Co-Mission-Viejo</id>
+    <name>Oggi's Pizza &amp; Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Oggi-s-Pizza-Brewing-Co-Orange</id>
+    <name>Oggi's Pizza &amp; Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Oggi-s-Pizza-Brewing-Co-San-Diego</id>
+    <name>Oggi's Pizza &amp; Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Oggi-s-Pizza-Brewing-Co-San-Diego-California</id>
+    <name>Oggi's Pizza &amp; Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Oggi-s-Pizza-Brewing-Co-Santa-Clarita</id>
+    <name>Oggi's Pizza &amp; Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Oggi-s-Pizza-Brewing-Co-Santee</id>
+    <name>Oggi's Pizza &amp; Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Oggi-s-Pizza-Brewing-Co-Temecula</id>
+    <name>Oggi's Pizza &amp; Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Oggi-s-Pizza-Brewing-Co-Tustin</id>
+    <name>Oggi's Pizza &amp; Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Oggi-s-Pizza-Brewing-Co-Vista</id>
+    <name>Oggi's Pizza &amp; Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Oggi-s-Pizza-and-Brewing-Phoenix</id>
+    <name>Oggi's Pizza and Brewing - Phoenix</name>
+  </place>
+  <place>
+    <id>place:Oggi-s-Pizza-and-Brewing-Scottsdale</id>
+    <name>Oggi's Pizza and Brewing - Scottsdale</name>
+  </place>
+  <place>
+    <id>place:Ol-Factory-Cafe</id>
+    <name>Ol' Factory Cafe</name>
+  </place>
+  <place>
+    <id>place:Old-Boys-Brew-House</id>
+    <name>Old Boys Brew House</name>
+  </place>
+  <place>
+    <id>place:Old-Capitol-Brew-Works-and-Public-House</id>
+    <name>Old Capitol Brew Works and Public House</name>
+  </place>
+  <place>
+    <id>place:Old-Chicago</id>
+    <name>Old Chicago</name>
+  </place>
+  <place>
+    <id>place:Old-Chicago-Beaverton</id>
+    <name>Old Chicago</name>
+  </place>
+  <place>
+    <id>place:Old-Chicago-Gresham</id>
+    <name>Old Chicago</name>
+  </place>
+  <place>
+    <id>place:Old-Doc-s-Discount-Liquor</id>
+    <name>Old Doc's Discount Liquor</name>
+  </place>
+  <place>
+    <id>place:Old-Harbor-Brewery-Steak-Lobster-House</id>
+    <name>Old Harbor Brewery Steak &amp; Lobster House</name>
+  </place>
+  <place>
+    <id>place:Old-Kings-Road</id>
+    <name>Old Kings Road</name>
+  </place>
+  <place>
+    <id>place:Old-Man-River-Restaurant-Brewery</id>
+    <name>Old Man River Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Old-Market-Pub-And-Brewery</id>
+    <name>Old Market Pub And Brewery</name>
+  </place>
+  <place>
+    <id>place:Old-Mill-Brewery-and-Grill</id>
+    <name>Old Mill Brewery and Grill</name>
+  </place>
+  <place>
+    <id>place:Old-Ship-Saloon</id>
+    <name>Old Ship Saloon</name>
+  </place>
+  <place>
+    <id>place:Old-Town-Alehouse</id>
+    <name>Old Town Alehouse</name>
+  </place>
+  <place>
+    <id>place:Old-Town-Liquor</id>
+    <name>Old Town Liquor</name>
+  </place>
+  <place>
+    <id>place:Old-Town-Saloon</id>
+    <name>Old Town Saloon</name>
+  </place>
+  <place>
+    <id>place:Old-Vienna</id>
+    <name>Old Vienna</name>
+  </place>
+  <place>
+    <id>place:Old-World-Restaurant</id>
+    <name>Old World Restaurant</name>
+  </place>
+  <place>
+    <id>place:Olde-Auburn-Ale-House</id>
+    <name>Olde Auburn Ale House</name>
+  </place>
+  <place>
+    <id>place:Olde-Peninsula-Brewpub-and-Restaurant</id>
+    <name>Olde Peninsula Brewpub and Restaurant</name>
+  </place>
+  <place>
+    <id>place:Olde-Saratoga-Brewing-Co</id>
+    <name>Olde Saratoga Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Olde-Saratoga-Brewing-Co-Saratoga-Springs</id>
+    <name>Olde Saratoga Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Olive-Tree-Marketplace</id>
+    <name>Olive Tree Marketplace</name>
+  </place>
+  <place>
+    <id>place:Omaha-Jack-s-Steakhouse-And-Brewery</id>
+    <name>Omaha Jack's Steakhouse And Brewery</name>
+  </place>
+  <place>
+    <id>place:On-The-Waterfront-Cafe</id>
+    <name>On The Waterfront Cafe</name>
+  </place>
+  <place>
+    <id>place:Onion-Pub-Brewery</id>
+    <name>Onion Pub &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Original-Nick-s-Pizzeria-And-Pub</id>
+    <name>Original Nick's Pizzeria And Pub</name>
+  </place>
+  <place>
+    <id>place:Oskar-Blues-Brewery</id>
+    <name>Oskar Blues Brewery</name>
+  </place>
+  <place>
+    <id>place:Oskar-Blues-Grill-and-Brew</id>
+    <name>Oskar Blues Grill and Brew</name>
+  </place>
+  <place>
+    <id>place:Otter-Creek-Brewing-Wolaver-s-Organic-Ales</id>
+    <name>Otter Creek Brewing &amp; Wolaver's Organic Ales</name>
+  </place>
+  <place>
+    <id>place:Otter-Creek-Brewing-Wolaver-s-Organic-Ales-Middlebury</id>
+    <name>Otter Creek Brewing &amp; Wolaver's Organic Ales</name>
+  </place>
+  <place>
+    <id>place:Otto-s-Pub-and-Brewery</id>
+    <name>Otto's Pub and Brewery</name>
+  </place>
+  <place>
+    <id>place:Outlaws-Bar-Grill</id>
+    <name>Outlaws Bar &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Oyster-Bar-Bistro-and-Brewery</id>
+    <name>Oyster Bar Bistro and Brewery</name>
+  </place>
+  <place>
+    <id>place:Pacific-Beach-Ale-House</id>
+    <name>Pacific Beach Ale House</name>
+  </place>
+  <place>
+    <id>place:Pacific-Coast-Brewing-Company</id>
+    <name>Pacific Coast Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Pacific-Liquor</id>
+    <name>Pacific Liquor</name>
+  </place>
+  <place>
+    <id>place:Pacific-Palms</id>
+    <name>Pacific Palms</name>
+  </place>
+  <place>
+    <id>place:Pacific-Park-Market</id>
+    <name>Pacific Park Market</name>
+  </place>
+  <place>
+    <id>place:Pacific-Ranch-Market</id>
+    <name>Pacific Ranch Market</name>
+  </place>
+  <place>
+    <id>place:Pagliaris-Market</id>
+    <name>Pagliaris Market</name>
+  </place>
+  <place>
+    <id>place:Palomart-Liquor-Deli</id>
+    <name>Palomart Liquor &amp; Deli</name>
+  </place>
+  <place>
+    <id>place:Pangea-Cafe-Pub</id>
+    <name>Pangea Cafe &amp; Pub</name>
+  </place>
+  <place>
+    <id>place:Paradise-Liquor</id>
+    <name>Paradise Liquor</name>
+  </place>
+  <place>
+    <id>place:Park-Lane-Liquor</id>
+    <name>Park Lane Liquor</name>
+  </place>
+  <place>
+    <id>place:Park-Tavern-Brewery-and-Eatery</id>
+    <name>Park Tavern Brewery and Eatery</name>
+  </place>
+  <place>
+    <id>place:Parkway-Tavern</id>
+    <name>Parkway Tavern</name>
+  </place>
+  <place>
+    <id>place:Parkway-Theater</id>
+    <name>Parkway Theater</name>
+  </place>
+  <place>
+    <id>place:Pastaworks</id>
+    <name>Pastaworks</name>
+  </place>
+  <place>
+    <id>place:Patrick-s-Steakhouse-and-Brewery</id>
+    <name>Patrick's Steakhouse and Brewery</name>
+  </place>
+  <place>
+    <id>place:Patterson-s-Pub</id>
+    <name>Patterson's Pub</name>
+  </place>
+  <place>
+    <id>place:Peak-s-Pub</id>
+    <name>Peak's Pub</name>
+  </place>
+  <place>
+    <id>place:Pearl-Street-Brewery</id>
+    <name>Pearl Street Brewery</name>
+  </place>
+  <place>
+    <id>place:Pearl-Street-Grill-and-Brewery</id>
+    <name>Pearl Street Grill and Brewery</name>
+  </place>
+  <place>
+    <id>place:Pelican-Pub-Brewery</id>
+    <name>Pelican Pub &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Penny-Lane-Pub-Grill</id>
+    <name>Penny Lane Pub &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Perry-s-Liquors</id>
+    <name>Perry's Liquors</name>
+  </place>
+  <place>
+    <id>place:Petaluma-Market</id>
+    <name>Petaluma Market</name>
+  </place>
+  <place>
+    <id>place:Pete-s-Brass-Rail-Car-Wash</id>
+    <name>Pete's Brass Rail &amp; Car Wash</name>
+  </place>
+  <place>
+    <id>place:Pete-s-Brewing</id>
+    <name>Pete's Brewing</name>
+  </place>
+  <place>
+    <id>place:Pete-s-of-Bellevue</id>
+    <name>Pete's of Bellevue</name>
+  </place>
+  <place>
+    <id>place:Pete-s-Place</id>
+    <name>Pete's Place</name>
+  </place>
+  <place>
+    <id>place:Peter-B-s-Brew-Pub</id>
+    <name>Peter B's Brew Pub</name>
+  </place>
+  <place>
+    <id>place:PH-Woods</id>
+    <name>PH Woods</name>
+  </place>
+  <place>
+    <id>place:Philadelphia-s</id>
+    <name>Philadelphia's</name>
+  </place>
+  <place>
+    <id>place:Piaci-Pub-And-Pizzeria</id>
+    <name>Piaci Pub And Pizzeria</name>
+  </place>
+  <place>
+    <id>place:Pig-Whistle</id>
+    <name>Pig &amp; Whistle</name>
+  </place>
+  <place>
+    <id>place:Pike-Bar-Fish-Grill-The</id>
+    <name>Pike Bar &amp; Fish Grill, The</name>
+  </place>
+  <place>
+    <id>place:Pike-Place-Bar-Grill</id>
+    <name>Pike Place Bar &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Pike-Place-Grocery-Deli</id>
+    <name>Pike Place Grocery &amp; Deli</name>
+  </place>
+  <place>
+    <id>place:Pike-Pub-and-Brewery</id>
+    <name>Pike Pub and Brewery</name>
+  </place>
+  <place>
+    <id>place:Pike-Steet-Beer-And-Wine</id>
+    <name>Pike Steet Beer And Wine</name>
+  </place>
+  <place>
+    <id>place:Pine-Lake-Alehouse-Grill</id>
+    <name>Pine Lake Alehouse &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Pinnacle-Peak-Patio-Steakhouse-Microbrewery</id>
+    <name>Pinnacle Peak Patio Steakhouse &amp; Microbrewery</name>
+  </place>
+  <place>
+    <id>place:Pirate-s-Alley-Wine-Shop</id>
+    <name>Pirate's Alley Wine Shop</name>
+  </place>
+  <place>
+    <id>place:Pix-Patisserie</id>
+    <name>Pix Patisserie</name>
+  </place>
+  <place>
+    <id>place:Pix-Patisserie-NPDX</id>
+    <name>Pix Patisserie NPDX</name>
+  </place>
+  <place>
+    <id>place:Pizza-Beer-Company</id>
+    <name>Pizza Beer Company</name>
+  </place>
+  <place>
+    <id>place:Pizza-Orgasmica-and-Brewing-Company</id>
+    <name>Pizza Orgasmica and Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Pizza-Port-Bottle-Shop</id>
+    <name>Pizza Port Bottle Shop</name>
+  </place>
+  <place>
+    <id>place:Pizza-Port-Carlsbad</id>
+    <name>Pizza Port Carlsbad</name>
+  </place>
+  <place>
+    <id>place:Pizza-Port-San-Clemente</id>
+    <name>Pizza Port San Clemente</name>
+  </place>
+  <place>
+    <id>place:Pizza-Port-Solana-Beach</id>
+    <name>Pizza Port Solana Beach</name>
+  </place>
+  <place>
+    <id>place:Pizzeria-Uno-Chicago-Grill-Brewery</id>
+    <name>Pizzeria Uno Chicago Grill &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Placerville-Brewing-Co</id>
+    <name>Placerville Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Plumpjack-Wine-Store</id>
+    <name>Plumpjack Wine Store</name>
+  </place>
+  <place>
+    <id>place:Port-Townsend-Brewing</id>
+    <name>Port Townsend Brewing</name>
+  </place>
+  <place>
+    <id>place:Porter-s-Pub</id>
+    <name>Porter's Pub</name>
+  </place>
+  <place>
+    <id>place:Porterhouse</id>
+    <name>Porterhouse</name>
+  </place>
+  <place>
+    <id>place:Porterhouse-Pub</id>
+    <name>Porterhouse Pub</name>
+  </place>
+  <place>
+    <id>place:Porterhouse-Restaurant-and-Brewpub</id>
+    <name>Porterhouse Restaurant and Brewpub</name>
+  </place>
+  <place>
+    <id>place:Powerhouse-Brewery-and-Restaurant</id>
+    <name>Powerhouse Brewery and Restaurant</name>
+  </place>
+  <place>
+    <id>place:Primo-Barone-s-Restaurant-and-Brewery</id>
+    <name>Primo Barone's Restaurant and Brewery</name>
+  </place>
+  <place>
+    <id>place:Princess-Pub-Grille</id>
+    <name>Princess Pub &amp; Grille</name>
+  </place>
+  <place>
+    <id>place:Produce-Row-Cafe</id>
+    <name>Produce Row Cafe</name>
+  </place>
+  <place>
+    <id>place:Prost</id>
+    <name>Prost!</name>
+  </place>
+  <place>
+    <id>place:Pub-85</id>
+    <name>Pub 85</name>
+  </place>
+  <place>
+    <id>place:Pub-At-Piper-s-Creek</id>
+    <name>Pub At Piper's Creek</name>
+  </place>
+  <place>
+    <id>place:Public-House-The</id>
+    <name>Public House, The</name>
+  </place>
+  <place>
+    <id>place:Pudley-s-Tavern-And-Grill</id>
+    <name>Pudley's Tavern And Grill</name>
+  </place>
+  <place>
+    <id>place:Pug-Ryan-s-Steakhouse-and-Brewery</id>
+    <name>Pug Ryan's Steakhouse and Brewery</name>
+  </place>
+  <place>
+    <id>place:Puget-Sound-Wine-Cellar</id>
+    <name>Puget Sound Wine Cellar</name>
+  </place>
+  <place>
+    <id>place:Pump-House-Restaurant-Brewery</id>
+    <name>Pump House Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Pumphouse-Restaurant</id>
+    <name>Pumphouse Restaurant</name>
+  </place>
+  <place>
+    <id>place:Pyramid-Portland-Brewing</id>
+    <name>Pyramid / Portland Brewing</name>
+  </place>
+  <place>
+    <id>place:Pyramid-Alehouse-Brewery-and-Restaurant</id>
+    <name>Pyramid Alehouse, Brewery and Restaurant</name>
+  </place>
+  <place>
+    <id>place:Pyramid-Alehouse-Brewery-and-Restaurant-Berkeley</id>
+    <name>Pyramid Alehouse, Brewery and Restaurant</name>
+  </place>
+  <place>
+    <id>place:Pyramid-Alehouse-Brewery-and-Restaurant-Sacramento</id>
+    <name>Pyramid Alehouse, Brewery and Restaurant</name>
+  </place>
+  <place>
+    <id>place:Pyramid-Alehouse-Brewery-and-Restaurant-Walnut-Creek</id>
+    <name>Pyramid Alehouse, Brewery and Restaurant</name>
+  </place>
+  <place>
+    <id>place:QFC</id>
+    <name>QFC</name>
+  </place>
+  <place>
+    <id>place:QFC-University-Village</id>
+    <name>QFC (University Village)</name>
+  </place>
+  <place>
+    <id>place:Quality-Market</id>
+    <name>Quality Market</name>
+  </place>
+  <place>
+    <id>place:Quest-Liquor</id>
+    <name>Quest Liquor</name>
+  </place>
+  <place>
+    <id>place:Quick-Stop</id>
+    <name>Quick Stop</name>
+  </place>
+  <place>
+    <id>place:Quinn-s</id>
+    <name>Quinn's</name>
+  </place>
+  <place>
+    <id>place:Quinn-s-Irish-Pub</id>
+    <name>Quinn's Irish Pub</name>
+  </place>
+  <place>
+    <id>place:Raccoon-Lodge-and-Brewpub-Cascade-Brewing</id>
+    <name>Raccoon Lodge and Brewpub / Cascade Brewing</name>
+  </place>
+  <place>
+    <id>place:Raging-River-Saloon</id>
+    <name>Raging River Saloon</name>
+  </place>
+  <place>
+    <id>place:Rail-City-Alehouse</id>
+    <name>Rail City Alehouse</name>
+  </place>
+  <place>
+    <id>place:Raja-Liquors</id>
+    <name>Raja Liquors</name>
+  </place>
+  <place>
+    <id>place:Raleigh-Hills-Pub-McMenamins</id>
+    <name>Raleigh Hills Pub (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Raleigh-s</id>
+    <name>Raleigh's</name>
+  </place>
+  <place>
+    <id>place:RAM-Kent</id>
+    <name>RAM - Kent</name>
+  </place>
+  <place>
+    <id>place:RAM-Restaurant-Brewery</id>
+    <name>RAM Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Ram-Restaurant-Brewery-of-Boise</id>
+    <name>Ram Restaurant &amp; Brewery of Boise</name>
+  </place>
+  <place>
+    <id>place:Ram-Restaurant-Brewery-of-Indianapolis</id>
+    <name>Ram Restaurant &amp; Brewery of Indianapolis</name>
+  </place>
+  <place>
+    <id>place:Ram-Restaurant-Brewery-of-Lakewood</id>
+    <name>Ram Restaurant &amp; Brewery of Lakewood</name>
+  </place>
+  <place>
+    <id>place:Ram-Restaurant-Brewery-of-Puyallup</id>
+    <name>Ram Restaurant &amp; Brewery of Puyallup</name>
+  </place>
+  <place>
+    <id>place:Ram-Restaurant-Brewery-of-Rosemont</id>
+    <name>Ram Restaurant &amp; Brewery of Rosemont</name>
+  </place>
+  <place>
+    <id>place:Ram-Restaurant-Brewery-of-Salem</id>
+    <name>Ram Restaurant &amp; Brewery of Salem</name>
+  </place>
+  <place>
+    <id>place:Ram-Restaurant-Brewery-of-Schaumburg</id>
+    <name>Ram Restaurant &amp; Brewery of Schaumburg</name>
+  </place>
+  <place>
+    <id>place:Ram-Restaurant-Brewery-of-Seattle</id>
+    <name>Ram Restaurant &amp; Brewery of Seattle</name>
+  </place>
+  <place>
+    <id>place:Ramp-West-Market-And-Liquor</id>
+    <name>Ramp West Market And Liquor</name>
+  </place>
+  <place>
+    <id>place:Rams-Head-McMenamins</id>
+    <name>Rams Head (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Randy-s-Fun-Hunters-Brewery-Restaurant-and-Banquet-Center</id>
+    <name>Randy's Fun Hunters Brewery Restaurant and Banquet Center</name>
+  </place>
+  <place>
+    <id>place:Raxx-Barbecue-Brewing-Co</id>
+    <name>Raxx Barbecue &amp; Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Ray-s-Liquor</id>
+    <name>Ray's Liquor</name>
+  </place>
+  <place>
+    <id>place:Raymond-s-Liquor</id>
+    <name>Raymond's Liquor</name>
+  </place>
+  <place>
+    <id>place:Rays-Liquor</id>
+    <name>Rays Liquor</name>
+  </place>
+  <place>
+    <id>place:Red-Car-Brewery-and-Restaurant</id>
+    <name>Red Car Brewery and Restaurant</name>
+  </place>
+  <place>
+    <id>place:Red-Carpet-Wine</id>
+    <name>Red Carpet Wine</name>
+  </place>
+  <place>
+    <id>place:Red-Dog-Depot</id>
+    <name>Red Dog Depot</name>
+  </place>
+  <place>
+    <id>place:Red-Dog-Depot-3</id>
+    <name>Red Dog Depot</name>
+  </place>
+  <place>
+    <id>place:Red-Lion-Tavern</id>
+    <name>Red Lion Tavern</name>
+  </place>
+  <place>
+    <id>place:Red-Restaurant-Bar</id>
+    <name>Red Restaurant &amp; Bar</name>
+  </place>
+  <place>
+    <id>place:Red-s-Corner</id>
+    <name>Red's Corner</name>
+  </place>
+  <place>
+    <id>place:Redhook-Ale-Brewery</id>
+    <name>Redhook Ale Brewery</name>
+  </place>
+  <place>
+    <id>place:Redhook-Ale-Brewery-Woodinville</id>
+    <name>Redhook Ale Brewery &#x2014; Woodinville</name>
+  </place>
+  <place>
+    <id>place:Redondo-Beach-Brewing</id>
+    <name>Redondo Beach Brewing</name>
+  </place>
+  <place>
+    <id>place:Redwood-Bar-Grill</id>
+    <name>Redwood Bar &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Redwood-Pizza</id>
+    <name>Redwood Pizza</name>
+  </place>
+  <place>
+    <id>place:Regal-s-Wine-Spirits</id>
+    <name>Regal's Wine &amp; Spirits</name>
+  </place>
+  <place>
+    <id>place:Republic-Restaurant-Lounge</id>
+    <name>Republic Restaurant &amp; Lounge</name>
+  </place>
+  <place>
+    <id>place:Revolution-Bar-Grill</id>
+    <name>Revolution Bar &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Richmond-Bar-Grill</id>
+    <name>Richmond Bar &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Riley-s-Pizza-Brewhaus</id>
+    <name>Riley&#x2019;s Pizza &amp; Brewhaus</name>
+  </place>
+  <place>
+    <id>place:Ringlers-Pub-Crystal-Ballroom-Brewery-McMenamins</id>
+    <name>Ringlers Pub/Crystal Ballroom Brewery (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Ritual-Tavern</id>
+    <name>Ritual Tavern</name>
+  </place>
+  <place>
+    <id>place:River-City-Brewing-Jacksonville</id>
+    <name>River City Brewing - Jacksonville</name>
+  </place>
+  <place>
+    <id>place:River-City-Brewing-Wichita</id>
+    <name>River City Brewing - Wichita</name>
+  </place>
+  <place>
+    <id>place:River-City-Brewing-Company</id>
+    <name>River City Brewing Company</name>
+  </place>
+  <place>
+    <id>place:River-Rock-Grill-Ale-House</id>
+    <name>River Rock Grill &amp; Ale House</name>
+  </place>
+  <place>
+    <id>place:RiverShark-Pub</id>
+    <name>RiverShark Pub</name>
+  </place>
+  <place>
+    <id>place:Riverwood-Pub-McMenamins</id>
+    <name>Riverwood Pub (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Riviera-Liquor-House</id>
+    <name>Riviera Liquor House</name>
+  </place>
+  <place>
+    <id>place:Roanoke-Inn</id>
+    <name>Roanoke Inn</name>
+  </place>
+  <place>
+    <id>place:Robin-Hood-British-Pub</id>
+    <name>Robin Hood British Pub</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery</id>
+    <name>Rock Bottom Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Arlington</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Arlington</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Arrowhead</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Arrowhead</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Atlanta</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Atlanta</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Bellevue</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Bellevue</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Boston</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Boston</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Centerra-Promenade</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Centerra Promenade</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Charlotte</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Charlotte</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Chicago</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Chicago</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Cincinnati</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Cincinnati</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Cleveland</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Cleveland</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-College-Park</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - College Park</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Colorado-Springs</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Colorado Springs</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Des-Moines</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Des Moines</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Desert-Ridge</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Desert Ridge</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Downtown</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Downtown</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-King-of-Prussia</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - King of Prussia</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Milwaukee</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Milwaukee</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Minneapolis</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Minneapolis</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Pittsburgh</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Pittsburgh</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Scottsdale</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Scottsdale</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Seattle</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Seattle</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-South-Denver</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - South Denver</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Warrenville</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Warrenville</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Westminster</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Westminster</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Yorktown</id>
+    <name>Rock Bottom Restaurant &amp; Brewery - Yorktown</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Ahwatukee</id>
+    <name>Rock Bottom Restaurant &amp; Brewery &#x2014; Ahwatukee</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Bethesda</id>
+    <name>Rock Bottom Restaurant &amp; Brewery &#x2014; Bethesda</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Denver</id>
+    <name>Rock Bottom Restaurant &amp; Brewery &#x2014; Denver</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Orland-Park</id>
+    <name>Rock Bottom Restaurant &amp; Brewery &#x2014; Orland Park</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-Brewery-Inc</id>
+    <name>Rock Bottom Restaurant &amp; Brewery Inc.</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-and-Brewery</id>
+    <name>Rock Bottom Restaurant and Brewery</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-and-Brewery-La-Jolla</id>
+    <name>Rock Bottom Restaurant and Brewery</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-and-Brewery-Portland</id>
+    <name>Rock Bottom Restaurant and Brewery</name>
+  </place>
+  <place>
+    <id>place:Rock-Bottom-Restaurant-and-Brewery-San-Diego</id>
+    <name>Rock Bottom Restaurant and Brewery</name>
+  </place>
+  <place>
+    <id>place:Rock-Creek-Tavern-McMenamins</id>
+    <name>Rock Creek Tavern (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Rock-Wood-Fire-Pizza-Brewery</id>
+    <name>Rock Wood Fire Pizza &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Rock-Wood-Fired-Pizza-and-Brewery-Lynnwood</id>
+    <name>Rock Wood Fired Pizza and Brewery - Lynnwood</name>
+  </place>
+  <place>
+    <id>place:Rock-Wood-Fired-Pizza-and-Brewery-Tacoma</id>
+    <name>Rock Wood Fired Pizza and Brewery - Tacoma</name>
+  </place>
+  <place>
+    <id>place:Rocket-Bakery</id>
+    <name>Rocket Bakery</name>
+  </place>
+  <place>
+    <id>place:Rocket-Market</id>
+    <name>Rocket Market</name>
+  </place>
+  <place>
+    <id>place:Rocky-Coulee-Brewing</id>
+    <name>Rocky Coulee Brewing</name>
+  </place>
+  <place>
+    <id>place:Rocky-Run-Tap-And-Grill-Baltimore</id>
+    <name>Rocky Run Tap And Grill - Baltimore</name>
+  </place>
+  <place>
+    <id>place:Rocky-Run-Tap-and-Grill-Columbia</id>
+    <name>Rocky Run Tap and Grill - Columbia</name>
+  </place>
+  <place>
+    <id>place:Rocky-Run-Tap-And-Grill-Glen-Burnie</id>
+    <name>Rocky Run Tap And Grill - Glen Burnie</name>
+  </place>
+  <place>
+    <id>place:Rocky-s-Market</id>
+    <name>Rocky's Market</name>
+  </place>
+  <place>
+    <id>place:Rod-s-Plaza-Beverage-Store</id>
+    <name>Rod's Plaza Beverage Store</name>
+  </place>
+  <place>
+    <id>place:Rogue-Ales-Brewery-Brewer-s-on-the-Bay</id>
+    <name>Rogue Ales Brewery / Brewer's on the Bay</name>
+  </place>
+  <place>
+    <id>place:Rogue-Ales-Distillery-Public-House</id>
+    <name>Rogue Ales Distillery &amp; Public House</name>
+  </place>
+  <place>
+    <id>place:Rogue-Ales-Public-House</id>
+    <name>Rogue Ales Public House</name>
+  </place>
+  <place>
+    <id>place:Rogue-Ales-Public-House-Newport</id>
+    <name>Rogue Ales Public House</name>
+  </place>
+  <place>
+    <id>place:Rogue-Ales-Public-House-PDX</id>
+    <name>Rogue Ales Public House (PDX)</name>
+  </place>
+  <place>
+    <id>place:Rogue-Ales-Public-House-Astoria</id>
+    <name>Rogue Ales Public House Astoria</name>
+  </place>
+  <place>
+    <id>place:Rogue-Brew-Pub-Eatery-The</id>
+    <name>Rogue Brew Pub &amp; Eatery, The</name>
+  </place>
+  <place>
+    <id>place:Roots-Organic-Brewery</id>
+    <name>Roots Organic Brewery</name>
+  </place>
+  <place>
+    <id>place:Roscoes-Deli</id>
+    <name>Roscoes Deli</name>
+  </place>
+  <place>
+    <id>place:Rose-Crown</id>
+    <name>Rose &amp; Crown</name>
+  </place>
+  <place>
+    <id>place:Roseburg-Station-Pub-Brewery-McMenamins</id>
+    <name>Roseburg Station Pub &amp; Brewery (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Rosie-McCann-s-Irish-Pub-Restaurant</id>
+    <name>Rosie McCann's Irish Pub &amp; Restaurant</name>
+  </place>
+  <place>
+    <id>place:Rosie-O-Grady-s</id>
+    <name>Rosie O'Grady's</name>
+  </place>
+  <place>
+    <id>place:Rosie-s-Brewpub</id>
+    <name>Rosie's Brewpub</name>
+  </place>
+  <place>
+    <id>place:Royal-Bavaria-Restaurant-Brewery</id>
+    <name>Royal Bavaria Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Royal-Falconer-British-Pub</id>
+    <name>Royal Falconer British Pub</name>
+  </place>
+  <place>
+    <id>place:Royal-Liquor</id>
+    <name>Royal Liquor</name>
+  </place>
+  <place>
+    <id>place:Royal-Liquors</id>
+    <name>Royal Liquors</name>
+  </place>
+  <place>
+    <id>place:Royal-Palms-Spirits</id>
+    <name>Royal Palms Spirits</name>
+  </place>
+  <place>
+    <id>place:Rubicon-Brewing-Company</id>
+    <name>Rubicon Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Ruddy-Duck-Brewery-and-Grill</id>
+    <name>Ruddy Duck Brewery and Grill</name>
+  </place>
+  <place>
+    <id>place:Russian-River-Brewing-Company</id>
+    <name>Russian River Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Rustic-Canyon</id>
+    <name>Rustic Canyon</name>
+  </place>
+  <place>
+    <id>place:Ruth-McGowan-s-Brewpub</id>
+    <name>Ruth McGowan's Brewpub</name>
+  </place>
+  <place>
+    <id>place:Ryleigh-s-Brew-Pub-and-Raw-Bar</id>
+    <name>Ryleigh's Brew Pub and Raw Bar</name>
+  </place>
+  <place>
+    <id>place:Sacramento-Alehouse-Pyramid-Breweries</id>
+    <name>Sacramento Alehouse (Pyramid Breweries)</name>
+  </place>
+  <place>
+    <id>place:Sacramento-Brewing-Co</id>
+    <name>Sacramento Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Sailfish-Bar-Grill-Twin-Rivers-Brewing-Co</id>
+    <name>Sailfish Bar &amp; Grill / Twin Rivers Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Saint-Louis-Brewery-and-Tap-Room</id>
+    <name>Saint Louis Brewery and Tap Room</name>
+  </place>
+  <place>
+    <id>place:Salmon-Creek-Brewery-and-Pub</id>
+    <name>Salmon Creek Brewery and Pub</name>
+  </place>
+  <place>
+    <id>place:Salmon-Row-Pub</id>
+    <name>Salmon Row Pub</name>
+  </place>
+  <place>
+    <id>place:Sam-Choy-s-Breakfast-Lunch-Crab-Big-Aloha-Brewery</id>
+    <name>Sam Choy's Breakfast, Lunch, Crab &amp; Big Aloha Brewery</name>
+  </place>
+  <place>
+    <id>place:San-Diego-Brewing-Co</id>
+    <name>San Diego Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:San-Dimas-Liquor</id>
+    <name>San Dimas Liquor</name>
+  </place>
+  <place>
+    <id>place:San-Francisco-Brewing-Company</id>
+    <name>San Francisco Brewing Company</name>
+  </place>
+  <place>
+    <id>place:San-Marcos-Brewery-Grill</id>
+    <name>San Marcos Brewery &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:San-Pedro-Brewing-Company</id>
+    <name>San Pedro Brewing Company</name>
+  </place>
+  <place>
+    <id>place:San-Roque-Market-Liquors</id>
+    <name>San Roque Market &amp; Liquors</name>
+  </place>
+  <place>
+    <id>place:Sandy-s-Deli-Liquor</id>
+    <name>Sandy's Deli &amp; Liquor</name>
+  </place>
+  <place>
+    <id>place:Sanford-Lake-Bar-and-Grill</id>
+    <name>Sanford Lake Bar and Grill</name>
+  </place>
+  <place>
+    <id>place:Santa-Anita-Wine-Spirits</id>
+    <name>Santa Anita Wine &amp; Spirits</name>
+  </place>
+  <place>
+    <id>place:Santa-Barbara-Brewing-Company</id>
+    <name>Santa Barbara Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Santa-Maria-Brewing-Co</id>
+    <name>Santa Maria Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Santa-Maria-Liquors</id>
+    <name>Santa Maria Liquors</name>
+  </place>
+  <place>
+    <id>place:Santa-Venetia-Market</id>
+    <name>Santa Venetia Market</name>
+  </place>
+  <place>
+    <id>place:Saraveza-Bottle-Shop-Pasty-Tavern</id>
+    <name>Saraveza Bottle Shop &amp; Pasty Tavern</name>
+  </place>
+  <place>
+    <id>place:SBC-Downtown-Restaurant-Brewery</id>
+    <name>SBC Downtown Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:SBC-Restaurant-Brewery</id>
+    <name>SBC Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:SBC-Restaurant-Brewery-Hamden</id>
+    <name>SBC Restaurant &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Schnitzelhaus</id>
+    <name>Schnitzelhaus</name>
+  </place>
+  <place>
+    <id>place:Schooner-s-Grille-Brewery</id>
+    <name>Schooner's Grille &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Scuttlebutt-Brewing-Company</id>
+    <name>Scuttlebutt Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Sea-Rocket-Bistro</id>
+    <name>Sea Rocket Bistro</name>
+  </place>
+  <place>
+    <id>place:Seabright-Brewery</id>
+    <name>Seabright Brewery</name>
+  </place>
+  <place>
+    <id>place:Seagate-Liquor</id>
+    <name>Seagate Liquor</name>
+  </place>
+  <place>
+    <id>place:Seattle-Alehouse-Pyramid-Breweries</id>
+    <name>Seattle Alehouse (Pyramid Breweries)</name>
+  </place>
+  <place>
+    <id>place:Sequoia-Brewing-Company</id>
+    <name>Sequoia Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Sequoia-Brewing-Company-Fresno</id>
+    <name>Sequoia Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Servall-Liquor</id>
+    <name>Servall Liquor</name>
+  </place>
+  <place>
+    <id>place:Seven-Day-Liquor-And-Cigar-Cabinet</id>
+    <name>Seven Day Liquor And Cigar Cabinet</name>
+  </place>
+  <place>
+    <id>place:Seventh-Street-Brew-House</id>
+    <name>Seventh Street Brew House</name>
+  </place>
+  <place>
+    <id>place:Seventh-Street-Brew-House-3</id>
+    <name>Seventh Street Brew House</name>
+  </place>
+  <place>
+    <id>place:Shadows-Pub-Grill</id>
+    <name>Shadows Pub &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Shakespeare-Pub-Grill</id>
+    <name>Shakespeare Pub &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Shamrock-Irish-Pub</id>
+    <name>Shamrock Irish Pub</name>
+  </place>
+  <place>
+    <id>place:Sharp-s-Roaster</id>
+    <name>Sharp's Roaster</name>
+  </place>
+  <place>
+    <id>place:Ship-Inn-Brewpub</id>
+    <name>Ship Inn Brewpub</name>
+  </place>
+  <place>
+    <id>place:Shipwrecked-Brew-Pub</id>
+    <name>Shipwrecked Brew Pub</name>
+  </place>
+  <place>
+    <id>place:Shopper-s-Corner</id>
+    <name>Shopper's Corner</name>
+  </place>
+  <place>
+    <id>place:Shultzy-s-Sausage</id>
+    <name>Shultzy's Sausage</name>
+  </place>
+  <place>
+    <id>place:Sierra-Nevada-Brewing-Co</id>
+    <name>Sierra Nevada Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Siletz-Brewing-And-Public-House</id>
+    <name>Siletz Brewing And Public House</name>
+  </place>
+  <place>
+    <id>place:Silom-Supermarket</id>
+    <name>Silom Supermarket</name>
+  </place>
+  <place>
+    <id>place:Silver-City-Brewing</id>
+    <name>Silver City Brewing</name>
+  </place>
+  <place>
+    <id>place:Silver-Moon-Brewing</id>
+    <name>Silver Moon Brewing</name>
+  </place>
+  <place>
+    <id>place:Silver-Peak-Gill-and-Taproom-on-the-River</id>
+    <name>Silver Peak Gill and Taproom on the River</name>
+  </place>
+  <place>
+    <id>place:Silver-Peak-Restaurant-Brewery-1</id>
+    <name>Silver Peak Restaurant &amp; Brewery #1</name>
+  </place>
+  <place>
+    <id>place:Silverado-Brewing-Company</id>
+    <name>Silverado Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Siskiyou-Pub</id>
+    <name>Siskiyou Pub</name>
+  </place>
+  <place>
+    <id>place:Six-Arms</id>
+    <name>Six Arms</name>
+  </place>
+  <place>
+    <id>place:Six-Rivers-Brewery</id>
+    <name>Six Rivers Brewery</name>
+  </place>
+  <place>
+    <id>place:Skagit-River-Brewing</id>
+    <name>Skagit River Brewing</name>
+  </place>
+  <place>
+    <id>place:Skye-Book-Brew</id>
+    <name>Skye Book &amp; Brew</name>
+  </place>
+  <place>
+    <id>place:Skytop-Steakhouse-and-Brewery</id>
+    <name>Skytop Steakhouse and Brewery</name>
+  </place>
+  <place>
+    <id>place:Sly-Fox-Brewhouse-and-Eatery-Royersford</id>
+    <name>Sly Fox Brewhouse and Eatery - Royersford</name>
+  </place>
+  <place>
+    <id>place:Sly-Fox-Brewhouse-and-Eatery-Phoenixville</id>
+    <name>Sly Fox Brewhouse and Eatery &#x2014; Phoenixville</name>
+  </place>
+  <place>
+    <id>place:Smoke-Cigars-Beer-Wine</id>
+    <name>Smoke &amp; Cigars, Beer &amp; Wine</name>
+  </place>
+  <place>
+    <id>place:Snake-Pit-Ale-House</id>
+    <name>Snake Pit Ale House</name>
+  </place>
+  <place>
+    <id>place:Snake-River-Brewpub-of-Lander</id>
+    <name>Snake River Brewpub of Lander</name>
+  </place>
+  <place>
+    <id>place:Snipes-Mountain-Microbrewery-Restaurant</id>
+    <name>Snipes Mountain Microbrewery &amp; Restaurant</name>
+  </place>
+  <place>
+    <id>place:Snoqualmie-Falls-Brewing-Company-Taproom</id>
+    <name>Snoqualmie Falls Brewing Company &amp; Taproom</name>
+  </place>
+  <place>
+    <id>place:Snowshoe-Brewing-Company</id>
+    <name>Snowshoe Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Sonny-McLean-s-Irish-Pub-And-Restaurant</id>
+    <name>Sonny McLean's Irish Pub And Restaurant</name>
+  </place>
+  <place>
+    <id>place:Sonoma-Chicken-Coop</id>
+    <name>Sonoma Chicken Coop</name>
+  </place>
+  <place>
+    <id>place:Sonora-Brewhouse-Pub-Restaurant-and-Brewer-s-Den</id>
+    <name>Sonora Brewhouse Pub &amp; Restaurant and Brewer's Den</name>
+  </place>
+  <place>
+    <id>place:South-Bay-Drugs</id>
+    <name>South Bay Drugs</name>
+  </place>
+  <place>
+    <id>place:South-Liberty-Road-Bar-Grill</id>
+    <name>South Liberty Road Bar &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Southampton-Publick-House</id>
+    <name>Southampton Publick House</name>
+  </place>
+  <place>
+    <id>place:Southern-Sun-Pub-and-Brewery</id>
+    <name>Southern Sun Pub and Brewery</name>
+  </place>
+  <place>
+    <id>place:Southside-Speakeasy-Brew-Pub</id>
+    <name>Southside Speakeasy Brew Pub</name>
+  </place>
+  <place>
+    <id>place:SPD-Market</id>
+    <name>SPD Market</name>
+  </place>
+  <place>
+    <id>place:Speedway-Brewing</id>
+    <name>Speedway Brewing</name>
+  </place>
+  <place>
+    <id>place:Speisekammer</id>
+    <name>Speisekammer</name>
+  </place>
+  <place>
+    <id>place:Spirits-Of-St-Germain</id>
+    <name>Spirits Of St. Germain</name>
+  </place>
+  <place>
+    <id>place:Sports-Brew-Pub</id>
+    <name>Sports Brew Pub</name>
+  </place>
+  <place>
+    <id>place:Sprague-Farm-Brew-Works</id>
+    <name>Sprague Farm &amp; Brew Works</name>
+  </place>
+  <place>
+    <id>place:Squirrel-s-Tavern</id>
+    <name>Squirrel's Tavern</name>
+  </place>
+  <place>
+    <id>place:St-John-s-Bar-Grill</id>
+    <name>St John's Bar &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:St-Johns-Theater-Pub-McMenamins</id>
+    <name>St. Johns Theater &amp; Pub (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:St-Stan-s-Brewing-Co-Tap-Room</id>
+    <name>St. Stan's Brewing Co. &amp; Tap Room</name>
+  </place>
+  <place>
+    <id>place:Stadium-Brewing-Company</id>
+    <name>Stadium Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Stagecoach-Liquors</id>
+    <name>Stagecoach Liquors</name>
+  </place>
+  <place>
+    <id>place:Standing-Stone-Brewing-Company</id>
+    <name>Standing Stone Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Stanislaus-Brewing-Company</id>
+    <name>Stanislaus Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Star-Grocery</id>
+    <name>Star Grocery</name>
+  </place>
+  <place>
+    <id>place:Star-Liquor</id>
+    <name>Star Liquor</name>
+  </place>
+  <place>
+    <id>place:Steam-Plant-Grill</id>
+    <name>Steam Plant Grill</name>
+  </place>
+  <place>
+    <id>place:Steelhead-Brewing-Co</id>
+    <name>Steelhead Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Steelhead-Brewing-Co-Burlingame</id>
+    <name>Steelhead Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Steelhead-Brewing-Co-Eugene</id>
+    <name>Steelhead Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Steilacoom-Deli-Pub</id>
+    <name>Steilacoom Deli &amp; Pub</name>
+  </place>
+  <place>
+    <id>place:Stix-Billiards-Brewhouse</id>
+    <name>Stix Billiards &amp; Brewhouse</name>
+  </place>
+  <place>
+    <id>place:Stone-Brewing-Company</id>
+    <name>Stone Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Stone-Cellar-Brewpub-Restaurant</id>
+    <name>Stone Cellar Brewpub &amp; Restaurant</name>
+  </place>
+  <place>
+    <id>place:Stuffed-Sandwich</id>
+    <name>Stuffed Sandwich</name>
+  </place>
+  <place>
+    <id>place:Stumbling-Monk-The</id>
+    <name>Stumbling Monk, The</name>
+  </place>
+  <place>
+    <id>place:Stumptown-Brewery-Smokehouse</id>
+    <name>Stumptown Brewery &amp; Smokehouse</name>
+  </place>
+  <place>
+    <id>place:Stumptown-Coffee-Roasters</id>
+    <name>Stumptown Coffee Roasters</name>
+  </place>
+  <place>
+    <id>place:Suds-n-Suds</id>
+    <name>Suds 'n' Suds</name>
+  </place>
+  <place>
+    <id>place:Sudwerk-Restaurant-and-Brewery</id>
+    <name>Sudwerk Restaurant and Brewery</name>
+  </place>
+  <place>
+    <id>place:Sullivan-s-Black-Forest-Brew-Haus-Grill</id>
+    <name>Sullivan's Black Forest Brew Haus &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Sunshine-Company-Saloon-Ltd</id>
+    <name>Sunshine Company Saloon Ltd.</name>
+  </place>
+  <place>
+    <id>place:Super-Liquors</id>
+    <name>Super Liquors</name>
+  </place>
+  <place>
+    <id>place:Super-Store</id>
+    <name>Super Store</name>
+  </place>
+  <place>
+    <id>place:Suppenk-che</id>
+    <name>Suppenk&#xFC;che</name>
+  </place>
+  <place>
+    <id>place:Surfside-Grill-Brewery</id>
+    <name>Surfside Grill &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Swamp-Tavern</id>
+    <name>Swamp Tavern</name>
+  </place>
+  <place>
+    <id>place:Sweet-Spot-Pub-Lounge</id>
+    <name>Sweet Spot Pub &amp; Lounge</name>
+  </place>
+  <place>
+    <id>place:Sweetwater-Brewing-Atlanta</id>
+    <name>Sweetwater Brewing &#x2014; Atlanta</name>
+  </place>
+  <place>
+    <id>place:Sweetwater-Tavern-Centreville</id>
+    <name>Sweetwater Tavern - Centreville</name>
+  </place>
+  <place>
+    <id>place:Syracuse-Suds-Factory</id>
+    <name>Syracuse Suds Factory</name>
+  </place>
+  <place>
+    <id>place:T-Phillips-Alehouse</id>
+    <name>T Phillips Alehouse</name>
+  </place>
+  <place>
+    <id>place:T-Bonz-Gill-Grill-and-Brewery</id>
+    <name>T-Bonz Gill, Grill and Brewery</name>
+  </place>
+  <place>
+    <id>place:T-H-Brewster-s-at-Sheraton-Four-Points-LAX</id>
+    <name>T.H. Brewster's (at Sheraton Four Points LAX)</name>
+  </place>
+  <place>
+    <id>place:T-S-McHugh-s</id>
+    <name>T.S. McHugh's</name>
+  </place>
+  <place>
+    <id>place:Tacoma-Boys-Produce</id>
+    <name>Tacoma Boys Produce</name>
+  </place>
+  <place>
+    <id>place:Tacoma-Pipe-Tobacco-World-Beers</id>
+    <name>Tacoma Pipe, Tobacco &amp; World Beers</name>
+  </place>
+  <place>
+    <id>place:Tahquamenon-Falls-Brewery-Pub</id>
+    <name>Tahquamenon Falls Brewery &amp; Pub</name>
+  </place>
+  <place>
+    <id>place:Tap-House-Grill</id>
+    <name>Tap House Grill</name>
+  </place>
+  <place>
+    <id>place:Tap-House-Grill-Seattle</id>
+    <name>Tap House Grill</name>
+  </place>
+  <place>
+    <id>place:Tap-Room-Bar-Grill</id>
+    <name>Tap Room Bar &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Taproom-at-Firestone-Walker-Brewing-Co</id>
+    <name>Taproom at Firestone Walker Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Taps-Fish-House-Brewery</id>
+    <name>Taps Fish House &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Taps-Fish-House-Brewery-Corona</id>
+    <name>Taps Fish House &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Terminal-Gravity-Brewing-Company</id>
+    <name>Terminal Gravity Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Terra-Organica</id>
+    <name>Terra Organica</name>
+  </place>
+  <place>
+    <id>place:Texas-Liquor</id>
+    <name>Texas Liquor</name>
+  </place>
+  <place>
+    <id>place:The-3rd-Stop</id>
+    <name>The 3rd Stop</name>
+  </place>
+  <place>
+    <id>place:The-Abbey</id>
+    <name>The Abbey</name>
+  </place>
+  <place>
+    <id>place:The-Alembic-Bar</id>
+    <name>The Alembic Bar</name>
+  </place>
+  <place>
+    <id>place:The-Ashland-Food-Co-Op</id>
+    <name>The Ashland Food Co-Op</name>
+  </place>
+  <place>
+    <id>place:The-Beer-Hunter</id>
+    <name>The Beer Hunter</name>
+  </place>
+  <place>
+    <id>place:The-Beer-Shoppe</id>
+    <name>The Beer Shoppe</name>
+  </place>
+  <place>
+    <id>place:The-Biercaf-at-Belmont-Station</id>
+    <name>The Biercaf&#xE9; at Belmont Station</name>
+  </place>
+  <place>
+    <id>place:The-Bistro</id>
+    <name>The Bistro</name>
+  </place>
+  <place>
+    <id>place:The-Blacksmith-Restaurant</id>
+    <name>The Blacksmith Restaurant</name>
+  </place>
+  <place>
+    <id>place:The-Blue-Monk</id>
+    <name>The Blue Monk</name>
+  </place>
+  <place>
+    <id>place:The-Blue-Spark</id>
+    <name>The Blue Spark</name>
+  </place>
+  <place>
+    <id>place:The-Bottle-Room</id>
+    <name>The Bottle Room</name>
+  </place>
+  <place>
+    <id>place:The-Bottle-Shop</id>
+    <name>The Bottle Shop</name>
+  </place>
+  <place>
+    <id>place:The-Brewhouse-At-Eastlake</id>
+    <name>The Brewhouse At Eastlake</name>
+  </place>
+  <place>
+    <id>place:The-Brick</id>
+    <name>The Brick</name>
+  </place>
+  <place>
+    <id>place:The-Broken-Rack</id>
+    <name>The Broken Rack</name>
+  </place>
+  <place>
+    <id>place:The-Bruery</id>
+    <name>The Bruery</name>
+  </place>
+  <place>
+    <id>place:The-Bucket</id>
+    <name>The Bucket</name>
+  </place>
+  <place>
+    <id>place:The-Cambridge-House-Brew-Pub</id>
+    <name>The Cambridge House Brew Pub</name>
+  </place>
+  <place>
+    <id>place:The-Cask-Room</id>
+    <name>The Cask Room</name>
+  </place>
+  <place>
+    <id>place:The-Catacombs-Pub</id>
+    <name>The Catacombs Pub</name>
+  </place>
+  <place>
+    <id>place:The-Cellar-Door</id>
+    <name>The Cellar Door</name>
+  </place>
+  <place>
+    <id>place:The-Cheese-Monger-s-Shop</id>
+    <name>The Cheese Monger's Shop</name>
+  </place>
+  <place>
+    <id>place:The-Counter</id>
+    <name>The Counter</name>
+  </place>
+  <place>
+    <id>place:The-Crepe-Place</id>
+    <name>The Crepe Place</name>
+  </place>
+  <place>
+    <id>place:The-Crow-Bar-And-Kitchen</id>
+    <name>The Crow Bar And Kitchen</name>
+  </place>
+  <place>
+    <id>place:The-Davis-Graduate</id>
+    <name>The Davis Graduate</name>
+  </place>
+  <place>
+    <id>place:The-Dray</id>
+    <name>The Dray</name>
+  </place>
+  <place>
+    <id>place:The-EastBurn</id>
+    <name>The EastBurn</name>
+  </place>
+  <place>
+    <id>place:The-Eastside-Club</id>
+    <name>The Eastside Club</name>
+  </place>
+  <place>
+    <id>place:The-End-Zone</id>
+    <name>The End Zone</name>
+  </place>
+  <place>
+    <id>place:The-Englander</id>
+    <name>The Englander</name>
+  </place>
+  <place>
+    <id>place:The-Englander-San-Leandro</id>
+    <name>The Englander</name>
+  </place>
+  <place>
+    <id>place:The-Graduate</id>
+    <name>The Graduate</name>
+  </place>
+  <place>
+    <id>place:The-Grape-Vine</id>
+    <name>The Grape Vine</name>
+  </place>
+  <place>
+    <id>place:The-Greenhouse</id>
+    <name>The Greenhouse</name>
+  </place>
+  <place>
+    <id>place:The-Grey-Parrot</id>
+    <name>The Grey Parrot</name>
+  </place>
+  <place>
+    <id>place:The-Hop-Vine-Pub-Eatery</id>
+    <name>The Hop Vine Pub &amp; Eatery</name>
+  </place>
+  <place>
+    <id>place:The-Horseshoe-Cafe</id>
+    <name>The Horseshoe Cafe</name>
+  </place>
+  <place>
+    <id>place:The-Jug-Shop</id>
+    <name>The Jug Shop</name>
+  </place>
+  <place>
+    <id>place:The-Linkery</id>
+    <name>The Linkery</name>
+  </place>
+  <place>
+    <id>place:The-Local-Eatery-Drinking-Hole</id>
+    <name>The Local Eatery &amp; Drinking Hole</name>
+  </place>
+  <place>
+    <id>place:The-Lodge-Cascade-Lakes-Brewing</id>
+    <name>The Lodge (Cascade Lakes Brewing)</name>
+  </place>
+  <place>
+    <id>place:The-Maiden-Publick-House</id>
+    <name>The Maiden Publick House</name>
+  </place>
+  <place>
+    <id>place:The-Mash-Tun</id>
+    <name>The Mash Tun</name>
+  </place>
+  <place>
+    <id>place:The-Mercury-Lounge</id>
+    <name>The Mercury Lounge</name>
+  </place>
+  <place>
+    <id>place:The-Milton</id>
+    <name>The Milton</name>
+  </place>
+  <place>
+    <id>place:The-Monk-s-Kettle</id>
+    <name>The Monk's Kettle</name>
+  </place>
+  <place>
+    <id>place:The-Moon-And-Sixpence</id>
+    <name>The Moon And Sixpence</name>
+  </place>
+  <place>
+    <id>place:The-Nichols-Company</id>
+    <name>The Nichols Company</name>
+  </place>
+  <place>
+    <id>place:The-Olde-Ship-British-Pub-Restaurant</id>
+    <name>The Olde Ship British Pub &amp; Restaurant</name>
+  </place>
+  <place>
+    <id>place:The-Olde-Ship-British-Pub-Restaurant-Fullerton</id>
+    <name>The Olde Ship British Pub &amp; Restaurant</name>
+  </place>
+  <place>
+    <id>place:The-Original-Spike-s</id>
+    <name>The Original Spike's</name>
+  </place>
+  <place>
+    <id>place:The-Otheroom</id>
+    <name>The Otheroom</name>
+  </place>
+  <place>
+    <id>place:The-Pacific-Inn</id>
+    <name>The Pacific Inn</name>
+  </place>
+  <place>
+    <id>place:The-Page</id>
+    <name>The Page</name>
+  </place>
+  <place>
+    <id>place:The-Parish-Publlck-House</id>
+    <name>The Parish Publlck House</name>
+  </place>
+  <place>
+    <id>place:The-Park-Pub</id>
+    <name>The Park Pub</name>
+  </place>
+  <place>
+    <id>place:The-PB-Tap-Room</id>
+    <name>The PB Tap Room</name>
+  </place>
+  <place>
+    <id>place:The-Peekskill-Brewery-Restaurant-and-Brewpub</id>
+    <name>The Peekskill Brewery Restaurant and Brewpub</name>
+  </place>
+  <place>
+    <id>place:The-People-s-Pint</id>
+    <name>The People's Pint</name>
+  </place>
+  <place>
+    <id>place:The-Press-Room</id>
+    <name>The Press Room</name>
+  </place>
+  <place>
+    <id>place:The-Pub</id>
+    <name>The Pub</name>
+  </place>
+  <place>
+    <id>place:The-Pub-At-The-End-Of-The-Universe</id>
+    <name>The Pub At The End Of The Universe</name>
+  </place>
+  <place>
+    <id>place:The-Pure-Luck</id>
+    <name>The Pure Luck</name>
+  </place>
+  <place>
+    <id>place:The-Ram-Restaurant-Brewery-Bighorn-Brewery</id>
+    <name>The Ram Restaurant &amp; Brewery/Bighorn Brewery</name>
+  </place>
+  <place>
+    <id>place:The-Red-Hot</id>
+    <name>The Red Hot</name>
+  </place>
+  <place>
+    <id>place:The-Red-House</id>
+    <name>The Red House</name>
+  </place>
+  <place>
+    <id>place:The-Refuge</id>
+    <name>The Refuge</name>
+  </place>
+  <place>
+    <id>place:The-Rock-Wood-Fired-Pizza-Spirits</id>
+    <name>The Rock Wood Fired Pizza &amp; Spirits</name>
+  </place>
+  <place>
+    <id>place:The-Rock-Wood-Fired-Pizza-And-Spirits</id>
+    <name>The Rock Wood Fired Pizza And Spirits</name>
+  </place>
+  <place>
+    <id>place:The-Rotten-Oak</id>
+    <name>The Rotten Oak</name>
+  </place>
+  <place>
+    <id>place:The-Royal-Falconer</id>
+    <name>The Royal Falconer</name>
+  </place>
+  <place>
+    <id>place:The-Seal-Rock-Store</id>
+    <name>The Seal Rock Store</name>
+  </place>
+  <place>
+    <id>place:The-Shack</id>
+    <name>The Shack</name>
+  </place>
+  <place>
+    <id>place:The-Sidelines</id>
+    <name>The Sidelines</name>
+  </place>
+  <place>
+    <id>place:The-Spar</id>
+    <name>The Spar</name>
+  </place>
+  <place>
+    <id>place:The-Starry-Plough</id>
+    <name>The Starry Plough</name>
+  </place>
+  <place>
+    <id>place:The-Swinging-Doors</id>
+    <name>The Swinging Doors</name>
+  </place>
+  <place>
+    <id>place:The-Swiss</id>
+    <name>The Swiss</name>
+  </place>
+  <place>
+    <id>place:The-Tap-Room</id>
+    <name>The Tap Room</name>
+  </place>
+  <place>
+    <id>place:The-Tides-Tavern</id>
+    <name>The Tides Tavern</name>
+  </place>
+  <place>
+    <id>place:The-Toad-House-Pizza-Pub</id>
+    <name>The Toad House Pizza Pub</name>
+  </place>
+  <place>
+    <id>place:The-Tractor-Room</id>
+    <name>The Tractor Room</name>
+  </place>
+  <place>
+    <id>place:The-Trappist</id>
+    <name>The Trappist</name>
+  </place>
+  <place>
+    <id>place:The-Triangle-Pub</id>
+    <name>The Triangle Pub</name>
+  </place>
+  <place>
+    <id>place:The-Twisted-Vine</id>
+    <name>The Twisted Vine</name>
+  </place>
+  <place>
+    <id>place:The-Two-Seven-Public-House</id>
+    <name>The Two Seven Public House</name>
+  </place>
+  <place>
+    <id>place:The-Victory-Bar</id>
+    <name>The Victory Bar</name>
+  </place>
+  <place>
+    <id>place:The-Village-Idiot</id>
+    <name>The Village Idiot</name>
+  </place>
+  <place>
+    <id>place:The-Village-Market</id>
+    <name>The Village Market</name>
+  </place>
+  <place>
+    <id>place:The-Vine</id>
+    <name>The Vine</name>
+  </place>
+  <place>
+    <id>place:The-White-Harte</id>
+    <name>The White Harte</name>
+  </place>
+  <place>
+    <id>place:The-Wine-Beer-Haus</id>
+    <name>The Wine &amp; Beer Haus</name>
+  </place>
+  <place>
+    <id>place:The-Wine-Castle</id>
+    <name>The Wine Castle</name>
+  </place>
+  <place>
+    <id>place:The-Wine-Rack</id>
+    <name>The Wine Rack</name>
+  </place>
+  <place>
+    <id>place:The-Wine-Rack-San-Jose</id>
+    <name>The Wine Rack</name>
+  </place>
+  <place>
+    <id>place:The-York</id>
+    <name>The York</name>
+  </place>
+  <place>
+    <id>place:Third-Street-Aleworks</id>
+    <name>Third Street Aleworks</name>
+  </place>
+  <place>
+    <id>place:Thirsty-Bear-Brewing-Company</id>
+    <name>Thirsty Bear Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Thirsty-Bull-Brew-Pub</id>
+    <name>Thirsty Bull Brew Pub</name>
+  </place>
+  <place>
+    <id>place:Thompson-Brewery-Public-House-McMenamins</id>
+    <name>Thompson Brewery &amp; Public House (McMenamins)</name>
+  </place>
+  <place>
+    <id>place:Three-Creeks-Brewing-Co</id>
+    <name>Three Creeks Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Three-Lions-Pub</id>
+    <name>Three Lions Pub</name>
+  </place>
+  <place>
+    <id>place:Three-Rivers-Eatery-and-Brewery</id>
+    <name>Three Rivers Eatery and Brewery</name>
+  </place>
+  <place>
+    <id>place:Tied-House-Cafe-Brewery</id>
+    <name>Tied House Cafe &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Tied-House-Cafe-Brewery-San-Jose</id>
+    <name>Tied House Cafe &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Tiernan-s-Restaurant-And-Irish-Pub</id>
+    <name>Tiernan's Restaurant And Irish Pub</name>
+  </place>
+  <place>
+    <id>place:Tip-Top-Meats-European-Delicatessen</id>
+    <name>Tip Top Meats European Delicatessen</name>
+  </place>
+  <place>
+    <id>place:Titanic-Brewery-and-Restaurant</id>
+    <name>Titanic Brewery and Restaurant</name>
+  </place>
+  <place>
+    <id>place:Tizley-s-Europub</id>
+    <name>Tizley's Europub</name>
+  </place>
+  <place>
+    <id>place:Toad-In-The-Hole-Pub</id>
+    <name>Toad In The Hole Pub</name>
+  </place>
+  <place>
+    <id>place:Toby-s-Tavern</id>
+    <name>Toby's Tavern</name>
+  </place>
+  <place>
+    <id>place:Tom-s-Farm</id>
+    <name>Tom's Farm</name>
+  </place>
+  <place>
+    <id>place:Tommyknocker-Brewery-and-Pub-Idaho-Springs</id>
+    <name>Tommyknocker Brewery and Pub &#x2014; Idaho Springs</name>
+  </place>
+  <place>
+    <id>place:Top-Food-Drug</id>
+    <name>Top Food &amp; Drug</name>
+  </place>
+  <place>
+    <id>place:Top-Food-Drug-Bellevue</id>
+    <name>Top Food &amp; Drug</name>
+  </place>
+  <place>
+    <id>place:Top-Food-Drug-Federal-Way</id>
+    <name>Top Food &amp; Drug</name>
+  </place>
+  <place>
+    <id>place:Top-Food-Drug-Puyallup</id>
+    <name>Top Food &amp; Drug</name>
+  </place>
+  <place>
+    <id>place:Top-Food-Drug-Woodinville</id>
+    <name>Top Food &amp; Drug</name>
+  </place>
+  <place>
+    <id>place:Toronado-San-Diego</id>
+    <name>Toronado - San Diego</name>
+  </place>
+  <place>
+    <id>place:Toronado-San-Francisco</id>
+    <name>Toronado - San Francisco</name>
+  </place>
+  <place>
+    <id>place:Total-Wine-More</id>
+    <name>Total Wine &amp; More</name>
+  </place>
+  <place>
+    <id>place:Total-Wine-More-Roseville</id>
+    <name>Total Wine &amp; More (Roseville)</name>
+  </place>
+  <place>
+    <id>place:Tower-Liquor</id>
+    <name>Tower Liquor</name>
+  </place>
+  <place>
+    <id>place:Town-Country-Liquor</id>
+    <name>Town &amp; Country Liquor</name>
+  </place>
+  <place>
+    <id>place:Town-Country-Market</id>
+    <name>Town &amp; Country Market</name>
+  </place>
+  <place>
+    <id>place:Town-Country-Markets-Ballard</id>
+    <name>Town &amp; Country Markets (Ballard)</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Alameda</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Arroyo-Grande</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Beaverton</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Bellevue</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Bellingham</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Brea</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Burien</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Camarillo</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Campbell</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Capitola</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Eagle-Rock</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Everett</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Federal-Way</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Fremont</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Goleta</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Hillsboro</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Issaquah</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Kirkland</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Los-Altos</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Los-Angeles</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Lynnwood</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Menlo-Park</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Mountain-View</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Orange</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Pleasanton</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Redlands</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Riverside</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-San-Diego</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-San-Diego-California</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-San-Dimas</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-San-Francisco</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-San-Gabriel</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-San-Jose</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Santa-Barbara</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Santa-Barbara-California</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Santa-Cruz</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Seattle</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Sunnyvale</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Temecula</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-University-Place</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Upland</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Vancouver</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Ventura</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Whittier</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-Yorba-Linda</id>
+    <name>Trader Joe's</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-135-Upper-Queen-Anne-Hill</id>
+    <name>Trader Joe's (#135), Upper Queen Anne Hill</name>
+  </place>
+  <place>
+    <id>place:Trader-Joe-s-U-District</id>
+    <name>Trader Joe's (U District)</name>
+  </place>
+  <place>
+    <id>place:Traffic-Jam-and-Snug</id>
+    <name>Traffic Jam and Snug</name>
+  </place>
+  <place>
+    <id>place:Trailside-Cafe</id>
+    <name>Trailside Cafe</name>
+  </place>
+  <place>
+    <id>place:Trap-Rock-Restaurant-and-Brewery</id>
+    <name>Trap Rock Restaurant and Brewery</name>
+  </place>
+  <place>
+    <id>place:Travelers-Club-International-Restaurant-and-Tuba-Museum</id>
+    <name>Travelers Club International Restaurant and Tuba Museum</name>
+  </place>
+  <place>
+    <id>place:Trials-Pub</id>
+    <name>Trials Pub</name>
+  </place>
+  <place>
+    <id>place:Trinity-Brewhouse</id>
+    <name>Trinity Brewhouse</name>
+  </place>
+  <place>
+    <id>place:Trinity-Brewing-Company</id>
+    <name>Trinity Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Triple-J-Chophouse-Brew-Co</id>
+    <name>Triple J Chophouse &amp; Brew Co.</name>
+  </place>
+  <place>
+    <id>place:Triple-Rock-Brewery-Alehouse</id>
+    <name>Triple Rock Brewery &amp; Alehouse</name>
+  </place>
+  <place>
+    <id>place:Triumph-Brewing-of-New-Hope</id>
+    <name>Triumph Brewing of New Hope</name>
+  </place>
+  <place>
+    <id>place:Triumph-Brewing-of-Princeton</id>
+    <name>Triumph Brewing of Princeton</name>
+  </place>
+  <place>
+    <id>place:Triumph-Brewing-of-Red-Bank</id>
+    <name>Triumph Brewing of Red Bank</name>
+  </place>
+  <place>
+    <id>place:Tugboat-Brewing-Company</id>
+    <name>Tugboat Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Tumalo-Tavern</id>
+    <name>Tumalo Tavern</name>
+  </place>
+  <place>
+    <id>place:Tumalo-Tavern-3</id>
+    <name>Tumalo Tavern</name>
+  </place>
+  <place>
+    <id>place:Tun-Tavern-Brewing</id>
+    <name>Tun Tavern Brewing</name>
+  </place>
+  <place>
+    <id>place:Turoni-s-Pizzery-Brewery</id>
+    <name>Turoni's Pizzery &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Tustin-Brewing-Company</id>
+    <name>Tustin Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Twisted-Gourmet</id>
+    <name>Twisted Gourmet</name>
+  </place>
+  <place>
+    <id>place:Two-Bells</id>
+    <name>Two Bells</name>
+  </place>
+  <place>
+    <id>place:TwoRows-Restaurant-Brewery-Addison</id>
+    <name>TwoRows Restaurant &amp; Brewery - Addison</name>
+  </place>
+  <place>
+    <id>place:TwoRows-Restaurant-Brewery-Dallas</id>
+    <name>TwoRows Restaurant &amp; Brewery - Dallas</name>
+  </place>
+  <place>
+    <id>place:TwoRows-Restaurant-Brewery-Houston</id>
+    <name>TwoRows Restaurant &amp; Brewery - Houston</name>
+  </place>
+  <place>
+    <id>place:U-Save-Liquors</id>
+    <name>U Save Liquors</name>
+  </place>
+  <place>
+    <id>place:Ukiah-Brewing-Co</id>
+    <name>Ukiah Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Uncle-Billy-s-Brew-Que</id>
+    <name>Uncle Billy's Brew &amp; Que</name>
+  </place>
+  <place>
+    <id>place:Uncle-Sam-s-Saloon</id>
+    <name>Uncle Sam's Saloon</name>
+  </place>
+  <place>
+    <id>place:Union-Cattle-Company</id>
+    <name>Union Cattle Company</name>
+  </place>
+  <place>
+    <id>place:University-Market</id>
+    <name>University Market</name>
+  </place>
+  <place>
+    <id>place:Upstream-Brewing-Company-at-Legacy</id>
+    <name>Upstream Brewing Company at Legacy</name>
+  </place>
+  <place>
+    <id>place:Upstream-Brewing-Old-Market</id>
+    <name>Upstream Brewing Old Market</name>
+  </place>
+  <place>
+    <id>place:Val-De-Cole-Wines-Spirits</id>
+    <name>Val De Cole Wines &amp; Spirits</name>
+  </place>
+  <place>
+    <id>place:Valley-Bevarage-Co</id>
+    <name>Valley Bevarage Co.</name>
+  </place>
+  <place>
+    <id>place:Valley-Brewing-Company</id>
+    <name>Valley Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Valley-Liquor</id>
+    <name>Valley Liquor</name>
+  </place>
+  <place>
+    <id>place:Vendome-Liquor</id>
+    <name>Vendome Liquor</name>
+  </place>
+  <place>
+    <id>place:Vendome-Liquor-Studio-City</id>
+    <name>Vendome Liquor</name>
+  </place>
+  <place>
+    <id>place:Vendome-Liquor-And-Wine-Shop</id>
+    <name>Vendome Liquor And Wine Shop</name>
+  </place>
+  <place>
+    <id>place:Vendome-Wine-Spirits</id>
+    <name>Vendome Wine &amp; Spirits</name>
+  </place>
+  <place>
+    <id>place:Venice-Beach-Wines</id>
+    <name>Venice Beach Wines</name>
+  </place>
+  <place>
+    <id>place:Verdugo-Bar</id>
+    <name>Verdugo Bar</name>
+  </place>
+  <place>
+    <id>place:Verutti-Liquor</id>
+    <name>Verutti Liquor</name>
+  </place>
+  <place>
+    <id>place:Vicinato</id>
+    <name>Vicinato</name>
+  </place>
+  <place>
+    <id>place:Victoria-Pub-Grill</id>
+    <name>Victoria Pub &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Viking-The</id>
+    <name>Viking, The</name>
+  </place>
+  <place>
+    <id>place:Village-Market</id>
+    <name>Village Market</name>
+  </place>
+  <place>
+    <id>place:Village-Pub</id>
+    <name>Village Pub</name>
+  </place>
+  <place>
+    <id>place:Villard-Street-Pub</id>
+    <name>Villard Street Pub</name>
+  </place>
+  <place>
+    <id>place:Vin-De-Pays</id>
+    <name>Vin De Pays</name>
+  </place>
+  <place>
+    <id>place:Vin-Hus</id>
+    <name>Vin Hus</name>
+  </place>
+  <place>
+    <id>place:Vin-Rouge</id>
+    <name>Vin Rouge</name>
+  </place>
+  <place>
+    <id>place:Vinatero-Wine-Shop</id>
+    <name>Vinatero Wine Shop</name>
+  </place>
+  <place>
+    <id>place:Vino-s-Brewpub</id>
+    <name>Vino's Brewpub</name>
+  </place>
+  <place>
+    <id>place:Vino100</id>
+    <name>Vino100</name>
+  </place>
+  <place>
+    <id>place:Vintage-Bistro-Brewing-Company</id>
+    <name>Vintage Bistro &amp; Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Virginia-Inn-Tavern-The</id>
+    <name>Virginia Inn Tavern, The</name>
+  </place>
+  <place>
+    <id>place:Visalia-Brewing-Company</id>
+    <name>Visalia Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Waddell-s-Neighborhood-Pub-Grille</id>
+    <name>Waddell's Neighborhood Pub &amp; Grille</name>
+  </place>
+  <place>
+    <id>place:Wades-Wines</id>
+    <name>Wades Wines</name>
+  </place>
+  <place>
+    <id>place:Waldo-s</id>
+    <name>Waldo's</name>
+  </place>
+  <place>
+    <id>place:Walking-Man-Brewing-Co</id>
+    <name>Walking Man Brewing Co.</name>
+  </place>
+  <place>
+    <id>place:Walla-Walla-Brewers</id>
+    <name>Walla Walla Brewers</name>
+  </place>
+  <place>
+    <id>place:Walla-Walla-Brewers-Inc</id>
+    <name>Walla Walla Brewers Inc.</name>
+  </place>
+  <place>
+    <id>place:Walldorff-Brewpub-and-Bistro</id>
+    <name>Walldorff Brewpub and Bistro</name>
+  </place>
+  <place>
+    <id>place:Wally-s</id>
+    <name>Wally's</name>
+  </place>
+  <place>
+    <id>place:Walnut-Creek-Alehouse-Pyramid</id>
+    <name>Walnut Creek Alehouse (Pyramid)</name>
+  </place>
+  <place>
+    <id>place:Walnut-Liquorette</id>
+    <name>Walnut Liquorette</name>
+  </place>
+  <place>
+    <id>place:Wanker-s-Corner-Saloon-Cafe</id>
+    <name>Wanker's Corner Saloon &amp; Cafe</name>
+  </place>
+  <place>
+    <id>place:Warehouse-Cafe</id>
+    <name>Warehouse Cafe</name>
+  </place>
+  <place>
+    <id>place:Warren-House-Pub</id>
+    <name>Warren House Pub</name>
+  </place>
+  <place>
+    <id>place:Water-Street-Brewery</id>
+    <name>Water Street Brewery</name>
+  </place>
+  <place>
+    <id>place:Water-Street-Brewing-Ale-House</id>
+    <name>Water Street Brewing &amp; Ale House</name>
+  </place>
+  <place>
+    <id>place:Wayne-s-Liquor</id>
+    <name>Wayne's Liquor</name>
+  </place>
+  <place>
+    <id>place:Weeping-Radish-Restaurant-and-Brewery</id>
+    <name>Weeping Radish Restaurant and Brewery</name>
+  </place>
+  <place>
+    <id>place:Weiland-Brewery-Restaurant</id>
+    <name>Weiland Brewery Restaurant</name>
+  </place>
+  <place>
+    <id>place:Weiland-Brewery-Underground</id>
+    <name>Weiland Brewery Underground</name>
+  </place>
+  <place>
+    <id>place:Weimax-Wines-Spirits</id>
+    <name>Weimax Wines &amp; Spirits</name>
+  </place>
+  <place>
+    <id>place:West-Brothers-River-Ranch</id>
+    <name>West Brothers River Ranch</name>
+  </place>
+  <place>
+    <id>place:Westwood-Brewing-Company</id>
+    <name>Westwood Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Whale-And-Ale</id>
+    <name>Whale And Ale</name>
+  </place>
+  <place>
+    <id>place:Whidbey-Beer-Works</id>
+    <name>Whidbey Beer Works</name>
+  </place>
+  <place>
+    <id>place:Whistle-Stop</id>
+    <name>Whistle Stop</name>
+  </place>
+  <place>
+    <id>place:Whistle-Stop-Ale-House</id>
+    <name>Whistle Stop Ale House</name>
+  </place>
+  <place>
+    <id>place:Whiteside-s-Beer-And-Wine</id>
+    <name>Whiteside's Beer And Wine</name>
+  </place>
+  <place>
+    <id>place:Whitstran-Brewing-Company</id>
+    <name>Whitstran Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods</id>
+    <name>Whole Foods</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-San-Francisco</id>
+    <name>Whole Foods</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Bend</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Campbell</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Cupertino</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-El-Segundo</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Fresno</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Glendale</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-La-Jolla</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Los-Altos</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Los-Angeles</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Los-Angeles-California</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Northridge</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Oakland</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Pasadena</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Portland</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Redmond</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Redondo-Beach</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Redwood-City</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-San-Diego</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-San-Francisco</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-San-Mateo</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Santa-Monica</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Sherman-Oaks</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Torrance</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Tustin</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Valencia</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Woodland-Hills</id>
+    <name>Whole Foods Market</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Bellevue</id>
+    <name>Whole Foods Market (Bellevue)</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Bridgeport</id>
+    <name>Whole Foods Market (Bridgeport)</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Fremont</id>
+    <name>Whole Foods Market (Fremont)</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Laurelhurst</id>
+    <name>Whole Foods Market (Laurelhurst)</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Mill-Plain</id>
+    <name>Whole Foods Market (Mill Plain)</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Market-Tanasbourne</id>
+    <name>Whole Foods Market (Tanasbourne)</name>
+  </place>
+  <place>
+    <id>place:Whole-Foods-Roosevelt-Square</id>
+    <name>Whole Foods Roosevelt Square</name>
+  </place>
+  <place>
+    <id>place:Widmer-Gasthaus</id>
+    <name>Widmer Gasthaus</name>
+  </place>
+  <place>
+    <id>place:Wild-Mountain-Smokehouse-Brewery</id>
+    <name>Wild Mountain Smokehouse &amp; Brewery</name>
+  </place>
+  <place>
+    <id>place:Wild-River-Brewery-Pizza-Company</id>
+    <name>Wild River Brewery &amp; Pizza Company</name>
+  </place>
+  <place>
+    <id>place:Wild-River-Brewery-And-Restaurant</id>
+    <name>Wild River Brewery And Restaurant</name>
+  </place>
+  <place>
+    <id>place:Wild-River-Pub-And-Publick-House</id>
+    <name>Wild River Pub And Publick House</name>
+  </place>
+  <place>
+    <id>place:Williams-Seafood-Market-Wines</id>
+    <name>Williams Seafood Market &amp; Wines</name>
+  </place>
+  <place>
+    <id>place:Winchesters-Grill-Saloon</id>
+    <name>Winchesters Grill &amp; Saloon</name>
+  </place>
+  <place>
+    <id>place:Windy-City-Liqour</id>
+    <name>Windy City Liqour</name>
+  </place>
+  <place>
+    <id>place:Wine-And-Spirits-World</id>
+    <name>Wine And Spirits World</name>
+  </place>
+  <place>
+    <id>place:Wine-Barrel-Liquor</id>
+    <name>Wine Barrel Liquor</name>
+  </place>
+  <place>
+    <id>place:Wine-Country-The</id>
+    <name>Wine Country, The</name>
+  </place>
+  <place>
+    <id>place:Wine-Exchange</id>
+    <name>Wine Exchange</name>
+  </place>
+  <place>
+    <id>place:Wine-Exchange-Of-Sonoma</id>
+    <name>Wine Exchange Of Sonoma</name>
+  </place>
+  <place>
+    <id>place:Wine-Expo</id>
+    <name>Wine Expo</name>
+  </place>
+  <place>
+    <id>place:Wine-Fountaine-The</id>
+    <name>Wine Fountaine, The</name>
+  </place>
+  <place>
+    <id>place:Wine-House-The</id>
+    <name>Wine House, The</name>
+  </place>
+  <place>
+    <id>place:Wine-Street</id>
+    <name>Wine Street</name>
+  </place>
+  <place>
+    <id>place:Wings</id>
+    <name>Wings</name>
+  </place>
+  <place>
+    <id>place:Winthrop-Brewing-Company</id>
+    <name>Winthrop Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Wise-Guys-Pizzeria</id>
+    <name>Wise Guys Pizzeria</name>
+  </place>
+  <place>
+    <id>place:Wit-s-End-Pub-Cafe-The</id>
+    <name>Wit's End Pub &amp; Cafe, The</name>
+  </place>
+  <place>
+    <id>place:Wolf-Creek-Brewing</id>
+    <name>Wolf Creek Brewing</name>
+  </place>
+  <place>
+    <id>place:Woodland-Hills-Wine-Co</id>
+    <name>Woodland Hills Wine Co.</name>
+  </place>
+  <place>
+    <id>place:Woodstock-Wine-Deli</id>
+    <name>Woodstock Wine &amp; Deli</name>
+  </place>
+  <place>
+    <id>place:Woodstock-s-Pizza</id>
+    <name>Woodstock's Pizza</name>
+  </place>
+  <place>
+    <id>place:Workshop-Tavern</id>
+    <name>Workshop Tavern</name>
+  </place>
+  <place>
+    <id>place:Wunder-Brewing-Company</id>
+    <name>Wunder Brewing Company</name>
+  </place>
+  <place>
+    <id>place:Wurstkuche</id>
+    <name>Wurstkuche</name>
+  </place>
+  <place>
+    <id>place:Yard-House</id>
+    <name>Yard House</name>
+  </place>
+  <place>
+    <id>place:Yard-House-Costa-Mesa</id>
+    <name>Yard House</name>
+  </place>
+  <place>
+    <id>place:Yard-House-Irvine</id>
+    <name>Yard House</name>
+  </place>
+  <place>
+    <id>place:Yard-House-Long-Beach</id>
+    <name>Yard House</name>
+  </place>
+  <place>
+    <id>place:Yard-House-Newport-Beach</id>
+    <name>Yard House</name>
+  </place>
+  <place>
+    <id>place:Yard-House-Pasadena</id>
+    <name>Yard House</name>
+  </place>
+  <place>
+    <id>place:Yard-House-Rancho-Cucamonga</id>
+    <name>Yard House</name>
+  </place>
+  <place>
+    <id>place:Yard-House-Rancho-Mirage</id>
+    <name>Yard House</name>
+  </place>
+  <place>
+    <id>place:Yard-House-Riverside</id>
+    <name>Yard House</name>
+  </place>
+  <place>
+    <id>place:Yard-House-San-Diego</id>
+    <name>Yard House</name>
+  </place>
+  <place>
+    <id>place:YardHouse-Bar-Grill</id>
+    <name>YardHouse Bar &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Ye-Olde-King-s-Head</id>
+    <name>Ye Olde King's Head</name>
+  </place>
+  <place>
+    <id>place:Yoke-s-Fresh-Market</id>
+    <name>Yoke's Fresh Market</name>
+  </place>
+  <place>
+    <id>place:Yoke-s-Fresh-Market-Kennewick</id>
+    <name>Yoke's Fresh Market</name>
+  </place>
+  <place>
+    <id>place:Yokes-Fresh-Market</id>
+    <name>Yokes Fresh Market</name>
+  </place>
+  <place>
+    <id>place:Z-s-Taphouse-Grill</id>
+    <name>Z's Taphouse &amp; Grill</name>
+  </place>
+  <place>
+    <id>place:Zeitgeist</id>
+    <name>Zeitgeist</name>
+  </place>
+</places>

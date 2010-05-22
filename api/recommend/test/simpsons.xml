@@ -1,0 +1,748 @@
+<?xml version="1.0"?>
+<people>
+  <person>
+    <name>Agnes Skinner</name>
+    <desc>Seymour Skinner's mother.</desc>
+    <email>agnes.skinner@beercrush.com</email>
+  </person>
+  <person>
+    <name>Akira</name>
+    <desc>Waiter at The Happy Sumo; karate teacher.</desc>
+    <email>akira@beercrush.com</email>
+  </person>
+  <person>
+    <name>Allison Taylor</name>
+    <desc>Springfield Elementary Student.</desc>
+    <email>allison.taylor@beercrush.com</email>
+  </person>
+  <person>
+    <name>Amber Simpson</name>
+    <desc>Homer Simpson's deceased "Vegas wife."</desc>
+    <email>amber.simpson@beercrush.com</email>
+  </person>
+  <person>
+    <name>Apu Nahasapeemapetilon</name>
+    <desc>Operator of the Kwik-E-Mart.</desc>
+    <email>apu.nahasapeemapetilon@beercrush.com</email>
+  </person>
+  <person>
+    <name>Arnie Pye</name>
+    <desc>Helicopter reporter.</desc>
+    <email>arnie.pye@beercrush.com</email>
+  </person>
+  <person>
+    <name>Artie Ziff</name>
+    <desc>Former billionaire.</desc>
+    <email>artie.ziff@beercrush.com</email>
+  </person>
+  <person>
+    <name>Baby Gerald</name>
+    <desc>One-eyebrowed baby. Arch-nemisis of Maggie Simpson.</desc>
+    <email>baby.gerald@beercrush.com</email>
+  </person>
+  <person>
+    <name>Barney Gumble</name>
+    <desc>Homer's drunken old pal.</desc>
+    <email>barney.gumble@beercrush.com</email>
+  </person>
+  <person>
+    <name>Bart Simpson</name>
+    <desc>Oldest child of Homer and Marge; brother of Lisa and Maggie .</desc>
+    <email>bart.simpson@beercrush.com</email>
+  </person>
+  <person>
+    <name>Benjamin, Doug, and Gary</name>
+    <desc>Springfield University students.</desc>
+    <email>benjamin.doug.and.gary@beercrush.com</email>
+  </person>
+  <person>
+    <name>Bernice Hibbert</name>
+    <desc>Dr. Hibbert's wife.</desc>
+    <email>bernice.hibbert@beercrush.com</email>
+  </person>
+  <person>
+    <name>Bill and Marty</name>
+    <desc>KBBL Radio co-hosts.</desc>
+    <email>bill.and.marty@beercrush.com</email>
+  </person>
+  <person>
+    <name>Bleeding Gums Murphy</name>
+    <desc>Blues musician.</desc>
+    <email>bleeding.gums.murphy@beercrush.com</email>
+  </person>
+  <person>
+    <name>Blinky</name>
+    <desc>Three-eyed fish.</desc>
+    <email>blinky@beercrush.com</email>
+  </person>
+  <person>
+    <name>Blue Haired Lawyer</name>
+    <desc>Attorney.</desc>
+    <email>blue.haired.lawyer@beercrush.com</email>
+  </person>
+  <person>
+    <name>Boobarella</name>
+    <desc>Host of late night TV monster movies.</desc>
+    <email>boobarella@beercrush.com</email>
+  </person>
+  <person>
+    <name>Bowling instructor.</name>
+    <desc/>
+    <email>bowling.instructor@beercrush.com</email>
+  </person>
+  <person>
+    <name>Brandine Spuckler</name>
+    <desc>Cletus Spuckler's wife and sister.</desc>
+    <email>brandine.spuckler@beercrush.com</email>
+  </person>
+  <person>
+    <name>Bumblebee Man</name>
+    <desc>Star of slapstick sketch comedy show on Canal Ocho.</desc>
+    <email>bumblebee.man@beercrush.com</email>
+  </person>
+  <person>
+    <name>Capital City Goofball</name>
+    <desc>Mascot of the Capital City Capitals baseball team.</desc>
+    <email>capital.city.goofball@beercrush.com</email>
+  </person>
+  <person>
+    <name>Captain Horatio McCallister</name>
+    <desc>Sea captain.</desc>
+    <email>captain.horatio.mccallister@beercrush.com</email>
+  </person>
+  <person>
+    <name>Captain Lance Murdock</name>
+    <desc>Daredevil.</desc>
+    <email>captain.lance.murdock@beercrush.com</email>
+  </person>
+  <person>
+    <name>Carl Carlson</name>
+    <desc>Springfield Nuclear Power Plant employee.</desc>
+    <email>carl.carlson@beercrush.com</email>
+  </person>
+  <person>
+    <name>Cecil Terwilliger</name>
+    <desc>Sideshow Bob's younger brother.</desc>
+    <email>cecil.terwilliger@beercrush.com</email>
+  </person>
+  <person>
+    <name>Charles Montgomery Burns</name>
+    <desc>Owner of the Springfield Nuclear Power Plant.</desc>
+    <email>charles.montgomery.burns@beercrush.com</email>
+  </person>
+  <person>
+    <name>Charlie</name>
+    <desc>Springfield Nuclear Power Plant employee.</desc>
+    <email>charlie@beercrush.com</email>
+  </person>
+  <person>
+    <name>Chase</name>
+    <desc>Luann Van Houten's ex-boyfriend; American Gladiator.</desc>
+    <email>chase@beercrush.com</email>
+  </person>
+  <person>
+    <name>Chief Clancy Wiggum</name>
+    <desc>Springfield Chief of Police.</desc>
+    <email>chief.clancy.wiggum@beercrush.com</email>
+  </person>
+  <person>
+    <name>Cletus Spuckler</name>
+    <desc>Yokel.</desc>
+    <email>cletus.spuckler@beercrush.com</email>
+  </person>
+  <person>
+    <name>Comic Book Guy</name>
+    <desc>Proprietor of The Android's Dungeon comic book store. Name revealed to be Jeff Albertson in "Homer and Ned's Hail Mary Pass".</desc>
+    <email>comic.book.guy@beercrush.com</email>
+  </person>
+  <person>
+    <name>Cookie Kwan</name>
+    <desc>Real estate agent.</desc>
+    <email>cookie.kwan@beercrush.com</email>
+  </person>
+  <person>
+    <name>Crazy Cat Lady</name>
+    <desc>Mentally ill owner of many cats. Name revealed as Eleanor Abernathy in "See Homer Run".</desc>
+    <email>crazy.cat.lady@beercrush.com</email>
+  </person>
+  <person>
+    <name>Database</name>
+    <desc>Student at Springfield Elementary School.</desc>
+    <email>database@beercrush.com</email>
+  </person>
+  <person>
+    <name>Dave Shutton</name>
+    <desc>Reporter for The Springfield Shopper.</desc>
+    <email>dave.shutton@beercrush.com</email>
+  </person>
+  <person>
+    <name>Declan Desmond</name>
+    <desc>Documentary filmmaker.</desc>
+    <email>declan.desmond@beercrush.com</email>
+  </person>
+  <person>
+    <name>Dewey Largo</name>
+    <desc>Springfield Elementary School's music teacher.</desc>
+    <email>dewey.largo@beercrush.com</email>
+  </person>
+  <person>
+    <name>Disco Stu</name>
+    <desc>Disco aficionado.</desc>
+    <email>disco.stu@beercrush.com</email>
+  </person>
+  <person>
+    <name>Dolph</name>
+    <desc>Springfield Elementary School bully.</desc>
+    <email>dolph@beercrush.com</email>
+  </person>
+  <person>
+    <name>Drederick Tatum</name>
+    <desc>Professional boxer.</desc>
+    <email>drederick.tatum@beercrush.com</email>
+  </person>
+  <person>
+    <name>Dr. J. Loren Pryor</name>
+    <desc>Springfield Elementary's school psychologist.</desc>
+    <email>dr.j.loren.pryor@beercrush.com</email>
+  </person>
+  <person>
+    <name>Dr. Julius Hibbert</name>
+    <desc>Medical doctor.</desc>
+    <email>dr.julius.hibbert@beercrush.com</email>
+  </person>
+  <person>
+    <name>Dr. Marvin Monroe</name>
+    <desc>Psychotherapist.</desc>
+    <email>dr.marvin.monroe@beercrush.com</email>
+  </person>
+  <person>
+    <name>Dr. Nick Riviera</name>
+    <desc>Incompetent medical doctor. Killed at the end of the movie by a falling chunk of glass, but brought back in the twentieth season.</desc>
+    <email>dr.nick.riviera@beercrush.com</email>
+  </person>
+  <person>
+    <name>Duffman</name>
+    <desc>Spokes-mascot for Duff Beer.</desc>
+    <email>duffman@beercrush.com</email>
+  </person>
+  <person>
+    <name>Eddie and Lou</name>
+    <desc>Springfield police officers.</desc>
+    <email>eddie.and.lou@beercrush.com</email>
+  </person>
+  <person>
+    <name>Edna Krabappel</name>
+    <desc>Bart Simpson's teacher at Springfield Elementary School.</desc>
+    <email>edna.krabappel@beercrush.com</email>
+  </person>
+  <person>
+    <name>Elizabeth Hoover</name>
+    <desc>Lisa Simpson's teacher at Springfield Elementary School.</desc>
+    <email>elizabeth.hoover@beercrush.com</email>
+  </person>
+  <person>
+    <name>Ernst and Gunter</name>
+    <desc>Lion tamers.</desc>
+    <email>ernst.and.gunter@beercrush.com</email>
+  </person>
+  <person>
+    <name>Fat Tony</name>
+    <desc>Mob boss.</desc>
+    <email>fat.tony@beercrush.com</email>
+  </person>
+  <person>
+    <name>Frankie the Squealer</name>
+    <desc>Informant for Fat Tony.</desc>
+    <email>frankie.the.squealer@beercrush.com</email>
+  </person>
+  <person>
+    <name>Gil Gunderson</name>
+    <desc>Unsuccessful Salesman.</desc>
+    <email>gil.gunderson@beercrush.com</email>
+  </person>
+  <person>
+    <name>Gloria</name>
+    <desc>Snake's pregnant girlfriend.</desc>
+    <email>gloria@beercrush.com</email>
+  </person>
+  <person>
+    <name>Maggie Roswell</name>
+    <desc>Governor of Springfield's state.</desc>
+    <email>maggie.roswell@beercrush.com</email>
+  </person>
+  <person>
+    <name>Grampa Abraham Simpson</name>
+    <desc>Homer Simpson's father; Bart, Lisa, and Maggie Simpson's grandfather.</desc>
+    <email>grampa.abraham.simpson@beercrush.com</email>
+  </person>
+  <person>
+    <name>Jasper Beardly</name>
+    <desc>Grandpa's closest neighbor in the Retirement Castle.</desc>
+    <email>jasper.beardly@beercrush.com</email>
+  </person>
+  <person>
+    <name>Groundskeeper Willie</name>
+    <desc>Janitor of Springfield Elementary School.</desc>
+    <email>groundskeeper.willie@beercrush.com</email>
+  </person>
+  <person>
+    <name>Hans Moleman</name>
+    <desc>Misfortunate man.</desc>
+    <email>hans.moleman@beercrush.com</email>
+  </person>
+  <person>
+    <name>Happy Little Elves</name>
+    <desc>Children's cartoon series characters.</desc>
+    <email>happy.little.elves@beercrush.com</email>
+  </person>
+  <person>
+    <name>Helen Lovejoy</name>
+    <desc>Reverend Lovejoy's wife.</desc>
+    <email>helen.lovejoy@beercrush.com</email>
+  </person>
+  <person>
+    <name>Herbert Powell</name>
+    <desc>Homer Simpson's half-brother.</desc>
+    <email>herbert.powell@beercrush.com</email>
+  </person>
+  <person>
+    <name>Herman</name>
+    <desc>Owner of Herman's Military Antiques shop.</desc>
+    <email>herman@beercrush.com</email>
+  </person>
+  <person>
+    <name>Homer Simpson</name>
+    <desc>Husband of Marge; father of Bart, Lisa, and Maggie.</desc>
+    <email>homer.simpson@beercrush.com</email>
+  </person>
+  <person>
+    <name>Itchy &amp; Scratchy</name>
+    <desc>Cartoon cat and mouse.</desc>
+    <email>itchy.and.scratchy@beercrush.com</email>
+  </person>
+  <person>
+    <name>Janey Powell</name>
+    <desc>Student at Springfield Elementary School.</desc>
+    <email>janey.powell@beercrush.com</email>
+  </person>
+  <person>
+    <name>Jebediah Springfield</name>
+    <desc>Founder of Springfield; local hero.</desc>
+    <email>jebediah.springfield@beercrush.com</email>
+  </person>
+  <person>
+    <name>Jimbo Jones</name>
+    <desc>Springfield Elementary School bully.</desc>
+    <email>jimbo.jones@beercrush.com</email>
+  </person>
+  <person>
+    <name>Johnny Tightlips</name>
+    <desc>One of Fat Tony's henchmen.</desc>
+    <email>johnny.tightlips@beercrush.com</email>
+  </person>
+  <person>
+    <name>Judge Constance Harm</name>
+    <desc>Springfield judge.</desc>
+    <email>judge.constance.harm@beercrush.com</email>
+  </person>
+  <person>
+    <name>Judge Roy Snyder</name>
+    <desc>Springfield judge.</desc>
+    <email>judge.roy.snyder@beercrush.com</email>
+  </person>
+  <person>
+    <name>Kang and Kodos</name>
+    <desc>Extraterrestrials.</desc>
+    <email>kang.and.kodos@beercrush.com</email>
+  </person>
+  <person>
+    <name>Kearney</name>
+    <desc>Springfield Elementary School bully.</desc>
+    <email>kearney@beercrush.com</email>
+  </person>
+  <person>
+    <name>Kent Brockman</name>
+    <desc>News anchor.</desc>
+    <email>kent.brockman@beercrush.com</email>
+  </person>
+  <person>
+    <name>Kirk Van Houten</name>
+    <desc>Milhouse Van Houten's father; factory worker.</desc>
+    <email>kirk.van.houten@beercrush.com</email>
+  </person>
+  <person>
+    <name>Krusty the Clown</name>
+    <desc>TV show clown host, original name Herschel Shmoikel Pinchas Yerucham Krustofski.</desc>
+    <email>krusty.the.clown@beercrush.com</email>
+  </person>
+  <person>
+    <name>Legs and Louie</name>
+    <desc>Fat Tony's henchmen.</desc>
+    <email>legs.and.louie@beercrush.com</email>
+  </person>
+  <person>
+    <name>Lenny Leonard</name>
+    <desc>Springfield Nuclear Power Plant employee; one of Homer Simpson's friends.</desc>
+    <email>lenny.leonard@beercrush.com</email>
+  </person>
+  <person>
+    <name>Leopold</name>
+    <desc>Superintendent Chalmers' assistant.</desc>
+    <email>leopold@beercrush.com</email>
+  </person>
+  <person>
+    <name>Lewis</name>
+    <desc>Student at Springfield Elementary School.</desc>
+    <email>lewis@beercrush.com</email>
+  </person>
+  <person>
+    <name>Lindsey Naegle</name>
+    <desc>Corporate executive.</desc>
+    <email>lindsey.naegle@beercrush.com</email>
+  </person>
+  <person>
+    <name>Lionel Hutz</name>
+    <desc>Attorney.</desc>
+    <email>lionel.hutz@beercrush.com</email>
+  </person>
+  <person>
+    <name>Lisa Simpson</name>
+    <desc>Middle child and oldest daughter of Homer and Marge; sister of Bart and Maggie.</desc>
+    <email>lisa.simpson@beercrush.com</email>
+  </person>
+  <person>
+    <name>Luann Van Houten</name>
+    <desc>Kirk Van Houten's wife; Milhouse's mother.</desc>
+    <email>luann.van.houten@beercrush.com</email>
+  </person>
+  <person>
+    <name>Lugash</name>
+    <desc>Gymnastics instructor.</desc>
+    <email>lugash@beercrush.com</email>
+  </person>
+  <person>
+    <name>Luigi</name>
+    <desc>Italian restaurant proprietor.</desc>
+    <email>luigi@beercrush.com</email>
+  </person>
+  <person>
+    <name>Lunchlady Doris</name>
+    <desc>Springfield Elementary School lunch lady.</desc>
+    <email>lunchlady.doris@beercrush.com</email>
+  </person>
+  <person>
+    <name>Lurleen Lumpkin</name>
+    <desc>Country music singer/songwriter.</desc>
+    <email>lurleen.lumpkin@beercrush.com</email>
+  </person>
+  <person>
+    <name>Maggie Simpson</name>
+    <desc>Youngest child (the baby) and daughter of Homer and Marge; sister of Bart and Lisa.</desc>
+    <email>maggie.simpson@beercrush.com</email>
+  </person>
+  <person>
+    <name>Manjula Nahasapeemapetilon</name>
+    <desc>Apu Nahasapeemapetilon's wife.</desc>
+    <email>manjula.nahasapeemapetilon@beercrush.com</email>
+  </person>
+  <person>
+    <name>Marge Simpson</name>
+    <desc>Wife of Homer; mother of Bart, Lisa, and Maggie.</desc>
+    <email>marge.simpson@beercrush.com</email>
+  </person>
+  <person>
+    <name>Martin Prince</name>
+    <desc>Student at Springfield Elementary School.</desc>
+    <email>martin.prince@beercrush.com</email>
+  </person>
+  <person>
+    <name>Maude Flanders</name>
+    <desc>Ned Flanders's deceased wife.</desc>
+    <email>maude.flanders@beercrush.com</email>
+  </person>
+  <person>
+    <name>Mayor "Diamond Joe" Quimby</name>
+    <desc>Mayor of Springfield.</desc>
+    <email>mayor.diamond.joe.quimby@beercrush.com</email>
+  </person>
+  <person>
+    <name>Milhouse Van Houten</name>
+    <desc>Bart Simpson's best friend; Student at Springfield Elementary School.</desc>
+    <email>milhouse.van.houten@beercrush.com</email>
+  </person>
+  <person>
+    <name>Moe Szyslak</name>
+    <desc>Owner of Moe's Tavern.</desc>
+    <email>moe.szyslak@beercrush.com</email>
+  </person>
+  <person>
+    <name>Mona Simpson</name>
+    <desc>Deceased estranged mother of Homer Simpson and wife of Abe Simpson.</desc>
+    <email>mona.simpson@beercrush.com</email>
+  </person>
+  <person>
+    <name>Jacqueline Bouvier</name>
+    <desc>Mother of Selma and Patty Bouvier and Marge Simpson, Grandmother of Bart, Lisa, Maggie and Ling.</desc>
+    <email>jacqueline.bouvier@beercrush.com</email>
+  </person>
+  <person>
+    <name>Mr. Costington</name>
+    <desc>President of Costington's Department Store.</desc>
+    <email>mr.costington@beercrush.com</email>
+  </person>
+  <person>
+    <name>Mrs. Glick</name>
+    <desc>Elderly.</desc>
+    <email>mrs.glick@beercrush.com</email>
+  </person>
+  <person>
+    <name>Mrs. Muntz</name>
+    <desc>Nelson Muntz's mother.</desc>
+    <email>mrs.muntz@beercrush.com</email>
+  </person>
+  <person>
+    <name>Mr. Teeny</name>
+    <desc>The Krusty the Clown Show trained monkey.</desc>
+    <email>mr.teeny@beercrush.com</email>
+  </person>
+  <person>
+    <name>Ginger Flanders</name>
+    <desc>Ned Flanders's "Vegas wife."</desc>
+    <email>ginger.flanders@beercrush.com</email>
+  </person>
+  <person>
+    <name>Ned Flanders</name>
+    <desc>The Simpson family's next door neighbor; owner of The Leftorium.</desc>
+    <email>ned.flanders@beercrush.com</email>
+  </person>
+  <person>
+    <name>Nelson Muntz</name>
+    <desc>Springfield Elementary School bully.</desc>
+    <email>nelson.muntz@beercrush.com</email>
+  </person>
+  <person>
+    <name>Old Barber</name>
+    <desc>Barber.</desc>
+    <email>old.barber@beercrush.com</email>
+  </person>
+  <person>
+    <name>Old Jewish Man</name>
+    <desc>Springfield Retirement Castle resident.</desc>
+    <email>old.jewish.man@beercrush.com</email>
+  </person>
+  <person>
+    <name>Otto Mann</name>
+    <desc>Springfield Elementary School bus driver.</desc>
+    <email>otto.mann@beercrush.com</email>
+  </person>
+  <person>
+    <name>Aristotle Amadopolis</name>
+    <desc>Owner of the Shelbyville Nuclear Power Plant.</desc>
+    <email>aristotle.amadopolis@beercrush.com</email>
+  </person>
+  <person>
+    <name>Patches and Poor Violet</name>
+    <desc>Orphans.</desc>
+    <email>patches.and.poor.violet@beercrush.com</email>
+  </person>
+  <person>
+    <name>Patty Bouvier</name>
+    <desc>Twin sister of Selma and older sister of Marge.</desc>
+    <email>patty.bouvier@beercrush.com</email>
+  </person>
+  <person>
+    <name>Plastic surgeon.</name>
+    <desc/>
+    <email>plastic.surgeon@beercrush.com</email>
+  </person>
+  <person>
+    <name>Poochie</name>
+    <desc>Cartoon dog formerly on The Itchy &amp; Scratchy Show.</desc>
+    <email>poochie@beercrush.com</email>
+  </person>
+  <person>
+    <name>Princess Kashmir</name>
+    <desc>Belly dancer.</desc>
+    <email>princess.kashmir@beercrush.com</email>
+  </person>
+  <person>
+    <name>Principal Seymour Skinner</name>
+    <desc>Principal of Springfield Elementary School.</desc>
+    <email>principal.seymour.skinner@beercrush.com</email>
+  </person>
+  <person>
+    <name>Professor John Frink</name>
+    <desc>Scientist, inventor.</desc>
+    <email>professor.john.frink@beercrush.com</email>
+  </person>
+  <person>
+    <name>Rabbi Hyman Krustofski</name>
+    <desc>Rabbi; father of Krusty the Clown.</desc>
+    <email>rabbi.hyman.krustofski@beercrush.com</email>
+  </person>
+  <person>
+    <name>Rachel Jordan</name>
+    <desc>Lead singer of the Christian Rock band Kovenant.</desc>
+    <email>rachel.jordan@beercrush.com</email>
+  </person>
+  <person>
+    <name>Radioactive Man</name>
+    <desc>Comic book superhero.</desc>
+    <email>radioactive.man@beercrush.com</email>
+  </person>
+  <person>
+    <name>Birchibald "Birch" T. Barlow</name>
+    <desc>Radio talk show host; Fox News anchor.</desc>
+    <email>birchibald.birch.t.barlow@beercrush.com</email>
+  </person>
+  <person>
+    <name>Rainier Wolfcastle</name>
+    <desc>Actor; star of McBain films.</desc>
+    <email>rainier.wolfcastle@beercrush.com</email>
+  </person>
+  <person>
+    <name>Ralph Wiggum</name>
+    <desc>Student at Springfield Elementary School.</desc>
+    <email>ralph.wiggum@beercrush.com</email>
+  </person>
+  <person>
+    <name>Reverend Timothy Lovejoy</name>
+    <desc>Minister of the First Church of Springfield.</desc>
+    <email>reverend.timothy.lovejoy@beercrush.com</email>
+  </person>
+  <person>
+    <name>Richard</name>
+    <desc>Student at Springfield Elementary School.</desc>
+    <email>richard@beercrush.com</email>
+  </person>
+  <person>
+    <name>Rod Flanders</name>
+    <desc>Ned and Maude Flanders's elder son.</desc>
+    <email>rod.flanders@beercrush.com</email>
+  </person>
+  <person>
+    <name>Roger Meyers, Jr.</name>
+    <desc>President of Itchy &amp; Scratchy Studios.</desc>
+    <email>roger.meyers.jr@beercrush.com</email>
+  </person>
+  <person>
+    <name>Ruth Powers</name>
+    <desc>The Simpsons' next door neighbor.</desc>
+    <email>ruth.powers@beercrush.com</email>
+  </person>
+  <person>
+    <name>Sanjay Nahasapeemapetilon</name>
+    <desc>Apu Nahasapeemapetilon's older brother.</desc>
+    <email>sanjay.nahasapeemapetilon@beercrush.com</email>
+  </person>
+  <person>
+    <name>Santa's Little Helper</name>
+    <desc>The Simpson family's pet dog.</desc>
+    <email>santas.little.helper@beercrush.com</email>
+  </person>
+  <person>
+    <name>Sarah Wiggum</name>
+    <desc>Chief Wiggum's wife; Ralph Wiggum's mother.</desc>
+    <email>sarah.wiggum@beercrush.com</email>
+  </person>
+  <person>
+    <name>Scott Christian</name>
+    <desc>News co-anchor.</desc>
+    <email>scott.christian@beercrush.com</email>
+  </person>
+  <person>
+    <name>Selma Bouvier</name>
+    <desc>Twin sister of Patty and older sister of Marge. Adoptive mother of Ling.</desc>
+    <email>selma.bouvier@beercrush.com</email>
+  </person>
+  <person>
+    <name>Sherri and Terri</name>
+    <desc>Identical twins; Students at Springfield Elementary Schools.</desc>
+    <email>sherri.and.terri@beercrush.com</email>
+  </person>
+  <person>
+    <name>Sideshow Bob</name>
+    <desc>Criminal mastermind and Krusty the Clown Show ex-operator and sidekick.</desc>
+    <email>sideshow.bob@beercrush.com</email>
+  </person>
+  <person>
+    <name>Sideshow Mel</name>
+    <desc>The Krusty the Clown Show sidekick.</desc>
+    <email>sideshow.mel@beercrush.com</email>
+  </person>
+  <person>
+    <name>Snake</name>
+    <desc>Recidivist.</desc>
+    <email>snake@beercrush.com</email>
+  </person>
+  <person>
+    <name>Snowball</name>
+    <desc>The Simpson family's pet cats.</desc>
+    <email>snowball@beercrush.com</email>
+  </person>
+  <person>
+    <name>Squeaky-Voiced Teen</name>
+    <desc>Service industry.</desc>
+    <email>squeaky.voiced.teen@beercrush.com</email>
+  </person>
+  <person>
+    <name>State comptroller.</name>
+    <desc/>
+    <email>state.comptroller@beercrush.com</email>
+  </person>
+  <person>
+    <name>Russi Taylor</name>
+    <desc>Student at Springfield Elementary School.</desc>
+    <email>russi.taylor@beercrush.com</email>
+  </person>
+  <person>
+    <name>Tress MacNeille</name>
+    <desc>Sunday school teacher.</desc>
+    <email>tress.macneille@beercrush.com</email>
+  </person>
+  <person>
+    <name>Superintendent Gary Chalmers</name>
+    <desc>Public schools superintendent.</desc>
+    <email>superintendent.gary.chalmers@beercrush.com</email>
+  </person>
+  <person>
+    <name>The Rich Texan</name>
+    <desc>Philanthropist.</desc>
+    <email>the.rich.texan@beercrush.com</email>
+  </person>
+  <person>
+    <name>Todd Flanders</name>
+    <desc>Ned and Maude Flanders's younger son.</desc>
+    <email>todd.flanders@beercrush.com</email>
+  </person>
+  <person>
+    <name>Troy McClure</name>
+    <desc>Actor.</desc>
+    <email>troy.mcclure@beercrush.com</email>
+  </person>
+  <person>
+    <name>&#xDC;ter</name>
+    <desc>Student at Springfield Elementary School.</desc>
+    <email>uter@beercrush.com</email>
+  </person>
+  <person>
+    <name>Veterinarian.</name>
+    <desc/>
+    <email>veterinarian@beercrush.com</email>
+  </person>
+  <person>
+    <name>Waylon Smithers</name>
+    <desc>Monty Burns's personal assistant.</desc>
+    <email>waylon.smithers@beercrush.com</email>
+  </person>
+  <person>
+    <name>Wiseguy</name>
+    <desc>Service industry.</desc>
+    <email>wiseguy@beercrush.com</email>
+  </person>
+  <person>
+    <name>Yes Guy</name>
+    <desc>Service industry.</desc>
+    <email>yes.guy@beercrush.com</email>
+  </person>
+</people>

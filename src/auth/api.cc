@@ -255,6 +255,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 		"/api/place/review",
 		"/api/logout",
 		"/api/menu/edit",
+		"/api/recommend/edit",
 		"/api/user/edit",
 		"/api/user/fullinfo",
 		"/api/wishlist/edit"
@@ -300,6 +301,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 		!strncmp(cgiPathInfo,"/api/photoset/",14) ||
 		!strncmp(cgiPathInfo,"/api/place/",11) ||
 		!strcmp(cgiPathInfo,"/api/places") ||
+		!strncmp(cgiPathInfo,"/api/recommend",14) ||
 		!strcmp(cgiPathInfo,"/api/restaurantcategories") ||
 		!strncmp(cgiPathInfo,"/api/review/beer",16) ||
 		!strncmp(cgiPathInfo,"/api/review/place",17) ||
