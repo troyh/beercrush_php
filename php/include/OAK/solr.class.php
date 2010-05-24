@@ -23,7 +23,7 @@ class OAKSolrIndexer {
 	
 	function index_doc($doc) {
 		$xmlwriter=$this->batch_index_doc_start();
-		$this->write_xml_doc($doc,$xmlwriter);
+		$this->batch_index_doc($doc,$xmlwriter);
 		$this->batch_index_doc_end($xmlwriter);
 		$this->oak->log("Indexed doc: ".$doc->{$this->schema->doc_id});
 	}
@@ -50,6 +50,7 @@ class OAKSolrIndexer {
 		
 		$xmldoc=$xmlwriter->outputMemory();
 		// print $xmldoc;
+		// $this->oak->log($xmldoc);
 
 		// Submit to Solr
 		$status_code=$this->solr_post('/update',$xmldoc);
@@ -99,6 +100,7 @@ class OAKSolrIndexer {
 				$datatype=$info;
 			}
 			else {
+				$this->oak->log('Unhandled info type: '.gettype($info));
 				throw new Exception('Unhandled info type: '.gettype($info));
 			}
 		
@@ -123,8 +125,16 @@ class OAKSolrIndexer {
 						throw new Exception('No property name or function specified in schema for '.$field);
 					$this->writeValue($field,$v,'integer',$xmlwriter);
 					break;
+				case "text_array":
+					if (isset($doc->$propname)) {
+						foreach ($doc->$propname as $v) {
+							$this->writeValue($field,$v,'text',$xmlwriter);
+						}
+					}
+					break;
 				default:
-					throw new Exception('Unknown datatype: $datatype');
+					$this->oak->log('Unknown datatype:'.$datatype);
+					throw new Exception('Unknown datatype:'.$datatype);
 					break;
 			}
 		}

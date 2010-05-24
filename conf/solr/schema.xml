@@ -431,6 +431,7 @@
    <field name="placetype" type="string" indexed="true" stored="true" required="false" />
    <field name="name" type="text" indexed="true" stored="true"/>
    <field name="description" type="text" indexed="true" stored="true"/>
+   <field name="style" type="string" indexed="true" stored="false" multiValued="true"/>
    <field name="brewery" type="text" indexed="true" stored="true"/>
 
    <!-- Common metadata fields, named specifically to match up with

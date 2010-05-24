@@ -19,6 +19,30 @@ $beerlist  =BeerCrush::api_doc($oak,'brewery/'.$brewery_id.'/beerlist');
 
 if (empty($beerdoc->styles))
 	$beerdoc->styles=array();
+else {
+	// Get a list of random beers in this beer's (first) style
+	$url="http://duff:8080/solr/select?fl=id&start=0&rows=0&wt=json&q=style:".$beerdoc->styles[0];
+	$response=json_decode(file_get_contents($url));
+
+	// Pick the 1st random number
+	$initial=rand(0,$response->response->numFound);
+	$random_picks=array($initial);
+	// Now, pick at most 3 more numbers within 100 of that (careful not to go out of bounds)
+	for ($i=0,$j=min(3,$response->response->numFound);$i<$j;++$i) {
+		$random_picks[]=rand(max(0,$initial-50),min($response->response->numFound,$initial+50));
+	}
+
+	// Do a 2nd query to get those
+	$start=min($random_picks);
+	$url="http://duff:8080/solr/select?fl=id&start=$start&rows=100&wt=json&q=style:".$beerdoc->styles[0];
+	$response=json_decode(file_get_contents($url));
+
+	$other_by_style=array();
+	foreach ($random_picks as $pick) {
+		$other_by_style[]=$response->response->docs[$pick-$start]->id;
+	}
+}
+
 $styles_lookup=array();
 build_style_lookup_table($styles->styles);
 
@@ -249,13 +273,17 @@ include("../header.php");
 		<?php endforeach; ?>
 	</ul>
 	<?php endif; ?>
+	<?php if (count($beerdoc->styles)):?>
 	<h2>Other <?foreach ($beerdoc->styles as $styleid):?><?=$styles_lookup[$styleid]->name?><?endforeach?>s</h2>
 	<ul>
-		<li>Beer</li>
-		<li>Beer</li>
-		<li>Beer</li>
-		<li>Beer</li>
+		<?php foreach ($other_by_style as $id):
+			$b=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl($id));
+			$b->brewery=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl(BeerCrush::beer_id_to_brewery_id($id)));
+		?>
+			<li><a href="/<?=BeerCrush::docid_to_docurl($id)?>"><?=$b->name?></a> by <a href="/<?=BeerCrush::docid_to_docurl($b->brewery->id)?>"><?=$b->brewery->name?></a></li>
+		<?php endforeach;?>
 	</ul>
+	<?php endif;?>
 	<?php 
 	// Remove this beer from beerlist so we don't randomly pick it for the list of other beers
 	for ($i=0,$j=count($beerlist->beers);$i<$j;++$i) {
