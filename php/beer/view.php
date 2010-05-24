@@ -187,15 +187,6 @@ include("../header.php");
 <?php endforeach; ?>
 <!-- <div id="reviewdata"></div> -->
 
-<?php if (isset($recommends->beer)):?>
-<h3>People who liked this, also liked...</h3>
-<div>
-	<?php foreach($recommends->beer as $recommend) :?>
-		<div><a href="/<?=BeerCrush::docid_to_docurl($recommend->id)?>"><?=$recommend->name?></a> by <a href="/<?=BeerCrush::docid_to_docurl($recommend->brewery->id)?>"><?=$recommend->brewery->name?></a></div>
-	<?php endforeach; ?>
-</div>
-<?php endif; ?>
-
 <h3>Post a review</h3>
 <form id="review_form">
 	<input type="hidden" name="beer_id" value="<?=$beerdoc->id?>" />
@@ -248,13 +239,14 @@ include("../header.php");
 </div>
 
 	<div id="rightcol">
+	<?php if (isset($recommends->beer)):?>
 	<h2>People Who Like This Beer, Also Like</h2>
 	<ul>
-		<li>Beer</li>
-		<li>Beer</li>
-		<li>Beer</li>
-		<li>Beer</li>
+		<?php foreach($recommends->beer as $recommend) :?>
+			<li><a href="/<?=BeerCrush::docid_to_docurl($recommend->id)?>"><?=$recommend->name?></a> by <a href="/<?=BeerCrush::docid_to_docurl($recommend->brewery->id)?>"><?=$recommend->brewery->name?></a></li>
+		<?php endforeach; ?>
 	</ul>
+	<?php endif; ?>
 	<h2>Other <?foreach ($beerdoc->styles as $styleid):?><?=$styles_lookup[$styleid]->name?><?endforeach?>s</h2>
 	<ul>
 		<li>Beer</li>
