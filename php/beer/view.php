@@ -15,6 +15,7 @@ $styles    =BeerCrush::api_doc($oak,'beerstyles');
 $colors    =BeerCrush::api_doc($oak,'beercolors');
 $photoset  =BeerCrush::api_doc($oak,'photoset/beer/'.$api_beer_id);	
 $recommends=BeerCrush::api_doc($oak,'recommend/beer/'.$api_beer_id);	
+$beerlist  =BeerCrush::api_doc($oak,'brewery/'.$brewery_id.'/beerlist');
 
 if (empty($beerdoc->styles))
 	$beerdoc->styles=array();
@@ -254,13 +255,30 @@ include("../header.php");
 		<li>Beer</li>
 		<li>Beer</li>
 	</ul>
+	<?php 
+	// Remove this beer from beerlist so we don't randomly pick it for the list of other beers
+	for ($i=0,$j=count($beerlist->beers);$i<$j;++$i) {
+		if ($beerlist->beers[$i]->beer_id==$beerdoc->id) {
+			array_splice($beerlist->beers,$i,1);
+			break;
+		}
+	}
+	if (count($beerlist->beers)): 
+	?>
 	<h2>More from <?=$brewerydoc->name?></h2>	
 	<ul>
-		<li>Beer</li>
-		<li>Beer</li>
-		<li>Beer</li>
-		<li>Beer</li>
+		<?php
+		for ($i=0,$j=4;$i<$j;++$i) {
+			$n=rand(0,count($beerlist->beers)-1);
+		?>
+			<li><a href="/<?=BeerCrush::docid_to_docurl($beerlist->beers[$n]->beer_id)?>"><?=$beerlist->beers[$n]->name?></a></li>
+		<?php
+			// Remove it so it isn't selected again
+			array_splice($beerlist->beers,$n,1);
+		}
+		?>
 	</ul>
+	<?php endif;?>
 	</div>
 </div>
 <div id="leftcol">
