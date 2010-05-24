@@ -280,7 +280,7 @@ include("../header.php");
 			$b=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl($id));
 			$b->brewery=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl(BeerCrush::beer_id_to_brewery_id($id)));
 		?>
-			<li><a href="/<?=BeerCrush::docid_to_docurl($id)?>"><?=$b->name?></a> by <a href="/<?=BeerCrush::docid_to_docurl($b->brewery->id)?>"><?=$b->brewery->name?></a></li>
+			<li><?php if ($b->photos->total):?><img src="<?=$b->photos->thumbnail?>" /><?php endif?><a href="/<?=BeerCrush::docid_to_docurl($id)?>"><?=$b->name?></a> by <a href="/<?=BeerCrush::docid_to_docurl($b->brewery->id)?>"><?=$b->brewery->name?></a> (<?=$b->review_summary->avg?>)</li>
 		<?php endforeach;?>
 	</ul>
 	<?php endif;?>
