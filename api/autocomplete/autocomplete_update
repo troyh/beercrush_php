@@ -26,7 +26,7 @@ done
 
 shopt -s nullglob; # makes sure the -f test gives no files if none match
 
-if [ -f $DIR/autocomplete_searches.[0-9]* ]; then
+if [ -f "$DIR/autocomplete_searches.[0-9]*" ]; then
 	sort $DIR/autocomplete_searches.[0-9]* | uniq -c | sort -nr |
 	while read N TERM; do
 		if [ $N -lt $THRESHOLD ]; then
