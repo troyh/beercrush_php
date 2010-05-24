@@ -55,9 +55,9 @@ h1 {
 
 h2 {
 	color: #1371aa;
-	font-size: 1.2em;
+	font-size: 1.5em;
 	line-height: 1em;
-	margin: .25em 0 .25em 0;
+	margin: .25em 0 0 0;
 }
 
 h3 {
@@ -65,6 +65,11 @@ h3 {
 	font-size: 1.2em;
 	line-height: 1em;
 	margin: .25em 0 .25em 0;
+}
+h1>h2, h2>h3, h3>h4 {
+	margin: 0;
+	padding: 0;
+	
 }
 
 .tiny {
@@ -82,7 +87,7 @@ em {
 
 p {
 	font-size: 1em;
-	line-height: 1.5em;
+	line-height: 1.2em;
 	margin-bottom: .25em;
 }
 
@@ -270,14 +275,24 @@ img {
 #page_content {
 	padding: 5px 0;
 }
-#main {
+#mwr {
 	width: 710px;
 	float: right;
 	min-height: 1px;
 	overflow: hidden;
 }
-
-#leftcol {
+#main {
+	float: left;
+	width:390px;
+	margin-right: 10px;
+}
+#mwr_right_300 {
+	float:left;
+	width: 300px;
+	min-height: 1px;
+	overflow: hidden;
+}
+#mwr_left_250 {
 	float: right;
 	width: 250px;
 	margin-right: 10px;
@@ -285,15 +300,26 @@ img {
 	overflow: hidden;
 }
 
-#mainwithright {
+#mwl {
+	width: 710px;
 	float: left;
-	width:390px;
-	margin-right: 10px;
+	min-height: 1px;
+	overflow: hidden;
 }
-
-#rightcol {
-	float:right;
+#mwl #main {
+	float: right;
+	width:390px;
+	margin-left: 10px;
+}
+#mwl_left_300 {
+	float: right;
 	width: 300px;
+	min-height: 1px;
+	overflow: hidden;
+}
+#mwl_right_250 {
+	float:left;
+	width: 250px;
 	min-height: 1px;
 	overflow: hidden;
 }
@@ -319,6 +345,9 @@ img {
 	position:fixed;
 	right:5px;
 	bottom:0px;
+}
+.notice {
+	color: grey;
 }
 .help p {
 	color: grey;
@@ -587,63 +616,135 @@ div.label {
 
 /* place Page Specific
  ---------------------------------------------------------------------*/
-#beerlist a.brewery {
-	font-size: .8em;
-	color: maroon;
-	border: none;
-}
+.placetype {
+	width: 30px;
+	height: 30px;
+	float: left;
+	margin: 5px 5px 5px 0;
+	background: 0 -30px url("/img/beerplace.png") no-repeat;
 
+}
 #place div:hover {
 	background: #D0fbff;
 }
-ul#beerlist {
+.smstar_rating {
+	width: 150px;
+	height: 28px;
+	background: grey url("/img/starsm.png") repeat-x;
+	margin-bottom: 10px; 
+	float: left;
+}
+
+#atmosphere {
+	height: inherit;
+	background: #137aa1 url("/img/starsm.png") repeat-x;
+}
+#service {
+	height: inherit;
+	background: #c49a6c url("/img/starsm.png") repeat-x;
+}
+#food {
+	height: inherit;
+	background: #6f0014 url("/img/starsm.png") repeat-x;
+}
+.crush {
+	font-size: 1.5em;
+	color: white;
+	background: #6f0014;
+	display: inline;
+	padding: 5px;
+}
+ul#beermenu {
 	padding: 0;
 }
-#beerlist li {
+#beermenu li {
+	font-size: 1.2em;
 	list-style: none;
 	margin: 0;
 	padding: 0;
 	line-height: 1.1em;
 	min-height: 45px;
+	position: relative;
 }
-#beerlist li div {
-	background: 0 0 url("/img/servingicons.png") no-repeat;
+#beermenu li:nth-child(even) {
+	background: #e3e3e3;
+}
+#beermenu li .served {
 	width: 30px;
 	height: 30px;
 	float: left;
-	margin: 5px 10px 0 0;
+	margin: 5px 10px 0 10px;
 }
-#beerlist li div.ontap {
+#beermenu li .ontap, #beermenu li .inbottle, #beermenu li .inbottle22, #beermenu li .incan, #beermenu li .oncask {
+	background: 0 0 url("/img/servingicons.png") no-repeat;
+}
+#beermenu li .ontap {
 	background-position: -58px 0;
 }
-#beerlist li div.inbottle {
+#beermenu li .inbottle {
 	background-position: 0 0;
 }
-#beerlist li div.inbottle22 {
+#beermenu li .inbottle22 {
 	background-position: -118px 0;
 }
-#beerlist li div.incan {
+#beermenu li .incan {
 	background-position: -28px 0;
 }
-#beerlist li div.oncask {
+#beermenu li .oncask {
 	background-position: -88px 0;
 }
-#beerlist .cmd {
+#beermenu .brewery {
+	font-size: .8em;
+	color: maroon;
+	border: none;
+}
+#beermenu li .cmd {
 	border-color: white;
 	font-size: x-small;
 	color: #6f0014;
+	display: block;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 10px; 
+	height: 10px; 
+	background: #6f0014 -84px -132px url(/img/ui-icons_ffffff.png);
+	border: 0;
 }
-#beerlist .cmd:hover {
-	border-bottom: 1px solid #6f0014;
+#beermenu .cmd:hover {
+	background: #FFFFFF -84px -132px url(/img/ui-icons_red.png);	
 }
-#beerlist span.brewery {
+#beermenu span.brewery {
 	font-size: .8em;
 	border: 0 white none;
 	color: #6f0014;
 }
 
-#beerlist .price {
-	font-size: .8em;
+#beermenu .price {
+	font-size: .7em;
+	float: right;
+	margin-right: 10px;
+	color: grey;
+}
+.place {
+	width: 250px;
+	height: 250px;
+	background: -250px 0 url("/img/types.png") no-repeat;
+}
+div.Restaurant {
+	background: -500px 0 url("/img/types.png") no-repeat;
+}
+div.Bar {
+	background: -750px 0 url("/img/types.png") no-repeat;
+}
+div.Brewpub {
+	background: -1000px 0 url("/img/types.png") no-repeat;
+}
+div.Store {
+	background: -1250px 0 url("/img/types.png") no-repeat;
+}
+div.Brewery {
+	background: -1500px 0 url("/img/types.png") no-repeat;
 }
 /* Member Page Specific
  ---------------------------------------------------------------------*/
@@ -669,6 +770,41 @@ ul#beerlist {
 	color: #6f0014;
 	display: block;
 }
+/* JQUERY
+ ---------------------------------------------------------------------*/
+/* Icons
+----------------------------------*/
+
+/* states and images */
+.ui-icon { display: block; float: left; margin: 0 5px 5px 0; text-indent: -99999px; overflow: hidden; background-repeat: no-repeat; }
+/* Interaction states
+----------------------------------*/
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { border: 1px solid #45930b; background: #4ca20b url(/img/ui-bg_highlight-soft_60_4ca20b_1x100.png) 50% 50% repeat-x; font-weight: normal; color: #ffffff; }
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: #ffffff; text-decoration: none; }
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus { border: 1px solid #8bd83b; background: #4eb305 url(/img/ui-bg_highlight-soft_50_4eb305_1x100.png) 50% 50% repeat-x; font-weight: normal; color: #ffffff; }
+.ui-state-hover a, .ui-state-hover a:hover { color: #ffffff; text-decoration: none; }
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active { border: 1px solid #72b42d; background: #285c00 url(/img/ui-bg_highlight-hard_30_285c00_1x100.png) 50% 50% repeat-x; font-weight: normal; color: #ffffff; }
+.ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited { color: #ffffff; text-decoration: none; }
+.ui-widget :active { outline: none; }
+
+/* states and images */
+.ui-icon { width: 16px; height: 16px; background-image: url(/img/ui-icons_ffffff.png); }
+.ui-widget-content .ui-icon {background-image: url(/img/ui-icons_72b42d_256x240.png); }
+.ui-widget-header .ui-icon {background-image: url(/img/ui-icons_ffffff_256x240.png); }
+.ui-state-default .ui-icon { background-image: url(/img/ui-icons_ffffff.png); }
+.ui-state-hover .ui-icon, .ui-state-focus .ui-icon {background-image: url(/img/ui-icons_ffffff.png); }
+.ui-state-active .ui-icon {background-image: url(/img/ui-icons_ffffff.png); }
+.ui-state-highlight .ui-icon {background-image: url(/img/ui-icons_green.png); }
+.ui-state-error .ui-icon, .ui-state-error-text .ui-icon {background-image: url(/img/ui-icons_red.png); }
+
+
+.ui-icon-star { background-position: -224px -112px; }
+.ui-icon-close { background-position: -80px -128px; background-color: #ee3124;}
+.ui-icon-closethick { background-position: -96px -128px; background-color: #ee3124;}
+.ui-icon-check { background-position: -64px -144px; background-color: #4ca20b;}
+.ui-icon-help { background-position: -48px -144px;  background-color: #999999;}
+
+
 /* Float Clearing
  ---------------------------------------------------------------------*/
 

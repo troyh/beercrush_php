@@ -140,9 +140,9 @@ $header['js'][]='<script type="text/javascript" src="http://maps.google.com/maps
 
 include("../header.php");
 ?>
-<div id="main">
+<div id="mwr">
 
-<div id="mainwithright">
+<div id="main">
 	<h2><a id="brewery_link" href="/brewery/<?=preg_replace('/^.*:/','',$brewerydoc->id)?>"><?=$brewerydoc->name?>'s</a></h2>
 	<h1><?=$beerdoc->name?></h1>
 	<div id="ratings_section" class="cf">
@@ -186,7 +186,7 @@ include("../header.php");
 		
 	</div>
 
-<h3><?=count($reviews->reviews)?> Reviews</h3>
+<h3 id="ratings"><?=count($reviews->reviews)?> Reviews</h3>
 
 <?php foreach ($reviews->reviews as $review) :?>
 <div class="areview">
@@ -264,7 +264,7 @@ include("../header.php");
 </form>
 </div>
 
-	<div id="rightcol">
+	<div id="mwr_right_300">
 	<?php if (isset($recommends->beer)):?>
 	<h2>People Who Like This Beer, Also Like</h2>
 	<ul>
@@ -310,7 +310,7 @@ include("../header.php");
 	<?php endif;?>
 	</div>
 </div>
-<div id="leftcol">
+<div id="mwr_left_250">
 	<?php if ($beerdoc->photos->total==0):?>
 		<img src="/img/beer.png" />
 	<?php else: ?>

@@ -28,52 +28,31 @@ $header['css'][]='<link href="/css/uploadify.css" rel="stylesheet" type="text/cs
 include("../header.php");
 ?>
 
+<div id="mwl">
+
 <div id="main">
 
-<div id="mainwithright">
-
-<div id="place">
-	<input class="editable_savechanges_button hidden" type="button" value="Save Changes" />
-	<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
-
-	<input type="hidden" value="<?=$place->id?>" id="place_id">
 	<h1 id="place_name"><?=$place->name?></h1>
-	<div class="cl"><div class="label">Type: </div><div id="place_type"><?=$place->placetype?></div></div>
+	<div class="cl"><?=$place->placetype?></div>
 
-	<span id="address">
-		<div class="cl"><div class="label">Street:</div><div id="place_address:street"><?=$place->address->street?></div></div>
-		<div class="cl"><div class="label">City:</div><div id="place_address:city"><?=$place->address->city?></div></div>
-		<div class="cl"><div class="label">State:</div><div id="place_address:state"><?=$place->address->state?></div></div>
-		<div class="cl"><div class="label">Zip:</div><div id="place_address:zip"><?=$place->address->zip?></div></div>
-		<div class="cl"><div class="label">Country:</div><div id="place_address:country"><?=$place->address->country?></div></div>
-		<input type="hidden" name="latitude" value="<?=$place->address->latitude?>" />
-		<input type="hidden" name="longitude" value="<?=$place->address->longitude?>" />
-	</span>
-	<div class="cl"><div class="label">Phone:</div><div id="place_phone"><?=$place->phone?></div></div>
-	<div class="cl"><div class="label">Web site:</div><div id="place_uri" href="<?=$place->uri?>"><?=$place->uri?> <a href="<?=$place->uri?>">Visit web site</a></div></div>
-	<div class="cl"><div class="label">Description:</div><div id="place_description"><?=$place->description?></div></div>
-	<div class="cl"><div class="label">Kid-Friendly: </div><div id="place_kid-friendly"><?php echo isset($place->restaurant->kid_friendly)?($place->restaurant->kid_friendly?'Yes':'No'):'Unknown'; ?></div></div>
-	<div class="cl"><div class="label">Outdoor seating: </div><div id="place_outdoor-seating"><?php echo isset($place->restaurant->outdoor_seating)?($place->restaurant->outdoor_seating?'Yes':'No'):'Unknown'; ?></div></div>
-	<div class="cl"><div class="label">Wi-Fi: </div><div id="place_wi-fi"><?php echo isset($place->wifi)?($place->wifi?'Yes':'No'):'Unknown'; ?></div></div>
-	<div class="cl"><div class="label">Bottles to go: </div><div id="place_bottles"><?php echo isset($place->bottles)?($place->bottles?'Yes':'No'):'Unknown'; ?></div></div>
-	<div class="cl"><div class="label">Growlers to go: </div><div id="place_growlers"><?php echo isset($place->growlers)?($place->growlers?'Yes':'No'):'Unknown'; ?></div></div>
-	<div class="cl"><div class="label">Kegs to go: </div><div id="place_kegs"><?php echo isset($place->kegs)?($place->kegs?'Yes':'No'):'Unknown'; ?></div></div>
-		
-	<input class="editable_savechanges_button hidden" type="button" value="Save Changes" />
-	<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
-	<div id="editable_save_msg"></div>
-
-</div>
+	<div class="cl"><div class="label">Crushworthiness</div><div style="float: left;"><span class="crush">97</span> <a class="tiny" href="" style="margin-left: 5px;">what is this?</a></div></div>
+	<div class="cl"><div class="label"><a href="#ratings"><?=count($reviews->reviews)?> ratings</a></div><div class="star_rating" style="float:left;"><div id="avgrating" style="width: 50%"></div></div></div>
+	<div class="cl"><div class="label">Atmosphere: </div><div class="smstar_rating"><div id="atmosphere" style="width: 33%"></div></div></div>
+	<div class="cl"><div class="label">Service: </div><div class="smstar_rating"><div id="service" style="width: 80%"></div></div></div>
+	<div class="cl"><div class="label">Food: </div><div class="smstar_rating"><div id="food" style="width: 75%"></div></div></div>
 
 <h2><?=count($beerlist->items)?> Beers on the Menu</h2>
+<h3>Sort by <a href="">Brewery</a> &#124; <a href="">Beer Name</a> &#124; <a href="">Served</a></h3>
+<p class="notice tiny">Last updated x days ago</p>
 
-<ul id="beerlist">
+<ul id="beermenu">
 	<?foreach ($beerlist->items as $item) :?>
 	<li>
-		<div class="<?=$item->ontap     ?'ontap':''?> <?=$item->oncask    ?'oncask':''?> <?=$item->inbottle  ?'inbottle':''?> <?=$item->inbottle22?'inbottle22':''?> <?=$item->incan     ?'incan':''?>" title="Served <?=$item->ontap     ?'On Tap':''?> <?=$item->oncask    ?'On Cask':''?> <?=$item->inbottle  ?'In Bottles':''?> <?=$item->inbottle22?'In Large Bottles':''?> <?=$item->incan     ?'In Cans':''?>"></div>
+		<div class="served <?=$item->ontap     ?'ontap':''?> <?=$item->oncask    ?'oncask':''?> <?=$item->inbottle  ?'inbottle':''?> <?=$item->inbottle22?'inbottle22':''?> <?=$item->incan     ?'incan':''?>" title="Served <?=$item->ontap     ?'On Tap':''?> <?=$item->oncask    ?'On Cask':''?> <?=$item->inbottle  ?'In Bottles':''?> <?=$item->inbottle22?'In Large Bottles':''?> <?=$item->incan     ?'In Cans':''?>"></div>
 		<span class="brewery"><?=$item->brewery->name?></span><br />
 		<a href="/<?=str_replace(':','/',$item->id)?>"><?=$item->name?></a>
-		<span class="price"><?=$item->price?'$'.number_format($item->price,2):'$?'?></span> <a href="" onclick="beerlist_delete('<?=$item->id?>',event);return false;" class="cmd">Delete</a>
+		<div class="price"><?=$item->price?'$'.number_format($item->price,2):'$?'?></div>
+		<a href="" onclick="beerlist_delete('<?=$item->id?>',event);return false;" class="cmd" title="Remove from this menu"></a>
 	</li>
 	<?endforeach;?>
 </ul>
@@ -95,7 +74,7 @@ include("../header.php");
 
 </div>
 
-<h3><?=count($reviews->reviews)?> Reviews</h3>
+<h3 id="ratings"><?=count($reviews->reviews)?> Reviews</h3>
 <?php foreach($reviews->reviews as $review):?>
 <div class="areview">
 	<img src="<?=$BC->docobj('user/'.$review->user_id)->avatar?>" /><span class="user"><a href="/user/<?=$review->user_id?>"><?=$BC->docobj('user/'.$review->user_id)->name?></a> posted <span class="datestring"><?=date('D, d M Y H:i:s O',$review->meta->timestamp)?></span></span>
@@ -149,25 +128,56 @@ include("../header.php");
 	<input type="submit" value="Post Rating" />
 </form>
 </div>
-<div id="rightcol">
+<div id="mwl_left_300">
 	<div id="map"></div>
-	<h2>People Who Like This Place, Also Like</h2>
-	<ul>
-		<li>Place in same city</li>
-		<li>Place in same city</li>
-		<li>Place in same city</li>
-		<li>Place in same city</li>
-	</ul>
-	<h2>Other <?=$place->placetype?>s Nearby</h2>
-	<ul>
-		<li>Nearby Place</li>
-		<li>Nearby Place</li>
-		<li>Nearby Place</li>
-		<li>Nearby Place</li>
-	</ul>
+	<a href="">Get Directions</a>  &#124; <a href="">Street View</a>
+<div id="place">
+	<input type="hidden" value="<?=$place->id?>" id="place_id">
+	<span id="address">
+		<div id="place_address:street"><?=$place->address->street?></div>
+		<div><span id="place_address:city"><?=$place->address->city?></span>, <span id="place_address:state"><?=$place->address->state?></span>	<span id="place_address:zip"><?=$place->address->zip?></span></div>
+		<div id="place_address:country"><?=$place->address->country?></div>
+		<input type="hidden" name="latitude" value="<?=$place->address->latitude?>" />
+		<input type="hidden" name="longitude" value="<?=$place->address->longitude?>" />
+	</span>
+	<div id="place_phone"><?=$place->phone?></div>
+	<div><span id="place_uri" href="<?=$place->uri?>"><?=$place->uri?></span> <a href="<?=$place->uri?>">Visit web site</a></div>
+	<div id="place_description"><?=$place->description?></div>
+	
+	<div class="cl"><div id="NEWplace_kid-friendly" class="ui-icon <?php echo isset($place->restaurant->kid_friendly)?($place->restaurant->kid_friendly?'ui-icon-check':'ui-icon-closethick'):'ui-icon-help'; ?>"></div><span class="label">Kid-Friendly</span></div>
+	<div class="cl"><div id="NEWplace_outdoor-seating" class="ui-icon <?php echo isset($place->restaurant->outdoor_seating)?($place->restaurant->outdoor_seating?'ui-icon-check':'ui-icon-closethick'):'ui-icon-help'; ?>"></div><span class="label">Outdoor seating</span></div>
+	<div class="cl"><div id="NEWplace_wi-fi" class="ui-icon <?php echo isset($place->wifi)?($place->wifi?'ui-icon-check':'ui-icon-closethick'):'ui-icon-help'; ?>"></div><span class="label">Wi-Fi</span></div>
+	<div class="cl"><div id="NEWplace_bottles" class="ui-icon <?php echo isset($place->bottles)?($place->bottles?'ui-icon-check':'ui-icon-closethick'):'ui-icon-help'; ?>"></div><span class="label">Bottles to go</span></div>
+	<div class="cl"><div id="NEWplace_growlers" class="ui-icon <?php echo isset($place->growlers)?($place->growlers?'ui-icon-check':'ui-icon-closethick'):'ui-icon-help'; ?>"></div><span class="label">Growlers to go</span></div>
+	<div class="cl"><div id="NEWplace_kegs" class="ui-icon <?php echo isset($place->kegs)?($place->kegs?'ui-icon-check':'ui-icon-closethick'):'ui-icon-help'; ?>"></div><span class="label">Kegs to go</span></div>
+	
+	<p class="notice">editable method preserved below</p>
+	
+	<div class="cl"><div class="label">Kid-Friendly:</div><div id="place_kid-friendly"><?php echo isset($place->restaurant->kid_friendly)?($place->restaurant->kid_friendly?'Yes':'No'):'Unknown'; ?></div></div>
+	<div class="cl"><div class="label">Outdoor seating: </div><div id="place_outdoor-seating"><?php echo isset($place->restaurant->outdoor_seating)?($place->restaurant->outdoor_seating?'Yes':'No'):'Unknown'; ?></div></div>
+	<div class="cl"><div class="label">Wi-Fi: </div><div id="place_wi-fi"><?php echo isset($place->wifi)?($place->wifi?'Yes':'No'):'Unknown'; ?></div></div>
+	<div class="cl"><div class="label">Bottles to go: </div><div id="place_bottles"><?php echo isset($place->bottles)?($place->bottles?'Yes':'No'):'Unknown'; ?></div></div>
+	<div class="cl"><div class="label">Growlers to go: </div><div id="place_growlers"><?php echo isset($place->growlers)?($place->growlers?'Yes':'No'):'Unknown'; ?></div></div>
+	<div class="cl"><div class="label">Kegs to go: </div><div id="place_kegs"><?php echo isset($place->kegs)?($place->kegs?'Yes':'No'):'Unknown'; ?></div></div>
+		
+	<input class="editable_savechanges_button hidden" type="button" value="Save Changes" />
+	<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
+	<div id="editable_save_msg"></div>
+</div>
+<ul class="command">
+	<li style="background-image: url('/img/wishlist.png')"><a href="">Bookmark this Place</a></li>
+	<li style="background-image: url('/img/ratebeer.png')"><a href="">Rate this Place</a></li>
+</ul>
+
+<h3>Place Edit History</h3>
+<div>Beer last modified: <span id="beer_lastmodified" class="datestring"><?=date('D, d M Y H:i:s O',$beerdoc->meta->mtime)?></span></div>
+<div id="history"></div>
+
+
 </div>
 </div>
-<div id="leftcol">
+<div id="mwl_right_250">
+	<div id="photo_placeholder" class="place <?=$place->placetype?>"><!--TROY TODO: currently showing this div all the time, but should only show when there are no photos--></div>
 <?php foreach ($photoset->photos as $photo) :?>
 	<div class="photo">
 	<img src="<?=$photo->url?>?size=small" />
@@ -179,16 +189,20 @@ include("../header.php");
 
 <input id="photo_upload" name="photo" type="file" />
 <p></p>
-<ul class="command">
-	<li style="background-image: url('/img/wishlist.png')"><a href="">Bookmark this Place</a></li>
-	<li style="background-image: url('/img/ratebeer.png')"><a href="">Rate this Place</a></li>
-</ul>
-
-<h3>Place Edit History</h3>
-<div>Beer last modified: <span id="beer_lastmodified" class="datestring"><?=date('D, d M Y H:i:s O',$beerdoc->meta->mtime)?></span></div>
-<div id="history"></div>
-
-
+	<h2>People Who Like This Place, Also Like</h2>
+	<ul>
+		<li>Place in same city</li>
+		<li>Place in same city</li>
+		<li>Place in same city</li>
+		<li>Place in same city</li>
+	</ul>
+	<h2>Other Beer Places Nearby</h2>
+	<ul>
+		<li>Nearby Place</li>
+		<li>Nearby Place</li>
+		<li>Nearby Place</li>
+		<li>Nearby Place</li>
+	</ul>
 </div>
 
 

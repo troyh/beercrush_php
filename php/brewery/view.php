@@ -16,9 +16,9 @@ $header['js'][]='<script type="text/javascript" src="/js/swfobject.js"></script>
 
 include("../header.php");
 ?>
-<div id="main">
+<div id="mwr">
 
-<div id="mainwithright">
+<div id="main">
 
 <div id="brewery">
 	<input type="hidden" id="brewery_id" value="<?=$brewerydoc->id?>">
@@ -41,7 +41,7 @@ include("../header.php");
 	<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
 
 </div>
-</div><!--weird extra div required, not sure i get it-->
+
 
 
 <h2>[Count] Beers Brewed</h2>
@@ -61,7 +61,7 @@ include("../header.php");
 </div>
 
 </div>
-<div id="rightcol">
+<div id="mwr_right_300">
 	<div id="map"></div>
 	<h3>Visiting</h3>
 	<div class="cl"><div class="label">Hours:</div><div id="brewery_hours"><?=$brewerydoc->hours?></div></div>
@@ -74,7 +74,7 @@ include("../header.php");
 </div>
 
 </div>
-<div id="leftcol">
+<div id="mwr_left_250">
 <?php foreach ($photoset->photos as $photo) :?>
 	<div class="photo">
 	<img src="<?=$photo->url?>?size=small" />

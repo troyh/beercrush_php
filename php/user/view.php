@@ -7,9 +7,9 @@ $reviews=BeerCrush::api_doc($BC->oak,'user/'.$_GET['user_id'].'/reviews');
 include("../header.php");
 ?>
 
-<div id="main">
+<div id="mwr">
 
-<div id="mainwithright">
+<div id="main">
 
 <div id="user">
 	<h1 id="user_name"><?=empty($userdoc->name)?"Anonymous":$userdoc->name?></h1>
@@ -75,7 +75,7 @@ foreach ($reviews->reviews as $review) {
 
 </div>
 
-<div id="rightcol">
+<div id="mwr_right_300">
 <h2>My Wishlist</h2>
 	<ul>
 		<li>Beer</li>
@@ -94,7 +94,7 @@ foreach ($reviews->reviews as $review) {
 
 </div>
 </div>
-<div id="leftcol">
+<div id="mwr_left_250">
 
 	<div id="avatar">
 	<img src="<?=empty($userdoc->avatar)?"/img/default_avatar.gif":$userdoc->avatar?>" />
