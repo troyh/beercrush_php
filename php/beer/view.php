@@ -298,7 +298,7 @@ include("../header.php");
 
 <p></p>
 <ul class="command">
-	<li style="background-image: url('/img/wishlist.png')"><a href="">Add to My Wishlist</a></li>
+	<li style="background-image: url('/img/wishlist.png')"><a id="add_to_wishlist_link" href="#">Add to My Wishlist</a></li>
 	<li style="background-image: url('/img/ratebeer.png')"><a href="">Rate this Beer</a></li>
 	<li style="background-image: url('/img/nearby.png')">Find this Nearby<br />
 	Zip <input size="10"> <button>Find</button></li>
@@ -346,7 +346,6 @@ if ($history) {
 <script type="text/javascript">
 
 function undo_photo(uuid,url) {
-	console.log(url);
 	$.ajax({
 		"url": url,
 		"type": "DELETE",
@@ -504,6 +503,16 @@ function pageMain()
 		$('#review_result_msg').removeClass('hidden feedback_error');
 		$('#review_result_msg').addClass('feedback_success');
 		$('#review_result_msg').html('Your rating was posted and will appear here in a few hours.');
+	});
+	
+	$('#add_to_wishlist_link').click(function(){
+		$.post('/api/wishlist',
+			{'add_item':$('#beer_id').val()},
+			function(data){
+				// console.log(data);
+			}
+		);
+		return false;
 	});
 	
 	// Make the beer doc editable

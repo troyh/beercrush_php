@@ -258,7 +258,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 		"/api/recommend/edit",
 		"/api/user/edit",
 		"/api/user/fullinfo",
-		"/api/wishlist/edit"
+		"/api/wishlist"
 	};
 	
 	for (size_t i=0;i < (sizeof(valid_login_urls)/sizeof(valid_login_urls[0]));++i) {

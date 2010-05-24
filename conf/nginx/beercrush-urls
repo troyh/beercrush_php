@@ -39,6 +39,7 @@ rewrite ^/store/api/review/beer/([^/]+)/([^/]+)/(\d+)$	/api/review/beer.php?beer
 rewrite ^/store/api/review/beer/([^/]+)/([^/]+)/([^/]+)$	/api/review/beer.php?beer_id=beer:$1:$2&user_id=$3 break;
 rewrite ^/store/api/review/place/([^/]+)/(\d+)$	/api/review/place.php?place_id=place:$1&seqnum=$2 break;
 rewrite ^/store/api/review/place/([^/]+)/([^/]+)$	/api/review/place.php?place_id=place:$1&user_id=$2 break;
+rewrite ^/store/api/wishlist$ 		/api/wishlist/edit.php break;
 rewrite ^/store/api/wishlist/([^/]+)$ 		/api/wishlist/view.php?user_id=$1 break;
 rewrite ^/store/api/user/([a-z0-9-]+)/reviews$ 		/api/user/reviews.php?user_id=$1 break;
 rewrite ^/store/api/user/([a-z0-9-]+)$ 		/api/user/view.php?user_id=user:$1 break;
