@@ -120,23 +120,19 @@ include("../header.php");
 	<h2><a id="brewery_link" href="/brewery/<?=preg_replace('/^.*:/','',$brewerydoc->id)?>"><?=$brewerydoc->name?>'s</a></h2>
 	<h1><?=$beerdoc->name?></h1>
 	<div id="ratings_section" class="cf">
-		<div class="star_rating"><div id="avgrating" style="width: 50%"></div></div>
-		<a href="#ratings" id="ratingcount"><?=count($reviews->reviews)?> ratings</a>
+		<div class="star_rating"><div id="avgrating" style="width: <?=$beerdoc->review_summary->avg/5*100?>%"></div></div>
+		<a href="#ratings" id="ratingcount"><?=count($reviews->reviews)?> ratings (<?=$beerdoc->review_summary->avg?>)</a>
 		<div class="flavors">
-			<span class="size5">Hoppy, </span>
-			<span class="size5">Citrus, </span>
-			<span class="size4">Pine, </span>
-			<span class="size3">Green Apple, </span>
-			<span class="size2">Nutmeg, </span>
-			<span class="size1">Black Pepper, </span>
-			<span class="size1">Cut Green Grass</span>
+			<?php foreach ($beerdoc->review_summary->flavors as $f):?>
+				<span class="size3"><?=$flavor_lookup[$f]?> </span>
+			<?php endforeach?>
 		</div>
 		<p>Body</p>
-		<div id="body"><div class="meter"><div style="width: 77%"></div></div></div>
+		<div id="body"><div class="meter"><div style="width: <?=$beerdoc->review_summary->body_avg/5*100?>%"></div></div></div>
 		<p>Balance</p>
-		<div id="balance"><div class="meter"><div style="width: 90%"></div></div></div>
+		<div id="balance"><div class="meter"><div style="width: <?=$beerdoc->review_summary->balance_avg/5*100?>%"></div></div></div>
 		<p>Aftertaste</p>
-		<div id="aftertaste"><div class="meter"><div style="width: 70%"></div></div></div>
+		<div id="aftertaste"><div class="meter"><div style="width: <?=$beerdoc->review_summary->aftertaste_avg/5*100?>%"></div></div></div>
 	</div>
 	
 	<span class="label">Brewer's description:</span>
@@ -168,7 +164,7 @@ include("../header.php");
 
 <?php foreach ($reviews->reviews as $review) :?>
 <div class="areview">
-	<img src="/img/default_avatar.gif" style="width:30px"><span class="user"><a href="/user/<?=$review->user_id?>"><?=$users[$review->user_id]->name?></a> posted <span class="datestring"><?=date('D, d M Y H:i:s O',$review->meta->timestamp)?></span></span>
+	<img src="<?=empty($users[$review->user_id]->avatar)?"/img/default_avatar.gif":$users[$review->user_id]->avatar?>" style="width:30px"><span class="user"><a href="/user/<?=$review->user_id?>"><?=empty($users[$review->user_id]->name)?"Anonymous":$users[$review->user_id]->name?></a> posted <span class="datestring"><?=date('D, d M Y H:i:s O',$review->meta->timestamp)?></span></span>
 	<div class="triangle-border top">
 		<div class="star_rating"><div id="avgrating" style="width: <?=$review->rating?>0%"></div></div>
 		<div><?php
@@ -180,9 +176,9 @@ include("../header.php");
 			print join(', ',$flavor_titles);
 		?></div>
 		<div><?=$review->comments?></div>
-		<div class="cf"><div class="label">Body: </div><?=$review->body?></div>
-		<div class="cf"><div class="label">Balance: </div><?=$review->balance?></div>
-		<div class="cf"><div class="label">Aftertaste: </div><?=$review->aftertaste?></div>
+		<div class="cf"><div class="label">Body: </div><?=$review->body?> (<?=$review->body/5*100?>%)</div>
+		<div class="cf"><div class="label">Balance: </div><?=$review->balance?> (<?=$review->balance/5*100?>%)</div>
+		<div class="cf"><div class="label">Aftertaste: </div><?=$review->aftertaste?> (<?=$review->aftertaste/5*100?>%)</div>
 		<div class="cf"><div class="label">Date Drank: </div><span class="datestring"><?=!empty($review->date_drank)?date('D, d M Y H:i:s O',strtotime($review->date_drank)):''?></span></div>
 		<div class="cf"><div class="label">Price: </div>$<?=$review->purchase_price?> at <a href="/<?=str_replace(':','/',$review->purchase_place_id)?>"><?=$places[$review->purchase_place_id]->name?></a></div>
 		<div class="cf"><div class="label">Poured: </div><?=$review->poured_from?></div>
@@ -276,11 +272,15 @@ include("../header.php");
 	</div>
 </div>
 <div id="leftcol">
+	<?php if ($beerdoc->photos->total==0):?>
+		<img src="/img/beer.png" />
+	<?php else: ?>
 	<?php foreach ($photoset->photos as $photo) :?>
 	<div class="photo">
-		<img src="<?=$photo->url?>?size=small" /><p class="caption">by <a href="/user/<?=$photo->user_id?>"><?=$users[$photo->user_id]->name?></a> <span class="datestring"><?=date(BeerCrush::DATE_FORMAT,$photo->timestamp)?></span></p>
+		<img src="<?=$photo->url?>?size=small" /><p class="caption">by <a href="/user/<?=$photo->user_id?>"><img src="<?=empty($users[$photo->user_id]->avatar)?"/img/default_avatar.gif":$users[$photo->user_id]->avatar?>" /><?=$users[$photo->user_id]->name?></a> <span class="datestring"><?=date(BeerCrush::DATE_FORMAT,$photo->timestamp)?></span></p>
 	</div>
 	<?php endforeach; ?>
+	<?php endif;?>
 
 <div id="new_photos"></div>
 
