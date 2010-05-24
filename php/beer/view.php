@@ -112,6 +112,7 @@ function output_flavors($flavors)
 // Add the CSS for Uploadify
 $header['css'][]='<link href="/css/uploadify.css" rel="stylesheet" type="text/css" />';
 $header['title']=$brewerydoc->name.' '.$beerdoc->name;
+$header['js'][]='<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>';
 
 include("../header.php");
 ?>
@@ -300,9 +301,11 @@ include("../header.php");
 <ul class="command">
 	<li style="background-image: url('/img/wishlist.png')"><a id="add_to_wishlist_link" href="#">Add to My Wishlist</a></li>
 	<li style="background-image: url('/img/ratebeer.png')"><a href="">Rate this Beer</a></li>
-	<li style="background-image: url('/img/nearby.png')">Find this Nearby<br />
-	Zip <input size="10"> <button>Find</button></li>
+	<li style="background-image: url('/img/nearby.png')"><a id="find_this_nearby_link" href="#">Find this Nearby</a><br />
+	Zip <input id="find_this_nearby_zip" size="10"> <button id="find_this_nearby_button">Find</button></li>
 </ul>
+<div id="nearby_results"></div>
+
 <h3>Beer Edit History</h3>
 <div>Beer last modified: <span id="beer_lastmodified" class="datestring"><?=date('D, d M Y H:i:s O',$beerdoc->meta->mtime)?></span></div>
 <div id="history"></div>
@@ -479,6 +482,24 @@ function show_history() {
 	});
 }
 
+function find_beer_nearby(lat,lon) {
+	$('#nearby_results').empty(); // Clear it first
+	$.get('/api/nearby_beer.fcgi',
+		{
+			"beer_id": $('#beer_id').val(),
+			"within": 20,
+			"lat": lat,
+			"lon": lon
+		},
+		function(data) {
+			for (i=0,j=data.places.length;i<j;++i) {
+				$('#nearby_results').append('<div><a href="/'+data.places[i].place_id.replace(/:/g,'/')+'">'+data.places[i].name+'</a></div>');
+			}
+		}
+	)
+	
+}
+
 function pageMain()
 {
 	$('#post_review_button').click(function(){
@@ -513,6 +534,32 @@ function pageMain()
 			}
 		);
 		return false;
+	});
+
+	$('#find_this_nearby_link').click(function(){
+		if(navigator.geolocation) {
+		    browserSupportFlag = true;
+		    navigator.geolocation.getCurrentPosition(function(position) {
+				find_beer_nearby(position.coords.latitude,position.coords.longitude);
+		    }, function() {
+		    });
+		}
+	});
+	
+	$('#find_this_nearby_button').click(function(){
+
+		$('#find_this_nearby_zip').val($.trim($('#find_this_nearby_zip').val()));
+		if ($('#find_this_nearby_zip').val().length) {
+			var geocoder = new google.maps.Geocoder();
+			geocoder.geocode(
+				{address: $('#find_this_nearby_zip').val()},
+				function(results,status){
+					if (status == google.maps.GeocoderStatus.OK) {
+						find_beer_nearby(results[0].geometry.location.lat(),results[0].geometry.location.lng())
+					}
+				}
+			);
+		}
 	});
 	
 	// Make the beer doc editable
