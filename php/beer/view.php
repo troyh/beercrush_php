@@ -244,7 +244,7 @@ include("../header.php");
 	<h2>People Who Like This Beer, Also Like</h2>
 	<ul>
 		<?php foreach($recommends->beer as $recommend) :?>
-			<li><a href="/<?=BeerCrush::docid_to_docurl($recommend->id)?>"><?=$recommend->name?></a> by <a href="/<?=BeerCrush::docid_to_docurl($recommend->brewery->id)?>"><?=$recommend->brewery->name?></a></li>
+			<li><?php if ($recommend->photos->total):?><img src="<?=$recommend->photos->thumbnail?>" /><?php endif?><a href="/<?=BeerCrush::docid_to_docurl($recommend->id)?>"><?=$recommend->name?></a> by <a href="/<?=BeerCrush::docid_to_docurl($recommend->brewery->id)?>"><?=$recommend->brewery->name?></a> (<?=$recommend->review_summary->avg?>)</li>
 		<?php endforeach; ?>
 	</ul>
 	<?php endif; ?>
@@ -268,15 +268,15 @@ include("../header.php");
 	<h2>More from <?=$brewerydoc->name?></h2>	
 	<ul>
 		<?php
-		for ($i=0,$j=4;$i<$j;++$i) {
+		for ($i=0,$j=4;$i<$j;++$i) :
 			$n=rand(0,count($beerlist->beers)-1);
-		?>
-			<li><a href="/<?=BeerCrush::docid_to_docurl($beerlist->beers[$n]->beer_id)?>"><?=$beerlist->beers[$n]->name?></a></li>
-		<?php
+			$u=BeerCrush::docid_to_docurl($beerlist->beers[$n]->beer_id);
+			$morebeer=BeerCrush::api_doc($oak,$u);
 			// Remove it so it isn't selected again
 			array_splice($beerlist->beers,$n,1);
-		}
 		?>
+			<li><?php if ($morebeer->photos->total):?><img src="<?=$morebeer->photos->thumbnail?>" /><?php endif?><a href="/<?=$u?>"><?=$morebeer->name?></a> (<?=$morebeer->review_summary->avg?>)</li>
+		<?php endfor; ?>
 	</ul>
 	<?php endif;?>
 	</div>
