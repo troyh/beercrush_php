@@ -47,6 +47,20 @@ $styles_lookup=array();
 build_style_lookup_table($styles->styles);
 
 $color=get_color_rgb($beerdoc->srm);
+
+$color_titles=array();
+foreach ($colors->colors as $c) {
+	$color_titles[$c->srm]=$c->name;
+}
+
+$availability_titles=array(
+	'fall' 		 => "Fall",
+	'seasonal' 	 => "Seasonal",
+	'spring' 	 => "Spring",
+	'summer' 	 => "Summer",
+	'winter' 	 => "Winter",
+	'year-round' => "Year-round",
+);
 	
 // Build flavor id lookup table
 $flavor_lookup=array();
@@ -167,7 +181,7 @@ include("../header.php");
 		<div id="beer_description" class="editable_textarea"><?=$beerdoc->description?></div>
 		<div class="cf"><div class="label">Style: </div><div id="beer_style"><?foreach ($beerdoc->styles as $styleid):?><?=$styles_lookup[$styleid]->name?> <?endforeach?></div></div>
 		
-		<div class="cf"><div class="label">Color: </div><div id="beer_color"><div style="background:<?='#'.dechex($color->rgb[0]<<16 | $color->rgb[1]<<8 | $color->rgb[2])?>"></div><?=$color->name?></div></div>
+		<div class="cf"><div class="label">Color: </div><div id="beer_srm" class="editable_select"><div style="background:<?='#'.dechex($color->rgb[0]<<16 | $color->rgb[1]<<8 | $color->rgb[2])?>"></div><?=$color->name?>&nbsp;</div></div>
 		
 		<div class="cf"><div class="label">Alcohol (abv): </div><div id="beer_abv"><?=$beerdoc->abv?>&#37;</div></div>
 		<div class="cf"><div class="label">Bitterness (IBUs): </div><div id="beer_ibu"><?=$beerdoc->ibu?></div></div>
@@ -179,7 +193,7 @@ include("../header.php");
 		<div class="cf"><div class="label">Yeast: </div><div id="beer_yeast"><?=$beerdoc->yeast?></div></div>
 		
 		
-		<div class="cf"><div class="label">Availability: </div><div><?=$beerdoc->availability?></div></div>
+		<div class="cf"><div class="label">Availability: </div><div id="beer_availability" class="editable_select"><?=$availability_titles[$beerdoc->availability]?></div></div>
 		<div id="editable_save_msg"></div>
 		<input class="editable_savechanges_button hidden" type="button" value="Save Changes" />
 		<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
@@ -375,6 +389,23 @@ if ($history) {
 <script type="text/javascript" src="/js/jquery.uploadify.v2.1.0.js"></script>
 <script type="text/javascript" src="/js/swfobject.js"></script>
 <script type="text/javascript">
+
+<?php
+// Make javascript variable colors_strings from $colors so they can be used in javascript
+$kv=array();
+foreach ($colors->colors as $color) {
+	$kv[]="\"{$color->srm}\":\"{$color->name}\"";
+}
+print "var colors_strings={\n".join(",\n",$kv)."\n};\n";
+
+$kv=array();
+foreach ($availability_titles as $id=>$name) {
+	$kv[]="\"$id\":\"$name\"";
+}
+print "var availability_strings={\n".join(",\n",$kv)."\n};\n";
+
+
+?>
 
 function undo_photo(uuid,url) {
 	$.ajax({
@@ -591,7 +622,20 @@ function pageMain()
 	});
 	
 	// Make the beer doc editable
-	makeDocEditable('#beer','beer_id','/api/beer/edit');
+	makeDocEditable('#beer','beer_id','/api/beer/edit',{
+		'elements': {
+			'beer_srm': { 
+				'type': 'select', 
+				'display_format_func': function(data) { return colors_strings[data]; },
+				'data': "<?php $color_titles['selected']=$beerdoc->srm;print str_replace('"','\\"',json_encode($color_titles))?>"
+			},
+			'beer_availability': {
+				'type':'select', 
+				'display_format_func': function(data) { return availability_strings[data]; },
+				'data': "<?php $availability_titles['selected']=$beerdoc->availability;print str_replace('"','\\"',json_encode($availability_titles))?>"
+			}
+		}
+	});
 	
 	$('#photo_upload').uploadify({
 		'uploader'  : '/flash/uploadify.swf',

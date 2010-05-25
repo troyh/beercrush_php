@@ -7,6 +7,7 @@ if ($beerlistdoc==null)
 {
 	$beerlistdoc->beers=array();
 }
+
 $photoset=$BC->docobj('photoset/brewery/'.$_GET['brewery_id']);	
 
 $header['title']=$brewerydoc->name;
@@ -14,6 +15,12 @@ $header['js'][]='<script type="text/javascript" src="http://maps.google.com/maps
 $header['js'][]='<script type="text/javascript" src="/js/jquery.uploadify.v2.1.0.js"></script>';
 $header['js'][]='<script type="text/javascript" src="/js/swfobject.js"></script>';
 
+function yes_no_undecided($v) {
+	if (isset($v)) {
+		return $v?"Yes":"No";
+	}
+	return ""; // Undecided
+}
 include("../header.php");
 ?>
 <div id="mwr">
@@ -23,7 +30,7 @@ include("../header.php");
 <div id="brewery">
 	<input type="hidden" id="brewery_id" value="<?=$brewerydoc->id?>">
 	<h1 id="brewery_name"><?=$brewerydoc->name?></h1>
-
+	
 	<span id="address">
 		<div class="cl"><div class="label">Street:</div><div id="brewery_address:street"><?=$brewerydoc->address->street?></div></div>
 		<div class="cl"><div class="label">City:</div><div id="brewery_address:city"><?=$brewerydoc->address->city?></div></div>
@@ -44,10 +51,10 @@ include("../header.php");
 
 
 
-<h2>[Count] Beers Brewed</h2>
+<h2><?=count($beerlistdoc->beers)?> Beers Brewed</h2>
 <ul id="beerlist">
 <?php foreach ($beerlistdoc->beers as $beer){ ?>
-	<li><a href="/<?=str_replace(':','/',$beer->beer_id)?>"><?=$beer->name?></a></li>
+	<li><a href="/<?=BeerCrush::docid_to_docurl($beer->beer_id)?>"><?=$beer->name?></a> (<?=BeerCrush::api_doc($BC->oak,BeerCrush::docid_to_docurl($beer->beer_id))->review_summary->avg?>)</li>
 <?php } ?>
 </ul>
 
@@ -66,10 +73,10 @@ include("../header.php");
 	<h3>Visiting</h3>
 	<div class="cl"><div class="label">Hours:</div><div id="brewery_hours"><?=$brewerydoc->hours?></div></div>
 	<div class="cl"><div class="label">Tasting:</div><div id="brewery_tasting"><?=$brewerydoc->tasting?></div></div>
-	<div class="cl"><div class="label">Tours:</div><div id="brewery_tours"><?=$brewerydoc->tours?></div></div>
-	<div class="cl"><div class="label">Bottles to go:</div><div id="brewery_bottles"><?=$brewerydoc->bottles?></div></div>
-	<div class="cl"><div class="label">Growlers to go:</div><div id="brewery_growlers"><?=$brewerydoc->growlers?></div></div>
-	<div class="cl"><div class="label">Kegs to go:</div><div id="brewery_kegs"><?=$brewerydoc->kegs?></div></div>
+	<div class="cl"><div class="label">Tours:</div><div id="brewery_tours"><?=$brewerydoc->tourinfo?></div></div>
+	<div class="cl"><div class="label">Bottles to go:</div><div id="brewery_bottles"><?=yes_no_undecided($brewerydoc->togo->bottles)?></div></div>
+	<div class="cl"><div class="label">Growlers to go:</div><div id="brewery_growlers"><?=yes_no_undecided($brewerydoc->togo->growlers)?></div></div>
+	<div class="cl"><div class="label">Kegs to go:</div><div id="brewery_kegs"><?=yes_no_undecided($brewerydoc->togo->kegs)?></div></div>
 	
 </div>
 

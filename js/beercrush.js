@@ -130,8 +130,27 @@ function makeDocEditable(docSelector,docid_id,url,options)
 			if ($(this).get(0).tagName!='INPUT' && ($(this).attr('id').substr(0,prefix.length) == prefix))
 			{ // This is a field we need to make editable
 
+				if (options && options.elements && options.elements[$(this).attr('id')])
+					editable_options=options.elements[$(this).attr('id')];
+				else
+					editable_options=new Object;
+
+				// Set any defaults, if they aren't set already (by the caller's options arg)
+				if (!editable_options.type) {
+					if ($(this).hasClass('editable_textarea'))
+						editable_options.type='textarea';
+					else if ($(this).hasClass('editable_select'))
+						editable_options.type='select';
+					else
+						editable_options.type='text';
+				}
+				if (!editable_options.cancel)
+					editable_options.cancel='Cancel';
+				if (!editable_options.submit)
+					editable_options.submit='OK';
 				
-				$(this).editable(function(value,settings) {
+				$(this).editable(
+					function(value,settings) {
 
 					// Get the name of this field
 					var fieldname=$(this).attr('id').substr(prefix.length);
@@ -179,7 +198,11 @@ function makeDocEditable(docSelector,docid_id,url,options)
 									if ($(this).attr('id').substr(0,prefix.length) == prefix)
 									{
 										fieldname=$(this).attr('id').substr(prefix.length);
-										$(this).text(data[fieldname]);
+										//  Call user-supplied function to format data, if one was supplied
+										if (options.elements[$(this).attr('id')] && typeof(options.elements[$(this).attr('id')].display_format_func)=='function')
+											$(this).text(options.elements[$(this).attr('id')].display_format_func(data[fieldname]));
+										else
+											$(this).text(data[fieldname]);
 									}
 								});
 
@@ -223,11 +246,8 @@ function makeDocEditable(docSelector,docid_id,url,options)
 					});
 					
 					return value;
-				}, {
-					type: $(this).hasClass('editable_textarea')?'textarea':'text',
-					cancel: 'Cancel',
-					submit: 'OK'
-				});
+				}, 
+				editable_options);
 			}
 		});
 	}
