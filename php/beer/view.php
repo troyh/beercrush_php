@@ -160,8 +160,8 @@ include("../header.php");
 	<h2><a id="brewery_link" href="/brewery/<?=preg_replace('/^.*:/','',$brewerydoc->id)?>"><?=$brewerydoc->name?>'s</a></h2>
 	<h1><?=$beerdoc->name?></h1>
 	<div id="ratings_section" class="cf">
-		<div class="star_rating"><div id="avgrating" style="width: <?=$beerdoc->review_summary->avg/5*100?>%"></div></div>
-		<a href="#ratings" id="ratingcount"><?=count($reviews->reviews)?> ratings (<?=$beerdoc->review_summary->avg?>)</a>
+		<div class="star_rating" title="Average rating: <?=$beerdoc->review_summary->avg?> out of 5"><div id="avgrating" style="width: <?=$beerdoc->review_summary->avg/5*100?>%"></div></div>
+		<a href="#ratings" id="ratingcount"><?=count($reviews->reviews)?> ratings</a>
 		<div class="flavors">
 			<?php foreach ($beerdoc->review_summary->flavors as $f):?>
 				<span class="size3"><?=$flavor_lookup[$f]?> </span>
@@ -206,7 +206,7 @@ include("../header.php");
 <div class="areview">
 	<img src="<?=empty($users[$review->user_id]->avatar)?"/img/default_avatar.gif":$users[$review->user_id]->avatar?>" style="width:30px"><span class="user"><a href="/user/<?=$review->user_id?>"><?=empty($users[$review->user_id]->name)?"Anonymous":$users[$review->user_id]->name?></a> posted <span class="datestring"><?=date('D, d M Y H:i:s O',$review->meta->timestamp)?></span></span>
 	<div class="triangle-border top">
-		<div class="star_rating"><div id="avgrating" style="width: <?=$review->rating?>0%"></div></div>
+		<div class="star_rating"><div id="avgrating" style="width: <?=$review->rating/5*100?>%"></div></div>
 		<div><?php
 			$flavor_titles=array();
 			if (isset($review->flavors))
