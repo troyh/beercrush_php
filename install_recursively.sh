@@ -107,6 +107,9 @@ install_routine() {
 				if [ ! -f /etc/cron.d/$CROND_FILENAME ]; then
 					echo "Installing crontab: $CRONTAB";
 					sudo cp $CRONTAB /etc/cron.d/$CROND_FILENAME;
+				elif ! files_are_identical $CRONTAB /etc/cron.d/$CROND_FILENAME; then
+					echo "Updating crontab: $CRONTAB";
+					sudo cp $CRONTAB /etc/cron.d/$CROND_FILENAME;
 				fi
 			elif [ -f /etc/cron.d/$CROND_FILENAME ]; then
 				echo "Uninstalling crontab: $CRONTAB";
