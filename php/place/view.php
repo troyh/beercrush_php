@@ -25,6 +25,11 @@ $header['js'][]='<script type="text/javascript" src="/js/swfobject.js"></script>
 // Add the CSS for Uploadify
 $header['css'][]='<link href="/css/uploadify.css" rel="stylesheet" type="text/css" />';
 
+function get_beer_doc($beer_id) {
+	global $oak;
+	return BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl($beer_id));
+}
+
 include("../header.php");
 ?>
 
@@ -50,7 +55,8 @@ include("../header.php");
 	<li>
 		<div class="served <?=$item->ontap     ?'ontap':''?> <?=$item->oncask    ?'oncask':''?> <?=$item->inbottle  ?'inbottle':''?> <?=$item->inbottle22?'inbottle22':''?> <?=$item->incan     ?'incan':''?>" title="Served <?=$item->ontap     ?'On Tap':''?> <?=$item->oncask    ?'On Cask':''?> <?=$item->inbottle  ?'In Bottles':''?> <?=$item->inbottle22?'In Large Bottles':''?> <?=$item->incan     ?'In Cans':''?>"></div>
 		<span class="brewery"><?=$item->brewery->name?></span><br />
-		<a href="/<?=str_replace(':','/',$item->id)?>"><?=$item->name?></a>
+		<a href="/<?=BeerCrush::docid_to_docurl($item->id)?>"><?=$item->name?></a>
+		(<?=get_beer_doc($item->id)->review_summary->avg?>)
 		<div class="price"><?=$item->price?'$'.number_format($item->price,2):'$?'?></div>
 		<a href="" onclick="beerlist_delete('<?=$item->id?>',event);return false;" class="cmd" title="Remove from this menu"></a>
 	</li>
