@@ -110,6 +110,7 @@ function get_color_rgb($srm) {
 			// return '#'.dechex($color->rgb[0]<<16 | $color->rgb[1]<<8 | $color->rgb[2]);
 		}
 	}
+	return null;
 }
 
 function build_flavor_lookup_table($flavors)
@@ -181,7 +182,7 @@ include("../header.php");
 		<div id="beer_description" class="editable_textarea"><?=$beerdoc->description?></div>
 		<div class="cf"><div class="label">Style: </div><div id="beer_style"><?foreach ($beerdoc->styles as $styleid):?><?=$styles_lookup[$styleid]->name?> <?endforeach?></div></div>
 		
-		<div class="cf"><div class="label">Color: </div><div id="beer_srm" class="editable_select"><div style="background:<?='#'.dechex($color->rgb[0]<<16 | $color->rgb[1]<<8 | $color->rgb[2])?>"></div><?=$color->name?>&nbsp;</div></div>
+		<div class="cf"><div class="label">Color: </div><div id="beer_srm" class="editable_select"><div <?php if (!is_null($color)):?>style="background:<?='#'.dechex($color->rgb[0]<<16 | $color->rgb[1]<<8 | $color->rgb[2])?>"<?php endif;?>></div><?=$color->name?>&nbsp;</div></div>
 		
 		<div class="cf"><div class="label">Alcohol (abv): </div><div id="beer_abv"><?=$beerdoc->abv?>&#37;</div></div>
 		<div class="cf"><div class="label">Bitterness (IBUs): </div><div id="beer_ibu"><?=$beerdoc->ibu?></div></div>
