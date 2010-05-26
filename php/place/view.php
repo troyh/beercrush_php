@@ -7,9 +7,17 @@ $beerlist=BeerCrush::api_doc($oak,'place/'.str_replace(':','/',$_GET['place_id']
 $reviews =BeerCrush::api_doc($oak,'review/place/'.str_replace(':','/',$_GET['place_id']).'/0');
 $photoset=BeerCrush::api_doc($oak,'photoset/place/'.$_GET['place_id']);	
 
+function sort_by_brewery($a,$b) {
+	return strcmp($a->brewery->name,$b->brewery->name);
+}
+
 if (is_null($beerlist)) {
 	$beerlist=new stdClass;
 	$beerlist->items=array();
+}
+else {
+	// Sort the beer list by brewery
+	usort($beerlist->items,'sort_by_brewery');
 }
 
 // var_dump($photoset);exit;
@@ -47,16 +55,17 @@ include("../header.php");
 	<div class="cl"><div class="label">Food: </div><div class="smstar_rating"><div id="food" style="width: 75%"></div></div></div>
 
 <h2><?=count($beerlist->items)?> Beers on the Menu</h2>
-<h3>Sort by <a href="">Brewery</a> &#124; <a href="">Beer Name</a> &#124; <a href="">Served</a></h3>
+<h3>Sort by <a href="" onclick="sort_beermenu('.brewery');return false;">Brewery</a> &#124; <a href="" onclick="sort_beermenu('.beername');return false;">Beer Name</a> &#124; <a href="" onclick="sort_beermenu('.servingtype');return false;">Served</a> &#124; <a href="" onclick="sort_beermenu('.rating',true);return false;">Rating</a></h3>
 <p class="notice tiny">Last updated x days ago</p>
 
 <ul id="beermenu">
 	<?foreach ($beerlist->items as $item) :?>
 	<li>
 		<div class="served <?=$item->ontap     ?'ontap':''?> <?=$item->oncask    ?'oncask':''?> <?=$item->inbottle  ?'inbottle':''?> <?=$item->inbottle22?'inbottle22':''?> <?=$item->incan     ?'incan':''?>" title="Served <?=$item->ontap     ?'On Tap':''?> <?=$item->oncask    ?'On Cask':''?> <?=$item->inbottle  ?'In Bottles':''?> <?=$item->inbottle22?'In Large Bottles':''?> <?=$item->incan     ?'In Cans':''?>"></div>
+		<span class="hidden servingtype"><?=$item->ontap?1:($item->oncask?2:($item->inbottle?3:($item->inbottle22?4:($item->incan?5:6))))?></span>
 		<span class="brewery"><?=$item->brewery->name?></span><br />
-		<a href="/<?=BeerCrush::docid_to_docurl($item->id)?>"><?=$item->name?></a>
-		(<?=get_beer_doc($item->id)->review_summary->avg?>)
+		<a class="beername" href="/<?=BeerCrush::docid_to_docurl($item->id)?>"><?=$item->name?></a>
+		<span class="rating"><?=get_beer_doc($item->id)->review_summary->avg?></span>
 		<div class="price"><?=$item->price?'$'.number_format($item->price,2):'$?'?></div>
 		<a href="" onclick="beerlist_delete('<?=$item->id?>',event);return false;" class="cmd" title="Remove from this menu"></a>
 	</li>
@@ -136,7 +145,10 @@ include("../header.php");
 </div>
 <div id="mwl_left_300">
 	<div id="map"></div>
-	<a href="">Get Directions</a>  &#124; <a href="">Street View</a>
+	<div id="streetview" style="width: 400px; height: 300px;"></div>
+	<a href="" onclick="turn_street_view(false);return false;">Map</a> &#124;
+	<a href="" onclick="turn_street_view(true);return false;">Street View</a> &#124;
+	<a href="http://maps.google.com/maps?f=d&daddr=<?=$place->address->street.', '.$place->address->city.', '.$place->address->state.' '.$place->address->zip?>&hl=en">Get Directions</a> 
 <div id="place">
 	<input type="hidden" value="<?=$place->id?>" id="place_id">
 	<span id="address">
@@ -301,6 +313,7 @@ function geocodeAddress(callback) {
 
 var place_latitude=<?=$place->address->latitude?$place->address->latitude:'null'?>;
 var place_longitude=<?=$place->address->longitude?$place->address->longitude:'null'?>;
+var map=null;
 
 function makemap(lat,lon) {
 	var latlng = new google.maps.LatLng(lat,lon);
@@ -308,14 +321,45 @@ function makemap(lat,lon) {
 		zoom: 10,
 		center: latlng,
 		mapTypeId: google.maps.MapTypeId.ROADMAP,
+		streetViewControl: true
+	  
 	};
-    var map = new google.maps.Map(document.getElementById("map"), myOptions);
+	map = new google.maps.Map(document.getElementById("map"), myOptions);
+	var infowindow=new google.maps.InfoWindow({
+		content: "<div id=\"bodyContent\">"+
+		"<a href=\"http://maps.google.com/maps?f=d&daddr=<?=$place->address->street.', '.$place->address->city.', '.$place->address->state.' '.$place->address->zip?>&hl=en\">Get Directions</a>  &#124; "+
+		"<a href=\"http://maps.google.com/maps?f=q&hl=en&q=<?=$place->address->street.', '.$place->address->city.', '.$place->address->state.' '.$place->address->zip?>\">Street View</a>"
+	});
 	var marker=new google.maps.Marker({
 		position: latlng,
 		map: map,
 		title: "<?=$place->name?>"
 	});
-	
+	google.maps.event.addListener(marker,'click',function(){
+		infowindow.open(map,marker);
+	})
+}
+
+function turn_street_view(turnon) {
+	if (turnon) {
+		var pos=new google.maps.LatLng(place_latitude,place_longitude);
+		var panoptions={
+			position:pos,
+			pov: {
+				heading: 34,
+				pitch: 10,
+				zoom: 1
+			}
+		};
+		var panorama = new  google.maps.StreetViewPanorama(document.getElementById("streetview"), panoptions);
+		map.setStreetView(panorama);
+		$('#map').hide();
+		$('#streetview').show();
+	}
+	else {
+		$('#map').show();
+		$('#streetview').hide();
+	}
 }
 
 function updateLatLon(results,status) {
@@ -332,8 +376,24 @@ function updateLatLon(results,status) {
 		});
 	}
 }
+
+
+function sort_beermenu(selector,reverse) {
+	var mylist = $('#beermenu');
+	var listitems = mylist.children('li').get();
+	listitems.sort(function(a, b) {
+	   var compA = $(a).children(selector).first().text().toUpperCase();
+	   var compB = $(b).children(selector).first().text().toUpperCase();
+	   return ((compA < compB) ? -1 : (compA > compB) ? 1 : 0) * (reverse?-1:1);
+	})
+	$.each(listitems, function(idx, itm) { mylist.append(itm); });
+}
+
+
 function pageMain()
 {
+	$('#streetview').hide();
+	
 	if (place_longitude && place_latitude) {
 		makemap(place_latitude,place_longitude)
 	}
