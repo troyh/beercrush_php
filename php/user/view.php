@@ -76,12 +76,9 @@ foreach ($reviews->reviews as $review) {
 </div>
 
 <div id="mwr_right_300">
+<div id="for_your_eyes_only">
 <h2>My Wishlist</h2>
-	<ul>
-		<li>Beer</li>
-		<li>Beer</li>
-		<li>Beer</li>
-		<li>Beer</li>
+	<ul id="wishlist">
 	</ul>
 
 <h2>My Beer Buddies</h2>
@@ -92,6 +89,7 @@ foreach ($reviews->reviews as $review) {
 		<li>Person</li>
 	</ul>
 
+</div>
 </div>
 </div>
 <div id="mwr_left_250">
@@ -142,8 +140,14 @@ function pageMain()
 			if (userinfo.gravatar_url)
 				$('#avatar').append('I have a <a href="http://en.gravatar.com/">Gravatar</a>. <input type="button" value="Use my Gravatar" onclick="useGravatar();" />');
 		});
-	}
 
+		$.getJSON('/api/wishlist/'+$.cookie('userid'),function(data,status){
+			$.each(data.items,function(idx,item){
+				$('#wishlist').append('<li><a href="/'+item.beer_id.replace(/:/g,'/')+'">'+item.name+'</a></li>');
+			});
+		})
+		
+	}
 }
 
 </script>
