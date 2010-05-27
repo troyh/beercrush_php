@@ -1,11 +1,62 @@
 <?php
 require_once('beercrush/beercrush.php');
 
-$oak=new OAK(BeerCrush::CONF_FILE);
-$place   =BeerCrush::api_doc($oak,'place/'.str_replace(':','/',$_GET['place_id']));
-$beerlist=BeerCrush::api_doc($oak,'place/'.str_replace(':','/',$_GET['place_id']).'/menu');
-$reviews =BeerCrush::api_doc($oak,'review/place/'.str_replace(':','/',$_GET['place_id']).'/0');
-$photoset=BeerCrush::api_doc($oak,'photoset/place/'.$_GET['place_id']);	
+$place_id='place:'.$_GET['place_id'];
+$place_url=BeerCrush::docid_to_docurl($place_id);
+
+$place   =BeerCrush::api_doc($BC->oak,$place_url);
+$beerlist=BeerCrush::api_doc($BC->oak,$place_url.'/menu');
+$reviews =BeerCrush::api_doc($BC->oak,'review/'.$place_url.'/0');
+$photoset=BeerCrush::api_doc($BC->oak,'photoset/'.$place_url);
+$nearby  =BeerCrush::api_doc($BC->oak,'nearby.fcgi?lat='.$place->address->latitude.'&lon='.$place->address->longitude.'&within=10');
+$recommend=BeerCrush::api_doc($BC->oak,'recommend/'.$place_url);
+
+// Sort nearby places by distance (closest first)
+usort($nearby->places,'sort_by_distance');
+// Remove this place (hopefully, the first one, or close to it, so we can quit early)
+for ($i=0,$j=count($nearby->places);$i<$j;++$i) {
+	if ($nearby->places[$i]->id==$place_id) {
+		array_splice($nearby->places,$i,1); // Remove it
+		break;
+	}
+}
+// Truncate $nearby to the 4 closest places to this one (excluding this one, of course)
+array_splice($nearby->places,4);
+
+function distance_between_gps_coords($lat1,$lon1,$lat2,$lon2) {
+	// Algorithm from http://www.movable-type.co.uk/scripts/latlong.html
+	$r=6371; // km
+	$dLat=deg2rad($lat2-$lat1);
+	$dLon=deg2rad($lon2-$lon1); 
+	$a=sin($dLat/2) * sin($dLat/2) +
+	        cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * 
+	        sin($dLon/2) * sin($dLon/2); 
+	$c = 2 * atan2(sqrt($a), sqrt(1-$a)); 
+	$d = $r * $c;
+	return $d;	
+}
+
+function sort_by_distance(&$a,&$b) {
+	global $place;
+	if (!isset($a->distance)) {
+		// Compute distance from a to $place->address->latitude/longitude
+		$a->distance=distance_between_gps_coords($a->lat,$a->lon,$place->address->latitude,$place->address->longitude);
+	}
+	
+	if (!isset($b->distance)) {
+		// Compute distance from b to $place->address->latitude/longitude
+		$b->distance=distance_between_gps_coords($b->lat,$b->lon,$place->address->latitude,$place->address->longitude);
+	}
+	
+	// FYI, doing math (subtraction) here doesn't work because the usort() function expects an integer, 
+	// so 0.185 is considered equal to 0.195 (i.e., they're both 0 as ints). That's why it's done if/else style.
+	if ($a->distance < $b->distance)
+		return -1;
+	if ($a->distance == $b->distance)
+		return 0;
+	return 1;
+}
+
 
 function sort_by_brewery($a,$b) {
 	return strcmp($a->brewery->name,$b->brewery->name);
@@ -34,8 +85,8 @@ $header['js'][]='<script type="text/javascript" src="/js/swfobject.js"></script>
 $header['css'][]='<link href="/css/uploadify.css" rel="stylesheet" type="text/css" />';
 
 function get_beer_doc($beer_id) {
-	global $oak;
-	return BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl($beer_id));
+	global $BC;
+	return BeerCrush::api_doc($BC->oak,BeerCrush::docid_to_docurl($beer_id));
 }
 
 include("../header.php");
@@ -49,10 +100,10 @@ include("../header.php");
 	<div class="cl"><?=$place->placetype?></div>
 
 	<div class="cl"><div class="label">Crushworthiness</div><div style="float: left;"><span class="crush">97</span> <a class="tiny" href="" style="margin-left: 5px;">what is this?</a></div></div>
-	<div class="cl"><div class="label"><a href="#ratings"><?=count($reviews->reviews)?> ratings</a></div><div class="star_rating" style="float:left;"><div id="avgrating" style="width: 50%"></div></div></div>
-	<div class="cl"><div class="label">Atmosphere: </div><div class="smstar_rating"><div id="atmosphere" style="width: 33%"></div></div></div>
-	<div class="cl"><div class="label">Service: </div><div class="smstar_rating"><div id="service" style="width: 80%"></div></div></div>
-	<div class="cl"><div class="label">Food: </div><div class="smstar_rating"><div id="food" style="width: 75%"></div></div></div>
+	<div class="cl"><div class="label"><a href="#ratings"><?=$place->review_summary->total?> ratings</a></div><div class="star_rating" style="float:left;"><div id="avgrating" style="width: <?=$place->review_summary->avg/5*100?>%"></div>(<?=$place->review_summary->avg?>)</div></div>
+	<div class="cl"><div class="label">Atmosphere: </div><div class="smstar_rating"><div id="atmosphere" style="width: <?=$place->review_summary->atmosphere_avg/5*100?>%"></div>(<?=$place->review_summary->atmosphere_avg?>)</div></div>
+	<div class="cl"><div class="label">Service: </div><div class="smstar_rating"><div id="service" style="width: <?=$place->review_summary->service_avg/5*100?>%"></div>(<?=$place->review_summary->service_avg?>)</div></div>
+	<div class="cl"><div class="label">Food: </div><div class="smstar_rating"><div id="food" style="width: <?=$place->review_summary->food_avg/5*100?>%"></div>(<?=$place->review_summary->food_avg?>)</div></div>
 
 <h2><?=count($beerlist->items)?> Beers on the Menu</h2>
 <h3>Sort by <a href="" onclick="sort_beermenu('.brewery');return false;">Brewery</a> &#124; <a href="" onclick="sort_beermenu('.beername');return false;">Beer Name</a> &#124; <a href="" onclick="sort_beermenu('.servingtype');return false;">Served</a> &#124; <a href="" onclick="sort_beermenu('.rating',true);return false;">Rating</a></h3>
@@ -195,13 +246,14 @@ include("../header.php");
 </div>
 </div>
 <div id="mwl_right_250">
-	<div id="photo_placeholder" class="place <?=$place->placetype?>"><!--TROY TODO: currently showing this div all the time, but should only show when there are no photos--></div>
+<?php if (count($photoset->photos)==0):?><div id="photo_placeholder" class="place <?=$place->placetype?>"></div><?php else:?>
 <?php foreach ($photoset->photos as $photo) :?>
 	<div class="photo">
 	<img src="<?=$photo->url?>?size=small" />
 	<p class="caption"><a href="/user/<?=$photo->user_id?>"><?=$BC->docobj('user/'.$photo->user_id)->name?></a> <span class="datestring"><?=date(BeerCrush::DATE_FORMAT,$photo->timestamp)?></span></p>
 	</div>
 <?php endforeach; ?>
+<?php endif;?>
 
 <div id="new_photos"></div>
 
@@ -209,17 +261,18 @@ include("../header.php");
 <p></p>
 	<h2>People Who Like This Place, Also Like</h2>
 	<ul>
-		<li>Place in same city</li>
-		<li>Place in same city</li>
-		<li>Place in same city</li>
-		<li>Place in same city</li>
+		<?php foreach ($recommend->place as $rp):
+			$rpurl=BeerCrush::docid_to_docurl($rp);
+			$rpdoc=BeerCrush::api_doc($BC->oak,$rpurl);
+		?>
+			<li><a href="/<?=$rpurl?>"><?=$rpdoc->name?></a></li>
+		<?php endforeach;?>
 	</ul>
 	<h2>Other Beer Places Nearby</h2>
 	<ul>
-		<li>Nearby Place</li>
-		<li>Nearby Place</li>
-		<li>Nearby Place</li>
-		<li>Nearby Place</li>
+		<?php foreach ($nearby->places as $p):?>
+			<li><a href="/<?=BeerCrush::docid_to_docurl($p->id)?>"><?=$p->name?></a> (<?=number_format($p->distance/1.609,2)?> miles)</li>
+		<?php endforeach;?>
 	</ul>
 </div>
 

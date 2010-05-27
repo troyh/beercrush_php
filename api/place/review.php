@@ -5,6 +5,9 @@ require_once("OAK/oak.class.php");
 $cgi_fields=array(
 	"place_id"		=> array(flags=>OAK::FIELDFLAG_REQUIRED, type=>OAK::DATATYPE_TEXT, validatefunc=>'Place::validatePlaceID' ),
 	"rating"		=> array(flags=>OAK::FIELDFLAG_REQUIRED, type=>OAK::DATATYPE_INT, min=>0, max=>5),
+	"atmosphere"	=> array(type=>OAK::DATATYPE_INT, min=>0, max=>5),
+	"service"		=> array(type=>OAK::DATATYPE_INT, min=>0, max=>5),
+	"food"			=> array(type=>OAK::DATATYPE_INT, min=>0, max=>5),
 	"kidfriendly"	=> array(type=>OAK::DATATYPE_INT, min=>0, max=>5),
 	"comments"		=> array(type=>OAK::DATATYPE_TEXT),
 );

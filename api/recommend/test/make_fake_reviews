@@ -1,5 +1,51 @@
 #!/bin/bash
 
+function usage() {
+	cat - <<EOF
+${0##*/} -t <type> -u <users> -n <number>
+	
+   -t   Type of review ("beer" or "place")
+   -u   Number of random users to post reviews for
+   -n   Number of reviews to post for each user
+	
+EOF
+	exit 1;
+}
+
+while getopts "t:u:n:" opt; do
+	case $opt in 
+		t)
+			case $OPTARG in 
+				beer)
+					;;
+				place)
+					;;
+				*)
+					printf "Invalid review type: %s. Must be either \"beer\" or \"place\"\n" $OPTARG;
+					exit 1;
+					;;
+			esac
+			
+			review_type=$OPTARG;
+			;;
+		u)
+			num_users=$OPTARG;
+			;;
+		n)
+			num_reviews_per_user=$OPTARG;
+			;;
+		*)
+			;;
+	esac
+done
+
+if [ -z "$num_reviews_per_user" -o -z "$num_users" -o -z "$review_type" ]; then
+	usage;
+fi
+
+printf "Posting %d %s reviews for each of %d users\n" $num_reviews_per_user $review_type $num_users;
+
+
 function login_random_user() {
 
 	USERS_COUNT=$(xmlstarlet sel -t -v "count(//person)" -n simpsons.xml);
@@ -23,6 +69,36 @@ function login_random_user() {
 		fi
 	fi
 
+}
+
+function review_random_place() {
+	# Randomly pick place from list
+	PLACE_COUNT=$(xmlstarlet sel -t -v 'count(//place)' -n  places.xml);
+	# echo "$PLACE_COUNT places";
+	pick_random_number $PLACE_COUNT;
+	PLACE_ID=$(xmlstarlet sel -t -m "//place[$RANDOM_NUMBER]" -v id -n  places.xml);
+
+	#
+	# Post a randomly-generated review of the place
+	#
+
+	REVIEW_ANSWER=$(curl --fail --silent  -X POST \
+		-d userid=$USERID \
+		-d usrkey=$USRKEY \
+		-d place_id=$PLACE_ID \
+		-d rating=$(($RANDOM % 5 + 1)) \
+		-d atmosphere=$(($RANDOM % 5 + 1)) \
+		-d service=$(($RANDOM % 5 + 1)) \
+		-d food=$(($RANDOM % 5 + 1)) \
+		http://duff/api/place/review);
+	
+	if [ $? != 0 ]; then
+		echo "Failed to post review ($?)";
+		echo $REVIEW_ANSWER;
+	else
+		REVIEW_ID=$(echo $REVIEW_ANSWER | /usr/local/beercrush/bin/jsonpath id);
+		# echo $REVIEW_ID;
+	fi
 }
 
 function review_random_beer() {
@@ -90,14 +166,25 @@ function pick_random_number() {
 	# echo picked $RANDOM_NUMBER;
 }
 
-for U in {1..3}; do
+for ((U=0;U < $num_users;++U)); do
 
 	login_random_user;
 	# echo USERID=$USERID;
 	# echo USRKEY=$USRKEY;
 
-	for R in {1..100}; do
-		review_random_beer;
+	for ((R=0; R < $num_reviews_per_user; ++R)); do
+		case $review_type in
+			beer)
+				review_random_beer;
+				;;
+			place)
+				review_random_place;
+				;;
+			*)
+				echo "Unknown type: $review_type";
+				exit 1;
+				;;
+		esac
 	done
 
 done
