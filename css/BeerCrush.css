@@ -373,7 +373,7 @@ img {
 }
 
 #beer div:hover {
-	background: #D0fbff;
+	background-color: #D0fbff;
 }
 
 div.label {
@@ -388,6 +388,16 @@ div.label {
 #beer_og, #beer_fg, #beer_abv, #beer_ibu, #beer_hops, #beer_grains, #beer_yeast, #beer_style {
 	float: left;
 	width: auto;
+}
+#beer_srm div {
+	width: 20px;
+	height: 20px;
+	float: left;
+	margin-right: 5px;
+}
+
+select.beercolors option {
+	padding: 5px 5px 5px 25px;
 }
 
 #flavors_table td {
@@ -482,6 +492,29 @@ div.label {
 	font-size: .8em;
 }
 
+.swatchselect option {
+	background-image:  url("/img/colorswatchbkgd.png");
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	height: 20px;
+	padding-left: 24px;
+	padding-top: 4px;
+
+}
+.swatchselect2 option {
+	height: 20px;
+	padding-left: 24px;
+	padding-top: 4px;
+	color: white;
+}
+.swatchselect2 span{
+	font-size: .5em;
+	color: grey
+}
+.swatchselect option:hover, .swatchselect option selected {
+	background-color: transparent;
+	background-image: none;
+}
 .triangle-border {
 	position:relative;
 	padding:15px;
@@ -560,7 +593,6 @@ div.label {
 
 .photo {
 	margin: 0 auto 5px auto;
-	
 }
 .caption {
 	font-size:80%;
@@ -573,6 +605,16 @@ div.label {
 .photo img {
 	display: block;
 	margin: 0 auto;
+}
+.photo2 img {
+	border: 3px solid #fff;
+	-o-box-shadow: 0 3px 4px rgba(0,0,0,.5);
+	-moz-box-shadow: 0 3px 4px rgba(0,0,0,.5);
+	-webkit-box-shadow: 0 3px 4px rgba(0,0,0,.5);
+	box-shadow: 0 3px 4px rgba(0,0,0,.5);
+	-o-transform: rotate(2.5deg);
+	-moz-transform: rotate(2.5deg);
+	-webkit-transform: rotate(2.5deg);
 }
 
 .command {

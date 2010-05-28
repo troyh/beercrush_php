@@ -182,7 +182,7 @@ include("../header.php");
 		<div id="beer_description" class="editable_textarea"><?=$beerdoc->description?></div>
 		<div class="cf"><div class="label">Style: </div><div id="beer_style"><?foreach ($beerdoc->styles as $styleid):?><?=$styles_lookup[$styleid]->name?> <?endforeach?></div></div>
 		
-		<div class="cf"><div class="label">Color: </div><div id="beer_srm" class="editable_select"><div <?php if (!is_null($color)):?>style="background:<?='#'.dechex($color->rgb[0]<<16 | $color->rgb[1]<<8 | $color->rgb[2])?>"<?php endif;?>></div><?=$color->name?>&nbsp;</div></div>
+		<div class="cf"><div class="label">Color: </div><div id="beer_srm" class="editable_select"><div <?php if (!is_null($color)):?>style="background-color:<?='#'.dechex($color->rgb[0]<<16 | $color->rgb[1]<<8 | $color->rgb[2])?>"<?php endif;?>></div><?=$color->name?>&nbsp;</div></div>
 		
 		<div class="cf"><div class="label">Alcohol (abv): </div><div id="beer_abv"><?=$beerdoc->abv?>&#37;</div></div>
 		<div class="cf"><div class="label">Bitterness (IBUs): </div><div id="beer_ibu"><?=$beerdoc->ibu?></div></div>
@@ -200,6 +200,34 @@ include("../header.php");
 		<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
 		
 	</div>
+		<select class="swatchselect" size="1">
+			<option style="background-color: rgb(255, 249, 180);">Pale Straw [x-y srm]</option>
+			<option style="background-color: rgb(255, 216, 120)">Straw [x-y srm]</option>
+			<option style="background-color: rgb(255, 191, 66)">Pale Gold [x-y srm]</option>
+			<option style="background-color: rgb(248, 166, 0)">Deep Gold [x-y srm]</option>
+			<option style="background-color: rgb(229, 133, 0)">Pale Amber [x-y srm]</option>
+			<option style="background-color: rgb(207, 105, 0)">Medium Amber [x-y srm]</option>
+			<option style="background-color: rgb(187, 81, 0)">Deep Amber [x-y srm]</option>
+			<option style="background-color: rgb(166, 62, 10)">Amber Brown [x-y srm]</option>
+			<option style="background-color: rgb(100, 52, 10)">Brown [x-y srm]</option>
+			<option style="background-color: rgb(78, 11, 10);">Ruby Brown [x-y srm]</option>
+			<option style="background-color: rgb(54, 8, 10);">Deep Brown [x-y srm]</option>
+			<option style="background-color: rgb(15, 11, 10)">Black [x-y srm]</option>
+		</select>
+		<select class="swatchselect2" size="1">
+			<option style="background-color: rgb(255, 249, 180);">Pale Straw [x-y srm]</option>
+			<option style="background-color: rgb(255, 216, 120)">Straw [x-y srm]</option>
+			<option style="background-color: rgb(255, 191, 66)">Pale Gold [x-y srm]</option>
+			<option style="background-color: rgb(248, 166, 0)">Deep Gold [x-y srm]</option>
+			<option style="background-color: rgb(229, 133, 0)">Pale Amber [x-y srm]</option>
+			<option style="background-color: rgb(207, 105, 0)">Medium Amber [x-y srm]</option>
+			<option style="background-color: rgb(187, 81, 0)">Deep Amber [x-y srm]</option>
+			<option style="background-color: rgb(166, 62, 10)">Amber Brown [x-y srm]</option>
+			<option style="background-color: rgb(100, 52, 10)">Brown [x-y srm]</option>
+			<option style="background-color: rgb(78, 11, 10);">Ruby Brown [x-y srm]</option>
+			<option style="background-color: rgb(54, 8, 10);">Deep Brown [x-y srm]</option>
+			<option style="background-color: rgb(15, 11, 10)">Black [x-y srm]</option>
+		</select>
 
 <h3 id="ratings"><?=count($reviews->reviews)?> Reviews</h3>
 
