@@ -1,0 +1,9 @@
+#!/bin/bash
+
+APIURL=$(/usr/local/beercrush/bin/jsonpath -1 api.base_uri < /etc/BeerCrush/webapp.conf);
+
+curl --silent $APIURL/beerstyles  | 
+	OAKConfig=/etc/BeerCrush/webapp.conf ../../tools/json2xml  | 
+	xmlstarlet sel -t -m '//item' -v id -o ' ' -v name -n |  
+	awk '{for(i=2;i<=NF;++i){print tolower($i)" "$0;}}' |
+	LC_ALL=C sort
