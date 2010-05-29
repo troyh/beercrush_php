@@ -130,8 +130,9 @@ function makeDocEditable(docSelector,docid_id,url,options)
 			if ($(this).get(0).tagName!='INPUT' && ($(this).attr('id').substr(0,prefix.length) == prefix))
 			{ // This is a field we need to make editable
 
-				if (options && options.elements && options.elements[$(this).attr('id')])
-					editable_options=options.elements[$(this).attr('id')];
+				var fieldnameid=$(this).attr('id');
+				if (options && options.elements && options.elements[fieldnameid])
+					editable_options=options.elements[fieldnameid];
 				else
 					editable_options=new Object;
 
@@ -166,6 +167,12 @@ function makeDocEditable(docSelector,docid_id,url,options)
 						// Put onclick functions on each Save Changes button
 						$(this).click(function(){
 							// TODO: disable all the buttons so they can't be pressed while the POST request is happening
+							
+							// Let the caller override names and values if they provide a name and value option
+							if (options && typeof(options.elements[fieldnameid].value) == 'function') {
+								var v=options.elements[fieldnameid].value();
+								editable_changes[$(docSelector).attr('id')][options.elements[fieldnameid].name]=v;
+							}
 						
 							// Add in document id to change object
 							editable_changes[$(docSelector).attr('id')][docid_id]=$('#'+docid_id).val();
@@ -199,10 +206,11 @@ function makeDocEditable(docSelector,docid_id,url,options)
 									{
 										fieldname=$(this).attr('id').substr(prefix.length);
 										//  Call user-supplied function to format data, if one was supplied
-										if (options.elements[$(this).attr('id')] && typeof(options.elements[$(this).attr('id')].display_format_func)=='function')
-											$(this).text(options.elements[$(this).attr('id')].display_format_func(data[fieldname]));
+										if (options.elements[$(this).attr('id')] && typeof(options.elements[$(this).attr('id')].display_format_func)=='function') {
+											$(this).html(options.elements[$(this).attr('id')].display_format_func(data[fieldname]));
+										}
 										else
-											$(this).text(data[fieldname]);
+											$(this).html(data[fieldname]);
 									}
 								});
 
@@ -217,6 +225,9 @@ function makeDocEditable(docSelector,docid_id,url,options)
 								if (options && typeof(options['afterSave']) == 'function') {
 									options['afterSave']();
 								}
+
+								// Clear out all data so a subsequent edit only makes the new changes
+								editable_changes[$(docSelector).attr('id')]=new Object;
 
 							},'json');
 						

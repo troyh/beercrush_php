@@ -1,0 +1,21 @@
+#!/usr/bin/php
+<?php
+
+$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));
+$styles=json_decode(file_get_contents($cfg->api->base_uri.'/beerstyles'));
+$all_styles=array();
+output($styles->styles);
+print "var beerstyles=".json_encode($all_styles);
+
+function output($styles) {
+	global $all_styles;
+	foreach ($styles as $style) {
+		$o=new stdClass;
+		$o->id=$style->id;
+		$o->name=$style->name;
+		$all_styles[]=$o;
+		if (isset($style->styles))
+			output($style->styles);
+	}
+}
+?>

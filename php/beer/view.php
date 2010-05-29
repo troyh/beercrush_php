@@ -17,12 +17,12 @@ $photoset  =BeerCrush::api_doc($oak,'photoset/beer/'.$api_beer_id);
 $recommends=BeerCrush::api_doc($oak,'recommend/beer/'.$api_beer_id);	
 $beerlist  =BeerCrush::api_doc($oak,'brewery/'.$brewery_id.'/beerlist');
 
-if (empty($beerdoc->styles))
+if (empty($beerdoc->styles) || empty($beerdoc->styles[0]))
 	$beerdoc->styles=array();
 else {
 	// Get a list of random beers in this beer's (first) style
 	$url="http://duff:8080/solr/select?fl=id&start=0&rows=0&wt=json&q=style:".$beerdoc->styles[0];
-	$response=json_decode(file_get_contents($url));
+	$response=json_decode(@file_get_contents($url));
 
 	// Pick the 1st random number
 	$initial=rand(0,$response->response->numFound);
@@ -35,7 +35,7 @@ else {
 	// Do a 2nd query to get those
 	$start=min($random_picks);
 	$url="http://duff:8080/solr/select?fl=id&start=$start&rows=100&wt=json&q=style:".$beerdoc->styles[0];
-	$response=json_decode(file_get_contents($url));
+	$response=json_decode(@file_get_contents($url));
 
 	$other_by_style=array();
 	foreach ($random_picks as $pick) {
@@ -156,9 +156,9 @@ $header['js'][]='<script type="text/javascript" src="http://maps.google.com/maps
 include("../header.php");
 ?>
 <div id="mwr">
-
+	
 <div id="main">
-	<h2><a id="brewery_link" href="/brewery/<?=preg_replace('/^.*:/','',$brewerydoc->id)?>"><?=$brewerydoc->name?>'s</a></h2>
+	<h2><a id="brewery_link" href="/<?=BeerCrush::docid_to_docurl($brewerydoc->id)?>"><?=$brewerydoc->name?>'s</a></h2>
 	<h1><?=$beerdoc->name?></h1>
 	<div id="ratings_section" class="cf">
 		<div class="star_rating" title="Average rating: <?=$beerdoc->review_summary->avg?> out of 5"><div id="avgrating" style="width: <?=$beerdoc->review_summary->avg/5*100?>%"></div></div>
@@ -179,10 +179,11 @@ include("../header.php");
 	<span class="label">Brewer's description:</span>
 	<div id="beer" class="triangle-border top">
 		<input type="hidden" id="beer_id" value="<?=$beerdoc->id?>" />
+		<input type="hidden" id="beer_srm_value" value="<?=$beerdoc->srm?>" />
 		<div id="beer_description" class="editable_textarea"><?=$beerdoc->description?></div>
-		<div class="cf"><div class="label">Style: </div><div id="beer_style"><?foreach ($beerdoc->styles as $styleid):?><?=$styles_lookup[$styleid]->name?> <?endforeach?></div></div>
+		<div class="cf"><div class="label">Style: </div><div id="beer_stylename"><?=$styles_lookup[$beerdoc->styles[0]]->name?></div><input type="hidden" id="beer_style" /></div>
 		
-		<div class="cf"><div class="label">Color: </div><div id="beer_srm" class="editable_select"><div <?php if (!is_null($color)):?>style="background-color:<?='#'.dechex($color->rgb[0]<<16 | $color->rgb[1]<<8 | $color->rgb[2])?>"<?php endif;?>></div><?=$color->name?>&nbsp;</div></div>
+		<div class="cf"><div class="label">Color: </div><div id="beer_srm"><div <?php if (!is_null($color)):?>style="background-color:<?='#'.dechex($color->rgb[0]<<16 | $color->rgb[1]<<8 | $color->rgb[2])?>"<?php endif;?>></div><?=$color->name?>&nbsp;</div></div>
 		
 		<div class="cf"><div class="label">Alcohol (abv): </div><div id="beer_abv"><?=$beerdoc->abv?>&#37;</div></div>
 		<div class="cf"><div class="label">Bitterness (IBUs): </div><div id="beer_ibu"><?=$beerdoc->ibu?></div></div>
@@ -421,11 +422,7 @@ if ($history) {
 
 <?php
 // Make javascript variable colors_strings from $colors so they can be used in javascript
-$kv=array();
-foreach ($colors->colors as $color) {
-	$kv[]="\"{$color->srm}\":\"{$color->name}\"";
-}
-print "var colors_strings={\n".join(",\n",$kv)."\n};\n";
+print "var colors_strings=\n".json_encode($colors->colors).";\n";
 
 $kv=array();
 foreach ($availability_titles as $id=>$name) {
@@ -515,7 +512,7 @@ function display_diffs(vindex,diffs) {
 	for (var prop in diffs) {
 		if (jQuery.inArray(prop,exclude_props)==-1) {
 			if (typeof(diffs[prop].old) == 'undefined' && typeof(diffs[prop].new) == 'undefined') {
-				display_diffs_base(vindex,diffs[prop]);
+				display_diffs(vindex,diffs[prop]);
 			}
 			else {
 				var s;
@@ -650,13 +647,74 @@ function pageMain()
 		}
 	});
 	
+	$.getScript('/js/beerstyles.js');
+	
+	// Make custom beerstyle editable control
+	$.editable.addInputType('beerstyle',{
+		element: function(settings,original) {
+			var input=jQuery('<input id="beerstyle_autocomplete" type="text" />');
+			$(this).append(input);
+			return input;
+		},
+		plugin: function(settings,original) {
+			$("#beerstyle_autocomplete").autocomplete(beerstyles,{
+				"mustMatch": true,
+				"matchContains": true,
+				"formatItem": function(item) {
+					return item.name;
+				}
+			}).result(function(evt,item) {
+				$('#beer_style').val(item.id);
+				$('#beerstyle_autocomplete').val(item.name);
+			});
+		}
+	});
+	
+	// Make custom beer color editable control
+	$.editable.addInputType('beercolor',{
+		element: function(settings,original) {
+			var option_html='';
+			$(colors_strings).each(function(k,v) {
+				option_html+='<option value="'+v.srm+'" style="background-color: rgb('+v.rgb[0]+','+v.rgb[1]+','+v.rgb[2]+');">'+v.name+' ['+v.srmmin+'-'+v.srmmax+' srm]</option>';
+			});
+			
+			var dropdown=jQuery('<select id="beercolor_dropdown" class="swatchselect2" size="1">'+option_html+'</select>');
+			$(this).append(dropdown);
+
+			var input=jQuery('<input type="hidden" />');
+			$(this).append(input);
+			return input;
+		},
+		content: function(string,settings,original) {
+			$('#beercolor_dropdown',this).children().each(function(){
+				if ($(this).val()==6) // TODO: this 6 should be the SRM value that is set for the beer
+					$(this).attr('selected','selected');
+			});
+		},
+		submit: function(settings,original) {
+			var srm_val=$('#beercolor_dropdown').val();
+			var c=jQuery.grep(colors_strings,function(item,idx){ return item.srm==srm_val; });
+			$('#beer_srm_value').val(srm_val);
+			$('input',this).val('<div style="background-color:rgb('+c[0].rgb[0]+','+c[0].rgb[1]+','+c[0].rgb[2]+')"></div>'+c[0].name+'&nbsp;');
+		}
+	});
+	
 	// Make the beer doc editable
 	makeDocEditable('#beer','beer_id','/api/beer/edit',{
 		'elements': {
+			'beer_stylename': {
+				'type': 'beerstyle',
+				'name': 'styles',
+				'value': function() {return $('#beer_style').val();}
+			},
 			'beer_srm': { 
-				'type': 'select', 
-				'display_format_func': function(data) { return colors_strings[data]; },
-				'data': "<?php $color_titles['selected']=$beerdoc->srm;print str_replace('"','\\"',json_encode($color_titles))?>"
+				'type': 'beercolor',
+				'name': 'srm',
+				'value': function() { return $('#beer_srm_value').val(); },
+				'display_format_func': function(data) {
+					var c=jQuery.grep(colors_strings,function(item,idx){ return item.srm==data; });
+					return '<div style="background-color:rgb('+c[0].rgb[0]+','+c[0].rgb[1]+','+c[0].rgb[2]+')"></div>'+c[0].name+'&nbsp;';
+				}
 			},
 			'beer_availability': {
 				'type':'select', 
@@ -705,7 +763,7 @@ function pageMain()
 		}
 	});
 	
-	show_history();
+	// show_history();
 	
 }
 

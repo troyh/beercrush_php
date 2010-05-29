@@ -187,7 +187,51 @@ extern "C" void fcgiUninit()
 		free(styles_list);
 }
 
-void autocomplete(FCGX_Stream* out, const char* query,size_t query_len,const char** list,TYPES* types, size_t count, int filtertype, bool bXMLOutput)
+void get_delimited_field(const char* str, char delimeter, size_t fieldnum, const char** start, size_t* len) {
+
+	if (fieldnum==0) { // Means the entire string
+		*start=str;
+		*len=strlen(str);
+	}
+	else {
+		*start=NULL;
+		*len=0;
+	
+		const char* field_start=str;
+		while (fieldnum>0) {
+			const char* p=strchr(field_start,delimeter);
+			--fieldnum;
+			if (fieldnum==0) {
+				*start=field_start;
+				if (p)
+					*len=p-field_start;
+				else
+					*len=strlen(field_start);
+			}
+			else if (!p)
+				break;
+			else
+				field_start=p+1;
+		}
+	}
+	
+}
+
+typedef void (*OUTPUT_USERFUNC)(const char* str,const char** output_str,size_t* output_len);
+
+void style_output(const char* line, const char** output_str, size_t* output_len) {
+	const char* p=strchr(line,' ');
+	if (!p) {
+		*output_str=line;
+		*output_len=strlen(*output_str);
+	}		
+	else {
+		*output_str=p+1;
+		*output_len=strlen(*output_str);
+	}
+}
+
+void autocomplete(FCGX_Stream* out, const char* query,size_t query_len,const char** list,TYPES* types, size_t count, int filtertype, bool bXMLOutput,size_t* fieldnum,size_t fieldnum_count,char delimeter,OUTPUT_USERFUNC userfunc)
 {
 	if (count==0)
 		return;
@@ -231,16 +275,39 @@ void autocomplete(FCGX_Stream* out, const char* query,size_t query_len,const cha
 				{
 					if (filtertype==0 || !types || (types[mid-1]&filtertype))
 					{
-						if (bXMLOutput)
-						{
-							// TODO: use libxml2 to take care of XML entities
-							FCGX_FPrintF(out,"<result>");
-							FCGX_FPrintF(out,"<text>%s</text>",list[mid-1]);
-							FCGX_FPrintF(out,"</result>");
+						//
+						// Output the line
+						//
+						if (userfunc) {
+							const char* s;
+							size_t len;
+							userfunc(list[mid-1],&s,&len);
+							if (s && len) {
+								FCGX_FPrintF(out,"%.*s\n",len,s);
+							}
 						}
-						else
-						{
-							FCGX_FPrintF(out,"%s\n",list[mid-1]);
+						else if (delimeter && fieldnum) {
+							for (size_t i=0;fieldnum[i];++i) {
+								const char* p;
+								size_t p_len;
+								get_delimited_field(list[mid-1],delimeter,fieldnum[i],&p,&p_len);
+								if (p && p_len) {
+									FCGX_FPrintF(out,"%.*s",p_len,p);
+									if (fieldnum[i+1])
+										FCGX_FPrintF(out,"%c",delimeter);
+								}
+							}
+							FCGX_FPrintF(out,"\n");
+						}
+						else {
+							if (bXMLOutput) {
+								// TODO: use libxml2 to take care of XML entities
+								FCGX_FPrintF(out,"<result>");
+								FCGX_FPrintF(out,"<text>%s</text>",list[mid-1]);
+								FCGX_FPrintF(out,"</result>");
+							}
+							else
+								FCGX_FPrintF(out,"%s\n",list[mid-1]);
 						}
 						
 						--limit;
@@ -308,12 +375,13 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 	if (!strcasecmp(dataset,"beerstyle")) {
 		// FCGX_FPrintF(out,"Querying for beerstyle:%s\n",query);
 		// Do the query for each term in the query
+		
 		const char* q_term=query,*qp=query;
 		for (;*qp;++qp) {
 			if (isspace(*qp)) {
 				// FCGX_FPrintF(out,"term=%s\n",q_term);
 			
-				autocomplete(out,q_term,qp - q_term,styles_list,0,styles_count,0,false);
+				autocomplete(out,q_term,qp - q_term,styles_list,0,styles_count,0,false,NULL,0,'\0',style_output);
 			
 				// Skip to next term
 				do
@@ -325,12 +393,12 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 		}
 		if (*q_term) {
 			// FCGX_FPrintF(out,"term=%s\n",q_term);
-			autocomplete(out,q_term,qp - q_term,styles_list,0,styles_count,0,false);
+			autocomplete(out,q_term,qp - q_term,styles_list,0,styles_count,0,false,NULL,0,'\0',style_output);
 		}
 	}
 	else
 	{
-		autocomplete(out,query,strlen(query),searchable_names,searchable_types,searchable_names_count,filtertype,bXMLOutput);
+		autocomplete(out,query,strlen(query),searchable_names,searchable_types,searchable_names_count,filtertype,bXMLOutput,NULL,0,'\0',NULL);
 	}
 
 	if (bXMLOutput)

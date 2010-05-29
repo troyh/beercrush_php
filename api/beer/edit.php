@@ -13,9 +13,9 @@ function validate_brewery_id($name,$value,$attribs,$converted_value,$oak)
 	return $oak->get_document($converted_value,$brewery_doc);
 }
 
-function valid_srm_value($name,$value,$attribs,$converted_value,$oak)
+function validate_srm_value($name,$value,$attribs,$converted_value,$oak)
 {
-	return ctype_digit($converted_value);
+	return 2 <= $converted_value && $converted_value <= 40;
 }
 
 function validate_beer_style_id($name,$value,$attribs,$converted_value,$oak)

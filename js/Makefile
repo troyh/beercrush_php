@@ -1,7 +1,10 @@
 include ../Makefile.rules
 
-build: mini/ $(addprefix mini/,$(wildcard *.js))
+build: beerstyles.js mini/ $(addprefix mini/,$(wildcard *.js))
 
+beerstyles.js:
+	php beerstyles_data > $@
+	
 clean:
 	rm -rf mini/
 	
