@@ -3,6 +3,27 @@ require_once('beercrush/beercrush.php');
 
 $userdoc=BeerCrush::api_doc($BC->oak,'user/'.$_GET['user_id']);
 $reviews=BeerCrush::api_doc($BC->oak,'user/'.$_GET['user_id'].'/reviews');
+$flavors=BeerCrush::api_doc($BC->oak,'flavors');
+
+function build_flavor_lookup_table($flavors)
+{
+	global $flavor_lookup;
+	
+	foreach ($flavors as $flavor)
+	{
+		if (isset($flavor->flavors))
+		{
+			build_flavor_lookup_table($flavor->flavors);
+		}
+		else
+		{
+			$flavor_lookup[$flavor->id]=$flavor->title;
+		}
+	}
+}
+
+$flavor_lookup=array();
+build_flavor_lookup_table($flavors->flavors);
 
 include("../header.php");
 ?>
