@@ -1,5 +1,9 @@
 var login_data=new Object;
 
+function get_user_id() {
+	return $.cookie('userid');
+}
+
 function set_login_cookies(login,date) 
 {
 	login_data=new Object;

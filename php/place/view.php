@@ -234,7 +234,7 @@ include("../header.php");
 	<div id="editable_save_msg"></div>
 </div>
 <ul class="command">
-	<li style="background-image: url('/img/wishlist.png')"><a href="">Bookmark this Place</a></li>
+	<li style="background-image: url('/img/wishlist.png')"><a id="bookmark_link" href="">Bookmark this Place</a></li>
 	<li style="background-image: url('/img/ratebeer.png')"><a href="">Rate this Place</a></li>
 </ul>
 
@@ -500,6 +500,34 @@ function pageMain()
 		function(data,status){
 			
 		});
+		return false;
+	});
+
+	var place_is_bookmarked=false;
+	var user_id=get_user_id();
+	if (typeof(user_id)!='undefined') { // I'm logged in
+		// Get my bookmarks to see if this place is on it
+		$.getJSON('/api/bookmarks',function(data){
+			if (data.items[$('#place_id').val()]) {
+				place_is_bookmarked=true;
+				$('#bookmark_link').html('Unbookmark this Place');
+			}
+		});
+	}
+	$('#bookmark_link').click(function(){
+		if (place_is_bookmarked) {
+			$.post('/api/bookmarks',{'del_item': $('#place_id').val(),},
+			function(data) {
+				// TODO: confirm to user
+			});
+		}
+		else {
+			$.post('/api/bookmarks',{'add_item': $('#place_id').val(),},
+			function(data) {
+				// TODO: confirm to user
+			});
+		}
+
 		return false;
 	});
 

@@ -1,0 +1,93 @@
+#!/bin/bash
+
+userid="23f034ac-b520-11de-833e-000c29bf531c";
+usrkey="a78c73155616e7b25621a0dcb550f42b";
+
+###############################################
+# Get list of existing items
+###############################################
+ITEMS=$(curl --silent -d userid=$userid -d usrkey=$usrkey http://localhost/api/bookmarks/$userid |
+	OAKConfig=/etc/BeerCrush/webapp.conf /usr/local/beercrush/bin/json2xml |
+	xmlstarlet sel -t -m '/obj/obj[@tag=&quot;items&quot;]/obj' -v @tag -o ' ');
+
+###############################################
+# Delete all items
+###############################################
+curl -X POST --silent -d userid=$userid -d usrkey=$usrkey -d del_item="$ITEMS" http://localhost/api/bookmarks > /dev/null;
+sleep 1; # Give the uncaching that occurs after the deletions above a chance to happen
+
+###############################################
+# Verify that there are zero bookmarked items
+###############################################
+
+
+num_items=$(curl --silent -d userid=$userid -d usrkey=$usrkey http://localhost/api/bookmarks/$userid |
+	OAKConfig=/etc/BeerCrush/webapp.conf /usr/local/beercrush/bin/json2xml |
+	xmlstarlet sel -t -v 'count(/obj/obj[@tag=&quot;items&quot;]/obj)');
+	
+if [ $num_items -ne 0 ]; then
+	echo "Delete all items test: FAILED (items not deleted)";
+	exit;
+else
+	echo "Delete all items test: PASSED";
+fi
+
+###############################################
+# Randomly add a bunch of legitimate items
+###############################################
+if [ ! -f items.list ]; then
+
+	for T in places beers breweries; do
+		
+		curl --silent http://localhost/api/$T |
+			OAKConfig=/etc/BeerCrush/webapp.conf /usr/local/beercrush/bin/json2xml |
+			xmlstarlet sel -t -m '/obj/array/obj[@tag=&quot;item&quot;]' -v 'scalar[@tag=&quot;id&quot;]/@val' -n |
+			sed -e '/^\s*$/d';
+			
+	done > items.list;
+
+fi
+
+###############################################
+# Pick 10 items at random
+###############################################
+TOTAL_ITEMS=$(wc -l items.list);
+TOTAL_ITEMS=${TOTAL_ITEMS% *};
+
+for i in {1..10}; do
+	N=$(($RANDOM % $TOTAL_ITEMS));
+	ID=$(sed -n -e ${N}p items.list);
+	ITEMS="${ITEMS:+$ITEMS }$ID";
+done
+
+###############################################
+# Add those items
+###############################################
+# echo "Adding:$ITEMS";
+bookmarks_json=$(curl --fail --silent -d userid=$userid -d usrkey=$usrkey -d add_item="$ITEMS" http://localhost/api/bookmarks);
+if [ $? -ne 0 ]; then
+	echo "Add random items test: FAILED (items not added)";
+	exit;
+fi
+
+sleep 1; # Give the uncaching that occurs after the additions above a chance to happen
+
+###############################################
+# Verify that the existing items are the just-added items
+###############################################
+echo $ITEMS | sed -e 's/ /\n/g' | sort > correct.list;
+echo $bookmarks_json | OAKConfig=/etc/BeerCrush/webapp.conf /usr/local/beercrush/bin/json2xml |
+	xmlstarlet sel -t -m '/obj/obj[@tag=&quot;items&quot;]/obj' -v @tag -n | sed -e '/^\s*$/d'| sort > actual.list;
+
+if ! diff -u actual.list correct.list; then
+	
+	echo "Verification failed:";
+	diff -u actual.list correct.list;
+else
+	echo "Add random items test: PASSED";
+fi
+
+rm -f actual.list correct.list items.list;
+
+# TODO: Try to randomly add a bunch of illegitimate items
+# TODO: Randomly delete a bunch of items

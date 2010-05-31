@@ -11,7 +11,6 @@ function oakMain($oak)
 {
 	global $cgi_fields;
 
-	header("Content-Type: text/plain"); // Debug only
 	$add_items=array();
 	$del_items=array();
 
@@ -95,6 +94,7 @@ function oakMain($oak)
 
 	$oak->put_document($wishlist->getID(),$wishlist);
 
+	header('Content-Type: application/json; charset=utf-8');
 	$oak->write_document_json($wishlist);
 }
 

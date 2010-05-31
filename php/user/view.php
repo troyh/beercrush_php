@@ -110,6 +110,10 @@ foreach ($reviews->reviews as $review) {
 		<li>Person</li>
 	</ul>
 
+<h2>My Bookmarks</h2>
+	<ul id="bookmarks">
+	</ul>
+
 </div>
 </div>
 </div>
@@ -165,6 +169,12 @@ function pageMain()
 		$.getJSON('/api/wishlist/'+$.cookie('userid'),function(data,status){
 			$.each(data.items,function(idx,item){
 				$('#wishlist').append('<li><a href="/'+item.beer_id.replace(/:/g,'/')+'">'+item.name+'</a></li>');
+			});
+		})
+
+		$.getJSON('/api/bookmarks/'+$.cookie('userid'),function(data,status){
+			$.each(data.items,function(idx,item){
+				$('#bookmarks').append('<li><a href="/'+idx.replace(/:/g,'/')+'">'+item.name+'</a></li>');
 			});
 		})
 		

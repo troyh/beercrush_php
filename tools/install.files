@@ -1,3 +1,5 @@
 BIN db_dump
 BIN jsonpath
+BIN jsontidy
+BIN json2xml
 BIN dbchanges2git

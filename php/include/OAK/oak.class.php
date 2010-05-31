@@ -822,24 +822,33 @@ class OAK
 	{
 		if (is_bool($jsonobj))
 		{
-			if (!is_null($tag))
-				$xmlwriter->writeElement($tag,($jsonobj===true?'yes':'no'));
+			if (!is_null($tag)) {
+				$xmlwriter->startElement('bool');
+				$xmlwriter->writeAttribute('tag',$tag);
+				$xmlwriter->writeAttribute('val',$jsonobj===true?'yes':'no');
+				$xmlwriter->endElement();
+			}
 			else
 				$xmlwriter->text($jsonobj===true?'yes':'no');
 		}
 		else if (is_scalar($jsonobj))
 		{
-			if (!is_null($tag))
-				$xmlwriter->writeElement($tag,$jsonobj);
+			if (!is_null($tag)) {
+				$xmlwriter->startElement('scalar');
+				$xmlwriter->writeAttribute('tag',$tag);
+				$xmlwriter->writeAttribute('val',$jsonobj);
+				$xmlwriter->endElement();
+			}
 			else
 				$xmlwriter->text($jsonobj);
 		}
 		else if (is_array($jsonobj))
 		{
-			if (is_null($tag) || !is_string($tag))
-				$tag="doc";
-
-			$xmlwriter->startElement($tag);
+			$xmlwriter->startElement('array');
+			if (!is_null($tag) && is_string($tag)) {
+				$xmlwriter->writeAttribute('tag',$tag);
+			}
+			
 			foreach ($jsonobj as $array_item)
 			{
 				$this->json2xml($array_item,$xmlwriter,'item');
@@ -857,7 +866,8 @@ class OAK
 			else if (is_null($tag) || !is_string($tag))
 				$tag="doc";
 
-			$xmlwriter->startElement($tag);
+			$xmlwriter->startElement('obj');
+			$xmlwriter->writeAttribute('tag',$tag);
 
 			if (property_exists($jsonobj,'@attributes'))
 			{
@@ -879,10 +889,18 @@ class OAK
 				}
 				else
 				{
-					if (is_bool($v))
-						$xmlwriter->writeElement($k,$v===true?'yes':'no');
-					else if (is_scalar($v))
-						$xmlwriter->writeElement($k,$v);
+					if (is_bool($v)) {
+						$xmlwriter->startElement('bool');
+						$xmlwriter->writeAttribute('tag',$k);
+						$xmlwriter->writeAttribute('val',$v===true?'yes':'no');
+						$xmlwriter->endElement();
+					}
+					else if (is_scalar($v)) {
+						$xmlwriter->startElement('scalar');
+						$xmlwriter->writeAttribute('tag',$k);
+						$xmlwriter->writeAttribute('val',$v);
+						$xmlwriter->endElement();
+					}
 					else if (is_object($v) || is_array($v))
 					{
 						$this->json2xml($v,$xmlwriter,$k);

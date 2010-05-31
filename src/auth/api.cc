@@ -202,6 +202,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 	// FCGX_FPrintF(out,"cgiReferrer=%s\n",cgiReferrer);
 	
 	const int CGIPATH_WISHLIST_LEN=14;
+	const int CGIPATH_BOOKMARKS_LEN=15;
 
 	char user_id[256];
 	user_id[0]='\0';
@@ -258,6 +259,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 		"/api/recommend/edit",
 		"/api/user/edit",
 		"/api/user/fullinfo",
+		"/api/bookmarks",
 		"/api/wishlist"
 	};
 	
@@ -325,6 +327,21 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 		else
 		{
 			FCGX_FPrintF(out,"X-Accel-Redirect: /store/api/wishlist/%s\r\n",cgiPathInfo+CGIPATH_WISHLIST_LEN);
+			FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
+		}
+	}
+	else if (!strncmp(cgiPathInfo,"/api/bookmarks/",CGIPATH_BOOKMARKS_LEN))
+	{
+		// Verify that the requesting user has access permissions to this bookmarks list (i.e., it's their own bookmarks)
+		if (strcmp(user_id,cgiPathInfo+CGIPATH_BOOKMARKS_LEN))
+		{
+			FCGX_FPrintF(out,"Status: 403 Permission denied\r\n");
+			FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
+			FCGX_FPrintF(out,"Permission denied");
+		}
+		else
+		{
+			FCGX_FPrintF(out,"X-Accel-Redirect: /store/api/bookmarks/%s\r\n",cgiPathInfo+CGIPATH_BOOKMARKS_LEN);
 			FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
 		}
 	}
