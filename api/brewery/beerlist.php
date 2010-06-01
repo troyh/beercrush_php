@@ -18,6 +18,7 @@ foreach ($viewdoc->rows as $row)
 		'beer_id' => $beerdoc->getID(),
 		'name' => $beerdoc->name,
 		'description' => $beerdoc->description,
+		'style' => $beerdoc->styles[0],
 	);
 }
 

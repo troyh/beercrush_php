@@ -9,6 +9,7 @@ if ($beerlistdoc==null)
 }
 
 $photoset=$BC->docobj('photoset/brewery/'.$_GET['brewery_id']);	
+$styles  =BeerCrush::api_doc($BC->oak,'beerstyles');
 
 $header['title']=$brewerydoc->name;
 $header['js'][]='<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>';
@@ -21,6 +22,20 @@ function yes_no_undecided($v) {
 	}
 	return ""; // Undecided
 }
+
+function build_style_lookup_table($styles) {
+	global $styles_lookup;
+	
+	foreach ($styles as $style) {
+		$styles_lookup[$style->id]=$style;//->name;
+		if (isset($style->styles))
+			build_style_lookup_table($style->styles);
+	}
+}
+
+$styles_lookup=array();
+build_style_lookup_table($styles->styles);
+
 include("../header.php");
 ?>
 <div id="mwr">
@@ -52,9 +67,15 @@ include("../header.php");
 
 
 <h2><?=count($beerlistdoc->beers)?> Beers Brewed</h2>
+<h3>Sort by
+	<a href="" onclick="sort_beerlist('.beername');return false;">Name</a> &#124; 
+	<a href="" onclick="sort_beerlist('.beerstyle');return false;">Style</a> &#124; 
+	<a href="" onclick="sort_beerlist('.rating',true);return false;">Rating</a></h3>
 <ul id="beerlist">
 <?php foreach ($beerlistdoc->beers as $beer){ ?>
-	<li><a href="/<?=BeerCrush::docid_to_docurl($beer->beer_id)?>"><?=$beer->name?></a> (<?=BeerCrush::api_doc($BC->oak,BeerCrush::docid_to_docurl($beer->beer_id))->review_summary->avg?>)</li>
+	<li><span class="beername"><a href="/<?=BeerCrush::docid_to_docurl($beer->beer_id)?>"><?=$beer->name?></a></span>
+		<span class="beerstyle">(<a href="/style/<?=BeerCrush::docid_to_docurl($beer->style)?>"><?=$styles_lookup[$beer->style]->name?>)</span></a> 
+		<span class="rating"><?=BeerCrush::api_doc($BC->oak,BeerCrush::docid_to_docurl($beer->beer_id))->review_summary->avg?></span></li>
 <?php } ?>
 </ul>
 
@@ -96,6 +117,17 @@ include("../header.php");
 	
 <script type="text/javascript" src="/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript">
+
+function sort_beerlist(selector,reverse) {
+	var mylist = $('#beerlist');
+	var listitems = mylist.children('li').get();
+	listitems.sort(function(a, b) {
+	   var compA = $(a).children(selector).first().text().toUpperCase();
+	   var compB = $(b).children(selector).first().text().toUpperCase();
+	   return ((compA < compB) ? -1 : (compA > compB) ? 1 : 0) * (reverse?-1:1);
+	})
+	$.each(listitems, function(idx, itm) { mylist.append(itm); });
+}
 
 function geocodeAddress(callback) {
 	var addressstr=$('#brewery_address\\:street').text() + ', ' +
