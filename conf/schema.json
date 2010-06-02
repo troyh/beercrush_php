@@ -6,6 +6,7 @@
 			"doctype": { "fieldtype":"text", "propname": "type" },
 			"name": "text",
 			"description": "text",
+			"ctime": { "fieldtype": "date", "propname": "meta.timestamp" },
 			"style": { "fieldtype": "text_array", "propname": "styles" },
 			"brewery": { "fieldtype": "text", "php_function": "BeerCrush::brewery_name_from_beerdoc" }
 		},

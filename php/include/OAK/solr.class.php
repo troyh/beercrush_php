@@ -132,6 +132,13 @@ class OAKSolrIndexer {
 						}
 					}
 					break;
+				case 'date':
+					// Format: 1995-12-31T23:59:59Z
+					if (!is_null($propname)) {
+						$v=gmdate('c',$this->get_property_value($doc,$propname)); // Assumes Unix timestamp
+						$this->writeValue($field,substr($v,0,19).'Z','tdate',$xmlwriter);
+					}
+					break;
 				default:
 					$this->oak->log('Unknown datatype:'.$datatype);
 					throw new Exception('Unknown datatype:'.$datatype);

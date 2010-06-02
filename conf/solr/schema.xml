@@ -426,6 +426,8 @@
        when adding a document.
    -->
 
+	<!-- Beer Crush fields -->
+	
    <field name="id" type="string" indexed="true" stored="true" required="true" />
    <field name="doctype" type="string" indexed="true" stored="true" required="true" />
    <field name="placetype" type="string" indexed="true" stored="true" required="false" />
@@ -433,6 +435,7 @@
    <field name="description" type="text" indexed="true" stored="true"/>
    <field name="style" type="string" indexed="true" stored="false" multiValued="true"/>
    <field name="brewery" type="text" indexed="true" stored="true"/>
+   <field name="ctime" type="tdate" indexed="true" stored="true"/>
 
    <!-- Common metadata fields, named specifically to match up with
      SolrCell metadata when parsing rich documents such as Word, PDF.

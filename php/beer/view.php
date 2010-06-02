@@ -21,7 +21,8 @@ if (empty($beerdoc->styles) || empty($beerdoc->styles[0]))
 	$beerdoc->styles=array();
 else {
 	// Get a list of random beers in this beer's (first) style
-	$url="http://duff:8080/solr/select?fl=id&start=0&rows=0&wt=json&q=style:".$beerdoc->styles[0];
+	$solr_url='http://'.$BC->oak->get_config_info()->solr->nodes[rand()%count($BC->oak->get_config_info()->solr->nodes)].$BC->oak->get_config_info()->solr->url.'/select?';
+	$url=$solr_url.'fl=id&start=0&rows=0&wt=json&q=style:'.$beerdoc->styles[0];
 	$response=json_decode(@file_get_contents($url));
 
 	// Pick the 1st random number
@@ -34,7 +35,7 @@ else {
 
 	// Do a 2nd query to get those
 	$start=min($random_picks);
-	$url="http://duff:8080/solr/select?fl=id&start=$start&rows=100&wt=json&q=style:".$beerdoc->styles[0];
+	$url=$solr_url.'fl=id&start='.$start.'&rows=100&wt=json&q=style:'.$beerdoc->styles[0];
 	$response=json_decode(@file_get_contents($url));
 
 	$other_by_style=array();
