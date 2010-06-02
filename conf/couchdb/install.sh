@@ -18,6 +18,8 @@ for F in $(find design/ -maxdepth 1 -mindepth 1 -type d ! -name ".*"); do
 
 done
 
+design_changed=0;
+
 # Put design docs in couchdb
 for D in design/*.json; do
 	DD=$(basename $D .json);
@@ -35,6 +37,7 @@ for D in design/*.json; do
 
 		# Compare the two docs
 		if ! diff design/$DD.tmp design/$DD.indb > /dev/null; then
+			design_changed=1;
 			echo "$DD has changed, replacing $REV in couchdb";
 			# Add the _rev
 			cat design/$DD.json | php -r '$doc=json_decode(file_get_contents("php://stdin"));$doc->_rev=$argv[1];print json_encode($doc);' $REV > design/$DD.new;
@@ -52,3 +55,11 @@ for D in design/*.json; do
 		rm design/$DD.indb design/$DD.tmp;
 	fi
 done
+
+rm -f design/*.json;
+
+if [ $design_changed -ne 0 ]; then
+	# Restart couchdb
+	# sudo /etc/init.d/couchdb stop;
+	sudo /etc/init.d/couchdb restart;
+fi

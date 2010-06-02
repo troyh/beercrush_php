@@ -1,0 +1,29 @@
+<?php
+require_once('beercrush/beercrush.php');
+// print_r($_GET);exit;
+$locations=new stdClass;
+
+$key=urlencode('["'.$_GET['country'].'","'.$_GET['state'].'"]');
+$endkey=urlencode('["'.$_GET['country'].'","'.$_GET['state'].'\\\\uFFFF"]');
+$view_url='place/locations?group_level=3&inclusive_end=true&startkey='.$key.'&endkey='.$endkey;
+// print $view_url;exit;
+$BC->oak->get_view($view_url,&$locations);
+// print_r($locations);exit;
+
+include('../header.php');
+?>
+
+<a href="../../">All locations</a> &gt; 
+<a href="../"><?=$locations->rows[0]->key[0]?></a> &gt;
+<?=$locations->rows[0]->key[1]?>
+
+<h1>Locations</h1>
+
+<ul>
+<?php foreach ($locations->rows as $location):?>
+	<li><a href="./<?=$location->key[2]?>/"><?=$location->key[2]?></a> (<?=$location->value?>)</li>
+<?php endforeach; ?>
+</ul>
+<?php
+include('../footer.php');
+?>
