@@ -1,0 +1,73 @@
+#!/usr/bin/php
+<?php
+require_once('OAK/oak.class.php');
+require_once('OAK/solr.class.php');
+
+$opts=getopt('C:h');
+
+if (isset($opts['h']) || empty($opts['C'])) {
+	$cmdname=basename($argv[0]);
+	print <<<EOF
+Usage: $cmdname -C <conf file>
+
+	-C Specify path to .conf file
+
+
+EOF;
+	exit(2);
+}
+
+try {
+	$oak=new OAK($opts['C']);
+}
+catch (Exception $x) {
+	print $x->getMessage()."\n";
+	exit;
+}
+
+$schema=json_decode(file_get_contents(dirname($opts['C'])."/schema.json"));
+$solridx=new OAKSolrIndexer($oak,$schema);
+
+$docurl=$argv[3];
+
+if (empty($docurl)) {
+	// Read IDs from stdin
+	$f=fopen("php://stdin",'r');
+	if ($f) {
+
+		while ($url=fgets($f)) {
+
+			if ($count==0) {
+				$xmlwriter=$solridx->batch_index_doc_start();
+			}
+
+			$url=rtrim($url);
+			$doc=json_decode(file_get_contents($url));
+			if (is_null($doc)) {
+				print "FAILED: $url\n";
+			}
+			else {
+				print "$url\n";
+				$solridx->batch_index_doc($doc,$xmlwriter);
+			}
+			
+			++$count;
+
+			if ($count>=100) {
+				$solridx->batch_index_doc_end($xmlwriter);
+				$count=0;
+			}
+		}
+		fclose($f);
+
+	}
+	
+	$solridx->optimize();
+}
+else
+{
+	$doc=json_decode(file_get_contents($docurl));
+	$solridx->index_doc($doc);
+}
+
+?>

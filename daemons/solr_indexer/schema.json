@@ -1,0 +1,33 @@
+{
+	"phpincludes": ["beercrush/beercrush.php"],
+	"doc_id": "id",
+	"doctypes": {
+		"beer": {
+			"doctype": { "fieldtype":"text", "propname": "type" },
+			"name": "text",
+			"description": "text",
+			"ctime": { "fieldtype": "date", "propname": "meta.timestamp" },
+			"style": { "fieldtype": "text_array", "propname": "styles" },
+			"brewery": { "fieldtype": "text", "php_function": "BeerCrush::brewery_name_from_beerdoc" },
+			"avgrating": { "fieldtype": "float", "propname": "review_summary.avg" }
+		},
+		"brewery": {
+			"doctype": { "fieldtype":"text", "propname": "type" },
+			"name": "text",
+			"description": "text",
+			"address_street": { "fieldtype": "text", "propname": "address.street" },
+			"address_city": { "fieldtype": "text", "propname": "address.city" },
+			"address_state": { "fieldtype": "text", "propname": "address.state" }
+		},
+		"place": {
+			"doctype": { "fieldtype":"text", "propname": "type" },
+			"placetype": "text",
+			"name": "text",
+			"description": "text",
+			"address_street": { "fieldtype": "text", "propname": "address.street" },
+			"address_city": { "fieldtype": "text", "propname": "address.city" },
+			"address_state": { "fieldtype": "text", "propname": "address.state" },
+			"avgrating": { "fieldtype": "float", "propname": "review_summary.avg" }
+		}
+	}
+}

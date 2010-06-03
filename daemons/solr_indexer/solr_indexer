@@ -1,0 +1,65 @@
+#!/usr/bin/php
+<?php
+require_once('OAK/oak.class.php');
+require_once('OAK/jobs.class.php');
+require_once('OAK/solr.class.php');
+
+$opts=getopt('C:h');
+
+if (isset($opts['h'])) {
+	$cmdname=basename($argv[0]);
+	print <<<EOF
+Usage: $cmdname -C <conf file>
+
+	-C Specify path to .conf file
+
+
+EOF;
+	exit;
+}
+
+try {
+	$oak=new OAK($opts['C']);
+}
+catch (Exception $x) {
+	print $x->getMessage()."\n";
+	exit;
+}
+
+$schema=json_decode(file_get_contents(dirname($opts['C'])."/schema.json"));
+$solridx=new OAKSolrIndexer($oak,$schema);
+
+$oakjobs=new OAKJobs($oak,'docchanges');
+// $oakjobs->set_message_callback('log_message');
+$oakjobs->gimme_jobs('update_index');
+
+function update_index($oakjobs,$url) {
+	global $solridx;
+
+	$ch=curl_init($url);
+	if ($ch) {
+		curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+		$txt=curl_exec($ch);
+
+		$doc=json_decode($txt);
+		if (is_null($doc)) {
+			$oakjobs->getOAK()->log('Invalid JSON: '.$txt,OAK::LOGPRI_ERR);
+		}
+		else {
+
+			try {
+				$solridx->index_doc($doc);
+			}
+			catch (Exception $x) {
+				$oakjobs->getOAK()->log('Exception caught: '.$x->getMessage(),OAK::LOGPRI_ERR);
+			}
+
+		}
+		$oakjobs->job_done($msg);
+
+		curl_close($ch);
+	}
+}
+
+
+?>

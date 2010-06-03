@@ -1,0 +1,4 @@
+BIN solr_indexer
+BIN solr-index-all
+BIN solr-index-doc
+ETC schema.json

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+mydir=${0%%/*};
+
+beercrush_host="duff";
+conf_file="/etc/BeerCrush/webapp.conf";
+
+for doctype in beers breweries places; do
+
+	curl --silent http://$beercrush_host/api/$doctype | 
+		OAKConfig=$conf_file /usr/local/beercrush/bin/json2xml |
+		xmlstarlet sel -t -m '//obj[@tag=&quot;item&quot;]' -v 'scalar[@tag=&quot;id&quot;]/@val' -n |
+		sed -e '/^\s*$/d' -e 's|:|/|g' -e "s|^|http://$beercrush_host/api/|" |
+		sort |
+		$mydir/solr-index-doc -C $conf_file
+	
+done
