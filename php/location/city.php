@@ -23,10 +23,8 @@ include('../header.php');
 <?php
 $cfg=$BC->oak->get_config_info();
 foreach (array('Brewpub','Bar','Restaurant','Store') as $placetype) {
-	$solr_url='http://'.$cfg->solr->nodes[rand()%count($cfg->solr->nodes)].$cfg->solr->url.'/select?fl=id,name&start=0&rows=20&wt=json&q=doctype:place+AND+placetype:'.$placetype.'+AND+address_state:"'.urlencode($_GET['state']).'"+AND+address_city:"'.urlencode($_GET['city']).'"';
-	// print $solr_url;
+	$solr_url='http://'.$cfg->solr->nodes[rand()%count($cfg->solr->nodes)].$cfg->solr->url.'/select?fl=id,name,avgrating&start=0&rows=20&sort=avgrating+desc&wt=json&q=doctype:place+AND+placetype:'.$placetype.'+AND+address_state:"'.urlencode($_GET['state']).'"+AND+address_city:"'.urlencode($_GET['city']).'"';
 	$places=json_decode(file_get_contents($solr_url));
-	// print "<pre>places:";print_r($places);print "</pre>";
 ?>
 
 <h2><?=$places->response->numFound?> <?=$placetype?>s</h2>
@@ -35,11 +33,10 @@ foreach (array('Brewpub','Bar','Restaurant','Store') as $placetype) {
 <?php
 	foreach($places->response->docs as $doc):
 		$place=BeerCrush::api_doc($BC->oak,BeerCrush::docid_to_docurl($doc->id));
-		// print_r($place);
 ?>
 	<li>
 		<a href="/<?=BeerCrush::docid_to_docurl($doc->id)?>"><?=$doc->name?></a>
-		<span><?=$place->review_summary->avg?></span>
+		<span><?=$doc->avgrating?></span>
 		<div><?=$place->address->street?></div>
 		<div><?=$place->phone?></div>
 	</li>
