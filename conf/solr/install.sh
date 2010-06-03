@@ -1,26 +1,32 @@
 #!/bin/bash
 
+. ../../config.sh;
+
 # TODO: verify /etc/tomcat6/tomcat-users.xml is correct
 # TODO: copy the BeerCrush conf/solr/schema.xml to /etc/solr/conf/schema.xml
 # TODO: copy the BeerCrush conf/solr/solrconfig.xml to /etc/solr/conf/solrconfig.xml
 # TODO: attempt a Solr query to prove it works
 
-if ../../tools/iamservertype -q solr; then
+if iamservertype -q solr; then
 
-	if ! diff -u solrconfig.xml /etc/solr/conf/solrconfig.xml > /dev/null; then
-		echo "**************************************************";
-		echo "ERROR: Solr config (/etc/solr/conf/solrconfig.xml) is incorrect:";
-		echo "**************************************************";
-		diff -u solrconfig.xml /etc/solr/conf/solrconfig.xml;
-		exit;
+	solr_config_changed=0;
+
+	if ! files_are_identical solrconfig.xml /etc/solr/conf/solrconfig.xml; then
+		echo "Installing Solr solrconfig.xml";
+		sudo cp solrconfig.xml /etc/solr/conf/solrconfig.xml;
+		solr_config_changed=1;
 	fi
 
-	if ! diff -u schema.xml /etc/solr/conf/schema.xml > /dev/null; then
-		echo "**************************************************";
-		echo "ERROR: Solr schema (/etc/solr/conf/schema.xml) is incorrect:";
-		echo "**************************************************";
-		diff -u schema.xml /etc/solr/conf/schema.xml;
-		exit;
+	if ! files_are_identical schema.xml /etc/solr/conf/schema.xml; then
+		echo "Installing Solr schema.xml";
+		sudo cp schema.xml /etc/solr/conf/schema.xml;
+		solr_config_changed=1;
+	fi
+	
+	if [ $solr_config_changed -ne 0 ]; then
+		echo "Solr config changed. Restarting Solr...";
+		sudo /etc/init.d/jetty stop;
+		sudo /etc/init.d/jetty start;
 	fi
 
 fi

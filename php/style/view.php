@@ -41,7 +41,7 @@ include('../header.php');
 
 // Get a list of highest-rated beers in this beer's (first) style
 $solr_url='http://'.$BC->oak->get_config_info()->solr->nodes[rand()%count($BC->oak->get_config_info()->solr->nodes)].$BC->oak->get_config_info()->solr->url.'/select?';
-$url=$solr_url.'fl=id,name&start=0&rows=20&wt=json&q=style:'.$style->id;
+$url=$solr_url.'fl=id,name,avgrating&start=0&rows=20&sort=avgrating+desc&wt=json&q=style:'.$style->id;
 // print $url;exit;
 $response=json_decode(@file_get_contents($url));
 // print_r($response);exit;
@@ -51,7 +51,7 @@ $response=json_decode(@file_get_contents($url));
 	<?php foreach ($response->response->docs as $doc):
 		$brewery=BeerCrush::api_doc($BC->oak,BeerCrush::docid_to_docurl(BeerCrush::beer_id_to_brewery_id($doc->id)));
 	?>
-		<li><a href="/<?=BeerCrush::docid_to_docurl($doc->id)?>"><?=$doc->name?></a> by <a href="/<?=BeerCrush::docid_to_docurl($brewery->id)?>"><?=$brewery->name?></a></li>
+		<li><a href="/<?=BeerCrush::docid_to_docurl($doc->id)?>"><?=$doc->name?></a> by <a href="/<?=BeerCrush::docid_to_docurl($brewery->id)?>"><?=$brewery->name?></a> (<?=$doc->avgrating?>)</li>
 	<?php endforeach;?>
 </ul>
 

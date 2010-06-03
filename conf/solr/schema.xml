@@ -436,6 +436,7 @@
    <field name="style" type="string" indexed="true" stored="false" multiValued="true"/>
    <field name="brewery" type="text" indexed="true" stored="true"/>
    <field name="ctime" type="tdate" indexed="true" stored="true"/>
+   <field name="avgrating" type="tfloat" indexed="true" stored="true"/>
 
    <!-- Common metadata fields, named specifically to match up with
      SolrCell metadata when parsing rich documents such as Word, PDF.

@@ -139,6 +139,15 @@ class OAKSolrIndexer {
 						$this->writeValue($field,substr($v,0,19).'Z','tdate',$xmlwriter);
 					}
 					break;
+				case 'float':
+					if (!is_null($propname))
+						$v=$this->get_property_value($doc,$propname);
+					else if (!is_null($funcname))
+						$v=$this->get_property_value_from_function($doc,$funcname);
+					else
+						throw new Exception('No property name or function specified in schema for '.$field);
+					$this->writeValue($field,(float)$v,'tfloat',$xmlwriter);
+					break;
 				default:
 					$this->oak->log('Unknown datatype:'.$datatype);
 					throw new Exception('Unknown datatype:'.$datatype);
