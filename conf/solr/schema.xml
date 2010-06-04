@@ -442,7 +442,11 @@
    <field name="body" type="tint" indexed="true" stored="true"/>
    <field name="balance" type="tint" indexed="true" stored="true"/>
    <field name="aftertaste" type="tint" indexed="true" stored="true"/>
+   <field name="atmosphere" type="tint" indexed="true" stored="true"/>
+   <field name="service" type="tint" indexed="true" stored="true"/>
+   <field name="food" type="tint" indexed="true" stored="true"/>
    <field name="beer_id" type="text" indexed="true" stored="true"/>
+   <field name="place_id" type="text" indexed="true" stored="true"/>
    <field name="user_id" type="text" indexed="true" stored="true"/>
    <field name="date_drank" type="tdate" indexed="true" stored="true"/>
    <field name="flavor" type="string" indexed="true" stored="false" multiValued="true"/>

@@ -32,6 +32,7 @@
 		"review": {
 			"doctype": { "fieldtype":"text", "propname": "type" },
 			"beer_id": "text",
+			"place_id": "text",
 			"user_id": "text",
 			"ctime": { "fieldtype": "date", "propname": "meta.timestamp" },
 			"date_drank": "date",
@@ -39,6 +40,9 @@
 			"body": "integer",
 			"balance": "integer",
 			"aftertaste": "integer",
+			"atmosphere": "integer",
+			"service": "integer",
+			"food": "integer",
 			"flavor": { "fieldtype": "text_array", "propname": "flavors" }
 		}
 	}
