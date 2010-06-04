@@ -40,8 +40,11 @@ class OAKSolrIndexer {
 	}
 	
 	public function batch_index_doc($doc,$xmlwriter) {
-		$this->write_xml_doc($doc,$xmlwriter);
-		$this->batch_doc_count++;
+		// Only index the document if it's in the schema
+		if (!empty($this->schema->doctypes->{$doc->type})) {
+			$this->write_xml_doc($doc,$xmlwriter);
+			$this->batch_doc_count++;
+		}
 	}
 	
 	public function batch_index_doc_end($xmlwriter) {
@@ -123,7 +126,8 @@ class OAKSolrIndexer {
 						$v=$this->get_property_value_from_function($doc,$funcname);
 					else
 						throw new Exception('No property name or function specified in schema for '.$field);
-					$this->writeValue($field,$v,'integer',$xmlwriter);
+					if (is_numeric($v))
+						$this->writeValue($field,$v,'integer',$xmlwriter);
 					break;
 				case "text_array":
 					if (isset($doc->$propname)) {
@@ -135,8 +139,14 @@ class OAKSolrIndexer {
 				case 'date':
 					// Format: 1995-12-31T23:59:59Z
 					if (!is_null($propname)) {
-						$v=gmdate('c',$this->get_property_value($doc,$propname)); // Assumes Unix timestamp
-						$this->writeValue($field,substr($v,0,19).'Z','tdate',$xmlwriter);
+						$v=$this->get_property_value($doc,$propname);
+						if (!is_numeric($v)) // Assumes Unix timestamp if it's numeric
+							$v=strtotime($v);
+
+						if ($v!==false) {
+							$v=gmdate('c',$v);
+							$this->writeValue($field,substr($v,0,19).'Z','tdate',$xmlwriter);
+						}
 					}
 					break;
 				case 'float':
@@ -146,7 +156,8 @@ class OAKSolrIndexer {
 						$v=$this->get_property_value_from_function($doc,$funcname);
 					else
 						throw new Exception('No property name or function specified in schema for '.$field);
-					$this->writeValue($field,(float)$v,'tfloat',$xmlwriter);
+					if (is_numeric($v))
+						$this->writeValue($field,(float)$v,'tfloat',$xmlwriter);
 					break;
 				default:
 					$this->oak->log('Unknown datatype:'.$datatype);

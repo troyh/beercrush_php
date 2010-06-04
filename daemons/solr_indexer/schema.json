@@ -28,6 +28,18 @@
 			"address_city": { "fieldtype": "text", "propname": "address.city" },
 			"address_state": { "fieldtype": "text", "propname": "address.state" },
 			"avgrating": { "fieldtype": "float", "propname": "review_summary.avg" }
+		},
+		"review": {
+			"doctype": { "fieldtype":"text", "propname": "type" },
+			"beer_id": "text",
+			"user_id": "text",
+			"ctime": { "fieldtype": "date", "propname": "meta.timestamp" },
+			"date_drank": "date",
+			"rating": "integer",
+			"body": "integer",
+			"balance": "integer",
+			"aftertaste": "integer",
+			"flavor": { "fieldtype": "text_array", "propname": "flavors" }
 		}
 	}
 }

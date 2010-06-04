@@ -119,6 +119,7 @@ function review_random_beer() {
 	FLAVORS_COUNT=$(xmlstarlet sel -t -v 'count(//flavor)' flavors.xml);
 	# echo $FLAVORS_COUNT flavors;
 	N=$(( $RANDOM % 5 ));
+	FLAVORS="";
 	for (( X=0; X < $N; X++)) do
 		pick_random_number $FLAVORS_COUNT;
 		FLAVOR_ID=$(xmlstarlet sel -t -m "//flavor[$RANDOM_NUMBER]" -v id -n  flavors.xml);

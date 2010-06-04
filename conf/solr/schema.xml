@@ -429,6 +429,7 @@
 	<!-- Beer Crush fields -->
 	
    <field name="id" type="string" indexed="true" stored="true" required="true" />
+   <field name="random" type="random" indexed="true"/>
    <field name="doctype" type="string" indexed="true" stored="true" required="true" />
    <field name="placetype" type="string" indexed="true" stored="true" required="false" />
    <field name="name" type="text" indexed="true" stored="true"/>
@@ -437,6 +438,14 @@
    <field name="brewery" type="text" indexed="true" stored="true"/>
    <field name="ctime" type="tdate" indexed="true" stored="true"/>
    <field name="avgrating" type="tfloat" indexed="true" stored="true"/>
+   <field name="rating" type="tint" indexed="true" stored="true"/>
+   <field name="body" type="tint" indexed="true" stored="true"/>
+   <field name="balance" type="tint" indexed="true" stored="true"/>
+   <field name="aftertaste" type="tint" indexed="true" stored="true"/>
+   <field name="beer_id" type="text" indexed="true" stored="true"/>
+   <field name="user_id" type="text" indexed="true" stored="true"/>
+   <field name="date_drank" type="tdate" indexed="true" stored="true"/>
+   <field name="flavor" type="string" indexed="true" stored="false" multiValued="true"/>
 
    <!-- Common metadata fields, named specifically to match up with
      SolrCell metadata when parsing rich documents such as Word, PDF.
@@ -453,13 +462,13 @@
 
    <!-- catchall text field that indexes tokens both normally and in reverse for efficient
         leading wildcard queries. -->
-   <field name="text_rev" type="text_rev" indexed="true" stored="false" multiValued="true"/>
+   <!-- <field name="text_rev" type="text_rev" indexed="true" stored="false" multiValued="true"/> -->
 
    <!-- non-tokenized version of manufacturer to make it easier to sort or group
         results by manufacturer.  copied from "manu" via copyField -->
-   <field name="manu_exact" type="string" indexed="true" stored="false"/>
+   <!-- <field name="manu_exact" type="string" indexed="true" stored="false"/> -->
 
-   <field name="payloads" type="payloads" indexed="true" stored="true"/>
+   <!-- <field name="payloads" type="payloads" indexed="true" stored="true"/> -->
 
    <!-- Uncommenting the following will create a "timestamp" field using
         a default value of "NOW" to indicate when each document was indexed.

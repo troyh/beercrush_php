@@ -1,17 +1,87 @@
 #!/bin/bash
 
+function usage() {
+	cat <<EOF
+${0##*/} -C <conf_file> [-i <doctype>]
+	
+   -C   Config file
+   -i   Type of documents to index (beers, breweries, places, beer_reviews or place_reviews)
+
+EOF
+	exit;
+}
+
 mydir=${0%%/*};
+doc_index_type="beers breweries places";
+review_index_type="beer_reviews place_reviews";
 
-beercrush_host="duff";
-conf_file="/etc/BeerCrush/webapp.conf";
+while getopts "C:i:" opt; do
+	case $opt in
+		C)
+			conf_file=$OPTARG;
+			;;
+		i)
+			case $OPTARG in
+				beers )
+					doc_index_type=$OPTARG;
+					review_index_type=;
+					;;
+				breweries )
+					doc_index_type=$OPTARG;
+					review_index_type=;
+					;;
+				places )
+					doc_index_type=$OPTARG;
+					review_index_type=;
+					;;
+				beer_reviews )
+					doc_index_type=;
+					review_index_type=$OPTARG;
+					;;
+				place_reviews )
+					doc_index_type=;
+					review_index_type=$OPTARG;
+					;;
+				*)
+					echo "Unrecognized index type: $OPTARG";
+					usage;
+					;;
+			esac
+			;;
+		\?)
+			usage;
+			;;
+	esac
+done
 
-for doctype in beers breweries places; do
+if [ -z $conf_file ]; then
+	usage;
+fi
 
-	curl --silent http://$beercrush_host/api/$doctype | 
+api_prefix=$(/usr/local/beercrush/bin/jsonpath -1 api.base_uri < $conf_file);
+couchdb_host=$(/usr/local/beercrush/bin/jsonpath -1 "couchdb.nodes[0]" < $conf_file);
+couchdb_name=$(/usr/local/beercrush/bin/jsonpath -1 couchdb.database < $conf_file);
+
+for doctype in $doc_index_type; do
+
+	curl --silent $api_prefix/$doctype | 
 		OAKConfig=$conf_file /usr/local/beercrush/bin/json2xml |
 		xmlstarlet sel -t -m '//obj[@tag=&quot;item&quot;]' -v 'scalar[@tag=&quot;id&quot;]/@val' -n |
-		sed -e '/^\s*$/d' -e 's|:|/|g' -e "s|^|http://$beercrush_host/api/|" |
+		sed -e '/^\s*$/d' -e 's|:|/|g' -e "s|^|$api_prefix/|" |
 		sort |
 		$mydir/solr-index-doc -C $conf_file
+	
+done
+
+# Index beer and place reviews
+for review_type in "$review_index_type"; do
+
+	echo "Indexing $review_type...";
+	curl --silent http://$couchdb_host/$couchdb_name/_design/$review_type/_view/all | 
+		sed -e1d -e'$d' -e 's/,\s*$//' |
+		/usr/local/beercrush/bin/jsonpath id |
+		sed -e 's|:|/|g' -e "s|^|$api_prefix/|" |
+		sort | 
+		$mydir/solr-index-doc -C $conf_file;
 	
 done

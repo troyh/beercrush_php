@@ -34,6 +34,9 @@ if (empty($docurl)) {
 	// Read IDs from stdin
 	$f=fopen("php://stdin",'r');
 	if ($f) {
+		
+		$count=0;
+		$xmlwriter=null;
 
 		while ($url=fgets($f)) {
 
@@ -59,6 +62,11 @@ if (empty($docurl)) {
 			}
 		}
 		fclose($f);
+
+		if ($count) { // End the last (fewer than 100) batch
+			$solridx->batch_index_doc_end($xmlwriter);
+			$count=0;
+		}
 
 	}
 	

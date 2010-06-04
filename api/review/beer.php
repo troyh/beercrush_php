@@ -30,6 +30,9 @@ function oakMain($oak)
 			else
 			{
 				header('Content-Type: application/json; charset=utf-8');
+				$review->id=$review->_id;
+				unset($review->_id);
+				unset($review->_rev);
 				print json_encode($review);
 				exit;
 			}
