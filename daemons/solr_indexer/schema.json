@@ -44,6 +44,20 @@
 			"service": "integer",
 			"food": "integer",
 			"flavor": { "fieldtype": "text_array", "propname": "flavors" }
+		},
+		"user": {
+			"doctype": { "fieldtype":"text", "propname": "type" },
+			"name": "text",
+			"address_city": { "fieldtype": "text", "propname": "address.city" },
+			"address_state": { "fieldtype": "text", "propname": "address.state" }
+		},
+		"style": {
+			"doctype": { "fieldtype":"text", "propname": "type" },
+			"name": "text"
+		},
+		"location": {
+			"doctype": { "fieldtype":"text", "propname": "type" },
+			"name": "text"
 		}
 	}
 }

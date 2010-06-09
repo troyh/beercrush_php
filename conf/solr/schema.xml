@@ -466,7 +466,7 @@
 
    <!-- catchall text field that indexes tokens both normally and in reverse for efficient
         leading wildcard queries. -->
-   <!-- <field name="text_rev" type="text_rev" indexed="true" stored="false" multiValued="true"/> -->
+   <field name="text_rev" type="text_rev" indexed="true" stored="false" multiValued="true"/>
 
    <!-- non-tokenized version of manufacturer to make it easier to sort or group
         results by manufacturer.  copied from "manu" via copyField -->

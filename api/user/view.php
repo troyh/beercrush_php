@@ -23,10 +23,18 @@ add it here if we want itout.
 */
 $user=new stdClass;
 $user->id=$userdoc->_id;
+$user->type='user';
 $user->meta->timestamp=$userdoc->meta->timestamp;
 $user->aboutme=$userdoc->aboutme;
 if (!empty($userdoc->name))
 	$user->name=$userdoc->name;
+
+if (!empty($userdoc->address)) {
+	$user->address=new stdClass;
+	$user->address->city=$userdoc->address->city;
+	$user->address->state=$userdoc->address->state;
+	$user->address->country=$userdoc->address->country;
+}
 
 if (!empty($userdoc->avatar))
 	$user->avatar=$userdoc->avatar;

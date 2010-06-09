@@ -9,4 +9,6 @@ if ../tools/iamservertype -q web; then
 	fi
 
 	rsync --recursive --delete --times --exclude=".*" --include="*/" --include="*.png" --include="*.jpg" --include="*.gif" --exclude="*" ./ $WWW_DIR/img/;
+
+	rsync favicon.ico $WWW_DIR/;
 fi

@@ -5,7 +5,7 @@ function usage() {
 ${0##*/} -C <conf_file> [-i <doctype>]
 	
    -C   Config file
-   -i   Type of documents to index (beers, breweries, places, beer_reviews or place_reviews)
+   -i   Type of documents to index (beers, breweries, places, beer_reviews, place_reviews, user, styles or locations)
 
 EOF
 	exit;
@@ -13,7 +13,9 @@ EOF
 
 mydir=${0%%/*};
 doc_index_type="beers breweries places";
-review_index_type="beer_reviews place_reviews";
+view_index_type="beer_reviews place_reviews";
+style_index=1;
+location_index=1;
 
 while getopts "C:i:" opt; do
 	case $opt in
@@ -24,23 +26,51 @@ while getopts "C:i:" opt; do
 			case $OPTARG in
 				beers )
 					doc_index_type=$OPTARG;
-					review_index_type=;
+					view_index_type=;
+					style_index=0;
+					location_index=0;
 					;;
 				breweries )
 					doc_index_type=$OPTARG;
-					review_index_type=;
+					view_index_type=;
+					style_index=0;
+					location_index=0;
 					;;
 				places )
 					doc_index_type=$OPTARG;
-					review_index_type=;
+					view_index_type=;
+					style_index=0;
+					location_index=0;
 					;;
 				beer_reviews )
 					doc_index_type=;
-					review_index_type=$OPTARG;
+					view_index_type=$OPTARG;
+					style_index=0;
+					location_index=0;
 					;;
 				place_reviews )
 					doc_index_type=;
-					review_index_type=$OPTARG;
+					view_index_type=$OPTARG;
+					style_index=0;
+					location_index=0;
+					;;
+				user )
+					doc_index_type=;
+					view_index_type=$OPTARG;
+					style_index=0;
+					location_index=0;
+					;;
+				styles )
+					doc_index_type=;
+					view_index_type=;
+					style_index=1;
+					location_index=0;
+					;;
+				locations )
+					doc_index_type=;
+					view_index_type=;
+					style_index=0;
+					location_index=1;
 					;;
 				*)
 					echo "Unrecognized index type: $OPTARG";
@@ -73,15 +103,44 @@ for doctype in $doc_index_type; do
 	
 done
 
-# Index beer and place reviews
-for review_type in "$review_index_type"; do
+if [ -n "$view_index_type" ]; then
+	# Index beer and place reviews
+	for view_type in "$view_index_type"; do
 
-	echo "Indexing $review_type...";
-	curl --silent http://$couchdb_host/$couchdb_name/_design/$review_type/_view/all | 
-		sed -e1d -e'$d' -e 's/,\s*$//' |
-		/usr/local/beercrush/bin/jsonpath id |
-		sed -e 's|:|/|g' -e "s|^|$api_prefix/|" |
-		sort | 
-		$mydir/solr-index-doc -C $conf_file;
+		echo "Indexing $view_type...";
+		curl --silent http://$couchdb_host/$couchdb_name/_design/$view_type/_view/all | 
+			sed -e1d -e'$d' -e 's/,\s*$//' |
+			/usr/local/beercrush/bin/jsonpath id |
+			sed -e 's|:|/|g' -e "s|^|$api_prefix/|" |
+			sort | 
+			$mydir/solr-index-doc -C $conf_file;
 	
-done
+	done
+fi
+
+if [ $style_index -ne 0 ]; then
+
+	# Index beer styles
+	echo "Indexing styles...";
+	curl --silent $api_prefix/beerstyles |
+		OAKConfig=$conf_file /usr/local/beercrush/bin/json2xml |
+		xmlstarlet sel -t -m '//obj[@tag=&quot;item&quot;]/scalar[@tag=&quot;id&quot;]' -v @val -n |
+		sed -e '/^\s*$/d' -e "s|^|$api_prefix/style/|" |
+		$mydir/solr-index-doc -C $conf_file;
+		
+fi
+	
+if [ $location_index -ne 0 ]; then
+
+	# Index locations
+	echo "Indexing locations...";
+	curl --silent http://$couchdb_host/$couchdb_name/_design/place/_view/locations?group_level=3 |
+		sed -e1d -e'$d' -e 's/,\s*$//' |
+		/usr/local/beercrush/bin/jsonpath "key[0]" "key[1]" "key[2]" | 
+		sed -e "s|^|$api_prefix/location/|" -e 's|\t|/|g' -e s'|\s\+|%20|g' | 
+		sort |
+		$mydir/solr-index-doc -C $conf_file;
+		
+fi
+	
+	

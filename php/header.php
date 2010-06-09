@@ -51,13 +51,13 @@ foreach (array('css','js') as $t) {
 			<div id="searchform">
 				<form method="GET" action="/search">
 					Search:
-					<input type="text" id="searchbox" name="q" size="40" value="">
+					<input type="text" id="searchbox" name="q" size="40" value="<?=empty($_GET['q'])?"":trim($_GET['q']);?>">
 					<input type="submit" value="Go">
 					<div>
-						<input type="radio" name="dt" value="" checked="checked">All
-						<input type="radio" name="dt" value="beersandbreweries">Beers/Breweries
-						<input type="radio" name="dt" value="places">Places
-						<input type="radio" name="dt" value="people">People
+						<input type="radio" name="dt" value=""       <?=empty($_GET['dt'])   ?"checked=\"checked\"":""?>>All
+						<input type="radio" name="dt" value="beers"  <?=$_GET['dt']=='beers' ?"checked=\"checked\"":""?>>Beers/Breweries
+						<input type="radio" name="dt" value="places" <?=$_GET['dt']=='places'?"checked=\"checked\"":""?>>Places
+						<input type="radio" name="dt" value="people" <?=$_GET['dt']=='people'?"checked=\"checked\"":""?>>People
 					</div>
 				</form>
 			</div>
