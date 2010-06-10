@@ -1,0 +1,4 @@
+MAILTO=troy@beercrush.com
+
+# m h dom mon dow user    command
+30 2 * * * www-data /usr/local/beercrush/bin/update_location_data -C /etc/BeerCrush/webapp.conf

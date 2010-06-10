@@ -1,0 +1,28 @@
+#!/bin/bash
+
+
+function usage() {
+	cat -<<EOF
+${0##*/} -C <config>
+
+EOF
+	exit;
+}
+
+while getopts "C:" opt; do
+	case $opt in
+		C )
+			conf_file=$OPTARG;
+			;;
+		\? )
+			usage;
+			;;
+	esac
+done
+
+if [ -z "$conf_file" ]; then
+	usage;
+fi
+
+OAKConfig=$conf_file ./latlonfile > /var/local/BeerCrush/meta/latlonpairs.txt;
+OAKConfig=$conf_file ./beers > /var/local/BeerCrush/meta/nearby_beer.txt;
