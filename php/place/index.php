@@ -1,9 +1,7 @@
 <?php 
-require_once('OAK/oak.class.php');
+require_once('beercrush/beercrush.php');
 
-$oak=new OAK;
-
-$places=json_decode(file_get_contents($oak->get_config_info()->api->base_uri."/places"));
+$places=BeerCrush::api_doc($BC->oak,'/places');
 
 if (empty($_GET['letter']))
 	$page='#';
@@ -23,9 +21,19 @@ include('../header.php');
 </div>
 	
 <div id="place_list">
-<?php foreach ($places->$page as $place) { ?>
-	<div><a href="/<?=str_replace(':','/',$place->id)?>"><?=$place->name?></a></div>
-<?php } ?>
+<?php
+foreach ($places->$page as $place) :
+	$place=BeerCrush::api_doc($BC->oak,BeerCrush::docid_to_docurl($place->id));
+?>
+	<div>
+		<a href="/<?=BeerCrush::docid_to_docurl($place->id)?>"><?=$place->name?></a>
+		<?=$place->address->city?>, 
+		<?=$place->address->state?>
+		<?=$place->address->country?>
+	</div>
+<?php
+endforeach;
+?>
 </div>
 
 <h2>Add a Place</h2>

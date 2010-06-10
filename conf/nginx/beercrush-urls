@@ -40,6 +40,7 @@ rewrite ^/store/api/place/edit$	/api/place/edit.php break;
 rewrite ^/store/api/place/([^/]+)$ 		/api/place/view.php?place_id=place:$1 break;
 rewrite ^/store/api/place/([^/]+)/menu$ 	/api/menu/view.php?place_id=place:$1 break;
 rewrite ^/store/api/menu/edit$ 	/api/menu/edit.php break;
+rewrite ^/store/api/menu/statistics$ 	/api/menu/statistics.php break;
 rewrite ^/store/api/recommend/beer/([^/]+)/([^/]+)$	/api/recommend/view.php?id=beer:$1:$2 break;
 rewrite ^/store/api/recommend/place/([^/]+)$	/api/recommend/view.php?id=place:$1 break;
 rewrite ^/store/api/review/beer/([^/]+)/([^/]+)/(\d+)$	/api/review/beer.php?beer_id=beer:$1:$2&seqnum=$3 break;
