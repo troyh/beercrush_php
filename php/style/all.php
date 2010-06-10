@@ -10,12 +10,15 @@ include('../header.php');
 <?php
 print_styles($styles->styles);
 
-function print_styles($styles) {
+function print_styles($styles,$depth=0) {
 	print '<ul>';
 	foreach ($styles as $style) {
-		print '<li><a href="./'.$style->id.'">'.$style->name.'</a>';
+		if ($depth==0)
+			print '<li>'.$style->name;
+		else
+			print '<li><a href="./'.$style->id.'">'.$style->name.'</a>';
 		if (isset($style->styles))
-			print_styles($style->styles);
+			print_styles($style->styles,$depth+1);
 		print '</li>';
 	}
 	print '</ul>';
