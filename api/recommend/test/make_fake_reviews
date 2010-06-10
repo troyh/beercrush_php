@@ -92,8 +92,9 @@ function review_random_place() {
 		-d food=$(($RANDOM % 5 + 1)) \
 		http://duff/api/place/review);
 	
-	if [ $? != 0 ]; then
-		echo "Failed to post review ($?)";
+	ret=$?;
+	if [ $ret != 0 ]; then
+		echo "Failed to post review ($ret)";
 		echo $REVIEW_ANSWER;
 	else
 		REVIEW_ID=$(echo $REVIEW_ANSWER | /usr/local/beercrush/bin/jsonpath id);
