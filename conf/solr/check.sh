@@ -11,3 +11,4 @@ while read NODE; do
 done
 
 
+# TODO: verify that master_node exists in webapp.conf file

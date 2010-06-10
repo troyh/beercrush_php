@@ -94,6 +94,7 @@ couchdb_name=$(/usr/local/beercrush/bin/jsonpath -1 couchdb.database < $conf_fil
 
 for doctype in $doc_index_type; do
 
+	echo "Indexing $doctype...";
 	curl --silent $api_prefix/$doctype | 
 		OAKConfig=$conf_file /usr/local/beercrush/bin/json2xml |
 		xmlstarlet sel -t -m '//obj[@tag=&quot;item&quot;]' -v 'scalar[@tag=&quot;id&quot;]/@val' -n |
@@ -105,7 +106,7 @@ done
 
 if [ -n "$view_index_type" ]; then
 	# Index beer and place reviews
-	for view_type in "$view_index_type"; do
+	for view_type in $view_index_type; do
 
 		echo "Indexing $view_type...";
 		curl --silent http://$couchdb_host/$couchdb_name/_design/$view_type/_view/all | 
@@ -142,5 +143,4 @@ if [ $location_index -ne 0 ]; then
 		$mydir/solr-index-doc -C $conf_file;
 		
 fi
-	
-	
+
