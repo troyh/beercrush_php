@@ -23,19 +23,17 @@ function find_style($styles,$id) {
 
 include('../header.php');
 ?>
-<a href="/style/">All Styles</a>
+<a href="/style/">All Beer Styles</a>  &gt; <?=$style->name?>
 <h1><?=$style->name?></h1>
+<div class="cf"><div class="label">Type: </div><div><?=$style->type?></div></div>
+<div class="cf"><div class="label">Origin: </div><div><?=$style->origin?></div></div>
+<div class="cf"><div class="label">Original Gravity: </div><div><?=$style->OGlo?>-<?=$style->OGhi?></div></div>
+<div class="cf"><div class="label">Final Gravity: </div><div><?=$style->FGlo?>-<?=$style->FGhi?></div></div>
+<div class="cf"><div class="label">Bitterness: </div><div><?=$style->IBUlo?>-<?=$style->IBUhi?> IBUs</div></div>
+<div class="cf"><div class="label">Color: </div><div><?=$style->SRMlo?>-<?=$style->SRMhi?> srm</div></div>
+<div class="cf"><div class="label">Alcohol (abv): </div><div><?=$style->ABVlo?>-<?=$style->ABVhi?></div></div>
 
-<div>OG:<?=$style->OGlo?>-<?=$style->OGhi?></div>
-<div>FG:<?=$style->FGlo?>-<?=$style->FGhi?></div>
-<div>IBU:<?=$style->IBUlo?>-<?=$style->IBUhi?></div>
-<div>SRM:<?=$style->SRMlo?>-<?=$style->SRMhi?></div>
-<div>ABV:<?=$style->ABVlo?>-<?=$style->ABVhi?></div>
-<div>Type:<?=$style->type?></div>
-<div>Origin:<?=$style->origin?></div>
-<div>From:<?=$style->from?></div>
-
-<h2>Beers</h2>
+<h2>Top <?=$style->name?> Beers</h2>
 
 <?php
 
@@ -65,7 +63,7 @@ $response=json_decode(@file_get_contents($url));
 
 ?>
 
-<h2>Newest Beers</h2>
+<h2>Recently Added <?=$style->name?> Beers</h2>
 <ul>
 	<?php foreach ($response->response->docs as $doc):
 		$brewery=BeerCrush::api_doc($BC->oak,BeerCrush::docid_to_docurl(BeerCrush::beer_id_to_brewery_id($doc->id)));

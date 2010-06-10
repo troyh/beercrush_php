@@ -73,9 +73,10 @@ include("../header.php");
 	<a href="" onclick="sort_beerlist('.rating',true);return false;">Rating</a></h3>
 <ul id="beerlist">
 <?php foreach ($beerlistdoc->beers as $beer){ ?>
-	<li><span class="beername"><a href="/<?=BeerCrush::docid_to_docurl($beer->beer_id)?>"><?=$beer->name?></a></span>
-		<span class="beerstyle">(<a href="/style/<?=BeerCrush::docid_to_docurl($beer->style)?>"><?=$styles_lookup[$beer->style]->name?>)</span></a> 
-		<span class="rating"><?=BeerCrush::api_doc($BC->oak,BeerCrush::docid_to_docurl($beer->beer_id))->review_summary->avg?></span></li>
+	<li><a href="/<?=BeerCrush::docid_to_docurl($beer->beer_id)?>" class="beername"><?=$beer->name?></a>
+		<span class="beerstyle"><?=$styles_lookup[$beer->style]->name?></span> 
+		<span class="rating"><div class="star_rating" title="Rating: <?=BeerCrush::api_doc($BC->oak,BeerCrush::docid_to_docurl($beer->beer_id))->review_summary->avg?> of 5"><div class="avgrating" style="width: <?=BeerCrush::api_doc($BC->oak,BeerCrush::docid_to_docurl($beer->beer_id))->review_summary->avg/5*100?>%"></div></div></span>
+	</li>
 <?php } ?>
 </ul>
 

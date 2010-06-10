@@ -5,8 +5,8 @@ $styles=BeerCrush::api_doc($BC->oak,'beerstyles');
 
 include('../header.php');
 ?>
-<h1>Styles</h1>
-
+<h1>Beer Styles</h1>
+<div id="styles">
 <?php
 print_styles($styles->styles);
 
@@ -21,7 +21,7 @@ function print_styles($styles) {
 	print '</ul>';
 }
 ?>
-
+</div>
 <?php
 include('../footer.php');
 ?>

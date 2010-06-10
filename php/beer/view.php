@@ -55,12 +55,13 @@ foreach ($colors->colors as $c) {
 }
 
 $availability_titles=array(
-	'fall' 		 => "Fall",
-	'seasonal' 	 => "Seasonal",
+	'year-round' => "Year-round",
 	'spring' 	 => "Spring",
 	'summer' 	 => "Summer",
+	'fall' 		 => "Fall",
 	'winter' 	 => "Winter",
-	'year-round' => "Year-round",
+	'seasonal' 	 => "Seasonal",
+	'limited' => "Limited",
 );
 	
 // Build flavor id lookup table
@@ -161,6 +162,7 @@ include("../header.php");
 <div id="main">
 	<h2><a id="brewery_link" href="/<?=BeerCrush::docid_to_docurl($brewerydoc->id)?>"><?=$brewerydoc->name?>'s</a></h2>
 	<h1><?=$beerdoc->name?></h1>
+	<a href="/style/<?=$styles_lookup[$beerdoc->styles[0]]->id?>"><?=$styles_lookup[$beerdoc->styles[0]]->name?></a>
 	<div id="ratings_section" class="cf">
 		<div class="star_rating" title="Average rating: <?=$beerdoc->review_summary->avg?> out of 5"><div id="avgrating" style="width: <?=$beerdoc->review_summary->avg/5*100?>%"></div></div>
 		<a href="#ratings" id="ratingcount"><?=count($reviews->reviews)?> ratings</a>
@@ -170,11 +172,11 @@ include("../header.php");
 			<?php endforeach?>
 		</div>
 		<p>Body</p>
-		<div id="body"><div class="meter"><div style="width: <?=$beerdoc->review_summary->body_avg/5*100?>%"></div></div></div>
+		<div class="body"><div class="meter"><div style="width: <?=$beerdoc->review_summary->body_avg/5*100?>%"></div></div></div>
 		<p>Balance</p>
-		<div id="balance"><div class="meter"><div style="width: <?=$beerdoc->review_summary->balance_avg/5*100?>%"></div></div></div>
+		<div class="balance"><div class="meter"><div style="width: <?=$beerdoc->review_summary->balance_avg/5*100?>%"></div></div></div>
 		<p>Aftertaste</p>
-		<div id="aftertaste"><div class="meter"><div style="width: <?=$beerdoc->review_summary->aftertaste_avg/5*100?>%"></div></div></div>
+		<div class="aftertaste"><div class="meter"><div style="width: <?=$beerdoc->review_summary->aftertaste_avg/5*100?>%"></div></div></div>
 	</div>
 	
 	<span class="label">Brewer's description:</span>
@@ -202,34 +204,6 @@ include("../header.php");
 		<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
 		
 	</div>
-		<select class="swatchselect" size="1">
-			<option style="background-color: rgb(255, 249, 180);">Pale Straw [x-y srm]</option>
-			<option style="background-color: rgb(255, 216, 120)">Straw [x-y srm]</option>
-			<option style="background-color: rgb(255, 191, 66)">Pale Gold [x-y srm]</option>
-			<option style="background-color: rgb(248, 166, 0)">Deep Gold [x-y srm]</option>
-			<option style="background-color: rgb(229, 133, 0)">Pale Amber [x-y srm]</option>
-			<option style="background-color: rgb(207, 105, 0)">Medium Amber [x-y srm]</option>
-			<option style="background-color: rgb(187, 81, 0)">Deep Amber [x-y srm]</option>
-			<option style="background-color: rgb(166, 62, 10)">Amber Brown [x-y srm]</option>
-			<option style="background-color: rgb(100, 52, 10)">Brown [x-y srm]</option>
-			<option style="background-color: rgb(78, 11, 10);">Ruby Brown [x-y srm]</option>
-			<option style="background-color: rgb(54, 8, 10);">Deep Brown [x-y srm]</option>
-			<option style="background-color: rgb(15, 11, 10)">Black [x-y srm]</option>
-		</select>
-		<select class="swatchselect2" size="1">
-			<option style="background-color: rgb(255, 249, 180);">Pale Straw [x-y srm]</option>
-			<option style="background-color: rgb(255, 216, 120)">Straw [x-y srm]</option>
-			<option style="background-color: rgb(255, 191, 66)">Pale Gold [x-y srm]</option>
-			<option style="background-color: rgb(248, 166, 0)">Deep Gold [x-y srm]</option>
-			<option style="background-color: rgb(229, 133, 0)">Pale Amber [x-y srm]</option>
-			<option style="background-color: rgb(207, 105, 0)">Medium Amber [x-y srm]</option>
-			<option style="background-color: rgb(187, 81, 0)">Deep Amber [x-y srm]</option>
-			<option style="background-color: rgb(166, 62, 10)">Amber Brown [x-y srm]</option>
-			<option style="background-color: rgb(100, 52, 10)">Brown [x-y srm]</option>
-			<option style="background-color: rgb(78, 11, 10);">Ruby Brown [x-y srm]</option>
-			<option style="background-color: rgb(54, 8, 10);">Deep Brown [x-y srm]</option>
-			<option style="background-color: rgb(15, 11, 10)">Black [x-y srm]</option>
-		</select>
 
 <h3 id="ratings"><?=count($reviews->reviews)?> Reviews</h3>
 
@@ -237,7 +211,8 @@ include("../header.php");
 <div class="areview">
 	<img src="<?=empty($users[$review->user_id]->avatar)?"/img/default_avatar.gif":$users[$review->user_id]->avatar?>" style="width:30px"><span class="user"><a href="/user/<?=$review->user_id?>"><?=empty($users[$review->user_id]->name)?"Anonymous":$users[$review->user_id]->name?></a> posted <span class="datestring"><?=date('D, d M Y H:i:s O',$review->meta->timestamp)?></span></span>
 	<div class="triangle-border top">
-		<div class="star_rating"><div id="avgrating" style="width: <?=$review->rating/5*100?>%"></div></div>
+		<div class="star_rating" title="Rating: <?=$review->rating?> of 5"><div id="avgrating" style="width: <?=$review->rating/5*100?>%"></div></div>
+		<div><?=$review->comments?></div>
 		<div><?php
 			$flavor_titles=array();
 			if (isset($review->flavors))
@@ -246,10 +221,11 @@ include("../header.php");
 			}
 			print join(', ',$flavor_titles);
 		?></div>
-		<div><?=$review->comments?></div>
-		<div class="cf"><div class="label">Body: </div><?=$review->body?> (<?=$review->body/5*100?>%)</div>
-		<div class="cf"><div class="label">Balance: </div><?=$review->balance?> (<?=$review->balance/5*100?>%)</div>
-		<div class="cf"><div class="label">Aftertaste: </div><?=$review->aftertaste?> (<?=$review->aftertaste/5*100?>%)</div>
+		<div id="ratings_section" class="cf">
+			<div class="body" title="Body: <?=$review->body?> of 5"><div class="meter"><div style="width: <?=$review->body/5*100?>%"></div></div></div>
+			<div class="balance" title="Balance: <?=$review->balance?> of 5"><div class="meter"><div style="width: <?=$review->balance/5*100?>%"></div></div></div>
+			<div class="aftertaste" title="Aftertaste: <?=$review->aftertaste?> of 5"><div class="meter"><div style="width: <?=$review->aftertaste/5*100?>%"></div></div></div>
+		</div>
 		<div class="cf"><div class="label">Date Drank: </div><span class="datestring"><?=!empty($review->date_drank)?date('D, d M Y H:i:s O',strtotime($review->date_drank)):''?></span></div>
 		<div class="cf"><div class="label">Price: </div>$<?=$review->purchase_price?> at <a href="/<?=str_replace(':','/',$review->purchase_place_id)?>"><?=$places[$review->purchase_place_id]->name?></a></div>
 		<div class="cf"><div class="label">Poured: </div><?=$review->poured_from?></div>
@@ -312,15 +288,18 @@ include("../header.php");
 	<div id="mwr_right_300">
 	<?php if (isset($recommends->beer)):?>
 	<h2>People Who Like This Beer, Also Like</h2>
-	<ul>
+	<ul class="otherlist">
 		<?php foreach($recommends->beer as $recommend) :?>
-			<li><?php if ($recommend->photos->total):?><img src="<?=$recommend->photos->thumbnail?>" /><?php endif?><a href="/<?=BeerCrush::docid_to_docurl($recommend->id)?>"><?=$recommend->name?></a> by <a href="/<?=BeerCrush::docid_to_docurl($recommend->brewery->id)?>"><?=$recommend->brewery->name?></a> (<?=$recommend->review_summary->avg?>)</li>
+			<li><?php if ($recommend->photos->total):?><img src="<?=$recommend->photos->thumbnail?>" /><?php endif?>
+			<a href="/<?=BeerCrush::docid_to_docurl($recommend->brewery->id)?>" class="brewery"><?=$recommend->brewery->name?></a>
+			<a href="/<?=BeerCrush::docid_to_docurl($recommend->id)?>"><?=$recommend->name?></a>
+			<div class="star_rating" title="Rating: <?=$recommend->review_summary->avg?> of 5"><div id="avgrating" style="width: <?=$recommend->review_summary->avg/5*100?>%"></div></div></li>
 		<?php endforeach; ?>
 	</ul>
 	<?php endif; ?>
 	<?php if (count($beerdoc->styles)):?>
 	<h2>Other <?foreach ($beerdoc->styles as $styleid):?><?=$styles_lookup[$styleid]->name?><?endforeach?>s</h2>
-	<ul>
+	<ul class="otherlist">
 		<?php foreach ($other_by_style as $id):
 			$b=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl($id));
 			$b->brewery=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl(BeerCrush::beer_id_to_brewery_id($id)));
@@ -340,7 +319,7 @@ include("../header.php");
 	if (count($beerlist->beers)): 
 	?>
 	<h2>More from <?=$brewerydoc->name?></h2>	
-	<ul>
+	<ul class="otherlist">
 		<?php
 		for ($i=0,$j=4;$i<$j;++$i) :
 			$n=rand(0,count($beerlist->beers)-1);

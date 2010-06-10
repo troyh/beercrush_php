@@ -7,8 +7,8 @@ $BC->oak->get_view('place/locations?group_level=1',&$locations);
 
 include('../header.php');
 ?>
-
-<ul>
+<h1>Browse by Location</h1>
+<ul id="loclist">
 <?php foreach ($locations->rows as $country):?>
 	<li><a href="./<?=$country->key[0]?>/"><?=$country->key[0]?></a> (<?=$country->value?>)</li>
 <?php endforeach; ?>

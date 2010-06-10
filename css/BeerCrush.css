@@ -60,7 +60,7 @@ h3 {
 	line-height: 1em;
 	margin: .25em 0 .25em 0;
 }
-h1>h2, h2>h3, h3>h4 {
+h1>h2, h2>h3, h3>h4, h2+h1 {
 	margin: 0;
 	padding: 0;
 	
@@ -127,15 +127,14 @@ ul, ol {
 }
 
 ul {
-	list-style-type: disc;
+	list-style: none;
 }
 
 ol {
 	list-style-type: decimal;
 }
 
-ul li, ol li
-{
+ul li, ol li {
 	line-height: 1.5em;
 }
 
@@ -422,7 +421,7 @@ select.beercolors option {
 	margin-bottom: 10px; 
 }
 
-#avgrating {
+#avgrating, .avgrating {
 	height: inherit;
 	background: #38bdec url("/img/star.png") repeat-x;
 }
@@ -434,19 +433,19 @@ select.beercolors option {
 	height: .5em;
 	margin-top: -5px;
 }
-#body, #balance, #aftertaste {
+.body, .balance, .aftertaste {
 	background: url("/img/meter.png") no-repeat;
 	height: 34px;
 	width: 280px;
 	position: relative;
 }
-#body {
+.body {
 	background-position: -70px 0;
 }
-#balance {
+.balance {
 	background-position: -70px -34px;
 }
-#aftertaste {
+.aftertaste {
 	background-position: -70px -68px;
 }
 .meter {
@@ -457,15 +456,15 @@ select.beercolors option {
 	top: 13px;
 	position: absolute;
 }
-#body .meter div {
+.body .meter div {
 	height: inherit;
 	background: #137aa1;
 }
-#balance .meter div {
+.balance .meter div {
 	height: inherit;
 	background: #c49a6c;
 }
-#aftertaste .meter div {
+.aftertaste .meter div {
 	height: inherit;
 	background: #6f0014;
 }
@@ -584,7 +583,7 @@ select.beercolors option {
 .areview .user {
 	color: #666666;
 }
-.areview img {
+.areview img, .caption img {
 	width:30px;
 	height:30px;
 	margin: -5px 5px 0 0;
@@ -626,11 +625,18 @@ select.beercolors option {
 	vertical-align: middle;
 	background-position: 0 5px;
 	padding: 10px 0 0 35px;
-	list-style: none;
 	background-repeat: no-repeat;
 	min-height: 35px;
 }
-	
+.otherlist li {
+	font-size: 1.2em;
+}
+.otherlist .brewery {
+	display: block;
+	font-size: .8em;
+	color: maroon;
+	border: none;
+}	
 /* Brewery Page Specific
  ---------------------------------------------------------------------*/
 #brewery_description{
@@ -645,9 +651,11 @@ select.beercolors option {
 }
 
 #beerlist li {
-	list-style: none;
 	margin-bottom: 5px;
 	font-size: 1.2em;
+}
+.beerstyle {
+	font-size: smaller;
 }
 
 /* place Page Specific
@@ -695,7 +703,6 @@ ul#beermenu {
 }
 #beermenu li {
 	font-size: 1.2em;
-	list-style: none;
 	margin: 0;
 	padding: 0;
 	line-height: 1.1em;
@@ -806,6 +813,23 @@ div.Brewery {
 	color: #6f0014;
 	display: block;
 }
+/* Styles Page Specific
+ ---------------------------------------------------------------------*/
+#styles ul {
+	font-size: 1.5em;
+	font-weight: bold;
+}
+#styles ul ul {
+	font-size: .8em;
+	font-weight: normal;
+	margin-top: 0;
+}
+/* Location Page Specific
+ ---------------------------------------------------------------------*/
+#loclist span{
+	font-size: smaller;
+}
+
 /* JQUERY
  ---------------------------------------------------------------------*/
 /* Icons

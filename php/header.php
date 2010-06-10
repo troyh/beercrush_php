@@ -32,7 +32,7 @@ foreach (array('css','js') as $t) {
 <div id="login" class="white"></div>
 <div id="page_wrap">
 	<div id="header" class="clearfix">
-		<div id="logo"><a href="/"><img src="/img/Logosmall.jpg"></a></div>
+		<div id="logo"><a href="/home.php"><img src="/img/Logosmall.jpg"></a></div>
 		<div id="header_main">
 			<div id="tabs_wrap">
 				<ol id="navmenu" class="module">

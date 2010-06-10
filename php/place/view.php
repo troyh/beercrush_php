@@ -100,10 +100,10 @@ include("../header.php");
 	<div class="cl"><?=$place->placetype?></div>
 
 	<div class="cl"><div class="label">Crushworthiness</div><div style="float: left;"><span class="crush">97</span> <a class="tiny" href="" style="margin-left: 5px;">what is this?</a></div></div>
-	<div class="cl"><div class="label"><a href="#ratings"><?=$place->review_summary->total?> ratings</a></div><div class="star_rating" style="float:left;"><div id="avgrating" style="width: <?=$place->review_summary->avg/5*100?>%"></div>(<?=$place->review_summary->avg?>)</div></div>
-	<div class="cl"><div class="label">Atmosphere: </div><div class="smstar_rating"><div id="atmosphere" style="width: <?=$place->review_summary->atmosphere_avg/5*100?>%"></div>(<?=$place->review_summary->atmosphere_avg?>)</div></div>
-	<div class="cl"><div class="label">Service: </div><div class="smstar_rating"><div id="service" style="width: <?=$place->review_summary->service_avg/5*100?>%"></div>(<?=$place->review_summary->service_avg?>)</div></div>
-	<div class="cl"><div class="label">Food: </div><div class="smstar_rating"><div id="food" style="width: <?=$place->review_summary->food_avg/5*100?>%"></div>(<?=$place->review_summary->food_avg?>)</div></div>
+	<div class="cl"><div class="label"><a href="#ratings"><?=$place->review_summary->total?> ratings</a></div><div class="star_rating" style="float:left;" title="Rating: <?=$place->review_summary->avg?> of 5"><div id="avgrating" style="width: <?=$place->review_summary->avg/5*100?>%"></div></div></div>
+	<div class="cl"><div class="label">Atmosphere: </div><div class="smstar_rating" title="Atmosphere Rating: <?=$place->review_summary->atmosphere_avg?> of 5"><div id="atmosphere" style="width: <?=$place->review_summary->atmosphere_avg/5*100?>%"></div></div></div>
+	<div class="cl"><div class="label">Service: </div><div class="smstar_rating" title="Service Rating: <?=$place->review_summary->service_avg?> of 5"><div id="service" style="width: <?=$place->review_summary->service_avg/5*100?>%"></div></div></div>
+	<div class="cl"><div class="label">Food: </div><div class="smstar_rating" title="Food Rating: <?=$place->review_summary->food_avg?> of 5"><div id="food" style="width: <?=$place->review_summary->food_avg/5*100?>%"></div></div></div>
 
 <h2><?=count($beerlist->items)?> Beers on the Menu</h2>
 <h3>Sort by <a href="" onclick="sort_beermenu('.brewery');return false;">Brewery</a> &#124; <a href="" onclick="sort_beermenu('.beername');return false;">Beer Name</a> &#124; <a href="" onclick="sort_beermenu('.servingtype');return false;">Served</a> &#124; <a href="" onclick="sort_beermenu('.rating',true);return false;">Rating</a></h3>
@@ -116,7 +116,7 @@ include("../header.php");
 		<span class="hidden servingtype"><?=$item->ontap?1:($item->oncask?2:($item->inbottle?3:($item->inbottle22?4:($item->incan?5:6))))?></span>
 		<span class="brewery"><?=$item->brewery->name?></span><br />
 		<a class="beername" href="/<?=BeerCrush::docid_to_docurl($item->id)?>"><?=$item->name?></a>
-		<span class="rating"><?=get_beer_doc($item->id)->review_summary->avg?></span>
+		<span class="rating"><div class="star_rating" title="Rating: <?=get_beer_doc($item->id)->review_summary->avg?> of 5"><div class="avgrating" style="width: <?=get_beer_doc($item->id)->review_summary->avg/5*100?>%"></div></div></span>
 		<div class="price"><?=$item->price?'$'.number_format($item->price,2):'$?'?></div>
 		<a href="" onclick="beerlist_delete('<?=$item->id?>',event);return false;" class="cmd" title="Remove from this menu"></a>
 	</li>

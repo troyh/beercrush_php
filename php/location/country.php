@@ -11,13 +11,14 @@ $BC->oak->get_view($view_url,&$locations);
 include('../header.php');
 ?>
 
-<a href="./">All locations</a> &gt;
+<a href="../">All</a> &gt;
 <?=$locations->rows[0]->key[0]?>
-<h1>Locations</h1>
 
-<ul>
+<h2>Browse by States/Provinces:</h2><h1><?=$locations->rows[0]->key[0]?></h1>
+
+<ul id="loclist">
 <?php foreach ($locations->rows as $location):?>
-	<li><a href="./<?=$location->key[1]?>/"><?=$location->key[1]?></a> (<?=$location->value?>)</li>
+	<li><a href="./<?=$location->key[1]?>/"><?=$location->key[1]?></a> <span>(<?=$location->value?>)</span></li>
 <?php endforeach; ?>
 </ul>
 <?php
