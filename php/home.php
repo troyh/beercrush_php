@@ -85,6 +85,28 @@ $reviewer=BeerCrush::api_doc($BC->oak,'/user/'.$review->user_id);
 </div>
 
 <h1>A Random Place</h1>
+
+<?php
+// TODO: only get a place with a high crushworthy score
+$response=solr_query('doctype:place',array(
+	'rows'=>1,
+	'sort'=>'random_'.rand().' asc',
+));
+$place=BeerCrush::api_doc($BC->oak,BeerCrush::docid_to_docurl($response->response->docs[0]->id));
+$menu=BeerCrush::api_doc($BC->oak,BeerCrush::docid_to_docurl($response->response->docs[0]->id).'/menu');
+?>
+
+<?php if ($place->photos->total):?><img src="<?=$place->photos->thumbnail?>" /><?php endif;?>
+<div><a href="/<?=BeerCrush::docid_to_docurl($place->id)?>"><?=$place->name?></a></div>
+<div><?=$place->placetype?></div>
+<div><?=$place->address->city?>, <?=$place->address->state?> <?=$place->address->country?></div>
+<div>Crushworthy Score: <?=$place->crushworthy_index?></div>
+<div>Avg Rating: <?=$place->review_summary->avg?></div>
+<div>Avg Atmosphere Rating: <?=$place->review_summary->atmosphere_avg?></div>
+<div>Avg Service Rating: <?=$place->review_summary->service_avg?></div>
+<div>Avg Food Rating: <?=$place->review_summary->food_avg?></div>
+<div># beers on menu: <?=count($menu->items)?></div>
+
 <h1>Count of Stuff</h1>
 
 <?php $response=solr_query('doctype:beer',array('rows'=>0,));?>
