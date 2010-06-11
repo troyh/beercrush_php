@@ -5,7 +5,7 @@ $locations=new stdClass;
 
 $key=urlencode('["'.$_GET['country'].'","'.$_GET['state'].'"]');
 $endkey=urlencode('["'.$_GET['country'].'","'.$_GET['state'].'\\\\uFFFF"]');
-$view_url='place/locations?group_level=3&inclusive_end=true&startkey='.$key.'&endkey='.$endkey;
+$view_url='location/all?group_level=3&inclusive_end=true&startkey='.$key.'&endkey='.$endkey;
 // print $view_url;exit;
 $BC->oak->get_view($view_url,&$locations);
 // print_r($locations);exit;

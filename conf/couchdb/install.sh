@@ -38,9 +38,16 @@ for D in design/*.json; do
 		# Compare the two docs
 		if ! diff design/$DD.tmp design/$DD.indb > /dev/null; then
 			design_changed=1;
-			echo "$DD has changed, replacing $REV in couchdb";
-			# Add the _rev
-			cat design/$DD.json | php -r '$doc=json_decode(file_get_contents("php://stdin"));$doc->_rev=$argv[1];print json_encode($doc);' $REV > design/$DD.new;
+			if [ -z "$REV" ]; then
+				echo "$DD is new, adding to couchdb";
+
+				cat design/$DD.json | php -r '$doc=json_decode(file_get_contents("php://stdin"));print json_encode($doc);' $REV > design/$DD.new;
+			else
+				echo "$DD has changed, replacing $REV in couchdb";
+				# Add the _rev
+				cat design/$DD.json | php -r '$doc=json_decode(file_get_contents("php://stdin"));$doc->_rev=$argv[1];print json_encode($doc);' $REV > design/$DD.new;
+			fi
+
 			# Put the new version
 			if ! curl --fail --silent -X PUT -d @design/$DD.new http://$COUCHDB_HOST/$COUCHDB_DBNAME/_design/$DD > /dev/null; then
 				echo "ERROR: Failed to put new design document $DD";

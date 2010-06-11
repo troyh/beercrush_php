@@ -2,7 +2,7 @@
 require_once('beercrush/beercrush.php');
 
 $locations=new stdClass;
-$BC->oak->get_view('place/locations?group_level=1',&$locations);
+$BC->oak->get_view('location/all?group_level=1',&$locations);
 // print_r($locations);
 
 include('../header.php');

@@ -3,7 +3,7 @@ require_once('beercrush/beercrush.php');
 
 $locations=new stdClass;
 
-$view_url='place/locations?group_level=2&startkey='.urlencode('["'.$_GET['country'].'"]');
+$view_url='location/all?group_level=2&startkey='.urlencode('["'.$_GET['country'].'"]');
 // print $view_url;exit;
 $BC->oak->get_view($view_url,&$locations);
 // print_r($locations);exit;
