@@ -1,1 +1,3 @@
 BIN update_location_data
+BIN beers
+BIN latlonfile
