@@ -7,12 +7,13 @@ ${0##*/} -t <type> -u <users> -n <number>
    -t   Type of review ("beer" or "place")
    -u   Number of random users to post reviews for
    -n   Number of reviews to post for each user
+   -s   Server to post reviews to (duff or nearbeer)
 	
 EOF
 	exit 1;
 }
 
-while getopts "t:u:n:" opt; do
+while getopts "t:u:n:s:" opt; do
 	case $opt in 
 		t)
 			case $OPTARG in 
@@ -34,16 +35,18 @@ while getopts "t:u:n:" opt; do
 		n)
 			num_reviews_per_user=$OPTARG;
 			;;
+		s)	server=$OPTARG;
+			;;
 		*)
 			;;
 	esac
 done
 
-if [ -z "$num_reviews_per_user" -o -z "$num_users" -o -z "$review_type" ]; then
+if [ -z "$num_reviews_per_user" -o -z "$num_users" -o -z "$review_type" -o -z "$server" ]; then
 	usage;
 fi
 
-printf "Posting %d %s reviews for each of %d users\n" $num_reviews_per_user $review_type $num_users;
+printf "Posting %d %s reviews for each of %d users (on %s)\n" $num_reviews_per_user $review_type $num_users $server;
 
 
 function login_random_user() {
@@ -58,7 +61,7 @@ function login_random_user() {
 	# echo $RANDOM_EMAIL:$PASSWORD;
 
 	# Login
-	LOGIN_ANSWER=$(curl --silent --fail -d email=$RANDOM_EMAIL -d password=$PASSWORD http://duff/api/login);
+	LOGIN_ANSWER=$(curl --silent --fail -d email=$RANDOM_EMAIL -d password=$PASSWORD http://$server/api/login);
 	if [ $? != 0 ]; then
 		echo "Failed to login";
 		exit;
@@ -90,7 +93,7 @@ function review_random_place() {
 		-d atmosphere=$(($RANDOM % 5 + 1)) \
 		-d service=$(($RANDOM % 5 + 1)) \
 		-d food=$(($RANDOM % 5 + 1)) \
-		http://duff/api/place/review);
+		http://$server/api/place/review);
 	
 	ret=$?;
 	if [ $ret != 0 ]; then
@@ -148,7 +151,7 @@ function review_random_beer() {
 		-d purchase_place_id=$RANDOM_PLACE \
 		-d poured_from=$POURED_FROM \
 		-d date_drank="$(date -d "$(( $RANDOM % 800 )) days ago")" \
-		http://duff/api/beer/review);
+		http://$server/api/beer/review);
 	
 	if [ $? != 0 ]; then
 		echo "Failed to post review ($?)";
