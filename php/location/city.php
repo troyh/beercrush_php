@@ -15,7 +15,7 @@ include('../header.php');
 
 <a href="../../../">All</a> &gt; 
 <a href="../../"><?=$locations->rows[0]->key[0]?></a> &gt;
-<a href="../"><?=$locations->rows[0]->key[1]?></a> &gt;
+<a href=".."><?=$locations->rows[0]->key[1]?></a> &gt;
 <?=$locations->rows[0]->key[2]?>
 
 <h1><?=$locations->rows[0]->key[2]?> Beer Places</h1>

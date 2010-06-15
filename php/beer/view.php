@@ -287,6 +287,19 @@ include("../header.php");
 
 	<div id="mwr_right_300">
 	<?php if (isset($recommends->beer)):?>
+	<h2>Similar Beers to This Beer (showing same data as also likes for now)</h2>
+	<ul class="otherlist">
+		<?php foreach($recommends->beer as $recommend) :?>
+			<li><?php if ($recommend->photos->total):?><img src="<?=$recommend->photos->thumbnail?>" /><?php endif?>
+			<a href="/<?=BeerCrush::docid_to_docurl($recommend->brewery->id)?>" class="brewery"><?=$recommend->brewery->name?></a>
+			<a href="/<?=BeerCrush::docid_to_docurl($recommend->id)?>"><?=$recommend->name?></a>
+			<div class="star_rating" title="Rating: <?=$recommend->review_summary->avg?> of 5"><div id="avgrating" style="width: <?=$recommend->review_summary->avg/5*100?>%"></div></div></li>
+		<?php endforeach; ?>
+	</ul>
+	<?php endif; ?>
+
+
+	<?php if (isset($recommends->beer)):?>
 	<h2>People Who Like This Beer, Also Like</h2>
 	<ul class="otherlist">
 		<?php foreach($recommends->beer as $recommend) :?>
@@ -297,6 +310,7 @@ include("../header.php");
 		<?php endforeach; ?>
 	</ul>
 	<?php endif; ?>
+
 	<?php if (count($beerdoc->styles)):?>
 	<h2>Other <?foreach ($beerdoc->styles as $styleid):?><?=$styles_lookup[$styleid]->name?><?endforeach?>s</h2>
 	<ul class="otherlist">

@@ -233,7 +233,7 @@ if (empty($_GET['dt']) || $_GET['dt']=='places' || $_GET['dt']=='locations') :
 	foreach ($results->response->docs as $doc) :
 ?>
 	<div>
-		<a href="/<?=BeerCrush::docid_to_docurl($doc->id)?>"><?=$doc->name?></a>
+		<a href="/<?=BeerCrush::docid_to_docurl($doc->id)?>/"><?=$doc->name?></a>
 	</div>
 <?php
 	endforeach;

@@ -67,7 +67,7 @@ foreach ($reviews->reviews as $review) {
 	<span class="user"><?=empty($userdoc->name)?"Anonymous":$userdoc->name?> posted <span class="datestring"><?=date('D, d M Y H:i:s O',$review->meta->timestamp)?></span></span>
 	<div class="triangle-border top">
 		<div class="star_rating"><div id="avgrating" style="width: <?=$review->rating/5*100?>%"></div></div>
-		<?if (!empty($review->comments)):?><div><?=$review->comments?></div><?endif?>
+		<?if (!empty($review->comments)):?><div class="comments"><?=$review->comments?></div><?endif?>
 		<?if ($review_type=='beer') {?>
 			<div><?php
 				$flavor_titles=array();
