@@ -18,13 +18,14 @@ install_file() {
 		sudo chown $USER $DEST;
 	fi
 	
-	md5sum $1 $DEST | cut -f 1 -d ' ' | paste - - | if read A B; then
+	if read A B < <(md5sum $1 $DEST | cut -f 1 -d ' ' | paste - -); then
 		if [[ $A != $B ]]; then
 			if cp $1 $DEST; then
 				echo "Installed $DEST";
 				return 1;
 			else
 				echo "ERROR: Unable to install $DEST";
+				return 2;
 			fi
 		fi
 	fi
@@ -35,12 +36,13 @@ install_file() {
 install_routine() {
 	
 	SUBDIR=$1;
+	installed_bin_file=0;
 
 	#################################
 	# Install files from install.files
 	#################################
 	if [ -f install.files ]; then
-		cat install.files |sed -e '/^ *$/d' | while read LOC FNAME; do
+		 while read LOC FNAME; do
 			FNAME=$(eval "echo $FNAME");
 			case $LOC in 
 				DIR)
@@ -61,9 +63,12 @@ install_routine() {
 					fi
 					;;
 				BIN) 
-					if install_file $FNAME $BEERCRUSH_BIN_DIR; then
+					install_file $FNAME $BEERCRUSH_BIN_DIR;
+					if [ $? -eq 1 ]; then
 						if ! chmod +x $BEERCRUSH_BIN_DIR/$FNAME; then
 							echo "ERROR: Unable to make $BEERCRUSH_BIN_DIR/$FNAME executable.";
+						else
+							installed_bin_file=1;
 						fi
 					fi
 					;;
@@ -90,7 +95,7 @@ install_routine() {
 					fi
 					;;
 			esac
-		done
+		done < <(cat install.files |sed -e '/^ *$/d');
 	fi
 
 	#################################
@@ -132,6 +137,12 @@ install_routine() {
 					echo "Updating supervisord config file: $DAEMON_NAME.conf";
 					sudo cp $SUP /etc/supervisor/conf.d/$DAEMON_NAME.conf;
 				fi
+
+				if [ $installed_bin_file -ne 0 ]; then
+					echo "One or more bin files were installed. Restarting supervisord daemon: $DAEMON_NAME";
+					sudo supervisorctl restart $DAEMON_NAME;
+				fi
+
 			elif [ -f /etc/supervisord/conf.d/$DAEMON_NAME.conf ]; then
 				echo "Uninstalling supervisord program: $DAEMON_NAME.conf";
 				sudo rm /etc/supervisor/conf.d/$DAEMON_NAME.conf;

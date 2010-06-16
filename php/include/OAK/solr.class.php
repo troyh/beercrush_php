@@ -23,9 +23,12 @@ class OAKSolrIndexer {
 	
 	function index_doc($doc) {
 		$xmlwriter=$this->batch_index_doc_start();
-		$this->batch_index_doc($doc,$xmlwriter);
-		$this->batch_index_doc_end($xmlwriter);
-		$this->oak->log("Indexed doc: ".$doc->{$this->schema->doc_id});
+		if ($this->batch_index_doc($doc,$xmlwriter)) {
+			// $this->oak->log("Indexed doc: ".$doc->{$this->schema->doc_id});
+			$this->batch_index_doc_end($xmlwriter);
+			return true;
+		}
+		return false;
 	}
 	
 	public function batch_index_doc_start() {
@@ -40,11 +43,13 @@ class OAKSolrIndexer {
 	}
 	
 	public function batch_index_doc($doc,$xmlwriter) {
-		// Only index the document if it's in the schema
-		if (!empty($this->schema->doctypes->{$doc->type})) {
+		// Only index the document if it's in the schema and there's an ID field to use
+		if (!empty($this->schema->doctypes->{$doc->type}) && !empty($doc->{$this->schema->doc_id})) {
 			$this->write_xml_doc($doc,$xmlwriter);
 			$this->batch_doc_count++;
+			return true;
 		}
+		return false;
 	}
 	
 	public function batch_index_doc_end($xmlwriter) {
@@ -64,7 +69,7 @@ class OAKSolrIndexer {
 			$status_code=$this->solr_post('/update','<commit/>');
 			if ($status_code!=200)
 				$this->oak->log("Solr index commit failed: $status_code",OAK::LOGPRI_ERR);
-			else {
+			else if ($this->batch_doc_count > 1) {
 				$this->oak->log("Batch indexed {$this->batch_doc_count} docs");
 			}
 		}

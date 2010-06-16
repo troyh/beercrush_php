@@ -107,9 +107,8 @@ function build_style_lookup_table($styles) {
 function get_color_rgb($srm) {
 	global $colors;
 	foreach ($colors->colors as $color) {
-		if ($color->srmmin <= $srm && $srm <= $color->srmmax) {
+		if ($color->srmmin <= $srm && ($srm <= $color->srmmax || empty($color->srmmax))) { // The last one doesn't have an srmmax, hence the check for empty()
 			return $color;
-			// return '#'.dechex($color->rgb[0]<<16 | $color->rgb[1]<<8 | $color->rgb[2]);
 		}
 	}
 	return null;
@@ -178,32 +177,78 @@ include("../header.php");
 		<p>Aftertaste</p>
 		<div class="aftertaste"><div class="meter"><div style="width: <?=$beerdoc->review_summary->aftertaste_avg/5*100?>%"></div></div></div>
 	</div>
-	
+
 	<span class="label">Brewer's description:</span>
+		<input id="edit_button" type="button" value="Edit This" />
 	<div id="beer" class="triangle-border top">
-		<input type="hidden" id="beer_id" value="<?=$beerdoc->id?>" />
-		<input type="hidden" id="beer_srm_value" value="<?=$beerdoc->srm?>" />
-		<div id="beer_description" class="editable_textarea"><?=$beerdoc->description?></div>
-		<div class="cf"><div class="label">Style: </div><div id="beer_stylename"><?=$styles_lookup[$beerdoc->styles[0]]->name?></div><input type="hidden" id="beer_style" /></div>
 		
-		<div class="cf"><div class="label">Color: </div><div id="beer_srm"><div <?php if (!is_null($color)):?>style="background-color:<?='#'.dechex($color->rgb[0]<<16 | $color->rgb[1]<<8 | $color->rgb[2])?>"<?php endif;?>></div><?=$color->name?>&nbsp;</div></div>
+		<input type="hidden" id="beer_id" value="<?=$beerdoc->id?>" />
+		<input type="hidden" id="beer_srm" value="<?=$beerdoc->srm?>" />
+		<input type="hidden" id="beer_availability" value="<?=$beerdoc->availability?>" />
+		<input type="hidden" id="beer_name" value="<?=$beerdoc->name?>" />
+		<input type="hidden" id="beer_style" value="<?=$beerdoc->styles[0]?>" />
+		<div id="beer_description" class="editable_textarea"><?=$beerdoc->description?></div>
+		<div class="cf"><div class="label">Style: </div><div id="beer_stylename"><?=$styles_lookup[$beerdoc->styles[0]]->name?></div></div>
+		
+		<div class="cf"><div class="label">Color: </div><div id="beer_srm_name"><div <?php if (!is_null($color)):?>style="background-color:<?=sprintf("#%02x%02x%02x",$color->rgb[0],$color->rgb[1],$color->rgb[2])?>"<?php endif;?>></div><?=$color->name?>&nbsp;</div></div>
 		
 		<div class="cf"><div class="label">Alcohol (abv): </div><div id="beer_abv"><?=$beerdoc->abv?>&#37;</div></div>
 		<div class="cf"><div class="label">Bitterness (IBUs): </div><div id="beer_ibu"><?=$beerdoc->ibu?></div></div>
 		<div class="cf"><div class="label">Original Gravity: </div><div id="beer_og"><?=$beerdoc->og?></div></div>
 		<div class="cf"><div class="label">Final Gravity: </div><div id="beer_fg"><?=$beerdoc->fg?></div></div>
-		<div class="cf"><div class="label">Name: </div><div id="beer_name"><?=$beerdoc->name?></div></div>
 		<div class="cf"><div class="label">Hops: </div><div id="beer_hops"><?=$beerdoc->hops?></div></div>
 		<div class="cf"><div class="label">Grains: </div><div id="beer_grains"><?=$beerdoc->grains?></div></div>
 		<div class="cf"><div class="label">Yeast: </div><div id="beer_yeast"><?=$beerdoc->yeast?></div></div>
 		
 		
-		<div class="cf"><div class="label">Availability: </div><div id="beer_availability" class="editable_select"><?=$availability_titles[$beerdoc->availability]?></div></div>
-		<div id="editable_save_msg"></div>
-		<input class="editable_savechanges_button hidden" type="button" value="Save Changes" />
-		<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
+		<div class="cf"><div class="label">Availability: </div><div id="beer_availability_name"><?=$availability_titles[$beerdoc->availability]?></div></div>
 		
 	</div>
+
+	<div id="beer_edit" class="triangle-border top hidden">
+		
+		<textarea id="beer_description_edit" rows="6" cols="55"></textarea>
+		<div class="cf"><div class="label">Style: </div><input type="text" id="beer_stylename_edit" /><input type="hidden" id="beer_style_edit" value="<?=$beerdoc->styles[0]?>" /></div>
+		
+		<div class="cf"><div class="label">Color: </div><select id="beer_srm_edit" class="swatchselect2" size="1">
+			<option value="0" style="background-color: rgb(255,255,255)"></option>
+			<option value="2" style="background-color: rgb(255,249,180)">Pale Straw</option>
+			<option value="3" style="background-color: rgb(255,216,120)">Straw</option>
+			<option value="4" style="background-color: rgb(255,191,66)">Pale Gold</option>
+			<option value="6" style="background-color: rgb(248,166,0)">Deep Gold</option>
+			<option value="9" style="background-color: rgb(229,133,0)">Pale Amber</option>
+			<option value="12" style="background-color: rgb(207,105,0)">Medium Amber</option>
+			<option value="15" style="background-color: rgb(187,81,0)">Deep Amber</option>
+			<option value="18" style="background-color: rgb(166,62,10)">Amber Brown</option>
+			<option value="21" style="background-color: rgb(100,52,10)">Brown</option>
+			<option value="24" style="background-color: rgb(78,11,10)">Ruby Brown</option>
+			<option value="30" style="background-color: rgb(54,8,10)">Deep Brown</option>
+			<option value="40" style="background-color: rgb(0,0,0)">Black</option>
+		</select></div>
+		
+		<div class="cf"><div class="label">Alcohol (abv): </div><input type="text" id="beer_abv_edit" /></div>
+		<div class="cf"><div class="label">Bitterness (IBUs): </div><input type="text" id="beer_ibu_edit" /></div>
+		<div class="cf"><div class="label">Original Gravity: </div><input type="text" id="beer_og_edit" /></div>
+		<div class="cf"><div class="label">Final Gravity: </div><input type="text" id="beer_fg_edit" /></div>
+		<div class="cf"><div class="label">Name: </div><input type="text" id="beer_name_edit" /></div>
+		<div class="cf"><div class="label">Hops: </div><input type="text" id="beer_hops_edit" /></div>
+		<div class="cf"><div class="label">Grains: </div><input type="text" id="beer_grains_edit" /></div>
+		<div class="cf"><div class="label">Yeast: </div><input type="text" id="beer_yeast_edit" /></div>
+
+		<div class="cf"><div class="label">Availability: </div><select id="beer_availability_edit">
+			<option value=""></option>
+			<option value="year-round">Year-round</option>
+			<option value="spring">Spring</option>
+			<option value="summer">Summer</option>
+			<option value="fall">Fall</option>
+			<option value="winter">Winter</option>
+			<option value="seasonal">Seasonal</option>
+			<option value="limited">Limited</option>
+		</select></div>
+		<div id="editable_save_msg"></div>
+		
+	</div>
+
 
 <h3 id="ratings"><?=count($reviews->reviews)?> Reviews</h3>
 
@@ -409,7 +454,6 @@ if ($history) {
 ?>
 </div>
 
-<script type="text/javascript" src="/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript" src="/js/jquery.uploadify.v2.1.0.js"></script>
 <script type="text/javascript" src="/js/swfobject.js"></script>
 <script type="text/javascript">
@@ -464,15 +508,15 @@ function mydiff(a,b) {
 				
 			if (typeof(a[p])=='undefined') {
 				diffs[p].old=null;
-				diffs[p].new=b[p];
+				diffs[p]['new']=b[p];
 			}
 			else if (typeof(b[p])=='undefined') {
 				diffs[p].old=a[p];
-				diffs[p].new=null;
+				diffs[p]['new']=null;
 			}
 			else {
 				diffs[p].old=a[p];
-				diffs[p].new=b[p];
+				diffs[p]['new']=b[p];
 			}
 		}
 		else if (a[p] != b[p]) { // Same type, different values
@@ -492,7 +536,7 @@ function mydiff(a,b) {
 			}
 			else {
 				diffs[p].old=a[p];
-				diffs[p].new=b[p];
+				diffs[p]['new']=b[p];
 			}
 		}
 	}
@@ -505,16 +549,16 @@ var exclude_props=[ '_rev', 'meta' ];
 function display_diffs(vindex,diffs) {
 	for (var prop in diffs) {
 		if (jQuery.inArray(prop,exclude_props)==-1) {
-			if (typeof(diffs[prop].old) == 'undefined' && typeof(diffs[prop].new) == 'undefined') {
+			if (typeof(diffs[prop].old) == 'undefined' && typeof(diffs[prop]['new']) == 'undefined') {
 				display_diffs(vindex,diffs[prop]);
 			}
 			else {
 				var s;
 				if (diffs[prop].old!=null && diffs[prop].old.length) {
-					s='Changed '+prop+' from <span class="version_change_from">'+diffs[prop].old+'</span> to <span class="version_change_to">'+diffs[prop].new+'</span>';
+					s='Changed '+prop+' from <span class="version_change_from">'+diffs[prop].old+'</span> to <span class="version_change_to">'+diffs[prop]['new']+'</span>';
 				}
 				else {
-					s='Added '+prop+': <span class="version_change_new">'+diffs[prop].new+'</span>';
+					s='Added '+prop+': <span class="version_change_new">'+diffs[prop]['new']+'</span>';
 				}
 				s='<div>'+s+'</div>';
 				$('#version_'+vindex).append(s);
@@ -525,8 +569,6 @@ function display_diffs(vindex,diffs) {
 }
 
 function show_diff(a,b) {
-	// console.log(a);
-	// console.log(b);
 	var path=$('#beer_id').val().replace(/:/g,'/');
 
 	var doca=null;
@@ -579,6 +621,7 @@ function find_beer_nearby(lat,lon) {
 	
 }
 
+
 function pageMain()
 {
 	$('#post_review_button').click(function(){
@@ -609,7 +652,6 @@ function pageMain()
 		$.post('/api/wishlist',
 			{'add_item':$('#beer_id').val()},
 			function(data){
-				// console.log(data);
 			}
 		);
 		return false;
@@ -640,80 +682,73 @@ function pageMain()
 			);
 		}
 	});
-	
-	$.getScript('/js/beerstyles.js');
-	
-	// Make custom beerstyle editable control
-	$.editable.addInputType('beerstyle',{
-		element: function(settings,original) {
-			var input=jQuery('<input id="beerstyle_autocomplete" type="text" />');
-			$(this).append(input);
-			return input;
-		},
-		plugin: function(settings,original) {
-			$("#beerstyle_autocomplete").autocomplete(beerstyles,{
-				"mustMatch": true,
-				"matchContains": true,
-				"formatItem": function(item) {
-					return item.name;
-				}
-			}).result(function(evt,item) {
-				$('#beer_style').val(item.id);
-				$('#beerstyle_autocomplete').val(item.name);
-			});
-		}
-	});
-	
-	// Make custom beer color editable control
-	$.editable.addInputType('beercolor',{
-		element: function(settings,original) {
-			var option_html='';
-			$(colors_strings).each(function(k,v) {
-				option_html+='<option value="'+v.srm+'" style="background-color: rgb('+v.rgb[0]+','+v.rgb[1]+','+v.rgb[2]+');">'+v.name+' ['+v.srmmin+'-'+v.srmmax+' srm]</option>';
-			});
-			
-			var dropdown=jQuery('<select id="beercolor_dropdown" class="swatchselect2" size="1">'+option_html+'</select>');
-			$(this).append(dropdown);
 
-			var input=jQuery('<input type="hidden" />');
-			$(this).append(input);
-			return input;
-		},
-		content: function(string,settings,original) {
-			$('#beercolor_dropdown',this).children().each(function(){
-				if ($(this).val()==6) // TODO: this 6 should be the SRM value that is set for the beer
-					$(this).attr('selected','selected');
-			});
-		},
-		submit: function(settings,original) {
-			var srm_val=$('#beercolor_dropdown').val();
-			var c=jQuery.grep(colors_strings,function(item,idx){ return item.srm==srm_val; });
-			$('#beer_srm_value').val(srm_val);
-			$('input',this).val('<div style="background-color:rgb('+c[0].rgb[0]+','+c[0].rgb[1]+','+c[0].rgb[2]+')"></div>'+c[0].name+'&nbsp;');
-		}
+	$.getScript('/js/beerstyles.js',function(data,textStatus){
+		$("#beer_stylename_edit").autocomplete(beerstyles,{
+			"mustMatch": true,
+			"matchContains": true,
+			"formatItem": function(item) {
+				return item.name;
+			}
+		}).result(function(evt,item) {
+			$('#beer_style_edit').val(item.id);
+			$('#beer_stylename').val(item.name);
+		});
 	});
 	
-	// Make the beer doc editable
-	makeDocEditable('#beer','beer_id','/api/beer/edit',{
-		'elements': {
-			'beer_stylename': {
-				'type': 'beerstyle',
-				'name': 'styles',
-				'value': function() {return $('#beer_style').val();}
+
+	$('#beer').editabledoc('/api/beer/edit',{
+		args: {
+			beer_id: $('#beer_id').val()
+		},
+		stripprefix: 'beer_',
+		fields: {
+			'beer_name': {
+				postSuccess: function(name,value) {
+					$('#main h1').html(value); // Change the H1 tag on the page (the beer name)
+				}
 			},
-			'beer_srm': { 
-				'type': 'beercolor',
-				'name': 'srm',
-				'value': function() { return $('#beer_srm_value').val(); },
-				'display_format_func': function(data) {
-					var c=jQuery.grep(colors_strings,function(item,idx){ return item.srm==data; });
-					return '<div style="background-color:rgb('+c[0].rgb[0]+','+c[0].rgb[1]+','+c[0].rgb[2]+')"></div>'+c[0].name+'&nbsp;';
+			'beer_style': {
+				postName: 'styles',
+				displayValueToEditValue: function() {return $('#beer_style').val();},
+				saveEditValue: function(value) { $('#beer_style').val(value); },
+				postSuccess: function(name,value) {
+					$('#'+name).val(value[0]);
+					// Find the beer style id
+					$.each(beerstyles,function(idx,elem){
+						if (elem.id==value[0]) {
+							$('#beer_stylename').text(elem.name);
+							return false; // Break out of each() loop
+						}
+					})
+					
+				}
+			},
+			'beer_srm': {
+				displayValueToEditValue: function() {return $('#beer_srm').val();},
+				saveEditValue: function(value) { 
+					$('#beer_srm').val(value); 
+					
+					var c=jQuery.grep(colors_strings,function(item,idx){ return item.srm==value; });
+					$('#beer_srm_name').html('<div style="background-color:rgb('+c[0].rgb[0]+','+c[0].rgb[1]+','+c[0].rgb[2]+')"></div>'+c[0].name+'&nbsp;');
+				},
+				postSuccess: function(name,value) {
+					var c=jQuery.grep(colors_strings,function(item,idx){ return item.srm==value; });
+					$('#beer_srm').val(value);
+					$('#beer_srm_name').html('<div style="background-color:rgb('+c[0].rgb[0]+','+c[0].rgb[1]+','+c[0].rgb[2]+')"></div>'+c[0].name+'&nbsp;');
+					
 				}
 			},
 			'beer_availability': {
-				'type':'select', 
-				'display_format_func': function(data) { return availability_strings[data]; },
-				'data': "<?php $availability_titles['selected']=$beerdoc->availability;print str_replace('"','\\"',json_encode($availability_titles))?>"
+				displayValueToEditValue: function() {return $('#beer_availability').val();},
+				saveEditValue: function(value) { $('#beer_availability').val(value); },
+				postSuccess: function(name,value) {
+					$('#beer_availability').val(value);
+					$('#beer_availability_name').html(availability_strings[value]);
+				}
+			},
+			'beer_abv': {
+				postSuccess: function(name,value) { $('#'+name).html(value+'&#37;'); /* Add % sign */ }
 			}
 		}
 	});

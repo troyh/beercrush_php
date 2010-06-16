@@ -142,6 +142,20 @@ function oakMain($oak)
 	// Give it this request's edits
 	$oak->assign_cgi_values(&$place,$cgi_fields);
 
+	// For these booleans, they can be true, false or non-existent, so delete them
+	if (isset($_POST['kid_friendly']) && empty($_POST['kid_friendly']))
+		unset($place->kid_friendly);
+	if (isset($_POST['restaurant:outdoor_seating']) && empty($_POST['restaurant:outdoor_seating']))
+		unset($place->restaurant->outdoor_seating);
+	if (isset($_POST['wifi']) && empty($_POST['wifi']))
+		unset($place->wifi);
+	if (isset($_POST['togo:bottles']) && empty($_POST['togo:bottles']))
+		unset($place->togo->bottles);
+	if (isset($_POST['togo:growlers']) && empty($_POST['togo:growlers']))
+		unset($place->togo->growlers);
+	if (isset($_POST['togo:kegs']) && empty($_POST['togo:kegs']))
+		unset($place->togo->kegs);
+
 	// Store in db
 	if ($oak->put_document($place->getID(),$place)!==true)
 	{

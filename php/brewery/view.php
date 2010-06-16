@@ -42,29 +42,39 @@ include("../header.php");
 
 <div id="main">
 
+<input type="button" id="edit_button" value="Edit This" />
 <div id="brewery">
 	<input type="hidden" id="brewery_id" value="<?=$brewerydoc->id?>">
 	<h1 id="brewery_name"><?=$brewerydoc->name?></h1>
 	
 	<span id="address">
-		<div class="cl"><div class="label">Street:</div><div id="brewery_address:street"><?=$brewerydoc->address->street?></div></div>
-		<div class="cl"><div class="label">City:</div><div id="brewery_address:city"><?=$brewerydoc->address->city?></div></div>
-		<div class="cl"><div class="label">State:</div><div id="brewery_address:state"><?=$brewerydoc->address->state?></div></div>
-		<div class="cl"><div class="label">Zip:</div><div id="brewery_address:zip"><?=$brewerydoc->address->zip?></div></div>
-		<div class="cl"><div class="label">Country:</div><div id="brewery_address:country"><?=$brewerydoc->address->country?></div></div>
+		<div class="cl"><div class="label">Street:</div><div id="brewery_address_street"><?=$brewerydoc->address->street?></div></div>
+		<div class="cl"><div class="label">City:</div><div id="brewery_address_city"><?=$brewerydoc->address->city?></div></div>
+		<div class="cl"><div class="label">State:</div><div id="brewery_address_state"><?=$brewerydoc->address->state?></div></div>
+		<div class="cl"><div class="label">Zip:</div><div id="brewery_address_zip"><?=$brewerydoc->address->zip?></div></div>
+		<div class="cl"><div class="label">Country:</div><div id="brewery_address_country"><?=$brewerydoc->address->country?></div></div>
 	</span>
 
 	<div class="cl"><div class="label">Phone:</div><div id="brewery_phone"><?=$brewerydoc->phone?></div></div>
 	<div class="cl"><div class="label">Web site:</div><div><span id="brewery_uri"><?=$brewerydoc->uri?></span> <span><a href="<?=$brewerydoc->uri?>">Visit web site</a></span></div></div>
 	<div class="cl"><div class="label">About us:</div><div><span id="brewery_description"><?=$brewerydoc->description?></span></div></div>
 
-	<div id="editable_save_msg"></div>
-	<input class="editable_savechanges_button hidden" type="button" value="Save Changes" />
-	<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
-
 </div>
 
+<div id="brewery_edit" class="hidden">
+	<div class="cl"><div class="label">Name:</div><div><input type="text" id="brewery_name_edit" value="<?=$brewerydoc->name?>"></div></div>
+	<span id="address_edit">
+		<div class="cl"><div class="label">Street:</div><input type="text" id="brewery_address_street_edit" value="<?=$brewerydoc->address->street?>" /></div>
+		<div class="cl"><div class="label">City:</div><input type="text" id="brewery_address_city_edit" value="<?=$brewerydoc->address->city?>" /></div>
+		<div class="cl"><div class="label">State:</div><input type="text" id="brewery_address_state_edit" value="<?=$brewerydoc->address->state?>" /></div>
+		<div class="cl"><div class="label">Zip:</div><input type="text" id="brewery_address_zip_edit" value="<?=$brewerydoc->address->zip?>" /></div>
+		<div class="cl"><div class="label">Country:</div><input type="text" id="brewery_address_country_edit" value="<?=$brewerydoc->address->country?>" /></div>
+	</span>
 
+	<div class="cl"><div class="label">Phone:</div><input type="text" id="brewery_phone_edit" value="<?=$brewerydoc->phone?>" /></div>
+	<div class="cl"><div class="label">Web site:</div><div><input type="text" id="brewery_uri_edit" value="<?=$brewerydoc->uri?>" /></div></div>
+	<div class="cl"><div class="label">About us:</div><div><textarea rows="7" cols="40" id="brewery_description_edit"><?=$brewerydoc->description?></textarea></div></div>
+</div>
 
 <h2><?=count($beerlistdoc->beers)?> Beers Brewed</h2>
 <h3>Sort by
@@ -116,7 +126,6 @@ include("../header.php");
 <input id="photo_upload" name="photo" type="file" />
 </div>
 	
-<script type="text/javascript" src="/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript">
 
 function sort_beerlist(selector,reverse) {
@@ -187,12 +196,29 @@ function pageMain()
 	else {
 		geocodeAddress(updateLatLon);
 	}
-    
-	makeDocEditable('#brewery','brewery_id','/api/brewery/edit',{
-		'afterSave': function() {
-			geocodeAddress(updateLatLon);
+
+	$('#brewery').editabledoc('/api/brewery/edit',{
+		args: {
+			brewery_id: $('#brewery_id').val()
+		},
+		stripprefix: 'brewery_',
+		fields: {
+			'brewery_name': {
+				postSuccess: function(name,value) {
+					$('#main h1').html(value); // Change the H1 tag on the page (the brewery name)
+				}
+			},
+			'brewery_address_street': {postName: 'address:street'},
+			'brewery_address_city': {postName: 'address:city'},
+			'brewery_address_state': {postName: 'address:state'},
+			'brewery_address_zip': {postName: 'address:zip'},
+			'brewery_address_country': {postName: 'address:country'},
 		}
 	});
+	// TODO: make this work when the user edits the address
+	// afterSave: function() {
+	// 	geocodeAddress(updateLatLon);
+	// },
 	
 	$('#new_beer_form').submit(function() {
 		$('#new_beer_msg').text('Adding...');

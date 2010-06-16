@@ -17,6 +17,10 @@ $webapp=json_decode(file_get_contents(BeerCrush::CONF_FILE));
 
 $docid=$argv[1];
 
+// PHP
+$url='http://'.$setup->servers->web->servers[0].'/'.str_replace(':','/',$docid);
+output($url,"PHP      ($url):",$property);
+
 // API
 $url="{$webapp->api->base_uri}/".str_replace(':','/',$docid);
 output($url,"API      ($url):",$property);

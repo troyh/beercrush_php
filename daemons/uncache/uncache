@@ -35,21 +35,20 @@ $oakjobs=new OAKJobs($oak,array('dbchanges','docchanges','dependency'));
 // Every instance gets handle_message() called
 $oakjobs->set_message_callback('handle_message');
 // Only one instance of couchdb-proxy gets handle_job() called
-$oakjobs->gimme_jobs('handle_job');
+$oakjobs->gimme_jobs('handle_job','sig_handler');
 
 
 
 
-function print_dependencies($dependencies) {
-	print "-------------------------\n";
+function print_dependencies($dependencies,$h) {
 	$keys=array_keys($dependencies);
 	sort($keys);
 	foreach ($keys as $url) {
-		print "$url\n\t".join("\n\t",array_keys($dependencies[$url]))."\n";
+		fprintf($h,"$url\n\t".join("\n\t",array_keys($dependencies[$url]))."\n");
 	}
 }
 
-function print_dependencies_size($dependencies) {
+function print_dependencies_size($dependencies,$h) {
 	$total=0;
 	foreach ($dependencies as $k=>$a) {
 		$total+=strlen($k);
@@ -57,7 +56,7 @@ function print_dependencies_size($dependencies) {
 			$total+=strlen($k);
 		}
 	}
-	print (int)($total/1024)."K\n";
+	fprintf($h,(int)($total/1024)."K\n");
 }
 
 function add_dependency($source_url,$dep_url) {
@@ -197,4 +196,41 @@ function announce_docchange($job) {
 	$oak->broadcast_msg('docchanges',$job);
 }
 
+function sig_handler($signo) {
+	global $oakjobs;
+	global $dependencies;
+
+	switch ($signo)
+	{
+	case SIGUSR1: // 10      /* User-defined signal 1 (POSIX).  */
+		$fn=$oakjobs->getOAK()->get_config_info()->file_locations->LOCAL_DIR.'/uncache.dependencies';
+		$fh=fopen($fn,'w');
+		if (!$fh) {
+			$oakjobs->getOAK()->log('Unable to open '.$fn.' to dump dependencies',OAK::LOGPRI_ERR);
+		}
+		else {
+			print_dependencies_size($dependencies,$fh);
+			print_dependencies($dependencies,$fh);
+			fclose($fh);
+			$oakjobs->getOAK()->log('Dumped dependencies to '.$fn);
+		}
+		break;
+	case SIGHUP:  // 1
+	case SIGTERM: // 15
+	case SIGINT:  // 2
+	case SIGQUIT: // 3       /* Quit (POSIX).  */
+	case SIGABRT: // 6       /* Abort (ANSI).  */
+	case SIGKILL: // 9       /* Kill, unblockable (POSIX).  */
+	case SIGSTOP: // 19      /* Stop, unblockable (POSIX).  */
+	case SIGTSTP: // 20      /* Keyboard stop (POSIX).  */
+		$oakjobs->gimme_jobs_stop();
+		break;
+	case SIGUSR2: // 12      /* User-defined signal 2 (POSIX).  */
+	case SIGCONT: // 18      /* Continue (POSIX).  */
+		break;
+	default:
+		$oakjobs->getOAK()->log('sig_handler: unhandled '.$signo);
+		break;
+	}
+}
 ?>

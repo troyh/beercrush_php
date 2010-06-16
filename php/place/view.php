@@ -89,6 +89,15 @@ function get_beer_doc($beer_id) {
 	return BeerCrush::api_doc($BC->oak,BeerCrush::docid_to_docurl($beer_id));
 }
 
+function true_false_blank($val) {
+	if ($val===true)
+		print 'true';
+	else if ($val===false)
+		print 'false';
+	else
+		print '';
+}
+
 include("../header.php");
 ?>
 
@@ -96,7 +105,7 @@ include("../header.php");
 
 <div id="main">
 
-	<h1 id="place_name"><?=$place->name?></h1>
+	<h1><?=$place->name?></h1>
 	<div class="cl"><?=$place->placetype?></div>
 
 	<div class="cl"><div class="label">Crushworthiness</div><div style="float: left;"><span class="crush">97</span> <a class="tiny" href="" style="margin-left: 5px;">what is this?</a></div></div>
@@ -200,12 +209,20 @@ include("../header.php");
 	<a href="" onclick="turn_street_view(false);return false;">Map</a> &#124;
 	<a href="" onclick="turn_street_view(true);return false;">Street View</a> &#124;
 	<a href="http://maps.google.com/maps?f=d&daddr=<?=$place->address->street.', '.$place->address->city.', '.$place->address->state.' '.$place->address->zip?>&hl=en">Get Directions</a> 
+<div><input type="button" id="edit_button" value="Edit This" /></div>
 <div id="place">
 	<input type="hidden" value="<?=$place->id?>" id="place_id">
+	<input type="hidden" value="<?=$place->name?>" id="place_name">
+	<input type="hidden" id="place_kidfriendly" value="<?=true_false_blank($place->kid_friendly)?>" />
+	<input type="hidden" id="place_outdoorseating" value="<?=true_false_blank($place->restaurant->outdoor_seating)?>" />
+	<input type="hidden" id="place_wifi" value="<?=true_false_blank($place->wifi)?>" />
+	<input type="hidden" id="place_bottles" value="<?=true_false_blank($place->togo->bottles)?>" />
+	<input type="hidden" id="place_growlers" value="<?=true_false_blank($place->togo->growlers)?>" />
+	<input type="hidden" id="place_kegs" value="<?=true_false_blank($place->togo->kegs)?>" />
 	<span id="address">
-		<div id="place_address:street"><?=$place->address->street?></div>
-		<div><span id="place_address:city"><?=$place->address->city?></span>, <span id="place_address:state"><?=$place->address->state?></span>	<span id="place_address:zip"><?=$place->address->zip?></span></div>
-		<div id="place_address:country"><?=$place->address->country?></div>
+		<div id="place_address_street"><?=$place->address->street?></div>
+		<div><span id="place_address_city"><?=$place->address->city?></span>, <span id="place_address_state"><?=$place->address->state?></span>	<span id="place_address_zip"><?=$place->address->zip?></span></div>
+		<div id="place_address_country"><?=$place->address->country?></div>
 		<input type="hidden" name="latitude" value="<?=$place->address->latitude?>" />
 		<input type="hidden" name="longitude" value="<?=$place->address->longitude?>" />
 	</span>
@@ -213,26 +230,74 @@ include("../header.php");
 	<div><span id="place_uri" href="<?=$place->uri?>"><?=$place->uri?></span> <a href="<?=$place->uri?>">Visit web site</a></div>
 	<div id="place_description"><?=$place->description?></div>
 	
-	<div class="cl"><div id="NEWplace_kid-friendly" class="ui-icon <?php echo isset($place->restaurant->kid_friendly)?($place->restaurant->kid_friendly?'ui-icon-check':'ui-icon-closethick'):'ui-icon-help'; ?>"></div><span class="label">Kid-Friendly</span></div>
-	<div class="cl"><div id="NEWplace_outdoor-seating" class="ui-icon <?php echo isset($place->restaurant->outdoor_seating)?($place->restaurant->outdoor_seating?'ui-icon-check':'ui-icon-closethick'):'ui-icon-help'; ?>"></div><span class="label">Outdoor seating</span></div>
-	<div class="cl"><div id="NEWplace_wi-fi" class="ui-icon <?php echo isset($place->wifi)?($place->wifi?'ui-icon-check':'ui-icon-closethick'):'ui-icon-help'; ?>"></div><span class="label">Wi-Fi</span></div>
-	<div class="cl"><div id="NEWplace_bottles" class="ui-icon <?php echo isset($place->bottles)?($place->bottles?'ui-icon-check':'ui-icon-closethick'):'ui-icon-help'; ?>"></div><span class="label">Bottles to go</span></div>
-	<div class="cl"><div id="NEWplace_growlers" class="ui-icon <?php echo isset($place->growlers)?($place->growlers?'ui-icon-check':'ui-icon-closethick'):'ui-icon-help'; ?>"></div><span class="label">Growlers to go</span></div>
-	<div class="cl"><div id="NEWplace_kegs" class="ui-icon <?php echo isset($place->kegs)?($place->kegs?'ui-icon-check':'ui-icon-closethick'):'ui-icon-help'; ?>"></div><span class="label">Kegs to go</span></div>
-	
-	<p class="notice">editable method preserved below</p>
-	
-	<div class="cl"><div class="label">Kid-Friendly:</div><div id="place_kid-friendly"><?php echo isset($place->restaurant->kid_friendly)?($place->restaurant->kid_friendly?'Yes':'No'):'Unknown'; ?></div></div>
-	<div class="cl"><div class="label">Outdoor seating: </div><div id="place_outdoor-seating"><?php echo isset($place->restaurant->outdoor_seating)?($place->restaurant->outdoor_seating?'Yes':'No'):'Unknown'; ?></div></div>
-	<div class="cl"><div class="label">Wi-Fi: </div><div id="place_wi-fi"><?php echo isset($place->wifi)?($place->wifi?'Yes':'No'):'Unknown'; ?></div></div>
-	<div class="cl"><div class="label">Bottles to go: </div><div id="place_bottles"><?php echo isset($place->bottles)?($place->bottles?'Yes':'No'):'Unknown'; ?></div></div>
-	<div class="cl"><div class="label">Growlers to go: </div><div id="place_growlers"><?php echo isset($place->growlers)?($place->growlers?'Yes':'No'):'Unknown'; ?></div></div>
-	<div class="cl"><div class="label">Kegs to go: </div><div id="place_kegs"><?php echo isset($place->kegs)?($place->kegs?'Yes':'No'):'Unknown'; ?></div></div>
-		
-	<input class="editable_savechanges_button hidden" type="button" value="Save Changes" />
-	<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
-	<div id="editable_save_msg"></div>
+	<div class="cl"><div id="place_kidfriendly_icon" class="ui-icon <?php echo isset($place->kid_friendly)?($place->kid_friendly?'ui-icon-check':'ui-icon-closethick'):'ui-icon-help'; ?>"></div><span class="label">Kid-Friendly</span></div>
+	<div class="cl"><div id="place_outdoorseating_icon" class="ui-icon <?php echo isset($place->restaurant->outdoor_seating)?($place->restaurant->outdoor_seating?'ui-icon-check':'ui-icon-closethick'):'ui-icon-help'; ?>"></div><span class="label">Outdoor seating</span></div>
+	<div class="cl"><div id="place_wifi_icon" class="ui-icon <?php echo isset($place->wifi)?($place->wifi?'ui-icon-check':'ui-icon-closethick'):'ui-icon-help'; ?>"></div><span class="label">Wi-Fi</span></div>
+	<div class="cl"><div id="place_bottles_icon" class="ui-icon <?php echo isset($place->togo->bottles)?($place->togo->bottles?'ui-icon-check':'ui-icon-closethick'):'ui-icon-help'; ?>"></div><span class="label">Bottles to go</span></div>
+	<div class="cl"><div id="place_growlers_icon" class="ui-icon <?php echo isset($place->togo->growlers)?($place->togo->growlers?'ui-icon-check':'ui-icon-closethick'):'ui-icon-help'; ?>"></div><span class="label">Growlers to go</span></div>
+	<div class="cl"><div id="place_kegs_icon" class="ui-icon <?php echo isset($place->togo->kegs)?($place->togo->kegs?'ui-icon-check':'ui-icon-closethick'):'ui-icon-help'; ?>"></div><span class="label">Kegs to go</span></div>
 </div>
+
+<div id="place_edit" class="hidden">
+
+	<input id="place_name_edit" type="text" value="<?=$place->name?>" />
+	<div><input id="place_address_street_edit" type="text" value="<?=$place->address->street?>" /></div>
+	<div><input id="place_address_city_edit" type="text" value="<?=$place->address->city?>" />, 
+		<input id="place_address_state_edit" type="text" value="<?=$place->address->state?>" />
+		<input id="place_address_zip_edit" type="text" value="<?=$place->address->zip?>" /></div>
+	<input id="place_address_country_edit" type="text" value="<?=$place->address->country?>" />
+	<input id="place_phone_edit" type="text" value="<?=$place->phone?>" />
+
+	<div class="cl"><div class="label">Kid-Friendly:</div><div>
+		<input type="hidden" id="place_kidfriendly_edit" value="<?=(is_bool($place->kid_friendly))?($place->kid_friendly?"true":"false"):""?>" />
+		<input type="radio" name="kidfriendly" value="true"  <?php if (isset($place->kid_friendly) &&  $place->kid_friendly):?>checked="checked"<?php endif;?>>Yes
+		<input type="radio" name="kidfriendly" value="false" <?php if (isset($place->kid_friendly) && !$place->kid_friendly):?>checked="checked"<?php endif;?>>No
+		<input type="radio" name="kidfriendly" value="" <?php if (!isset($place->kid_friendly)):?>checked="checked"<?php endif;?>>Don't Know
+	</div>
+	</div>
+	
+	<div class="cl"><div class="label">Outdoor seating: </div><div>
+		<input type="hidden" id="place_outdoorseating_edit" value="<?=(isset($place->restaurant->outdoor_seating))?($place->restaurant->outdoor_seating?"true":"false"):""?>" />
+		<input type="radio" name="outdoorseating" value="true"  <?php if (isset($place->restaurant->outdoor_seating) &&  $place->restaurant->outdoor_seating):?>checked="checked"<?php endif;?>>Yes
+		<input type="radio" name="outdoorseating" value="false" <?php if (isset($place->restaurant->outdoor_seating) && !$place->restaurant->outdoor_seating):?>checked="checked"<?php endif;?>>No
+		<input type="radio" name="outdoorseating" value="" <?php if (!isset($place->restaurant->outdoor_seating)):?>checked="checked"<?php endif;?>>Don't Know
+	</div>
+	</div>
+	
+	<div class="cl"><div class="label">Wi-Fi: </div><div>
+		<input type="hidden" id="place_wifi_edit" value="<?=(isset($place->wifi))?($place->wifi?"true":"false"):""?>" />
+		<input type="radio" name="wifi" value="true"  <?php if (isset($place->wifi) &&  $place->wifi):?>checked="checked"<?php endif;?>>Yes
+		<input type="radio" name="wifi" value="false" <?php if (isset($place->wifi) && !$place->wifi):?>checked="checked"<?php endif;?>>No
+		<input type="radio" name="wifi" value="" <?php if (!isset($place->wifi)):?>checked="checked"<?php endif;?>>Don't Know
+	</div>
+	</div>
+
+	<div class="cl"><div class="label">Bottles to go: </div><div>
+		<input type="hidden" id="place_bottles_edit" value="<?=(isset($place->togo->bottles))?($place->togo->bottles?"true":"false"):""?>" />
+		<input type="radio" name="bottles" value="true"  <?php if (isset($place->togo->bottles) &&  $place->togo->bottles):?>checked="checked"<?php endif;?>>Yes
+		<input type="radio" name="bottles" value="false" <?php if (isset($place->togo->bottles) && !$place->togo->bottles):?>checked="checked"<?php endif;?>>No
+		<input type="radio" name="bottles" value="" <?php if (!isset($place->togo->bottles)):?>checked="checked"<?php endif;?>>Don't Know
+	</div>
+	</div>
+	
+	<div class="cl"><div class="label">Growlers to go: </div><div>
+		<input type="hidden" id="place_growlers_edit" value="<?=(isset($place->togo->growlers))?($place->togo->growlers?"true":"false"):""?>" />
+		<input type="radio" name="growlers" value="true"  <?php if (isset($place->togo->growlers) &&  $place->togo->growlers):?>checked="checked"<?php endif;?>>Yes
+		<input type="radio" name="growlers" value="false" <?php if (isset($place->togo->growlers) && !$place->togo->growlers):?>checked="checked"<?php endif;?>>No
+		<input type="radio" name="growlers" value="" <?php if (!isset($place->togo->growlers)):?>checked="checked"<?php endif;?>>Don't Know
+	</div>
+	</div>
+	
+	<div class="cl"><div class="label">Kegs to go: </div><div>
+		<input type="hidden" id="place_kegs_edit" value="<?=(isset($place->togo->kegs))?($place->togo->kegs?"true":"false"):""?>" />
+		<input type="radio" name="kegs" value="true"  <?php if (isset($place->togo->kegs) &&  $place->togo->kegs):?>checked="checked"<?php endif;?>>Yes
+		<input type="radio" name="kegs" value="false" <?php if (isset($place->togo->kegs) && !$place->togo->kegs):?>checked="checked"<?php endif;?>>No
+		<input type="radio" name="kegs" value="" <?php if (!isset($place->togo->kegs)):?>checked="checked"<?php endif;?>>Don't Know
+	</div>
+	</div>
+	
+</div>
+	
 <ul class="command">
 	<li style="background-image: url('/img/wishlist.png')"><a id="bookmark_link" href="">Bookmark this Place</a></li>
 	<li style="background-image: url('/img/ratebeer.png')"><a href="">Rate this Place</a></li>
@@ -277,7 +342,6 @@ include("../header.php");
 </div>
 
 
-<script type="text/javascript" src="/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript">
 
 function beerlist_add(evt,brewery_name,beer_name,beer_price) {
@@ -442,6 +506,11 @@ function sort_beermenu(selector,reverse) {
 	$.each(listitems, function(idx, itm) { mylist.append(itm); });
 }
 
+function booleans_click_handler() {
+	console.log('booleans_click_handler:'+$(this).attr('name'));
+	$('#place_'+$(this).attr('name')+'_icon').addClass('ui-icon-help'); // By default, make it unknown, it'll get set appropriately in postSuccess
+	$('#place_'+$(this).attr('name')+'_edit').val($(this).val().length?$(this).val():"");
+}
 
 function pageMain()
 {
@@ -454,11 +523,110 @@ function pageMain()
 		geocodeAddress(updateLatLon);
 	}
 
-	makeDocEditable('#place','place_id','/api/place/edit',{
-		'afterSave': function() {
-			geocodeAddress(updateLatLon);
+
+	// Make edit radio buttons set the value for the edit field
+	$('#place_edit input[name=kidfriendly]:radio').change(booleans_click_handler);
+	$('#place_edit input[name=outdoorseating]:radio').change(booleans_click_handler);
+	$('#place_edit input[name=wifi]:radio').change(booleans_click_handler);
+	$('#place_edit input[name=bottles]:radio').change(booleans_click_handler);
+	$('#place_edit input[name=growlers]:radio').change(booleans_click_handler);
+	$('#place_edit input[name=kegs]:radio').change(booleans_click_handler);
+
+	$('#place').editabledoc('/api/place/edit',{
+		args: {
+			place_id: $('#place_id').val()
+		},
+		stripprefix: 'place_',
+		fields: {
+			'place_name': {
+				postSuccess: function(name,value) {
+					$('#main h1').html(value); // Change the H1 tag on the page (the place name)
+				}
+			},
+			'place_kidfriendly': { 
+				postName: 'kid_friendly',
+				postSuccess: function(name,value) {
+					$('#place_kidfriendly_icon').removeClass('ui-icon-check ui-icon-closethick ui-icon-help');
+					if (value==true)
+						$('#place_kidfriendly_icon').addClass('ui-icon-check');
+					else if (value==false)
+						$('#place_kidfriendly_icon').addClass('ui-icon-closethick');
+					else
+						$('#place_kidfriendly_icon').addClass('ui-icon-help');
+				}
+			},
+			'place_outdoorseating': { 
+				postName: 'restaurant:outdoor_seating',
+				postSuccess: function(name,value) {
+					$('#place_outdoorseating_icon').removeClass('ui-icon-check ui-icon-closethick ui-icon-help');
+					if (value==true)
+						$('#place_outdoorseating_icon').addClass('ui-icon-check');
+					else if (value==false)
+						$('#place_outdoorseating_icon').addClass('ui-icon-closethick');
+					else
+						$('#place_outdoorseating_icon').addClass('ui-icon-help');
+				}
+			},
+			'place_wifi': { 
+				postName: 'wifi',
+				postSuccess: function(name,value) {
+					$('#place_wifi_icon').removeClass('ui-icon-check ui-icon-closethick ui-icon-help');
+					if (value==true)
+						$('#place_wifi_icon').addClass('ui-icon-check');
+					else if (value==false)
+						$('#place_wifi_icon').addClass('ui-icon-closethick');
+					else
+						$('#place_wifi_icon').addClass('ui-icon-help');
+				}
+			 },
+			'place_bottles': { 
+				postName: 'togo:bottles', 
+				postSuccess: function(name,value) {
+					$('#place_bottles_icon').removeClass('ui-icon-check ui-icon-closethick ui-icon-help');
+					if (value==true)
+						$('#place_bottles_icon').addClass('ui-icon-check');
+					else if (value==false)
+						$('#place_bottles_icon').addClass('ui-icon-closethick');
+					else
+						$('#place_bottles_icon').addClass('ui-icon-help');
+				}
+			},
+			'place_growlers': { 
+				postName: 'togo:growlers', 
+				postSuccess: function(name,value) {
+					$('#place_growlers_icon').removeClass('ui-icon-check ui-icon-closethick ui-icon-help');
+					if (value==true)
+						$('#place_growlers_icon').addClass('ui-icon-check');
+					else if (value==false)
+						$('#place_growlers_icon').addClass('ui-icon-closethick');
+					else
+						$('#place_growlers_icon').addClass('ui-icon-help');
+				}
+			},
+			'place_kegs': { 
+				postName: 'togo:kegs',
+				postSuccess: function(name,value) {
+					$('#place_kegs_icon').removeClass('ui-icon-check ui-icon-closethick ui-icon-help');
+					if (value==true)
+						$('#place_kegs_icon').addClass('ui-icon-check');
+					else if (value==false)
+						$('#place_kegs_icon').addClass('ui-icon-closethick');
+					else
+						$('#place_kegs_icon').addClass('ui-icon-help');
+				}
+			},
+			'place_address_street': {postName: 'address:street'},
+			'place_address_city': {postName: 'address:city'},
+			'place_address_state': {postName: 'address:state'},
+			'place_address_zip': {postName: 'address:zip'},
+			'place_address_country': {postName: 'address:country'},
 		}
 	});
+	
+	// TODO: make this work after an address has changed
+	// 'afterSave': function() {
+	// 	geocodeAddress(updateLatLon);
+	// }
 	
 	$('#beerlist input[type=checkbox]').change(beerlist_edit);
 	

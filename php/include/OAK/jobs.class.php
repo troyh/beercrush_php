@@ -234,13 +234,14 @@ class OAKJobs {
 			$signal_handler=array($this,'gimme_jobs_default_sig_handler');
 			
 		// Setup signal handler to stop this loop gracefully
-		declare(ticks = 1);
 		foreach (array(SIGUSR1,SIGUSR2,SIGTERM,SIGINT,SIGABRT,SIGCONT) as $sig) {
 			pcntl_signal($sig,$signal_handler);
 		}
 		
 		$this->gimme_jobs_continue=TRUE;
 		do {
+			pcntl_signal_dispatch(); // Process any pending signals
+			
 			$job=$this->next_job();
 				
 			if ($job !== FALSE) {

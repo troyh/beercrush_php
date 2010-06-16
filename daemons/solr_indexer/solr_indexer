@@ -40,25 +40,32 @@ function update_index($oakjobs,$url) {
 	if ($ch) {
 		curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
 		$txt=curl_exec($ch);
-
-		$doc=json_decode($txt);
-		if (is_null($doc)) {
-			$oakjobs->getOAK()->log('Invalid JSON: '.$txt,OAK::LOGPRI_ERR);
+		$status=curl_getinfo($ch,CURLINFO_HTTP_CODE);
+		if ($status!=200) {
+			$oakjobs->getOAK()->log('Status:'.$status.'. Ignoring URL:'.$url);
 		}
 		else {
-
-			try {
-				$solridx->index_doc($doc);
+			$doc=json_decode($txt);
+			if (is_null($doc)) {
+				$oakjobs->getOAK()->log('Invalid JSON: '.$txt,OAK::LOGPRI_ERR);
 			}
-			catch (Exception $x) {
-				$oakjobs->getOAK()->log('Exception caught: '.$x->getMessage(),OAK::LOGPRI_ERR);
-			}
+			else {
 
+				try {
+					if ($solridx->index_doc($doc))
+						$oakjobs->getOAK()->log('Indexed: '.$url);
+						
+				}
+				catch (Exception $x) {
+					$oakjobs->getOAK()->log('Exception caught: '.$x->getMessage(),OAK::LOGPRI_ERR);
+				}
+			}
 		}
-		$oakjobs->job_done($msg);
 
 		curl_close($ch);
 	}
+
+	return true;
 }
 
 

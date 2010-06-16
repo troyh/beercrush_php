@@ -1,0 +1,46 @@
+#!/usr/bin/php
+<?php
+require_once 'beercrush/beercrush.php';
+require_once 'OAK/oak.class.php';
+
+if (empty($argv[1])) {
+	print "Usage: ".basename($argv[0])." <document_id>\n";
+	exit;
+}
+
+$setup=json_decode(file_get_contents(BeerCrush::SETUP_CONF));
+$webapp=json_decode(file_get_contents(BeerCrush::CONF_FILE));
+
+$docid=$argv[1];
+
+// PHP
+$url='http://'.$setup->servers->web->servers[0].'/purge/'.str_replace(':','/',$docid);
+purge($url,"PHP:      $url");
+
+// API
+$url=preg_replace('|/api/|','/purge/api/',"{$webapp->api->base_uri}/".str_replace(':','/',$docid));
+purge($url,"API:      $url");
+
+// DB Cache
+$url="http://".$setup->servers->{'couchdb-proxy'}->servers[0]."/purge/{$webapp->couchdb->database}/$docid";
+purge($url,"DB Cache: $url");
+
+function get_http($url) {
+	// print "URL:$url\n";
+	$doc=null;
+	$ch=curl_init($url);
+	if ($ch) {
+		curl_setopt($ch,CURLOPT_RETURNTRANSFER,TRUE);
+		$doc=curl_exec($ch);
+		curl_close($ch);
+	}
+	return $doc;
+}
+
+function purge($url,$title,$param=null) {
+	$doc=get_http($url);
+	print $title."\n";
+	print $doc;
+}
+
+?>

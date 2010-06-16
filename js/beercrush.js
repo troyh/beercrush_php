@@ -119,151 +119,203 @@ function formatDates(selector)
 	});
 }
 
-var editable_changes=new Object;
+function flatten_json(data,prefix) {
+	var flattened={};
 
-function makeDocEditable(docSelector,docid_id,url,options)
-{
-	// Iterate each child, making every non-input element that has an id prefixed with
-	// '<STR>_', where <STR> is the ID of selector, into an editable field
-	if ($(docSelector).attr('id').length)
-	{
-		editable_changes[$(docSelector).attr('id')]=new Object;
-		
-		var prefix=$(docSelector).attr('id')+'_';
-		$(docSelector+' *').each(function() {
-			if ($(this).get(0).tagName!='INPUT' && ($(this).attr('id').substr(0,prefix.length) == prefix))
-			{ // This is a field we need to make editable
+	var n='';
+	if (prefix)
+		n=prefix+':';
 
-				var fieldnameid=$(this).attr('id');
-				if (options && options.elements && options.elements[fieldnameid])
-					editable_options=options.elements[fieldnameid];
-				else
-					editable_options=new Object;
-
-				// Set any defaults, if they aren't set already (by the caller's options arg)
-				if (!editable_options.type) {
-					if ($(this).hasClass('editable_textarea'))
-						editable_options.type='textarea';
-					else if ($(this).hasClass('editable_select'))
-						editable_options.type='select';
-					else
-						editable_options.type='text';
-				}
-				if (!editable_options.cancel)
-					editable_options.cancel='Cancel';
-				if (!editable_options.submit)
-					editable_options.submit='OK';
-				
-				$(this).editable(
-					function(value,settings) {
-
-					// Get the name of this field
-					var fieldname=$(this).attr('id').substr(prefix.length);
-					editable_changes[$(docSelector).attr('id')][fieldname]=value;
-					
-					$(docSelector+' .editable_savechanges_button').each(function() {
-						
-						// Unhide the button
-						$(this).removeClass('hidden');
-
-						// Unbind the click function, so we don't add multiple ones
-						$(this).unbind('click');
-						// Put onclick functions on each Save Changes button
-						$(this).click(function(){
-							// TODO: disable all the buttons so they can't be pressed while the POST request is happening
-							
-							// Let the caller override names and values if they provide a name and value option
-							if (options && typeof(options.elements[fieldnameid].value) == 'function') {
-								var v=options.elements[fieldnameid].value();
-								editable_changes[$(docSelector).attr('id')][options.elements[fieldnameid].name]=v;
-							}
-						
-							// Add in document id to change object
-							editable_changes[$(docSelector).attr('id')][docid_id]=$('#'+docid_id).val();
-							
-							if (options && typeof(options['beforeSave']) == 'function') {
-								var more_data=options['beforeSave']();
-								$.extend(editable_changes[$(docSelector).attr('id')],more_data);
-							}
-
-							// Post the data to the server
-							$('#editable_save_msg').text('');
-							$('#editable_save_msg').ajaxError(function(e,xhr,settings,exception){
-								if (settings.url==url)
-								{
-									explanation=jQuery.parseJSON(xhr.responseText);
-									$(this).text('Changes were not saved: '+explanation.exception.message);
-									$(this).ajaxError(null);
-								}
-							});
-							
-							$.post(url,editable_changes[$(docSelector).attr('id')],function(data,status,req){
-								$('#editable_save_msg').text('Changes saved!');
-
-								// Hide all the save & cancel buttons
-								$(docSelector+' .editable_savechanges_button').each(function(){$(this).addClass('hidden');});
-								$(docSelector+' .editable_cancelchanges_button').each(function(){$(this).addClass('hidden');});
-
-								// Put the values from the response, they could be slightly different than what the user actually typed.
-								$(docSelector+' *').each(function(){
-									if ($(this).attr('id').substr(0,prefix.length) == prefix)
-									{
-										fieldname=$(this).attr('id').substr(prefix.length);
-										//  Call user-supplied function to format data, if one was supplied
-										if (options.elements[$(this).attr('id')] && typeof(options.elements[$(this).attr('id')].display_format_func)=='function') {
-											$(this).html(options.elements[$(this).attr('id')].display_format_func(data[fieldname]));
-										}
-										else
-											$(this).html(data[fieldname]);
-									}
-								});
-
-								// Change the document modtime
-								// if (data.meta.mtime)
-								// {
-								// 	mtime=new Date(data.meta.mtime * 1000);
-								// 	$(docSelector+'_lastmodified').text(mtime.toLocaleString());
-								// 	formatDates('.datestring');
-								// }
-
-								if (options && typeof(options['afterSave']) == 'function') {
-									options['afterSave']();
-								}
-
-								// Clear out all data so a subsequent edit only makes the new changes
-								editable_changes[$(docSelector).attr('id')]=new Object;
-
-							},'json');
-						
-							// Hide all the save & cancel buttons
-							$(docSelector+' .editable_savechanges_button').each(function(){$(this).addClass('hidden');});
-							$(docSelector+' .editable_cancelchanges_button').each(function(){$(this).addClass('hidden');});
-							
-							return false;
-						});
-					});
-
-					$(docSelector+' .editable_cancelchanges_button').each(function(){
-
-						// Unhide the button
-						$(this).removeClass('hidden');
-
-						// Unbind the click function, so we don't add multiple ones
-						$(this).unbind('click');
-						// Put onclick functions on each Cancel Changes button
-						$(this).click(function(){
-							// TODO: put all the old data back
-							
-							// Hide all the save & cancel buttons
-							$(docSelector+' .editable_savechanges_button').each(function(){$(this).addClass('hidden');});
-							$(docSelector+' .editable_cancelchanges_button').each(function(){$(this).addClass('hidden');});
-						});
-					});
-					
-					return value;
-				}, 
-				editable_options);
-			}
-		});
-	}
+	$.each(data,function(k,v) {
+		if (typeof(v)=='object')
+			$.extend(flattened,flatten_json(v,n+k));
+		else
+			flattened[n+k]=v;
+	});
+	
+	return flattened;
 }
+
+
+////////////////////////////////////////////////
+// editabledoc jQuery Plugin
+////////////////////////////////////////////////
+(function($){
+$.fn.editabledoc = function(posturl,options) {
+	
+	var defaults={
+		args: {},
+		fields: {},
+		stripprefix: '',
+		edit_button_selector: '#edit_button',
+		done_button_text: 'Done'
+	};
+	
+	var options=$.extend(defaults,options);
+
+	return this.each(function() {
+		
+		var doc=$(this);
+
+		$(options.edit_button_selector).toggle(function(){
+			$(this).data('orig_value',$(this).attr('value'));
+			$(this).attr('value',options.done_button_text);
+		
+			$(doc).hide();
+			$('#'+$(doc).attr('id')+'_edit').show();
+		
+			// For each child element that has an ID and a matching edit version ID, assign the value
+			$(doc).find('[id]').each(function(){
+				var edit_id=$(this).attr('id')+'_edit';
+				if ($('#'+edit_id).size()) { // If a companion _edit field exists...
+			
+					var val=null;
+			
+					if (options.fields && options.fields[$(this).attr('id')] && options.fields[$(this).attr('id')].displayValueToEditValue) { // Call user function to get the value
+						val=options.fields[$(this).attr('id')].displayValueToEditValue();
+					}
+					else { // The standard way
+						switch ($(this).get(0).tagName) {
+							case 'INPUT':
+								val=$(this).val();
+								break;
+							case 'DIV':
+							case 'SPAN':
+								val=$(this).text();
+								break;
+							default:
+								break;
+						}
+					}
+			
+					if (val!=null) {
+						var ev=$('#'+edit_id).get(0);
+						switch (ev.tagName) {
+							case 'INPUT':
+							case 'TEXTAREA':
+								$(ev).val(val);
+								break;
+							case 'SELECT':
+								// Find the option element that has the value we want
+								$(ev).children().each(function(i,e){
+									if ($(e).val()==val)
+										$(e).attr('selected','selected');
+								});
+								break;
+							default:
+								break;
+						}
+					}
+				}
+			});
+		},
+		function() {
+			$(this).attr('value',$(this).data('orig_value'));
+			$(doc).show();
+			$('#'+$(doc).attr('id')+'_edit').hide();
+
+			var edited_fields=new Object;
+		
+			// Collect all the info and post it to the server
+			$(doc).find('[id]').each(function(idx,edit_elem){
+				var edit_id=$(edit_elem).attr('id')+'_edit';
+
+				if ($('#'+edit_id).size()) { // If a companion _edit field exists...
+					// Get the value from the edit field
+					var val=null;
+					var fld=$('#'+edit_id).get(0);
+					switch (fld.tagName) {
+						case 'INPUT':
+						case 'TEXTAREA':
+							val=$(fld).val();
+							break;
+						case 'SELECT':
+							// Find the value from the option elements
+							val=$(fld).val();
+							break;
+						default:
+							break;
+					}
+				
+					if (val!=null) {
+						var display_val=val;
+						if (options.fields && options.fields[$(fld).attr('id')] && options[$(fld).attr('id')].editValueToDisplayValue) {
+							display_val=options.fields[$(fld).attr('id')].editValueToDisplayValue(val);
+						}
+					
+						// Put the value back in the static form for display and if it's changed, 
+						// add it to the list of fields that need to be sent to the server
+					
+						var field_edited=false;
+					
+						switch ($(edit_elem).get(0).tagName) {
+							case 'SELECT':
+							case 'TEXTAREA':
+							case 'INPUT':
+								if ($(edit_elem).val()!=val) {
+									$(edit_elem).val(val);
+									field_edited=true;
+								}
+								break;
+							default: // H1s, H2s, DIVs, SPANs, etc.
+								if ($(edit_elem).text()!=val) {
+									$(edit_elem).html(val);
+									field_edited=true;
+								}
+								break;
+						}
+					
+						if (field_edited) {
+							if (options.fields && options.fields[$(fld).attr('id')] && options.fields[$(fld).attr('id')].saveEditValue) {
+								options.fields[$(fld).attr('id')].saveEditValue(val);
+							}
+						
+							edited_fields[$(fld).attr('id').replace(/_edit$/,'')]=val;
+						}
+					
+					}
+				}
+			});
+		
+			var server_to_local_name_map={};
+
+			$.each(edited_fields,function(k,v){
+				var server_side_name;
+				if (options.fields[k] && options.fields[k].postName) {
+					server_side_name=options.fields[k].postName;
+				}
+				else if (options.stripprefix && options.stripprefix.length) {
+					var regex=new RegExp(options.stripprefix);
+					server_side_name=k.replace(regex,'');
+				}
+				options.args[server_side_name]=v;
+				
+				// Remember all the server_side_names
+				server_to_local_name_map[server_side_name]=k;
+			});
+
+			if ($.isEmptyObject(edited_fields)==false) {
+				// Send edits to server
+				$.post(posturl,options.args,function(data,textStatus,xhr){
+					// Put all data in static form as provided by the server
+					// Flatten data so the each() loop works
+					var flattened=flatten_json(data);
+					
+					$.each(flattened,function(k,v) {
+						
+						if (typeof(server_to_local_name_map[k])!=='undefined') {
+							var n=server_to_local_name_map[k];
+
+							if (options.fields[n] && options.fields[n].postSuccess) {
+								options.fields[n].postSuccess(n,v);
+							}
+							else
+								$('#'+n).text(v);
+						}
+					});
+				},'json');
+			}
+		})		
+	});
+}
+})(jQuery);
