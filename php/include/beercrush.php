@@ -49,7 +49,49 @@ class BeerCrush
 	public function docobj($docid) {
 		return BeerCrush::api_doc($this->oak,BeerCrush::docid_to_docurl($docid));
 	}
+
+	static public function beer_html_mini($beer) {
+		global $BC;
+		$brewery=BeerCrush::api_doc($BC->oak,BeerCrush::beer_id_to_brewery_id($beer->id));
+		$styles=BeerCrush::api_doc($BC->oak,'style/flatlist');
+?>
+	<a href="/<?=BeerCrush::docid_to_docurl($brewery->id)?>"><?=$brewery->name?></a>
+	<a href="/<?=BeerCrush::docid_to_docurl($beer->id)?>"><?=$beer->name?></a>
+
+	<?php if ($beer->photos->total && $beer->photos->thumbnail):?><div><img src="<?=$beer->photos->thumbnail?>" /></div><?php endif;?>
+	<div class="star_rating" title="Rating: <?=$beer->review_summary->avg?> of 5"><div class="avgrating" style="width: <?=$beer->review_summary->avg/5*100?>%"></div></div>
+	<?php if (!empty($beer->styles[0])):?><div>Style:<?=$styles->{$beer->styles[0]}->name?></div><?php endif;?>
+<?php
+	}
+
+	static public function beer_html_full($beer) {
+		global $BC;
+		$brewery=BeerCrush::api_doc($BC->oak,BeerCrush::beer_id_to_brewery_id($beer->id));
+?>
+	<a href="/<?=BeerCrush::docid_to_docurl($brewery->id)?>"><?=$brewery->name?></a>
+	<a href="/<?=BeerCrush::docid_to_docurl($beer->id)?>"><?=$beer->name?></a>
 	
+	<?php if ($beer->photos->total && $beer->photos->thumbnail):?><div><img src="<?=$beer->photos->thumbnail?>" /></div><?php endif;?>
+	<div class="star_rating" title="Rating: <?=$beer->review_summary->avg?> of 5"><div class="avgrating" style="width: <?=$beer->review_summary->avg/5*100?>%"></div></div>
+	<div>Description:<?=$beer->description?></div>
+	<div>Flavors:<?=join(', ',$flavor_names)?></div>
+	<div>Body:<?=$beer->review_summary->body_avg?></div>
+	<div>Balance:<?=$beer->review_summary->balance_avg?></div>
+	<div>Aftertaste:<?=$beer->review_summary->aftertaste_avg?></div>
+	<div>Style:<?=$styles->{$beer->styles[0]}->name?></div>
+<?php
+	}
+	
+	static public function brewery_html($brewery) {
+		if ($brewery->photos->total):
+?>
+	<img src="<?=$brewery->photos->thumbnail?>" />
+	<?php endif;?>
+	<a href="/<?=BeerCrush::docid_to_docurl($brewery->id)?>"><?=$brewery->name?></a>
+	<div>Description:<?=$brewery->description?></div>
+	<div>Location:<?=$brewery->address->city?>, <?=$brewery->address->state?> <?=$brewery->address->country?></div>
+<?php
+	}
 };
 
 $BC=new BeerCrush();
