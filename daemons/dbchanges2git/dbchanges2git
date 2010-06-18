@@ -24,11 +24,11 @@ $BINDIR/listen -p /var/run/BeerCrush/dbchanges2git.pid dbchanges |
 			if [[ $USER_ID == "null" ]]; then
 				USER_ID="Anonymous";
 			fi
-			MSG="User:$USER_ID";
+			MSG="User:$USER_ID ID:$DOCID";
 			FNAME=$(echo $DOCID | sed -e 's/:/\//g');
 			git --work-tree=$GIT_DIR --git-dir=$GIT_DIR/.git add $FNAME;
 			git --work-tree=$GIT_DIR --git-dir=$GIT_DIR/.git commit -m "$MSG" "$FNAME";
-			echo Committed $FNAME;
+			$BINDIR/sendmsg -C $CONF_FILE oaklog "INFO:dbchanges2git:Committed $FNAME $MSG";
 		fi
 		
 done

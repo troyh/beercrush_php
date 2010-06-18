@@ -10,13 +10,6 @@ if iamservertype -q cgi || iamservertype -q php-cgi; then
 	
 fi
 
-if iamservertype -q gitrepo; then
-
-	cp ../../spread/tools/listen /usr/local/beercrush/bin/listen;
-	sudo cp dbchanges2git.conf /etc/supervisor/conf.d/;
-	
-fi
-
 # Copy all .conf files for daemons that will run on this host
 for D in $($BEERCRUSH_BIN_DIR/iamdaemon -t); do
 	if [ -f $D.conf ]; then
