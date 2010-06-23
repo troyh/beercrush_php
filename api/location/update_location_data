@@ -26,3 +26,4 @@ fi
 
 OAKConfig=$conf_file /usr/local/beercrush/bin/latlonfile > /var/local/BeerCrush/meta/latlonpairs.txt;
 OAKConfig=$conf_file /usr/local/beercrush/bin/beers > /var/local/BeerCrush/meta/nearby_beer.txt;
+/usr/local/beercrush/bin/locations_gps_data -C $conf_file > /var/local/BeerCrush/meta/nearby_locations.txt;

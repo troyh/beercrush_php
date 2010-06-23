@@ -1,0 +1,99 @@
+#!/bin/bash
+
+function usage() {
+	echo "Usage: ${0##* } -C <config file>";
+	echo;
+	exit;
+}
+
+function beerids() {
+	git --work-tree=$GIT_DIR --git-dir=$GIT_DIR/.git show $1 | 
+		OAKConfig=/etc/BeerCrush/webapp.conf  $bindir/json2xml  | 
+		xmlstarlet sel -t -m '/obj[@tag=&quot;menu&quot;]/array[@tag=&quot;items&quot;]/obj[@tag=&quot;item&quot;]/scalar[@tag=&quot;type&quot; and @val=&quot;beer&quot;]' -v '../scalar[@tag=&quot;id&quot;]/@val' -n	|
+		sed -e '/^\s*$/d';
+}
+
+while getopts "C:" opt; do
+	case $opt in
+		C )
+			CONF_FILE=$OPTARG;
+			;;
+		\? )
+			usage;
+			;;
+	esac
+done
+
+if [ -z "$CONF_FILE" ]; then 
+	usage; 
+fi
+
+bindir="/usr/local/beercrush/bin";
+apiurl=$(/usr/local/beercrush/bin/jsonpath -1 api.base_uri < $CONF_FILE);
+localdir=$(/usr/local/beercrush/bin/jsonpath -1 file_locations.LOCAL_DIR < $CONF_FILE);
+datadir=$localdir/menus/newbeers;
+GIT_DIR=$localdir/git;
+
+git --work-tree=$GIT_DIR --git-dir=$GIT_DIR/.git log --format="%s %ct %H" --since="7 day ago" |
+sed -e 's/^User:[0-9a-z-]\+\s\+ID://' | 
+grep -e '^menu:' |
+sort |
+cut -d ' ' -f 1,3 |
+php -R 'list($id,$h)=explode(" ",$argn);if ($id!=$last_id) {if (!empty($last_h)) print "$last_h\n";print "$id $h ";}$last_id=$id;$last_h=$h;' -E 'print "$last_h\n";' |
+while read id oldest_sha youngest_sha; do
+
+	# echo $id;
+	oldest_obj_hashes=$(git --work-tree=$GIT_DIR --git-dir=$GIT_DIR/.git show --oneline $oldest_sha | sed -n -e '/^index /p' | awk '{print $2}');
+	# echo $oldest_obj_hashes;
+
+	youngest_obj_hashes=$(git --work-tree=$GIT_DIR --git-dir=$GIT_DIR/.git show --oneline $youngest_sha | sed -n -e '/^index /p' | awk '{print $2}');
+	# echo $youngest_obj_hashes;
+
+	oldest_obj_hash=${oldest_obj_hashes%%..*};
+	youngest_obj_hash=${youngest_obj_hashes##*..};
+	
+	beerids $oldest_obj_hash |sort > old;
+	beerids $youngest_obj_hash |sort > new;
+
+	place_id=$(echo $id | sed -e 's/^menu://');
+	place_doc=$(curl --silent $apiurl/${place_id/:/\//});
+	city=$(echo $place_doc | $bindir/jsonpath -1 address.city);
+	state=$(echo $place_doc | $bindir/jsonpath -1 address.state);
+	country=$(echo $place_doc | $bindir/jsonpath -1 address.country);
+	
+	diff -u old new | sed -n -e '/^\+[^\+]/p' |sed -e 's/^\+//' |
+		php -B '$ids=array();' -R '$ids[]=$argn;' -E 'print join(" ",$ids)."\n";' |
+		sed -e "s|^|$country	$state	$city	$id	|";
+	
+	rm -f old new;
+	
+done | 
+sort |
+while IFS='	' read country state city menu_id beer_ids; do
+
+	if [ -z "$country" ]; then
+		continue;
+	fi
+	
+	filename="$datadir/$country/$state/$city.json";
+	if [ "$filename" != "$last_filename" ]; then
+		if [ ! -z "$last_filename" ]; then
+			echo "]" >> "$last_filename"; # End the previous file
+		fi
+		
+		if [ ! -d "${filename%/*}" ]; then 
+			mkdir -p "${filename%/*}";
+		fi # Make directory, if it doesn't exist yet
+		
+		echo "Starting $filename";
+		echo -n "[" > "$filename"; # Start the new file
+	else
+		echo "," >> "$filename";
+	fi
+
+	echo $beer_ids | 
+	php -r 'print json_encode(array("menu_id" => $argv[1], "beers" => explode(" ",trim(file_get_contents("php://stdin")))));' $menu_id >> "$filename";
+
+	last_filename=$filename;
+	
+done

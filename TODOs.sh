@@ -1,20 +1,29 @@
 #!/bin/bash
 
-cat - > /tmp/ignore.sed <<EOF
-/^src\/3rdparty\//d
-/^js\/jquery-1.3.1.js:/d
-/^makeconf.sh:/d
-/^spread\/web:/d
-/^src\/beer\/review.cc:/d
-/^src\/edit.cc:/d
-/^src\/libapp.cc:/d
-/^src\/onchange\/brewery:/d
-/^src\/phpinc\/Beer.class.php:/d
-/^TODOs.sh:/d
-/^tools\/csv2xml.pl:/d
-EOF
+dir=${0%/*};
 
-grep -rl TODO: * |grep -ve '\/\.' |xargs grep TODO: | sed -e 's/^\([^:]\+\):.*TODO:\(.*\)/\1:\2/' | sed --file=/tmp/ignore.sed > /tmp/TODOs.list
+cat - > /tmp/ignore.sed <<EOF
+/\/\./d
+/^src\/3rdparty\//d
+/^js\/jquery-1.3.1.js$/d
+/^makeconf.sh$/d
+/^spread\/web/d
+/^src\/beer\/review.cc$/d
+/^src\/edit.cc$/d
+/^src\/libapp.cc$/d
+/^src\/onchange\/brewery/d
+/^src\/phpinc\//d
+/^TODOs.sh$/d
+/^tools\/csv2xml.pl/d
+EOF
+#cat /tmp/ignore.sed;exit;
+
+grep -rl TODO: $dir/* |
+sed -e "s|^$dir/||" |
+sed --file=/tmp/ignore.sed |
+sed -e "s|^|$dir/|" |
+xargs grep TODO: |
+sed -e "s|^$dir/||" -e 's/^\([^:]\+\):.*TODO:\(.*\)/\1:\2/' > /tmp/TODOs.list
 
 total=$(wc -l /tmp/TODOs.list);
 total=${total%% *};

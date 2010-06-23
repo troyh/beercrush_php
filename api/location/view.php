@@ -41,7 +41,7 @@ if (count($locations->rows) == 1) {
 		'type' => 'location',
 		'name' => $name,
 		'stats' => array(
-			'places' => $locations->rows[0]->value,
+			'places' => $locations->rows[0]->value[0],
 		),
 		'hierarchy' => $hierarchy,
 	);
@@ -57,19 +57,19 @@ else {
 	foreach ($locations->rows as $row) {
 		list($name)=array_slice($row->key,count($id_parts),1);
 		if (isset($sublocations[$name])) {
-			$sublocations[$name]['stats']['places']+=$row->value;
-			$total_places+=$row->value;
+			$sublocations[$name]['stats']['places']+=$row->value[0];
+			$total_places+=$row->value[0];
 		}
 		else {
 			$sublocations[$name]=array(
 				'id' => 'location:'.join(':',array_slice($row->key,0,count($id_parts)+1)),
 				'name' => $name,
 				'stats' => array(
-					'places' => $row->value,
+					'places' => $row->value[0],
 				),
 			);
 
-			$total_places+=$row->value;
+			$total_places+=$row->value[0];
 		}
 	}
 	

@@ -99,7 +99,7 @@ function oakMain($oak)
 					$menu->items[$item]=new stdClass; // Create a new one
 				}
 
-				$parts=split(':',$id);
+				$parts=explode(':',$id);
 
 				$menu->items[$item]->type=$parts[0];
 				$menu->items[$item]->id=$id;

@@ -1,0 +1,101 @@
+#!/bin/bash
+#
+# Add a beer to a menu
+#
+
+function usage() {
+	cat - <<EOF
+${0##*/} -C <configfile> -e <email> -p <password> -m <menu_id> [-b <beer_id> [-s <type>]]
+
+	-C   Config file
+	-e   Email address of user to login as
+	-p   Password of user to login as
+	-m   ID of menu to add beer to
+	-b   ID of beer to add to menu (a beer ID is chosen at random if not provided)
+	-s   Serving type of beer (tap, bottle, bottle22, cask or can)
+
+EOF
+	exit;
+}
+
+while getopts "C:e:p:m:b:" opt; do
+	case $opt in
+		C )
+			conf_file=$OPTARG;
+			;;
+		e )
+			email=$OPTARG;
+			;;
+		p )
+			password=$OPTARG;
+			;;
+		m )
+			menu_id=$OPTARG;
+			;;
+		b )
+			beer_id=$OPTARG;
+			;;
+		s )
+			serving_type=$OPTARG;
+			;;
+		\? )
+			usage;
+			;;
+	esac
+done
+
+if [ -z "$conf_file" -o -z "$menu_id" -o -z "$email" -o -z "$password" ]; then
+	usage;
+fi
+
+if [ ! -f "$conf_file" ]; then
+	echo "Unable to open $conf_file";
+	usage;
+fi
+
+bindir="/usr/local/beercrush/bin";
+api_url=$($bindir/jsonpath -1 api.base_uri < $conf_file);
+
+if [ -z "$beer_id" ]; then
+	# Select a beer at random
+	if [ ! -f beers.tab ]; then
+		curl --silent $api_url/beers | 
+			OAKConfig=$conf_file $bindir/json2xml  | 
+			xmlstarlet sel -t -m '//obj[@tag=&quot;item&quot;]/scalar[@tag=&quot;id&quot;]' -v @val  -n |
+			sed -e '/^\s*$/d' > beers.tab
+	fi
+	
+	total=$(wc -l beers.tab);
+	total=${total%% *};
+	n=$(($RANDOM % $total));
+	beer_id=$(sed -n -e "${n}p" beers.tab);
+fi
+
+if [ -z "$serving_type" ]; then
+	declare -a types;
+	types=(tap bottle bottle22 cask can);
+	serving_type=${types[$(($RANDOM % 5))]};
+fi
+
+
+response=$(curl --silent --fail -d email=$email -d password=$password $api_url/login);
+if [ $? -ne 0 ]; then
+	echo "Failed to login";
+	exit;
+fi
+
+userid=$(echo $response | $bindir/jsonpath -1 userid);
+usrkey=$(echo $response | $bindir/jsonpath -1 usrkey);
+
+add_item="$beer_id;$serving_type";
+
+response=$(curl --silent --fail -d userid=$userid -d usrkey=$usrkey -d menu_id=$menu_id -d add_item=$add_item $api_url/menu/edit);
+if [ $? -ne 0 ]; then
+	echo "Failed to edit menu";
+	exit;
+else
+	echo "Added $beer_id;$serving_type to $menu_id";
+	echo $response | $bindir/jsontidy;
+fi
+
+# rm -f beers.tab;

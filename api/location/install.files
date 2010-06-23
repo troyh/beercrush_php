@@ -1,3 +1,5 @@
 BIN update_location_data
 BIN beers
 BIN latlonfile
+BIN locations_gps_data
+/var/www/BeerCrush/api nearby_locations.fcgi

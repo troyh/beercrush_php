@@ -26,17 +26,18 @@ class OAKListener {
 	}
 	
 	public function getOAK() { return $this->oak; }
-	
-	public function gimme_messages($callback,$signal_handler=null) {
+
+	public function gimme_messages($callback,$signal_handler=null,$idle_callback=null,$idle_callback_interval=3600) {
 
 		if (is_null($signal_handler))
 			$signal_handler=array($this,'gimme_messages_default_sig_handler');
 			
 		// Setup signal handler to stop this loop gracefully
-		declare(ticks = 1);
 		foreach (array(SIGUSR1,SIGUSR2,SIGTERM,SIGINT,SIGABRT,SIGCONT) as $sig) {
 			pcntl_signal($sig,$signal_handler);
 		}
+		
+		$idle_callback_stopwatch=time()+$idle_callback_interval;
 		
 		$this->gimme_messages_continue=TRUE;
 		do {
@@ -52,7 +53,16 @@ class OAKListener {
 				}
 			}
 			else {
+				pcntl_signal_dispatch();
+
 				usleep(250000); // Don't monopolize the CPU, sleep for 1/4th of a second
+
+				if (!is_null($idle_callback)) {
+					if (time() > $idle_callback_stopwatch) {
+						call_user_func($idle_callback,$this);
+						$idle_callback_stopwatch=time()+$idle_callback_interval;
+					}
+				}
 			}
 		}
 		while ($this->gimme_messages_continue);

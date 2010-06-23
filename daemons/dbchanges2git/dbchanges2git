@@ -1,12 +1,35 @@
-#!/bin/sh
+#!/bin/bash
 
-if [ -z "$1" ]; then
-	echo "Usage: $(basename $0) <config file>";
-	echo;
+function usage() {
+	cat - <<EOF
+${0##*/} -C <config file>
+
+EOF
 	exit;
-fi
+}
 
-CONF_FILE=$1;
+function oaklog() {
+	$BINDIR/sendmsg -C $CONF_FILE oaklog "INFO:dbchanges2git:$1";
+}
+
+while getopts "C:" opt; do
+	case $opt in
+		C )
+			CONF_FILE=$OPTARG;
+			;;
+		\? )
+			usage;
+			;;
+	esac
+done
+
+if [ -z "$CONF_FILE" ]; then
+	usage;
+fi
+if [ ! -f "$CONF_FILE" ]; then
+	echo "Unable to open $CONF_FILE";
+	usage;
+fi
 
 PATHS=$(php -r '$conf=json_decode(file_get_contents($argv[1]));print $conf->file_locations->APP_DIR." ".$conf->file_locations->LOCAL_DIR;' $CONF_FILE);
 APP_DIR=$(echo $PATHS | awk '{print $1}');
@@ -14,11 +37,29 @@ LOCAL_DIR=$(echo $PATHS | awk '{print $2}');
 GIT_DIR=$LOCAL_DIR/git;
 BINDIR=/usr/local/beercrush/bin
 
-$BINDIR/listen -p /var/run/BeerCrush/dbchanges2git.pid dbchanges |
+if [ -f /var/run/BeerCrush/dbchanges2git.pid ]; then
+	rm -f /var/run/BeerCrush/dbchanges2git.pid;
+fi
+
+if [ -f /var/run/BeerCrush/dbchanges2git.pid ]; then
+	echo "Please delete /var/run/BeerCrush/dbchanges2git.pid";
+	exit;
+fi
+
+echo $$ > /var/run/BeerCrush/dbchanges2git.pid;
+
+$BINDIR/listen -i dbchanges2git -g dbchanges |
 	$BINDIR/jsonpath id rev oldrev couchdb.host couchdb.port couchdb.db user_id |
 	while read DOCID NEWREV OLDREV COUCHDB_HOST COUCHDB_PORT COUCHDB_DBNAME USER_ID; do
+
+		if [ -z "$DOCID" ]; then
+			oaklog "Blank Doc ID. What's going on??";
+			continue;
+		fi
+		
+		oaklog "Change to $DOCID: $NEWREV $OLDREV $USER_ID";
 		# Get the new doc into the git working tree
-		$BINDIR/db_dump -C $1 -d $GIT_DIR -s -i $DOCID
+		$BINDIR/db_dump -C $CONF_FILE -d $GIT_DIR -s -i $DOCID
 		if [ $? -eq 0 ]; then
 			# Commit it
 			if [[ $USER_ID == "null" ]]; then
@@ -28,7 +69,12 @@ $BINDIR/listen -p /var/run/BeerCrush/dbchanges2git.pid dbchanges |
 			FNAME=$(echo $DOCID | sed -e 's/:/\//g');
 			git --work-tree=$GIT_DIR --git-dir=$GIT_DIR/.git add $FNAME;
 			git --work-tree=$GIT_DIR --git-dir=$GIT_DIR/.git commit -m "$MSG" "$FNAME";
-			$BINDIR/sendmsg -C $CONF_FILE oaklog "INFO:dbchanges2git:Committed $FNAME $MSG";
+			
+			oaklog "Committed $FNAME $MSG";
+		else
+			oaklog "db_dump failed to dump $DOCID";
 		fi
 		
 done
+
+rm -f /var/run/BeerCrush/dbchanges2git.pid;

@@ -1,5 +1,5 @@
 [program:dbchanges2git]
-command=pidproxy /var/run/BeerCrush/dbchanges2git.pid /usr/local/beercrush/bin/dbchanges2git /etc/BeerCrush/webapp.conf
+command=pidproxy /var/run/BeerCrush/dbchanges2git.pid /usr/local/beercrush/bin/dbchanges2git -C /etc/BeerCrush/webapp.conf
 autostart=true
 redirect_stderr=true
 user=www-data

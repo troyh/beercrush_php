@@ -1,0 +1,33 @@
+#!/bin/bash
+
+function usage() {
+	cat - <<EOF
+${0##*/} -C <configfile>
+
+EOF
+	exit;
+}
+
+while getopts "C:" opt; do
+	case $opt in
+		C )
+			conf_file=$OPTARG;
+			;;
+		\? )
+			usage;
+			;;
+	esac
+done
+
+if [ -z "$conf_file" ]; then usage; fi;
+	
+bindir="/usr/local/beercrush/bin";
+
+couchdb_host=$($bindir/jsonpath -1 couchdb.nodes[0] < $conf_file);
+couchdb_dbname=$($bindir/jsonpath -1 couchdb.database < $conf_file);
+
+curl --silent "http://$couchdb_host/$couchdb_dbname/_design/place/_view/locations?group_level=3" | 
+	sed -e 1d -e '$d' -e 's/,\s*$//' | 
+	$bindir/jsonpath "key[0]" "key[1]" "key[2]" "value[1]" "value[2]" | 
+	awk 'FS="\t" {print $4"\t"$5"\tlocation:"$1":"$2":"$3"\t"$3", "$2" "$1}' | 
+	sort -n -k 1,2

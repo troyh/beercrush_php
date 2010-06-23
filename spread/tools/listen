@@ -3,20 +3,38 @@
 require_once('beercrush/beercrush.php');
 require_once('OAK/listener.class.php');
 
-$opts=getopt('p:');
+$opts=getopt('p:i:g:');
 
-if (!empty($opts['p'])) {
+if (!empty($opts['p']))
 	file_put_contents($opts['p'],getmypid());
-	$groupname=$argv[3];
+
+if (!empty($opts['g']))
+	$groupname=$opts['g'];
+else {
+	usage();
 }
-else 
-	$groupname=$argv[1];
+	
+if (!empty($opts['i']))
+	$log_ident=$opts['i'];
+else
+	$log_ident='listen';
 
 $oaklistener=new OAKListener($BC->oak,$groupname);
-$oaklistener->gimme_messages('message_callback');
+$oaklistener->gimme_messages('message_callback',null,'idle_callback');
+
+function idle_callback($oaklistener) {
+	global $log_ident;
+	$oaklistener->getOAK()->log_ident($log_ident);
+	$oaklistener->getOAK()->log('-- MARK --');
+}
 
 function message_callback($oaklistener,$msg) {
 	print json_encode($msg);
 	print "\n";
+}
+
+function usage() {
+	print basename($argv[0])." [-p <file>] [-i <logidentity>] [-g <groupname>]\n\n";
+	exit(1);
 }
 ?>
