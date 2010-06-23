@@ -160,14 +160,14 @@ img {
 	position: relative;
 }
 #header {
-	padding-top: 30px;
 	border-bottom: 1px solid #137aa1;
 	color: #137aa1;
 }
 #header_main {
 	float: left;
-	width: 80%;
+	width: 83%;
 	height: 116px; /*this changes with font size?*/
+	position: relative;
 }
 #logo {
 	float: left;
@@ -181,7 +181,7 @@ img {
 }
 #tabs_wrap {
 	position: absolute;
-	top: 106px;
+	top: 76px;
 }
 #tabs_wrap #navmenu {
 	text-align:left;
@@ -237,18 +237,16 @@ img {
 }
 
 #login {
-	font-size:10pt;
-	width:100%;
+	width:300px;
+	padding:3px;
+	height:80px;
+	position: absolute;
+	right: 0px;
+	top: 0px;
 	z-index:999;
 	background:#38bdec;
+	font-size:10pt;
 	color:#FFFFFF;
-	padding:3px;
-	position: fixed;
-	text-align:center;
-	height:25px;
-	left:0px;
-	top:0px;
-	padding-top:7px;
 }
 #login input {
 	font-size: 13px;
@@ -264,6 +262,16 @@ img {
 }
 #login_msg {
 }
+#inplacelogin .buttons {
+	max-width: 40%;
+	margin-right: 5%;
+	float: left;
+}
+#inplacelogin {
+	border: 1px solid #38bdec;
+	padding: 5px; 
+}
+
 #page_content {
 	padding: 5px 0;
 }
@@ -448,6 +456,10 @@ select.beercolors option {
 #avgrating, .avgrating {
 	height: inherit;
 	background: #38bdec url("/img/star.png") repeat-x;
+}
+#predrating {
+	height: inherit;
+	background: #ee3124 url("/img/star.png") repeat-x;
 }
 #ratings_section p {
 	text-align: center;

@@ -69,22 +69,24 @@ function showlogin()
 {
 	$('#login').html('\
 	<form id="login_form" method="post" action="/api/login">\
-	Sign in or <a href="/user/create">create an account</a>\
-	Email:<input name="email" type="text" size="20" />\
-	Password:<input name="password" type="password" size="10" />\
-	<input value="Go" type="submit" />\
-	<span id="login_dropdown" class="tiny"><input type="checkbox" name="login_days" value="1" />Keep me signed in on this computer</span>\
+	<div id="form_login">\
+		Sign in or <a href="" id="show_register">create an account</a>\
+		<div>Email: <input name="email" type="text" size="10" />\
+		Password: <input name="password" type="password" size="5" /></div>\
+		<span id="login_dropdown" class="tiny"><input type="checkbox" name="login_days" value="1" />Remember me</span><input value="Sign In" type="submit" />\
+	</div>\
+	<div id="form_register" class="hidden">\
+		Create an account or <a href="" onClick="$(\'#form_register\').hide();$(\'#form_login\').show();" id="show_login">sign in</a>\
+		<div>Email: <input name="email" type="text" size="10" />\
+		Password: <input name="password" type="password" size="5" /></div>\
+		<input value="Create Account" type="submit" />\
+	</div>\
 	<span id="login_msg"></span>\
 	</form>');
 
 	$('#login_form').submit(function(){login();return false;});
-	$('#login_form').focusin(function(e){
-		$('#login_dropdown').clearQueue().slideDown();
-	});
-	$('#login').focusout(function(e){
-		$('#login_dropdown').delay(200).slideUp();
-	});
-	
+	$('#show_register').click(function(){$('#form_login').addClass('hidden');$('#form_register').removeClass('hidden'); return false;});
+	$('#show_login').click(function(){$('#form_register').addClass('hidden');$('#form_login').removeClass('hidden'); return false;});
 }
 
 function formatDates(selector)

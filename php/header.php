@@ -29,7 +29,6 @@ foreach (array('css','js') as $t) {
 	<?=join("\n",$header['js'])?>
 </head>
 <body>
-<div id="login" class="white"></div>
 <div id="page_wrap">
 	<div id="header" class="clearfix">
 		<div id="logo"><a href="/home.php"><img src="/img/Logosmall.jpg"></a></div>
@@ -39,7 +38,6 @@ foreach (array('css','js') as $t) {
 					<li class="selected"><a href="/beers/">Beers</a></li>
 					<li><a href="/breweries/">Breweries</a></li>
 					<li><a href="/places/">Places</a></li>
-					<li><a href="/users/">People</a></li>
 					<li id="findnearbylink"><a href="/nearby">Nearby</a></li>
 				</ol>
 				<!--GAY REMOVE SUBMENU
@@ -61,6 +59,7 @@ foreach (array('css','js') as $t) {
 					</div>
 				</form>
 			</div>
+			<div id="login" class="white"></div>
 		</div>
 	</div>
 	<div id="page_content" class="clearfix">

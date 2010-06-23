@@ -164,6 +164,7 @@ include("../header.php");
 	<a href="/style/<?=$styles_lookup[$beerdoc->styles[0]]->id?>"><?=$styles_lookup[$beerdoc->styles[0]]->name?></a>
 	<div id="ratings_section" class="cf">
 		<div class="star_rating" title="Average rating: <?=$beerdoc->review_summary->avg?> out of 5"><div id="avgrating" style="width: <?=$beerdoc->review_summary->avg/5*100?>%"></div></div>
+		<div class="star_rating" title="Predicted rating for you: <?=$beerdoc->review_summary->avg?> out of 5"><div id="predrating" style="width: <?=$beerdoc->review_summary->avg/5*100?>%"></div></div>
 		<a href="#ratings" id="ratingcount"><?=count($reviews->reviews)?> ratings</a>
 		<div class="flavors">
 			<?php foreach ($beerdoc->review_summary->flavors as $f):?>
@@ -411,12 +412,27 @@ include("../header.php");
 <p></p>
 <ul class="command">
 	<li style="background-image: url('/img/wishlist.png')"><a id="add_to_wishlist_link" href="#">Add to My Wishlist</a></li>
-	<li style="background-image: url('/img/ratebeer.png')"><a href="">Rate this Beer</a></li>
+	<li style="background-image: url('/img/ratebeer.png')"><a href="" id="ratebeer">Rate this Beer</a></li>
+	<div id="inplacelogin" class="cf hidden">
+		<form id="login_form" method="post" action="/api/login">
+			<div>Email: <input name="email" type="text" size="15" /></div>
+			<div>Password: <input name="password" type="password" size="10" /></div>
+			<div class="buttons">
+				<input value="Sign In" type="submit" />
+				<div id="login_dropdown" class="tiny"><input type="checkbox" name="login_days" value="1" />Remember me</div>
+			</div>
+			<div class="buttons">OR</div>
+			<div class="buttons">
+				<input value="Create Account" type="submit" />
+				<span class="tiny">It's Free!</span>
+			</div>
+			<span id="login_msg"></span>
+		</form>
+	</div>
 	<li style="background-image: url('/img/nearby.png')"><a id="find_this_nearby_link" href="#">Find this Nearby</a><br />
 	Zip <input id="find_this_nearby_zip" size="10"> <button id="find_this_nearby_button">Find</button></li>
 </ul>
 <div id="nearby_results"></div>
-
 <h3>Beer Edit History</h3>
 <div>Beer last modified: <span id="beer_lastmodified" class="datestring"><?=date('D, d M Y H:i:s O',$beerdoc->meta->mtime)?></span></div>
 <div id="history"></div>
@@ -795,6 +811,8 @@ function pageMain()
 	// show_history();
 	
 }
+
+$('#ratebeer').click(function(){$('#inplacelogin').toggle('drop'); return false;});
 
 </script>
 

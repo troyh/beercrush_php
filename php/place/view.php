@@ -110,6 +110,7 @@ include("../header.php");
 
 	<div class="cl"><div class="label">Crushworthiness</div><div style="float: left;"><span class="crush">97</span> <a class="tiny" href="" style="margin-left: 5px;">what is this?</a></div></div>
 	<div class="cl"><div class="label"><a href="#ratings"><?=$place->review_summary->total?> ratings</a></div><div class="star_rating" style="float:left;" title="Rating: <?=$place->review_summary->avg?> of 5"><div id="avgrating" style="width: <?=$place->review_summary->avg/5*100?>%"></div></div></div>
+	<div class="cl"><div class="label">Your Predicted Rating</div><div class="star_rating" style="float:left;" title="Your Predicted Rating: <?=$place->review_summary->avg?> of 5"><div id="predrating" style="width: <?=$place->review_summary->avg/5*100?>%"></div></div></div>
 	<div class="cl"><div class="label">Atmosphere: </div><div class="smstar_rating" title="Atmosphere Rating: <?=$place->review_summary->atmosphere_avg?> of 5"><div id="atmosphere" style="width: <?=$place->review_summary->atmosphere_avg/5*100?>%"></div></div></div>
 	<div class="cl"><div class="label">Service: </div><div class="smstar_rating" title="Service Rating: <?=$place->review_summary->service_avg?> of 5"><div id="service" style="width: <?=$place->review_summary->service_avg/5*100?>%"></div></div></div>
 	<div class="cl"><div class="label">Food: </div><div class="smstar_rating" title="Food Rating: <?=$place->review_summary->food_avg?> of 5"><div id="food" style="width: <?=$place->review_summary->food_avg/5*100?>%"></div></div></div>
