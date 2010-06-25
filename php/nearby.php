@@ -4,6 +4,7 @@ require_once 'beercrush/beercrush.php';
 
 $header['js'][]='<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>';
 $header['js'][]='<script type="text/javascript" src="/js/jquery.bt.js"></script>';
+$header['js'][]='<!--[if IE]><script type="text/javascript" src="/js/excanvas.js"></script><![endif]-->';
 include('./header.php');
 ?>
 
