@@ -13,12 +13,29 @@ extern "C"
 
 static time_t datafile_last_read=0;
 
+enum PLACETYPE {
+	PLACETYPE_UNKNOWN=0,
+	PLACETYPE_BAR,
+	PLACETYPE_BREWPUB,
+	PLACETYPE_RESTAURANT,
+	PLACETYPE_STORE
+};
+
+// const char* placetype_strings[]={
+// 	"UNKNOWN",
+// 	"BREWPUB",
+// 	"STORE",
+// 	"BAR",
+// 	"RESTAURANT",
+// };
+
 struct LATLONPAIR
 {
 	double lat;
 	double lon;
 	char place_id[MAX_PLACE_ID_LEN];
 	char* name;
+	PLACETYPE placetype;
 };
 
 LATLONPAIR* latlonpairs=0;
@@ -62,24 +79,41 @@ extern "C" void fcgiInit()
 				{
 					char* p=buf;
 					latlonpairs[n].lat=strtod(p,NULL);
-					p=strchr(p,' ');
+					p=strchr(p,'\t');
 					if (p)
 					{
 						for (++p;isspace(*p) && *p;++p) {}
 						latlonpairs[n].lon=strtod(p,NULL);
-						p=strchr(p,' '); // Skip to id
+						p=strchr(p,'\t'); // Skip to id
 						if (p)
 						{
 							for (++p;isspace(*p) && *p;++p) {}
 							strncpy(latlonpairs[n].place_id, p, sizeof(latlonpairs[n].place_id)-1);
 							latlonpairs[n].place_id[sizeof(latlonpairs[n].place_id)-1]='\0';
 							
-							p=strchr(latlonpairs[n].place_id,' '); // Skip to name
+							p=strchr(latlonpairs[n].place_id,'\t'); // Skip to name
 							if (p)
 							{
 								*p='\0'; // null-terminate id
 								for (++p;isspace(*p) && *p;++p) {}
 								latlonpairs[n].name=p;
+
+								p=strchr(latlonpairs[n].name,'\t'); // Skip to placetype
+								if (p)
+								{
+									*p='\0'; // null-terminate name
+									for (++p;isspace(*p) && *p;++p) {}
+									if (!strcasecmp(p,"Brewpub"))
+										latlonpairs[n].placetype=PLACETYPE_BREWPUB;
+									else if (!strcasecmp(p,"Store"))
+										latlonpairs[n].placetype=PLACETYPE_STORE;
+									else if (!strcasecmp(p,"Bar"))
+										latlonpairs[n].placetype=PLACETYPE_BAR;
+									else if (!strcasecmp(p,"Restaurant"))
+										latlonpairs[n].placetype=PLACETYPE_RESTAURANT;
+									else
+										latlonpairs[n].placetype=PLACETYPE_UNKNOWN;
+								}
 							}
 							else
 							{
@@ -147,7 +181,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 
 	// Formula from https://answers.google.com/answers/threadview?id=577262
 	double lon_deg_len=69.1703234283616 * cos(lat*0.0174532925199433);
-	const double lat_deg_len=69; // 1 degree of latitude is approx 69 miles TODO: get exact number!
+	const double lat_deg_len=69.172; // 1 degree of latitude is 69.172 miles
 	
 	double lat_max=lat+(double)(within/lat_deg_len);
 	double lat_min=lat-(double)(within/lat_deg_len);
@@ -190,12 +224,13 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 			if (lon_min <= latlonpairs[i].lon && latlonpairs[i].lon <= lon_max)
 			{
 				// Found one!
-				FCGX_FPrintF(out,"%c{ \"id\": \"%s\", \"lat\": %f, \"lon\": %f, \"name\": %s }",
+				FCGX_FPrintF(out,"%c{ \"id\": \"%s\", \"lat\": %f, \"lon\": %f, \"name\": \"%s\", \"placetype\": %d }",
 					(bFirst?' ':','),
 					latlonpairs[i].place_id,
 					latlonpairs[i].lat,
 					latlonpairs[i].lon,
-					latlonpairs[i].name
+					latlonpairs[i].name,
+					latlonpairs[i].placetype
 				);
 				bFirst=false;
 			}

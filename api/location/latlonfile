@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-require_once('OAK/oak.class.php');
+require_once('beercrush/beercrush.php');
 
 $rows=array();
 
@@ -30,7 +30,10 @@ if (uasort($rows,'compare_lat'))
 {
 	foreach ($rows as $row)
 	{
-		print $row->value->lat.' '.$row->value->lon.' '.$row->id.' '.json_encode(utf8_encode($row->key))."\n";
+		// Get placetype for the place
+		$doc=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl($row->id));
+
+		print $row->value->lat."\t".$row->value->lon."\t".$row->id."\t".trim(json_encode($row->key),'"')."\t".$doc->placetype."\n";
 	}
 }
 
