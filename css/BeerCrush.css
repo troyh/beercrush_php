@@ -398,11 +398,7 @@ img {
 #beer_description{
 	min-height: 50px;
 }
-
-#flavors_table {
-	font-size:8pt;
-}
-
+		
 #beer div:hover {
 	background-color: #D0fbff;
 }
@@ -673,6 +669,164 @@ select.beercolors option {
 	color: maroon;
 	border: none;
 }	
+
+
+#flavors_table {
+	font-size:8pt;
+}
+
+.star-rating{
+	list-style:none;
+	margin: 0px;
+	padding:0px;
+	width: 80px;
+	height: 15px;
+	position: relative;
+	background: url("/img/starrater.gif") 0 -32px repeat-x;		
+}
+.star-rating li{
+	padding:0px;
+	margin:0px;
+	float: left;
+}
+.star-rating li a{
+	display:block;
+	width: 16px;
+	height: 15px;
+	text-decoration: none;
+	text-indent: -9000px;
+	z-index: 20;
+	position: absolute;
+	padding: 0px;
+	border: none;
+}
+.star-rating li a:hover{
+	background: url("/img/starrater.gif") 0 -48px;
+	z-index: 1;
+	left: 0px;
+}
+.star-rating a.one-star {
+	left: 0px;
+}
+.star-rating a.one-star:hover {
+	width: 16px;
+}
+.star-rating a.two-stars {
+	left:16px;
+}
+.star-rating a.two-stars:hover {
+	width: 32px;
+}
+.star-rating a.three-stars{
+	left: 32px;
+}
+.star-rating a.three-stars:hover {
+	width: 48px;
+}
+.star-rating a.four-stars{
+	left: 48px;
+}	
+.star-rating a.four-stars:hover{
+	width: 64px;
+}
+.star-rating a.five-stars{
+	left: 64px;
+}
+.star-rating a.five-stars:hover{
+	width: 80px;
+}
+
+.bar-rating {
+	list-style:none;
+	margin: 0px;
+	padding:0px;
+	width: 80px;
+	height: 7px;
+	position: relative;
+	background: #d9d9d9;		
+}
+.bar-rating li {
+	padding:0px;
+	margin:0px;
+	float: left;
+}
+.bar-rating li a{
+	display:block;
+	width: 16px;
+	height: 7px;
+	text-decoration: none;
+	text-indent: -9000px;
+	z-index: 20;
+	position: absolute;
+	padding: 0px;
+	border: none;
+}
+.bar-rating li a:hover{
+	background: #137aa1;
+	z-index: 1;
+	left: 0px;
+}
+.bar-rating a.one-star {
+	left: 0px;
+}
+.bar-rating a.one-star:hover {
+	width: 16px;
+}
+.bar-rating a.two-stars {
+	left:16px;
+}
+.bar-rating a.two-stars:hover {
+	width: 32px;
+}
+.bar-rating a.three-stars{
+	left: 32px;
+}
+.bar-rating a.three-stars:hover {
+	width: 48px;
+}
+.bar-rating a.four-stars{
+	left: 48px;
+}	
+.bar-rating a.four-stars:hover{
+	width: 64px;
+}
+.bar-rating a.five-stars{
+	left: 64px;
+}
+.bar-rating a.five-stars:hover{
+	width: 80px;
+}
+#poured li {
+	line-height: 34px;
+}
+#poured li input {
+	float: left;
+	margin-top: 10px;
+}
+#ontap div, #inbottle div, #inbottle22 div, #incan div, #oncask div{
+	width: 30px;
+	height:30px;
+	margin:0 5px;
+	float: left;
+	background: url("/img/servingicons.png") 0 0 no-repeat;
+}
+#ontap div {
+	background-position: -58px 0;
+}
+#inbottle div {
+	background-position: 0 0;
+}
+#inbottle22 div {
+	background-position: -118px 0;
+}
+#incan div {
+	background-position: -28px 0;
+}
+#oncask div {
+	background-position: -88px 0;
+}
+
+
 /* Brewery Page Specific
  ---------------------------------------------------------------------*/
 #brewery_description{

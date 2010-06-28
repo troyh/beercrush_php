@@ -137,13 +137,13 @@ function output_flavors($flavors)
 	{
 		if (isset($flavor->flavors))
 		{
-			print '<tr><td>'.$flavor->title.':</td>';
+			print '<ul><li>'.$flavor->title.':</li>';
 			output_flavors($flavor->flavors);
-			print '</tr>';
+			print '</ul>';
 		}
 		else
 		{
-			print '<td><input type="checkbox" name="flavors_set[]" value="'.$flavor->id.'" />'.$flavor->title.'</td>';
+			print '<li><input type="checkbox" name="flavors_set[]" value="'.$flavor->id.'" />'.$flavor->title.'</li>';
 		}
 	}
 }
@@ -283,6 +283,23 @@ include("../header.php");
 <h3>Post a review</h3>
 <form id="review_form">
 	<input type="hidden" name="beer_id" value="<?=$beerdoc->id?>" />
+		<p>a css star rating item, doesn't work:</p>
+		<ul class="star-rating">
+			<li><a href="" title="1 star" class="one-star">1</a></li>
+			<li><a href="" title="2 stars" class="two-stars">2</a></li>
+			<li><a href="" title="3 stars" class="three-stars">3</a></li>
+			<li><a href="" title="4 stars" class="four-stars">4</a></li>
+			<li><a href="" title="5 stars" class="five-stars">5</a></li>
+		</ul>
+		<p>a bar type rating for bba meter ratings:</p>
+		<ul class="bar-rating">
+			<li><a href="" title="1 star" class="one-star">1</a></li>
+			<li><a href="" title="2 stars" class="two-stars">2</a></li>
+			<li><a href="" title="3 stars" class="three-stars">3</a></li>
+			<li><a href="" title="4 stars" class="four-stars">4</a></li>
+			<li><a href="" title="5 stars" class="five-stars">5</a></li>
+		</ul>
+
 	<div class="cf"><div class="label">Rating:</div><div> 
 		<input name="rating" type="radio" value="1" />1
 		<input name="rating" type="radio" value="2" />2
@@ -312,13 +329,23 @@ include("../header.php");
 		<input name="aftertaste" type="radio" value="5" />5
 	</div></div>
 	<div>
-		Price: <input name="purchase_price" type="text" size="10" />
-		at <input name="purchase_place_name" type="text" size="40" />
-		<input type="hidden" id="purchase_place_name_id" name="purchase_place_id" />
+		<fieldset><legend>Optional: Improve our beer menus, share where you got it</legend>
+		<p>Place: <input name="purchase_place_name" type="text" size="40" />
+		<input type="hidden" id="purchase_place_name_id" name="purchase_place_id" /></p>
+		Poured: 
+		<ul id="poured">
+			<li id="ontap" class="cl"><input name="poured" type="radio" value="ontap" /><div></div>Draft</li>
+			<li id="inbottle" class="cl"><input name="poured" type="radio" value="inbottle" /><div></div>Bottle</li>
+			<li id="inbottle22" class="cl"><input name="poured" type="radio" value="inbottle22" /><div></div>Large Bottle</li>
+			<li id="incan" class="cl"><input name="poured" type="radio" value="incan" /><div></div>Can</li>
+			<li id="oncask" class="cl"><input name="poured" type="radio" value="oncask" /><div></div>Cask</li>
+		</ul>
+		<p>Price: <input name="purchase_price" type="text" size="10" /></p>
+		<p>Date: <input name="purchase_date" type="text" size="10" /></p>
+		</fieldset>
 	</div>
 	<div>
-		Flavors: WARNING NOT ALL FLAVORS ARE CURRENTLY SHOWING, NEED TO DISCUSS
-		<table id="flavors_table"><!--FLAVORS TABLE HIDDEN HERE <?=output_flavors($flavors->flavors)?>--></table>
+		<ul id="flavors_table"><?=output_flavors($flavors->flavors)?></ul>
 		<input type="hidden" name="flavors" value="" />
 	</div>
 	<div>
