@@ -31,7 +31,7 @@ $oak=new OAK(BeerCrush::CONF_FILE);
 
 $dependencies=array();
 
-$oakjobs=new OAKJobs($oak,array('dbchanges','docchanges','dependency'));
+$oakjobs=new OAKJobs($oak,array('dbchanges','docchanges','dependency','viewchanges'));
 // Every instance gets handle_message() called
 $oakjobs->set_message_callback('handle_message');
 // Only one instance of couchdb-proxy gets handle_job() called
@@ -142,6 +142,9 @@ function handle_message($oakjobs,$job,$msg) {
 	else if (in_array('dbchanges',$msg['groups'])) {
 		foreach_dependency($job->id,'purge_url');
 	}
+	else if (in_array('viewchanges',$msg['groups'])) {
+		$oakjobs->getOAK()->purge_document_cache($job,7000); // TODO: don't hardcode the port number
+	}
 }
 
 function handle_job($oakjobs,$job) {
@@ -164,12 +167,16 @@ function handle_job($oakjobs,$job) {
 
 function foreach_dependency($url,$func) {
 	global $dependencies;
+	global $oak;
 	
 	$url=(string)$url; // Not sure why this is necessary, but array_key_exists() doesn't match it if it's not done.
 	if (array_key_exists($url,$dependencies)) {
 		foreach (array_keys($dependencies[$url]) as $uncache_url) {
 			call_user_func($func,$uncache_url);
 		}
+	}
+	else {
+		$oak->log('No action: '.$url);
 	}
 }
 

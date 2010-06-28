@@ -21,11 +21,8 @@ function set_login_cookies(login,date)
 	$.cookie('login_data',JSON.stringify(login_data), { path: '/', expires: date});
 }
 
-function login()
+function login(email,password)
 {
-	var email=$("#login_form input[name=email]").val();
-	var passw=$("#login_form input[name=password]").val();
-
 	$('#login_form').ajaxError(function(e,xhr,settings,exception){
 		if (settings.url==$('#login_form').attr('action'))
 		{
@@ -33,7 +30,7 @@ function login()
 			$('#login_msg').ajaxError(null);
 		}
 	});
-	$.post($('#login_form').attr('action'),{email:email, password:passw},function(data) {
+	$.post($('#login_form').attr('action'),{email:email, password:password},function(data) {
 		$('#login_msg').text('');
 		// Figure out how long to keep the cookies (session-only or a number of days)
 		var date=null;
@@ -60,6 +57,22 @@ function logout()
 	showlogin();
 }
 
+function create_account(email,password) {
+	// console.log(email);
+	// console.log(password);
+	$.post($('#register_form').attr('action'),{
+		email: email,
+		password: password
+	},
+	function(data){
+		console.log(data);
+		if (data.success==true) {
+			// Automatically log them in
+			login(email,password);
+		}
+	});
+}
+
 function showusername()
 {
 	$('#login').html((login_data.avatar?'<img src="'+login_data.avatar+'" />':'')+'Cheers, <a href="/user/'+$.cookie('userid')+'">'+login_data.name+'</a>! <a href="javascript:logout();">Logout</a>');
@@ -68,25 +81,28 @@ function showusername()
 function showlogin()
 {
 	$('#login').html('\
-	<form id="login_form" method="post" action="/api/login">\
 	<div id="form_login">\
+	<form id="login_form" method="post" action="/api/login">\
 		Sign in or <a href="" id="show_register">create an account</a>\
 		<div>Email: <input name="email" type="text" size="10" />\
 		Password: <input name="password" type="password" size="5" /></div>\
 		<span id="login_dropdown" class="tiny"><input type="checkbox" name="login_days" value="1" />Remember me</span><input value="Sign In" type="submit" />\
+	</form>\
 	</div>\
 	<div id="form_register" class="hidden">\
-		Create an account or <a href="" onClick="$(\'#form_register\').hide();$(\'#form_login\').show();" id="show_login">sign in</a>\
+	<form id="register_form" method="post" action="/api/createlogin">\
+		Create an account or <a href="" id="show_login">sign in</a>\
 		<div>Email: <input name="email" type="text" size="10" />\
 		Password: <input name="password" type="password" size="5" /></div>\
 		<input value="Create Account" type="submit" />\
+	</form>\
 	</div>\
-	<span id="login_msg"></span>\
-	</form>');
+	<span id="login_msg"></span>');
 
-	$('#login_form').submit(function(){login();return false;});
-	$('#show_register').click(function(){$('#form_login').addClass('hidden');$('#form_register').removeClass('hidden'); return false;});
-	$('#show_login').click(function(){$('#form_register').addClass('hidden');$('#form_login').removeClass('hidden'); return false;});
+	$('#login_form').submit(function(){login($("#login_form input[name=email]").val(),$("#login_form input[name=password]").val());return false;});
+	$('#form_register').submit(function(){create_account($('#form_register input[name="email"]').val(),$('#form_register input[name="password"]').val());return false;});
+	$('#show_register').click(function(){$('#form_login').hide();$('#form_register').show(); return false;});
+	$('#show_login').click(function(){$('#form_register').hide();$('#form_login').show(); return false;});
 }
 
 function formatDates(selector)

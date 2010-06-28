@@ -1070,7 +1070,9 @@ class OAK
 	
 	public function spread_receive($timeout=60)
 	{
-		return spread_receive($this->spread_id,$timeout);
+		$msg=spread_receive($this->spread_id,$timeout);
+		$msg=str_replace('%%','%',$msg);
+		return $msg;
 	}
 	
 	public function spread_disconnect()
@@ -1095,7 +1097,8 @@ class OAK
 				$msg=json_encode($msg);
 			}
 
-			if (spread_multicast($this->spread_id,$group,$msg)===FALSE) { // Failed
+			if (spread_multicast($this->spread_id,$group,str_replace('%','%%',$msg))===FALSE) { // Failed
+				$this->log('spread_multicast() failed',OAK::LOGPRI_ERR);
 			}
 			else {
 				$success=true;
@@ -1225,6 +1228,15 @@ class OAK
 			$this->memcached->addServers($this->config->memcached->servers);
 		}
 		return $this->memcached->get($key);
+	}
+	
+	public function memcached_get_result() {
+		if (is_null($this->memcached))
+			return 0; // Shouldn't happen if a previous memcached operation was performed.
+		return array(
+			'code' => $this->memcached->getResultCode(),
+			'text' => $this->memcached->getResultMessage()
+		);
 	}
 	
 };

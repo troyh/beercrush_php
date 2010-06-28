@@ -18,8 +18,6 @@ function login_failure($status_code,$reason='')
 	print json_encode($msg)."\n";
 }
 
-
-
 $email=null;
 $password=null;
 
@@ -40,57 +38,61 @@ if (is_null($email) || is_null($password))
 }
 else
 {
-	$oak=new OAK();
-	$results=new stdClass;
-	if ($oak->get_view('user/email?key=%22'.urlencode($email).'%22',&$results)===false)
-	{
-		login_failure(404,'email does not exist'); // Create failed
-	}
-	else
-	{
-		if (count($results->rows)>1)
-			$oak->log(count($results->rows).' accounts with email address '.$email);
-			
-		/*
-			Find the user doc for this email/password combo.
-			
-			In the event we have more than one user doc with the specified email address,
-			we'll pick one where the password matches and use it.
-
-			TODO: build a periodic scanner that removes such duplicates
-			
-		*/
-
-		$docid=null;
-		foreach ($results->rows as $row)
-		{
-			if ($row->key===$email && $row->value===$password)
-			{
-				$docid=$row->id;
-				break;
-			}
-		}
-		
-		$user_doc=new OAKDocument('');
+	$docid=null;
 	
-		if (is_null($docid))
+	$oak=new OAK();
+	if (($user_doc=$oak->memcached_get('email:'.$email))===false) {
+		$results=new stdClass;
+		if ($oak->get_view('user/email?key=%22'.urlencode($email).'%22',&$results)===false)
 		{
-			/*
-				Login failed
-			*/
-			login_failure(403,'Login failed');
-			$oak->log('failed login attempt:'.$email);
-		}
-		else if ($oak->get_document($docid,&$user_doc)!==true)
-		{
-			login_failure(500,'Internal error');
+			login_failure(404,'email does not exist'); // Create failed
 		}
 		else
 		{
+			if (count($results->rows)>1)
+				$oak->log(count($results->rows).' accounts with email address '.$email);
+			
+			/*
+				Find the user doc for this email/password combo.
+			
+				In the event we have more than one user doc with the specified email address,
+				we'll pick one where the password matches and use it.
+
+				TODO: build a periodic scanner that removes such duplicates
+			*/
+			
+			foreach ($results->rows as $row)
+			{
+				if ($row->key===$email && $row->value===$password)
+				{
+					$docid=$row->id;
+					break;
+				}
+			}
+		
+		}
+	}
+	else {
+		$docid='user:'.$user_doc->userid;
+	}
+
+	if (is_null($docid)) {
+		/*
+			Login failed
+		*/
+		login_failure(403,'Login failed');
+		$oak->log('failed login attempt:'.$email);
+	}
+	else {
+		$user_doc=new OAKDocument('');
+		if ($oak->get_document($docid,&$user_doc)!==true) {
+			login_failure(500,'Internal error');
+		}
+		else {
 			// Create another secret
 			$secret=rand();
 			$oak->memcached_set('loginsecret:'.$user_doc->userid,$secret);
-		
+	
 			// Make and return userkey
 			$usrkey=md5($user_doc->userid.$secret.$_SERVER['REMOTE_ADDR']);
 
@@ -101,21 +103,21 @@ else
 
 			header("HTTP/1.0 200 OK");
 			header("Content-Type: application/json; charset=utf-8");
-		
+	
 			$answer=array(
 				'userid'=>$user_doc->userid,
 				'usrkey'=>$usrkey,
 			);
-			
+		
 			if (!empty($user_doc->name))
 				$answer['name']=$user_doc->name;
 			else
 				$answer['name']="Anonymous";
 			if (!empty($user_doc->avatar))
 				$answer['avatar']=$user_doc->avatar;
-				
+			
 			print json_encode($answer)."\n";
-		
+	
 		}
 	}
 }

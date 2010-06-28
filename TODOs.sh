@@ -15,6 +15,9 @@ cat - > /tmp/ignore.sed <<EOF
 /^src\/phpinc\//d
 /^TODOs.sh$/d
 /^tools\/csv2xml.pl/d
+/^js\/excanvas.js/d
+/^js\/excanvas\//d
+/^js\/bt-0.9.5-rc1\//d
 EOF
 #cat /tmp/ignore.sed;exit;
 
