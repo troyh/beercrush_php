@@ -1,4 +1,5 @@
 #!/bin/bash
+set -o nounset;
 
 function usage() {
 	cat - <<EOF
@@ -12,6 +13,7 @@ function oaklog() {
 	$BINDIR/sendmsg -C $CONF_FILE oaklog "INFO:dbchanges2git:$1";
 }
 
+CONF_FILE="";
 while getopts "C:" opt; do
 	case $opt in
 		C )
@@ -46,9 +48,7 @@ if [ -f /var/run/BeerCrush/dbchanges2git.pid ]; then
 	exit;
 fi
 
-echo $$ > /var/run/BeerCrush/dbchanges2git.pid;
-
-$BINDIR/listen -i dbchanges2git -g dbchanges |
+$BINDIR/listen -p /var/run/BeerCrush/dbchanges2git.pid -i dbchanges2git -g dbchanges |
 	$BINDIR/jsonpath id rev oldrev couchdb.host couchdb.port couchdb.db user_id |
 	while read DOCID NEWREV OLDREV COUCHDB_HOST COUCHDB_PORT COUCHDB_DBNAME USER_ID; do
 
