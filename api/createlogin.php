@@ -120,7 +120,6 @@ else
 		$reply=array(
 			'success' => true,
 			'userid' => $userid,
-			'viewchanges' => $view_url,
 		);
 	
 		print json_encode($reply)."\n";

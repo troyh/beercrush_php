@@ -16,11 +16,13 @@ foreach (array('css','js') as $t) {
 	<title><?=isset($header['title'])?$header['title']:'Beer Crush'?></title>
 	<link href="/css/BeerCrush.css" rel="stylesheet" type="text/css" />
 	<link href="/css/jquery.autocomplete.css" rel="stylesheet" type="text/css" />
+	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/ui-lightness/jquery-ui.css" type="text/css" rel="Stylesheet" />
 	<?=join("\n",$header['css'])?>
 	
 	<script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAAtBVHEgzTr_SrDgMUCmnRJRQfXbV2W6YcYPLUqvTgqWubOD1G5hSaFaNTdVgdeM66iYgNhcbzSAGHNg"></script>
 	<script type="text/javascript">
-	google.load("jquery","1.4.1");
+	google.load("jquery","1.4.2");
+	google.load("jqueryui", "1.8.2");	
 	</script>
 	<script type="text/javascript" src="/js/jquery.cookie.js"></script>
 	<script type="text/javascript" src="/js/json2.js"></script>

@@ -280,6 +280,7 @@ include("../header.php");
 <?php endforeach; ?>
 <!-- <div id="reviewdata"></div> -->
 
+<div id="beer_review_form" class="hidden">
 <h3>Post a review</h3>
 <form id="review_form">
 	<input type="hidden" name="beer_id" value="<?=$beerdoc->id?>" />
@@ -356,6 +357,8 @@ include("../header.php");
 	<input id="post_review_button" type="button" value="Post my review" />
 	<div id="review_result_msg" class="hidden"></div><p></p>
 </form>
+</div>
+
 </div>
 
 	<div id="mwr_right_300">
@@ -440,22 +443,6 @@ include("../header.php");
 <ul class="command">
 	<li style="background-image: url('/img/wishlist.png')"><a id="add_to_wishlist_link" href="#">Add to My Wishlist</a></li>
 	<li style="background-image: url('/img/ratebeer.png')"><a href="" id="ratebeer">Rate this Beer</a></li>
-	<div id="inplacelogin" class="cf hidden">
-		<form id="login_form" method="post" action="/api/login">
-			<div>Email: <input name="email" type="text" size="15" /></div>
-			<div>Password: <input name="password" type="password" size="10" /></div>
-			<div class="buttons">
-				<input value="Sign In" type="submit" />
-				<div id="login_dropdown" class="tiny"><input type="checkbox" name="login_days" value="1" />Remember me</div>
-			</div>
-			<div class="buttons">OR</div>
-			<div class="buttons">
-				<input value="Create Account" type="submit" />
-				<span class="tiny">It's Free!</span>
-			</div>
-			<span id="login_msg"></span>
-		</form>
-	</div>
 	<li style="background-image: url('/img/nearby.png')"><a id="find_this_nearby_link" href="#">Find this Nearby</a><br />
 	Zip <input id="find_this_nearby_zip" size="10"> <button id="find_this_nearby_button">Find</button></li>
 </ul>
@@ -836,10 +823,20 @@ function pageMain()
 	});
 	
 	// show_history();
+
+	$('#ratebeer').click(function(){
+		if (get_user_id()==null) { // Not logged in
+			show_login_dialog(function(){
+				$('#beer_review_form').dialog({modal:true});
+			});
+		}
+		else
+			$('#beer_review_form').dialog({modal:true});
+		return false;
+	});
 	
 }
 
-$('#ratebeer').click(function(){$('#inplacelogin').toggle('drop'); return false;});
 
 </script>
 

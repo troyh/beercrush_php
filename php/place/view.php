@@ -674,7 +674,7 @@ function pageMain()
 
 	var place_is_bookmarked=false;
 	var user_id=get_user_id();
-	if (typeof(user_id)!='undefined') { // I'm logged in
+	if (user_id!=null) { // I'm logged in
 		// Get my bookmarks to see if this place is on it
 		$.getJSON('/api/bookmarks',function(data){
 			if (data.items[$('#place_id').val()]) {

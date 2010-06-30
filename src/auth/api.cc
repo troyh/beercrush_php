@@ -249,13 +249,9 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 	// { "urlregex": "/api/wishlist/([^/]+)", "validlogin": true, "authtest": "$userid==$1" }
 
 	const char* const valid_login_urls[]={
-		"/api/beer/edit",
 		"/api/beer/review",
-		"/api/brewery/edit",
-		"/api/place/edit",
 		"/api/place/review",
 		"/api/logout",
-		"/api/menu/edit",
 		"/api/recommend/edit",
 		"/api/user/edit",
 		"/api/user/fullinfo",
@@ -290,6 +286,8 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 		These URLs are publicly-accessible
 	*/
 	if (!strncmp(cgiPathInfo,"/api/beer/",10) ||
+		!strcmp(cgiPathInfo,"/api/brewery/edit") ||
+		!strcmp(cgiPathInfo,"/api/beer/edit") ||
 		!strcmp(cgiPathInfo,"/api/beercolors") ||
 		!strcmp(cgiPathInfo,"/api/beers") ||
 		!strcmp(cgiPathInfo,"/api/beerstyles") ||
@@ -301,8 +299,10 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 		!strncmp(cgiPathInfo,"/api/history/",13) ||
 		!strcmp(cgiPathInfo,"/api/login") ||
 		!strncmp(cgiPathInfo,"/api/menu/",10) ||
+		!strcmp(cgiPathInfo,"/api/menu/edit") ||
 		!strncmp(cgiPathInfo,"/api/photoset/",14) ||
 		!strncmp(cgiPathInfo,"/api/place/",11) ||
+		!strcmp(cgiPathInfo,"/api/place/edit") ||
 		!strcmp(cgiPathInfo,"/api/places") ||
 		!strncmp(cgiPathInfo,"/api/recommend",14) ||
 		!strcmp(cgiPathInfo,"/api/restaurantcategories") ||

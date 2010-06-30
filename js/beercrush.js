@@ -1,11 +1,24 @@
 var login_data=new Object;
 
 function get_user_id() {
-	return $.cookie('userid');
+	var user_id=$.cookie('userid');
+	if (typeof(user_id)=='undefined')
+		return null;
+	return user_id;
 }
 
-function set_login_cookies(login,date) 
+function set_login_cookies(login,expiry_days) 
 {
+	// Figure out how long to keep the cookies (session-only or a number of days)
+	var date=null;
+	if ($('#login_form input:checkbox[name=login_days]:checked').val()) {
+		date = new Date();
+		date.setTime(date.getTime() + ($('#login_form input:checkbox[name=login_days]').val() * 24 * 60 * 60 * 1000)); // set to expire in 1 day
+
+		// Add login_days to data so we track it in a cookie
+		data.login_days=expiry_days;
+	}
+
 	login_data=new Object;
 	$.each(login,function(key,val) {
 		switch (key) {
@@ -21,30 +34,24 @@ function set_login_cookies(login,date)
 	$.cookie('login_data',JSON.stringify(login_data), { path: '/', expires: date});
 }
 
-function login(email,password)
-{
-	$('#login_form').ajaxError(function(e,xhr,settings,exception){
-		if (settings.url==$('#login_form').attr('action'))
-		{
-			$('#login_msg').text('Unable to login. Try again.');
-			$('#login_msg').ajaxError(null);
-		}
+function login(email,password,success_func,fail_func) {
+	$.ajax({
+		type: 'POST',
+		url: '/api/login',
+		data: {
+			email:email, 
+			password:password
+		},
+		success: function(data) {
+			if (success_func)
+				success_func(data);
+		},
+		error: function(xhr,status,err) {
+			if (fail_func)
+				fail_func(xhr.status);
+		},
+		dataType: 'json'
 	});
-	$.post($('#login_form').attr('action'),{email:email, password:password},function(data) {
-		$('#login_msg').text('');
-		// Figure out how long to keep the cookies (session-only or a number of days)
-		var date=null;
-		if ($('#login_form input:checkbox[name=login_days]:checked').val()) {
-			date = new Date();
-			date.setTime(date.getTime() + ($('#login_form input:checkbox[name=login_days]').val() * 24 * 60 * 60 * 1000)); // set to expire in 1 day
-
-			// Add login_days to data so we track it in a cookie
-			data.login_days=parseInt($('#login_form input:checkbox[name=login_days]').val());
-		}
-		
-		set_login_cookies(data,date);
-		showusername();
-	},"json");
 }
 
 function logout()
@@ -57,25 +64,123 @@ function logout()
 	showlogin();
 }
 
-function create_account(email,password) {
-	// console.log(email);
-	// console.log(password);
-	$.post($('#register_form').attr('action'),{
-		email: email,
-		password: password
-	},
-	function(data){
-		console.log(data);
-		if (data.success==true) {
-			// Automatically log them in
-			login(email,password);
-		}
+function create_account(email,password,success_func,fail_func) {
+	$.ajax({
+		type: 'POST',
+		url: '/api/createlogin',
+		data: {
+			email: email,
+			password: password
+		},
+		success: success_func,
+		error: function(xhr,status,err) {
+			if (fail_func)
+				fail_func(xhr.status);
+		},
+		dataType: 'json'
 	});
 }
 
 function showusername()
 {
 	$('#login').html((login_data.avatar?'<img src="'+login_data.avatar+'" />':'')+'Cheers, <a href="/user/'+$.cookie('userid')+'">'+login_data.name+'</a>! <a href="javascript:logout();">Logout</a>');
+}
+
+function show_login_dialog(success_func) {
+	// #inplacelogin is defined in footer.php
+	$('#inplacelogin form').submit(function(evt) {
+
+		// Validate email and password
+		var email=$('input[name="email"]',evt.target).val().replace(/\s+/,''); // Remove all spaces
+		var password=$('input[name="password"]',evt.target).val().replace(/^\s+/,'').replace(/\s+$/,''); // Trim it
+		
+		if (email.length==0) {
+			$('#inplacelogin').dialog('widget').effect('shake');
+			$('#login_dialog_msg').html('Email field must be filled in.');
+		}
+		else if (password.length==0) {
+			$('#inplacelogin').dialog('widget').effect('shake');
+			$('#login_dialog_msg').html('Password field must be filled in.');
+		}
+		else if (email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)==null) {
+			// Regex from http://www.regular-expressions.info/email.html
+			$('#inplacelogin').dialog('widget').effect('shake');
+			$('#login_dialog_msg').html('Email format is not valid.');
+		}
+		else {
+			login(email,password,function(data) {
+				$('#inplacelogin').dialog('close');
+
+				set_login_cookies(data,parseInt($('#inplacelogin input:checkbox[name=login_days]').val()));
+				showusername();
+
+				if (success_func)
+					success_func();
+			},
+			function(status) {
+				switch (status) {
+					case 403:
+						$('#login_dialog_msg').html('That login information does not match our records');
+						break;
+					case 405:
+						$('#login_dialog_msg').html('We don\'t have an account with that address. Create one or Forgot password?');
+						break;
+					default:
+						$('#login_dialog_msg').html('It didn\'t work and I don\'t know why.');
+						break;
+				}
+			});
+		}
+		return false;
+	});
+	
+	$('#inplacelogin input:button').click(function(evt) {
+		var email=$('input[name="email"]',$('#inplacelogin form')).val().replace(/\s+/,''); // Remove all spaces
+		var password=$('input[name="password"]',$('#inplacelogin form')).val().replace(/^\s+/,'').replace(/\s+$/,''); // Trim it
+		
+		if (email.length==0) {
+			$('#inplacelogin').dialog('widget').effect('shake');
+			$('#login_dialog_msg').html('Email field must be filled in.');
+		}
+		else if (password.length==0) {
+			$('#inplacelogin').dialog('widget').effect('shake');
+			$('#login_dialog_msg').html('Password field must be filled in.');
+		}
+		else if (email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)==null) {
+			// Regex from http://www.regular-expressions.info/email.html
+			$('#inplacelogin').dialog('widget').effect('shake');
+			$('#login_dialog_msg').html('Email format is not valid.');
+		}
+		else {
+		
+			create_account(email,password,function(){
+				// Automatically log the user in
+				login(email,password);
+			},function(status){
+				switch (status) {
+					case 409: // Email already registered...
+						// Maybe they really meant to login? Try that.
+						login(email,password,function(data) {
+							$('#inplacelogin').dialog('close');
+
+							set_login_cookies(data,parseInt($('#inplacelogin input:checkbox[name=login_days]').val()));
+							showusername();
+
+							if (success_func)
+								success_func();
+						},function(status) {
+							$('#login_dialog_msg').html('Email is already registered');
+						});
+						break;
+					default:
+						$('#login_dialog_msg').html('It didn\'t work and I don\'t know why.');
+						break;
+				}
+			});
+		}
+	});
+	
+	$('#inplacelogin').dialog({modal:true});
 }
 
 function showlogin()
@@ -89,20 +194,33 @@ function showlogin()
 		<span id="login_dropdown" class="tiny"><input type="checkbox" name="login_days" value="1" />Remember me</span><input value="Sign In" type="submit" />\
 	</form>\
 	</div>\
-	<div id="form_register" class="hidden">\
-	<form id="register_form" method="post" action="/api/createlogin">\
-		Create an account or <a href="" id="show_login">sign in</a>\
-		<div>Email: <input name="email" type="text" size="10" />\
-		Password: <input name="password" type="password" size="5" /></div>\
-		<input value="Create Account" type="submit" />\
-	</form>\
-	</div>\
 	<span id="login_msg"></span>');
 
-	$('#login_form').submit(function(){login($("#login_form input[name=email]").val(),$("#login_form input[name=password]").val());return false;});
-	$('#form_register').submit(function(){create_account($('#form_register input[name="email"]').val(),$('#form_register input[name="password"]').val());return false;});
-	$('#show_register').click(function(){$('#form_login').hide();$('#form_register').show(); return false;});
-	$('#show_login').click(function(){$('#form_register').hide();$('#form_login').show(); return false;});
+	$('#login_form').submit(function() {
+		login($("#login_form input[name=email]").val(),$("#login_form input[name=password]").val(),function(data){
+			set_login_cookies(data,parseInt($('#inplacelogin input:checkbox[name=login_days]').val()));
+			showusername();
+		},
+		function(status) {
+			switch (status) {
+				case 403:
+					$('#login_msg').html('That login information does not match our records');
+					break;
+				case 405:
+					$('#login_msg').html('We don\'t have an account with that address. Create one or Forgot password?');
+					break;
+				default:
+					$('#login_msg').html('It didn\'t work and I don\'t know why.');
+					break;
+			}
+		});
+		return false;
+	});
+
+	$('#show_register').click(function() {
+		show_login_dialog();
+		return false;
+	});
 }
 
 function formatDates(selector)

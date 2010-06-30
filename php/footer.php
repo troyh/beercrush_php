@@ -67,6 +67,24 @@
 	<div id="pagemodtime">Page last modified: <span class="datestring"><?=date('D, d M Y H:i:s O',time())?></span></div>
 	&copy; <!-- YEAR --> Beer Crush (r<!-- SVNVERSION -->)
 </div>
+
+<div id="inplacelogin" class="cf hidden">
+	<form method="post" action="/api/login">
+		<div>Email: <input name="email" type="text" size="15" /></div>
+		<div>Password: <input name="password" type="password" size="10" /></div>
+		<div class="buttons">
+			<input value="Sign In" type="submit" />
+			<div id="login_dropdown" class="tiny"><input type="checkbox" name="login_days" value="1" />Remember me</div>
+		</div>
+		<div class="buttons">OR</div>
+		<div class="buttons">
+			<input value="Create Account" type="button" />
+			<span class="tiny">It's Free!</span>
+		</div>
+		<span id="login_dialog_msg"></span>
+	</form>
+</div>
+
 <script type="text/javascript">
 
 function BeerCrushMain()

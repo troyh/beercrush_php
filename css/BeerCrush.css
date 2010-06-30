@@ -262,15 +262,6 @@ img {
 }
 #login_msg {
 }
-#inplacelogin .buttons {
-	max-width: 40%;
-	margin-right: 5%;
-	float: left;
-}
-#inplacelogin {
-	border: 1px solid #38bdec;
-	padding: 5px; 
-}
 
 #page_content {
 	padding: 5px 0;
@@ -1024,40 +1015,6 @@ div.Brewery {
 .by {
 	float: right;
 }
-
-/* JQUERY
- ---------------------------------------------------------------------*/
-/* Icons
-----------------------------------*/
-
-/* states and images */
-.ui-icon { display: block; float: left; margin: 0 5px 5px 0; text-indent: -99999px; overflow: hidden; background-repeat: no-repeat; }
-/* Interaction states
-----------------------------------*/
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { border: 1px solid #45930b; background: #4ca20b url(/img/ui-bg_highlight-soft_60_4ca20b_1x100.png) 50% 50% repeat-x; font-weight: normal; color: #ffffff; }
-.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: #ffffff; text-decoration: none; }
-.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus { border: 1px solid #8bd83b; background: #4eb305 url(/img/ui-bg_highlight-soft_50_4eb305_1x100.png) 50% 50% repeat-x; font-weight: normal; color: #ffffff; }
-.ui-state-hover a, .ui-state-hover a:hover { color: #ffffff; text-decoration: none; }
-.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active { border: 1px solid #72b42d; background: #285c00 url(/img/ui-bg_highlight-hard_30_285c00_1x100.png) 50% 50% repeat-x; font-weight: normal; color: #ffffff; }
-.ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited { color: #ffffff; text-decoration: none; }
-.ui-widget :active { outline: none; }
-
-/* states and images */
-.ui-icon { width: 16px; height: 16px; background-image: url(/img/ui-icons_ffffff.png); }
-.ui-widget-content .ui-icon {background-image: url(/img/ui-icons_72b42d_256x240.png); }
-.ui-widget-header .ui-icon {background-image: url(/img/ui-icons_ffffff_256x240.png); }
-.ui-state-default .ui-icon { background-image: url(/img/ui-icons_ffffff.png); }
-.ui-state-hover .ui-icon, .ui-state-focus .ui-icon {background-image: url(/img/ui-icons_ffffff.png); }
-.ui-state-active .ui-icon {background-image: url(/img/ui-icons_ffffff.png); }
-.ui-state-highlight .ui-icon {background-image: url(/img/ui-icons_green.png); }
-.ui-state-error .ui-icon, .ui-state-error-text .ui-icon {background-image: url(/img/ui-icons_red.png); }
-
-
-.ui-icon-star { background-position: -224px -112px; }
-.ui-icon-close { background-position: -80px -128px; background-color: #ee3124;}
-.ui-icon-closethick { background-position: -96px -128px; background-color: #ee3124;}
-.ui-icon-check { background-position: -64px -144px; background-color: #4ca20b;}
-.ui-icon-help { background-position: -48px -144px;  background-color: #999999;}
 
 /* OTHER PAGES
  ---------------------------------------------------------------------*/
