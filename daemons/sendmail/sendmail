@@ -1,0 +1,70 @@
+#!/bin/bash
+progname=${0##*/};
+
+function usage() {
+	cat - <<EOF
+$progname -C <configfile>
+
+EOF
+	exit;
+}
+
+configfile=;
+
+while getopts "C:" opt; do
+	case $opt in
+		C )
+			configfile=$OPTARG;
+			;;
+		\? )
+			usage;
+			;;
+	esac
+done
+
+if [ -z "$configfile" ]; then
+	usage;
+fi
+
+function make_rules() {
+	params=$1;
+	for P in ${!params[*]}; do
+		echo s/\$$P\\b/${params[$P]}/g;
+	done
+	
+}
+
+function oaklog() {
+	$bindir/sendmsg -C $configfile oaklog "INFO:sendmail:$1";
+}
+
+bindir="/usr/local/beercrush/bin";
+template_dir="/etc/BeerCrush/sendmail/templates";
+
+reroute_to=$(cat $configfile | $bindir/jsonpath -1 sendmail.reroute_to);
+oaklog "Re-routing all mail to $reroute_to";
+
+$bindir/listen -p /var/run/BeerCrush/$progname.pid -i sendmail -g sendmail |
+while read json; do
+
+	declare -A params;
+
+	while read param value; do
+		params["$param"]=$value;
+	done < <(echo $json | php -r '$data=json_decode(file_get_contents("php://stdin")); foreach ($data as $k=>$v) { print "$k\t$v\n";}');
+	
+	if [ ! -f "$template_dir/${params[template]}" ]; then
+		oaklog "Not sending mail; no such template: ${params[template]}";
+		continue;
+	fi
+
+	# Check for a sendmail.reroute_to setting 
+	if [ -n "$reroute_to" ]; then
+		params[email]=$reroute_to;
+	fi
+
+	sed -f <(make_rules $params) $template_dir/${params[template]} | /usr/sbin/sendmail -i -t;
+	
+	oaklog "Sent ${params[template]} to ${params[email]}";
+	
+done

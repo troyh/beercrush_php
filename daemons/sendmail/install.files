@@ -1,0 +1,4 @@
+BIN sendmail
+DIR /etc/BeerCrush/sendmail
+DIR /etc/BeerCrush/sendmail/templates
+

@@ -1,0 +1,5 @@
+[program:sendmail]
+command=pidproxy /var/run/BeerCrush/sendmail.pid /usr/local/beercrush/bin/sendmail -C /etc/BeerCrush/webapp.conf
+autostart=true
+redirect_stderr=true
+user=www-data
