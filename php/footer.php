@@ -74,6 +74,7 @@
 		<div>Password: <input name="password" type="password" size="10" /></div>
 		<div class="buttons">
 			<input value="Sign In" type="submit" />
+			<a href="" onclick="forgot_password(event);return false;">Forgot password</a>
 			<div id="login_dropdown" class="tiny"><input type="checkbox" name="login_days" value="1" />Remember me</div>
 		</div>
 		<div class="buttons">OR</div>

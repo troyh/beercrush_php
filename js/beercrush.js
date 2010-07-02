@@ -123,7 +123,7 @@ function show_login_dialog(success_func) {
 						$('#login_dialog_msg').html('That login information does not match our records');
 						break;
 					case 405:
-						$('#login_dialog_msg').html('We don\'t have an account with that address. Create one or Forgot password?');
+						$('#login_dialog_msg').html('We don\'t have an account with that address. Create one or <a href="" onclick="forgot_password(event);return false;">Forgot password</a>?');
 						break;
 					default:
 						$('#login_dialog_msg').html('It didn\'t work and I don\'t know why.');
@@ -183,6 +183,17 @@ function show_login_dialog(success_func) {
 	$('#inplacelogin').dialog({modal:true});
 }
 
+function forgot_password(evt) {
+	var email=$(evt.target).parentsUntil('form').parent().find('input[name=email]').val();//.replace(/^\s+/,'').replace(/\s+$/,'');
+	if (email.length) {
+		$.post('/api/forgotpassword',{
+			'email': email
+		},function(data){
+			// TODO: tell user to expect email
+		});
+	}
+}
+
 function showlogin()
 {
 	$('#login').html('\
@@ -207,7 +218,7 @@ function showlogin()
 					$('#login_msg').html('That login information does not match our records');
 					break;
 				case 405:
-					$('#login_msg').html('We don\'t have an account with that address. Create one or Forgot password?');
+					$('#login_msg').html('We don\'t have an account with that address. Create one or <a href="" onclick="forgot_password(event);return false;">Forgot password</a>?');
 					break;
 				default:
 					$('#login_msg').html('It didn\'t work and I don\'t know why.');
