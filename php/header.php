@@ -42,11 +42,6 @@ foreach (array('css','js') as $t) {
 					<li><a href="/places/">Places</a></li>
 					<li id="findnearbylink"><a href="/nearby">Nearby</a></li>
 				</ol>
-				<!--GAY REMOVE SUBMENU
-				<ol id="submenu" class="module">
-					<li><a href="">some text here maybe</a></li>
-				</ol>
-				-->
 			</div>
 			<div id="searchform">
 				<form method="GET" action="/search">

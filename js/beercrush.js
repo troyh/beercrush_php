@@ -89,23 +89,31 @@ function showusername()
 function show_login_dialog(success_func) {
 	// #inplacelogin is defined in footer.php
 	$('#inplacelogin form').submit(function(evt) {
+		$('#login_dialog_msg').hide('blind','fast');
+		$('#login_dialog_msg').removeClass('ui-state-error');
 
 		// Validate email and password
 		var email=$('input[name="email"]',evt.target).val().replace(/\s+/,''); // Remove all spaces
 		var password=$('input[name="password"]',evt.target).val().replace(/^\s+/,'').replace(/\s+$/,''); // Trim it
 		
 		if (email.length==0) {
+			$('#login_dialog_msg').addClass('ui-state-error');
+			$('#login_dialog_msg').show('blind','slow');
 			$('#inplacelogin').dialog('widget').effect('shake');
-			$('#login_dialog_msg').html('Email field must be filled in.');
+			$('#login_dialog_msg').html('<span class="ui-icon ui-icon-alert"></span>Email field must be filled in.');
 		}
 		else if (password.length==0) {
-			$('#inplacelogin').dialog('widget').effect('shake');
-			$('#login_dialog_msg').html('Password field must be filled in.');
+			$('#login_dialog_msg').addClass('ui-state-error');
+			$('#login_dialog_msg').show('blind','slow');
+			$('#inplacelogin').dialog('widget').effect('shake','fast');
+			$('#login_dialog_msg').html('<span class="ui-icon ui-icon-alert"></span>Password field must be filled in.');
 		}
 		else if (email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)==null) {
 			// Regex from http://www.regular-expressions.info/email.html
+			$('#login_dialog_msg').addClass('ui-state-error');
+			$('#login_dialog_msg').show('blind','slow');
 			$('#inplacelogin').dialog('widget').effect('shake');
-			$('#login_dialog_msg').html('Email format is not valid.');
+			$('#login_dialog_msg').html('<span class="ui-icon ui-icon-alert"></span>Email format is not valid.');
 		}
 		else {
 			login(email,password,function(data) {
@@ -120,13 +128,19 @@ function show_login_dialog(success_func) {
 			function(status) {
 				switch (status) {
 					case 403:
-						$('#login_dialog_msg').html('That login information does not match our records');
+						$('#login_dialog_msg').addClass('ui-state-error');
+						$('#login_dialog_msg').show('blind','slow');
+						$('#login_dialog_msg').html('<span class="ui-icon ui-icon-alert"></span>Hmm, that combination doesn\'t match our files.  <a href="" onclick="forgot_password(event);return false;">Forgot your password</a>?');
 						break;
 					case 405:
-						$('#login_dialog_msg').html('We don\'t have an account with that address. Create one or <a href="" onclick="forgot_password(event);return false;">Forgot password</a>?');
+						$('#login_dialog_msg').addClass('ui-state-error');
+						$('#login_dialog_msg').show('blind','slow');
+						$('#login_dialog_msg').html('<span class="ui-icon ui-icon-alert"></span>We don\'t have an account with that address. Create one or <a href="" onclick="forgot_password(event);return false;">Forgot password</a>?');
 						break;
 					default:
-						$('#login_dialog_msg').html('It didn\'t work and I don\'t know why.');
+						$('#login_dialog_msg').addClass('ui-state-error');
+						$('#login_dialog_msg').show('blind','slow');
+						$('#login_dialog_msg').html('<span class="ui-icon ui-icon-alert"></span>It didn\'t work and I don\'t know why.');
 						break;
 				}
 			});
@@ -140,15 +154,21 @@ function show_login_dialog(success_func) {
 		
 		if (email.length==0) {
 			$('#inplacelogin').dialog('widget').effect('shake');
+			$('#login_dialog_msg').addClass('ui-state-error');
+			$('#login_dialog_msg').show('blind','slow');
 			$('#login_dialog_msg').html('Email field must be filled in.');
 		}
 		else if (password.length==0) {
 			$('#inplacelogin').dialog('widget').effect('shake');
+			$('#login_dialog_msg').addClass('ui-state-error');
+			$('#login_dialog_msg').show('blind','slow');
 			$('#login_dialog_msg').html('Password field must be filled in.');
 		}
 		else if (email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)==null) {
 			// Regex from http://www.regular-expressions.info/email.html
 			$('#inplacelogin').dialog('widget').effect('shake');
+			$('#login_dialog_msg').addClass('ui-state-error');
+			$('#login_dialog_msg').show('blind','slow');
 			$('#login_dialog_msg').html('Email format is not valid.');
 		}
 		else {
@@ -180,7 +200,7 @@ function show_login_dialog(success_func) {
 		}
 	});
 	
-	$('#inplacelogin').dialog({modal:true});
+	$('#inplacelogin').dialog({modal:true},{title:'That action requires an account.'},{minWidth: 400});
 }
 
 function forgot_password(evt) {
@@ -197,17 +217,17 @@ function forgot_password(evt) {
 function showlogin()
 {
 	$('#login').html('\
-	<div id="form_login">\
 	<form id="login_form" method="post" action="/api/login">\
-		Sign in or <a href="" id="show_register">create an account</a>\
-		<div>Email: <input name="email" type="text" size="10" />\
-		Password: <input name="password" type="password" size="5" /></div>\
-		<span id="login_dropdown" class="tiny"><input type="checkbox" name="login_days" value="1" />Remember me</span><input value="Sign In" type="submit" />\
+		<label for="email">Email: </label><input name="email" type="text" size="25" />\
+		<label for="password">Password: </label><input name="password" type="password" size="10" /><input type="checkbox" name="login_days" value="1" /><label for="login_days" class="tiny">Remember me</label>\
+		<div id="login_buttons"><input value="Sign In" type="submit" /> or <input value="Create Account" type="submit" /></div>\
+		<div id="login_msg"></div>\
 	</form>\
-	</div>\
-	<span id="login_msg"></span>');
+	');
 
 	$('#login_form').submit(function() {
+		$('#login_msg').hide('blind','fast');
+		$('#login_msg').removeClass('ui-state-error');
 		login($("#login_form input[name=email]").val(),$("#login_form input[name=password]").val(),function(data){
 			set_login_cookies(data,parseInt($('#inplacelogin input:checkbox[name=login_days]').val()));
 			showusername();
@@ -215,13 +235,19 @@ function showlogin()
 		function(status) {
 			switch (status) {
 				case 403:
-					$('#login_msg').html('That login information does not match our records');
+					$('#login_msg').addClass('ui-state-error');
+					$('#login_msg').show('blind','slow');
+					$('#login_msg').html('<span class="ui-icon ui-icon-alert"></span>Hmm, that combination doesn\'t match our files.  <a href="" onclick="forgot_password(event);return false;">Forgot your password</a>?');
 					break;
 				case 405:
-					$('#login_msg').html('We don\'t have an account with that address. Create one or <a href="" onclick="forgot_password(event);return false;">Forgot password</a>?');
+					$('#login_msg').addClass('ui-state-error');
+					$('#login_msg').show('blind','slow');
+					$('#login_msg').html('<span class="ui-icon ui-icon-alert"></span>No account with that email.  Create one.');
 					break;
 				default:
-					$('#login_msg').html('It didn\'t work and I don\'t know why.');
+					$('#login_msg').addClass('ui-state-error');
+					$('#login_msg').show('blind','slow');
+					$('#login_msg').html('<span class="ui-icon ui-icon-alert"></span>It didn\'t work and I don\'t know why.');
 					break;
 			}
 		});

@@ -19,19 +19,25 @@ html, body {
 	font-style: normal;
 	font-variant: normal;
 	font-weight: normal;
+	margin: 0;
+	padding: 0;
 }
 
 html > body {
 	font:13px/1.231em arial,helvetica,clean,sans-serif; /*16px/1.515 */
 	line-height: 20px;
 }
+
 /**
  * Nudge down to get to 13px equivalent for these form elements
  */ 
 select, input, button, textarea {
 	font:99% arial,helvetica,clean,sans-serif;
 }
-
+form {
+	display: block;
+	margin: 0;
+}
 /**
  * To help tables remember to inherit
  */
@@ -114,6 +120,9 @@ a:hover {
 	border-style: none none solid none;	
 }
 
+a:focus {
+	border-style: none none solid none;	
+}
 .white a {
 	color: #FFF;
 	border-bottom: #FFF;
@@ -152,7 +161,7 @@ img {
 /* Structure
  ---------------------------------------------------------------------*/
 #page_wrap {
-	margin:0 auto 10px;
+	margin: 0 auto 10px;
 	padding: 0 10px;
 	text-align:left;
 	width:974px;
@@ -181,7 +190,7 @@ img {
 }
 #tabs_wrap {
 	position: absolute;
-	top: 76px;
+	top: 77px;
 }
 #tabs_wrap #navmenu {
 	text-align:left;
@@ -239,17 +248,20 @@ img {
 #login {
 	width:300px;
 	padding:3px;
-	height:80px;
 	position: absolute;
 	right: 0px;
-	top: 0px;
+	top: -2px;
 	z-index:999;
 	background:#38bdec;
 	font-size:10pt;
 	color:#FFFFFF;
-}
-#login input {
-	font-size: 13px;
+	-moz-box-shadow: 3px 3px 3px 2px #8b979b;
+	-webkit-box-shadow: 3px 3px 3px 2px #8b979b;
+	box-shadow: 3px 3px 3px 2px #8b979b;
+	-moz-border-radius-bottomleft: 4px;
+	-webkit-border-bottom-left-radius: 4px;
+	-moz-border-radius-bottomright: 4px;
+	-webkit-border-bottom-right-radius: 4px;
 }
 #login img {
 	width:30px;
@@ -258,9 +270,19 @@ img {
 	vertical-align: middle;
 }
 
-#login_dropdown {
+#login_buttons, #inplacelogin_buttons {
+	text-align: center;
 }
-#login_msg {
+
+#login label, #inplacelogin label {
+	float: left;
+	width: 30%;
+	text-align: right;
+}
+#login label.tiny, #inplacelogin label.tiny {
+	float: none;
+	width: auto;
+	text-align: left;
 }
 
 #page_content {
@@ -376,14 +398,26 @@ img {
 	margin: 5px 0;
 }
 .feedback_error {
-	border: 3px solid #ee3124;
-	color: #ee3124;
+	background: #ee3124;
+	color: white;
 	padding: 3px;
 	margin: 5px 0;
+}
+.feedback_success .ui-icon, .ui-state-error .ui-icon {
+	float: left;
+	margin: 0 3px;
 }
 .hidden {
 	display: none;
 }
+
+.border {
+	border: 1px solid grey;
+	padding: 3px;
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px;
+}
+
 /* Beer Page Specific
  ---------------------------------------------------------------------*/
 #beer_description{

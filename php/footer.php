@@ -68,21 +68,15 @@
 	&copy; <!-- YEAR --> Beer Crush (r<!-- SVNVERSION -->)
 </div>
 
-<div id="inplacelogin" class="cf hidden">
+<div id="inplacelogin">
 	<form method="post" action="/api/login">
-		<div>Email: <input name="email" type="text" size="15" /></div>
-		<div>Password: <input name="password" type="password" size="10" /></div>
-		<div class="buttons">
+		<label for="email">Email: </label><input name="email" type="text" size="25" />
+		<label for="password">Password: </label><input name="password" type="password" size="10" /><input type="checkbox" name="login_days" value="1" /><label for="login_days" class="tiny">Remember me</label>
+		<div id="inplacelogin_buttons">
 			<input value="Sign In" type="submit" />
-			<a href="" onclick="forgot_password(event);return false;">Forgot password</a>
-			<div id="login_dropdown" class="tiny"><input type="checkbox" name="login_days" value="1" />Remember me</div>
+ 			or <input value="Create Account" type="button" />
 		</div>
-		<div class="buttons">OR</div>
-		<div class="buttons">
-			<input value="Create Account" type="button" />
-			<span class="tiny">It's Free!</span>
-		</div>
-		<span id="login_dialog_msg"></span>
+		<div id="login_dialog_msg"></div>
 	</form>
 </div>
 
