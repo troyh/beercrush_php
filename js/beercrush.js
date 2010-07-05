@@ -99,21 +99,21 @@ function show_login_dialog(success_func) {
 		if (email.length==0) {
 			$('#login_dialog_msg').addClass('ui-state-error');
 			$('#login_dialog_msg').show('blind','slow');
-			$('#inplacelogin').dialog('widget').effect('shake');
-			$('#login_dialog_msg').html('<span class="ui-icon ui-icon-alert"></span>Email field must be filled in.');
+			$('#inplacelogin').dialog('widget').effect('shake','fast');
+			$('#login_dialog_msg').html('<span class="ui-icon ui-icon-alert"></span>Email must be filled in.');
 		}
 		else if (password.length==0) {
 			$('#login_dialog_msg').addClass('ui-state-error');
 			$('#login_dialog_msg').show('blind','slow');
 			$('#inplacelogin').dialog('widget').effect('shake','fast');
-			$('#login_dialog_msg').html('<span class="ui-icon ui-icon-alert"></span>Password field must be filled in.');
+			$('#login_dialog_msg').html('<span class="ui-icon ui-icon-alert"></span>Password must be filled in.');
 		}
 		else if (email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)==null) {
 			// Regex from http://www.regular-expressions.info/email.html
 			$('#login_dialog_msg').addClass('ui-state-error');
 			$('#login_dialog_msg').show('blind','slow');
-			$('#inplacelogin').dialog('widget').effect('shake');
-			$('#login_dialog_msg').html('<span class="ui-icon ui-icon-alert"></span>Email format is not valid.');
+			$('#inplacelogin').dialog('widget').effect('shake','fast');
+			$('#login_dialog_msg').html('<span class="ui-icon ui-icon-alert"></span>Email format is not valid; check for typos.');
 		}
 		else {
 			login(email,password,function(data) {
@@ -135,7 +135,7 @@ function show_login_dialog(success_func) {
 					case 405:
 						$('#login_dialog_msg').addClass('ui-state-error');
 						$('#login_dialog_msg').show('blind','slow');
-						$('#login_dialog_msg').html('<span class="ui-icon ui-icon-alert"></span>We don\'t have an account with that address. Create one or <a href="" onclick="forgot_password(event);return false;">Forgot password</a>?');
+						$('#login_dialog_msg').html('<span class="ui-icon ui-icon-alert"></span>No account with that email.  Create one.');
 						break;
 					default:
 						$('#login_dialog_msg').addClass('ui-state-error');
@@ -156,20 +156,20 @@ function show_login_dialog(success_func) {
 			$('#inplacelogin').dialog('widget').effect('shake');
 			$('#login_dialog_msg').addClass('ui-state-error');
 			$('#login_dialog_msg').show('blind','slow');
-			$('#login_dialog_msg').html('Email field must be filled in.');
+			$('#login_dialog_msg').html('<span class="ui-icon ui-icon-alert"></span>Email must be filled in.');
 		}
 		else if (password.length==0) {
 			$('#inplacelogin').dialog('widget').effect('shake');
 			$('#login_dialog_msg').addClass('ui-state-error');
 			$('#login_dialog_msg').show('blind','slow');
-			$('#login_dialog_msg').html('Password field must be filled in.');
+			$('#login_dialog_msg').html('<span class="ui-icon ui-icon-alert"></span>Password must be filled in.');
 		}
 		else if (email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)==null) {
 			// Regex from http://www.regular-expressions.info/email.html
 			$('#inplacelogin').dialog('widget').effect('shake');
 			$('#login_dialog_msg').addClass('ui-state-error');
 			$('#login_dialog_msg').show('blind','slow');
-			$('#login_dialog_msg').html('Email format is not valid.');
+			$('#login_dialog_msg').html('<span class="ui-icon ui-icon-alert"></span>Email format is not valid; check for typos.');
 		}
 		else {
 		
@@ -189,11 +189,11 @@ function show_login_dialog(success_func) {
 							if (success_func)
 								success_func();
 						},function(status) {
-							$('#login_dialog_msg').html('Email is already registered');
+							$('#login_dialog_msg').html('<span class="ui-icon ui-icon-alert"></span>That email address is already registered. <a href="" onclick="forgot_password(event);return false;">Forgot your password</a>?');
 						});
 						break;
 					default:
-						$('#login_dialog_msg').html('It didn\'t work and I don\'t know why.');
+						$('#login_dialog_msg').html('<span class="ui-icon ui-icon-alert"></span>It didn\'t work and I don\'t know why.  Try again.  If you still have problems <a href="/contact">aontact us</a>');
 						break;
 				}
 			});
