@@ -131,28 +131,13 @@ function build_flavor_lookup_table($flavors)
 	}
 }
 
-function output_flavors($flavors)
-{
-	foreach ($flavors as $flavor)
-	{
-		if (isset($flavor->flavors))
-		{
-			print '<ul><li>'.$flavor->title.':</li>';
-			output_flavors($flavor->flavors);
-			print '</ul>';
-		}
-		else
-		{
-			print '<li><input type="checkbox" name="flavors_set[]" value="'.$flavor->id.'" />'.$flavor->title.'</li>';
-		}
-	}
-}
-
-
 // Add the CSS for Uploadify
 $header['css'][]='<link href="/css/uploadify.css" rel="stylesheet" type="text/css" />';
+$header['css'][]='<link href="/css/jquery.ui.stars.css" rel="stylesheet" type="text/css" />';
 $header['title']=$brewerydoc->name.' '.$beerdoc->name;
 $header['js'][]='<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>';
+$header['js'][]='<script type="text/javascript" src="/js/jquery.uploadify.v2.1.0.js"></script>';
+$header['js'][]='<script type="text/javascript" src="/js/swfobject.js"></script>';
 
 include("../header.php");
 ?>
@@ -280,85 +265,6 @@ include("../header.php");
 <?php endforeach; ?>
 <!-- <div id="reviewdata"></div> -->
 
-<div id="beer_review_form" class="hidden">
-<h3>Post a review</h3>
-<form id="review_form">
-	<input type="hidden" name="beer_id" value="<?=$beerdoc->id?>" />
-		<p>a css star rating item, doesn't work:</p>
-		<ul class="star-rating">
-			<li><a href="" title="1 star" class="one-star">1</a></li>
-			<li><a href="" title="2 stars" class="two-stars">2</a></li>
-			<li><a href="" title="3 stars" class="three-stars">3</a></li>
-			<li><a href="" title="4 stars" class="four-stars">4</a></li>
-			<li><a href="" title="5 stars" class="five-stars">5</a></li>
-		</ul>
-		<p>a bar type rating for bba meter ratings:</p>
-		<ul class="bar-rating">
-			<li><a href="" title="1 star" class="one-star">1</a></li>
-			<li><a href="" title="2 stars" class="two-stars">2</a></li>
-			<li><a href="" title="3 stars" class="three-stars">3</a></li>
-			<li><a href="" title="4 stars" class="four-stars">4</a></li>
-			<li><a href="" title="5 stars" class="five-stars">5</a></li>
-		</ul>
-
-	<div class="cf"><div class="label">Rating:</div><div> 
-		<input name="rating" type="radio" value="1" />1
-		<input name="rating" type="radio" value="2" />2
-		<input name="rating" type="radio" value="3" />3
-		<input name="rating" type="radio" value="4" />4
-		<input name="rating" type="radio" value="5" />5
-	</div></div>
-	<div class="cf"><div class="label">Body:</div><div> 
-		<input name="body" type="radio" value="1" />1
-		<input name="body" type="radio" value="2" />2
-		<input name="body" type="radio" value="3" />3
-		<input name="body" type="radio" value="4" />4
-		<input name="body" type="radio" value="5" />5
-	</div></div>
-	<div class="cf"><div class="label">Balance:</div><div> 
-		<input name="balance" type="radio" value="1" />1
-		<input name="balance" type="radio" value="2" />2
-		<input name="balance" type="radio" value="3" />3
-		<input name="balance" type="radio" value="4" />4
-		<input name="balance" type="radio" value="5" />5
-	</div></div>
-	<div class="cf"><div class="label">Aftertaste:</div><div> 
-		<input name="aftertaste" type="radio" value="1" />1
-		<input name="aftertaste" type="radio" value="2" />2
-		<input name="aftertaste" type="radio" value="3" />3
-		<input name="aftertaste" type="radio" value="4" />4
-		<input name="aftertaste" type="radio" value="5" />5
-	</div></div>
-	<div>
-		<fieldset><legend>Optional: Improve our beer menus, share where you got it</legend>
-		<p>Place: <input name="purchase_place_name" type="text" size="40" />
-		<input type="hidden" id="purchase_place_name_id" name="purchase_place_id" /></p>
-		Poured: 
-		<ul id="poured">
-			<li id="ontap" class="cl"><input name="poured" type="radio" value="ontap" /><div></div>Draft</li>
-			<li id="inbottle" class="cl"><input name="poured" type="radio" value="inbottle" /><div></div>Bottle</li>
-			<li id="inbottle22" class="cl"><input name="poured" type="radio" value="inbottle22" /><div></div>Large Bottle</li>
-			<li id="incan" class="cl"><input name="poured" type="radio" value="incan" /><div></div>Can</li>
-			<li id="oncask" class="cl"><input name="poured" type="radio" value="oncask" /><div></div>Cask</li>
-		</ul>
-		<p>Price: <input name="purchase_price" type="text" size="10" /></p>
-		<p>Date: <input name="purchase_date" type="text" size="10" /></p>
-		</fieldset>
-	</div>
-	<div>
-		<ul id="flavors_table"><?=output_flavors($flavors->flavors)?></ul>
-		<input type="hidden" name="flavors" value="" />
-	</div>
-	<div>
-		<p>Comments:</p>
-		<textarea name="comments" rows="5" cols="80"></textarea>
-	</div>
-	
-	<input id="post_review_button" type="button" value="Post my review" />
-	<div id="review_result_msg" class="hidden"></div><p></p>
-</form>
-</div>
-
 </div>
 
 	<div id="mwr_right_300">
@@ -484,8 +390,8 @@ if ($history) {
 ?>
 </div>
 
-<script type="text/javascript" src="/js/jquery.uploadify.v2.1.0.js"></script>
-<script type="text/javascript" src="/js/swfobject.js"></script>
+<div id="beer_review_form" class="hidden"></div>
+
 <script type="text/javascript">
 
 <?php
@@ -713,18 +619,18 @@ function pageMain()
 		}
 	});
 
-	$.getScript('/js/beerstyles.js',function(data,textStatus){
-		$("#beer_stylename_edit").autocomplete(beerstyles,{
-			"mustMatch": true,
-			"matchContains": true,
-			"formatItem": function(item) {
-				return item.name;
-			}
-		}).result(function(evt,item) {
-			$('#beer_style_edit').val(item.id);
-			$('#beer_stylename').val(item.name);
-		});
-	});
+	// $.getScript('/js/beerstyles.js',function(data,textStatus){
+	// 	$("#beer_stylename_edit").autocomplete(beerstyles,{
+	// 		"mustMatch": true,
+	// 		"matchContains": true,
+	// 		"formatItem": function(item) {
+	// 			return item.name;
+	// 		}
+	// 	}).result(function(evt,item) {
+	// 		$('#beer_style_edit').val(item.id);
+	// 		$('#beer_stylename').val(item.name);
+	// 	});
+	// });
 	
 
 	$('#beer').editabledoc('/api/beer/edit',{
@@ -806,35 +712,19 @@ function pageMain()
 		}
 	});
 	
-	$("#review_form input[name='purchase_place_name']").autocomplete('/api/autocomplete.fcgi',{
-		"mustMatch": true,
-		"extraParams": {
-			"dataset": "places"
-		}
-	}).result(function(evt,data,formatted) {
-		if (data) {
-			$.getJSON('/api/search?q='+data+'&dataset=place',function(data,textStatus){
-				$("#purchase_place_name_id").val(data.response.docs[0].id);
-			})
-		}
-		else {
-			$("#purchase_place_name_id").val('');
-		}
-	});
-	
 	// show_history();
 
 	$('#ratebeer').click(function(){
 		if (get_user_id()==null) { // Not logged in
-			show_login_dialog(function(){
-				$('#beer_review_form').dialog({modal:true});
+			show_login_dialog(function(){ // Successful login
+				$.getScript("/js/beerreview.js");
 			});
 		}
-		else
-			$('#beer_review_form').dialog({modal:true});
+		else {
+			$.getScript("/js/beerreview.js");
+		}
 		return false;
 	});
-	
 }
 
 

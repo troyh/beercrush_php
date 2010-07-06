@@ -24,7 +24,7 @@ function oakMain($oak)
 			if ($oak->get_document('review:'.$beer_id.':'.$user_id,&$review)!==true)
 			{
 				header('HTTP/1.0 404 No review');
-				print "No review";
+				print "No review\n";
 				exit;
 			}
 			else
@@ -33,14 +33,14 @@ function oakMain($oak)
 				$review->id=$review->_id;
 				unset($review->_id);
 				unset($review->_rev);
-				print json_encode($review);
+				print json_encode($review)."\n";
 				exit;
 			}
 		}
 		else if ($oak->get_view('beer_reviews/by_user?key=%22'.$user_id.'%22',$reviews)!==true)
 		{
 			header('HTTP/1.0 500 Internal error');
-			print 'Internal error';
+			print "Internal error\n";
 			exit;
 		}
 	}
@@ -50,7 +50,7 @@ function oakMain($oak)
 		if ($oak->get_view('beer_reviews/all?key=%22'.$beer_id.'%22',$reviews)!==true)
 		{
 			header('HTTP/1.0 500 Internal error');
-			print 'Internal error';
+			print "Internal error\n";
 			exit;
 		}
 	}
@@ -73,7 +73,7 @@ function oakMain($oak)
 	}
 
 	header('Content-Type: application/json; charset=utf-8');
-	print json_encode($output);
+	print json_encode($output)."\n";
 
 }
 
