@@ -110,7 +110,7 @@ include("../header.php");
 
 	<div class="cl"><div class="label">Crushworthiness</div><div style="float: left;"><span class="crush">97</span> <a class="tiny" href="" style="margin-left: 5px;">what is this?</a></div></div>
 	<div class="cl"><div class="label"><a href="#ratings"><?=$place->review_summary->total?> ratings</a></div><div class="star_rating" style="float:left;" title="Rating: <?=$place->review_summary->avg?> of 5"><div id="avgrating" style="width: <?=$place->review_summary->avg/5*100?>%"></div></div></div>
-	<div class="cl"><div class="label">Your Predicted Rating</div><div class="star_rating" style="float:left;" title="Your Predicted Rating: <?=$place->review_summary->avg?> of 5"><div id="predrating" style="width: <?=$place->review_summary->avg/5*100?>%"></div></div></div>
+	<div class="cl"><div class="label">Your Predicted Rating</div><div class="star_rating" style="float:left;" title=""><div id="predrating" style="width: 0%"></div></div></div>
 	<div class="cl"><div class="label">Atmosphere: </div><div class="smstar_rating" title="Atmosphere Rating: <?=$place->review_summary->atmosphere_avg?> of 5"><div id="atmosphere" style="width: <?=$place->review_summary->atmosphere_avg/5*100?>%"></div></div></div>
 	<div class="cl"><div class="label">Service: </div><div class="smstar_rating" title="Service Rating: <?=$place->review_summary->service_avg?> of 5"><div id="service" style="width: <?=$place->review_summary->service_avg/5*100?>%"></div></div></div>
 	<div class="cl"><div class="label">Food: </div><div class="smstar_rating" title="Food Rating: <?=$place->review_summary->food_avg?> of 5"><div id="food" style="width: <?=$place->review_summary->food_avg/5*100?>%"></div></div></div>
@@ -631,37 +631,38 @@ function pageMain()
 	
 	$('#beerlist input[type=checkbox]').change(beerlist_edit);
 	
-	$('#beerlist_new_brewery').autocomplete('/api/autocomplete.fcgi',{
-		"mustMatch": true,
-		"extraParams": {
-			"dataset": "breweries"
-		}
-	}).result(function(evt,data,formatted) {
-		brewery_beerlist=[];
-		brewery_beerlist_ids=[];
-
-		$('#beerlist_new_beer').flushCache();
-		
-		$.getJSON('/api/search',{
-			"q": jQuery.isArray(data)?data[0]:data,
-			"dataset": "brewery"
-		},
-		function (data,status) {
-			if (data.response.docs.length) {
-				var brewery_id=data.response.docs[0].id;
-				$.getJSON('/api/brewery/'+brewery_id.replace(/^brewery:/,'')+'/beerlist',function(data,status){
-					$(data.beers).each(function(i,v){
-						brewery_beerlist.push(v.name);
-						brewery_beerlist_ids[v.name]=v.beer_id;
-					});
-					$('#beerlist_new_beer').autocomplete(brewery_beerlist).result(function(evt,data,formatted) {
-						beerlist_new_beer_id=brewery_beerlist_ids[data];
-					});
-				});
-			}
-		});
-	}
-	);
+	// TODO: bring this back, we're using the JQuery UI Autocomplete instead of this one
+	// $('#beerlist_new_brewery').autocomplete('/api/autocomplete.fcgi',{
+	// 	"mustMatch": true,
+	// 	"extraParams": {
+	// 		"dataset": "breweries"
+	// 	}
+	// }).result(function(evt,data,formatted) {
+	// 	brewery_beerlist=[];
+	// 	brewery_beerlist_ids=[];
+	// 
+	// 	$('#beerlist_new_beer').flushCache();
+	// 	
+	// 	$.getJSON('/api/search',{
+	// 		"q": jQuery.isArray(data)?data[0]:data,
+	// 		"dataset": "brewery"
+	// 	},
+	// 	function (data,status) {
+	// 		if (data.response.docs.length) {
+	// 			var brewery_id=data.response.docs[0].id;
+	// 			$.getJSON('/api/brewery/'+brewery_id.replace(/^brewery:/,'')+'/beerlist',function(data,status){
+	// 				$(data.beers).each(function(i,v){
+	// 					brewery_beerlist.push(v.name);
+	// 					brewery_beerlist_ids[v.name]=v.beer_id;
+	// 				});
+	// 				$('#beerlist_new_beer').autocomplete(brewery_beerlist).result(function(evt,data,formatted) {
+	// 					beerlist_new_beer_id=brewery_beerlist_ids[data];
+	// 				});
+	// 			});
+	// 		}
+	// 	});
+	// }
+	// );
 
 	$('#review_form').submit(function(){
 		$.post($('#review_form').attr('action'),
@@ -721,6 +722,12 @@ function pageMain()
 			return true;
 		}
 	});
+
+	$.getJSON('/api/'+$('#place_id').val().replace(/:/g,'/')+'/personalization',null,function(data){
+		$('#predrating').parent('div').attr('title','Predicted rating for you: '+data.predictedrating+' out of 5');
+		$('#predrating').css('width',data.predictedrating/5*100+'%');
+	});
+
 	
 
 }

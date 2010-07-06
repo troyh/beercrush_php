@@ -35,6 +35,7 @@ rewrite ^/store/api/users$ /api/users.php break;
 rewrite ^/store/api/beer/edit$	/api/beer/edit.php break;
 rewrite ^/store/api/(beer|place|brewery)/photo$	/api/$1/photo.php break;
 rewrite ^/store/api/beer/([^/]+)/([^/]+)$	/api/beer/view.php?beer_id=beer:$1:$2 break;
+rewrite ^/store/api/beer/([^/]+)/([^/]+)/personalization$ /api/beer/personalization.php?beer_id=beer:$1:$2 break;
 rewrite ^/store/api/bookmarks$ 		/api/bookmarks/edit.php break;
 rewrite ^/store/api/bookmarks/([^/]+)$ 		/api/bookmarks/view.php?user_id=$1 break;
 rewrite ^/store/api/brewery/edit$	/api/brewery/edit.php break;
@@ -49,6 +50,7 @@ rewrite ^/store/api/photoset/(brewery|place)/([^/]+)$ 		/api/$1/photoset.php?$1_
 rewrite ^/store/api/place/edit$	/api/place/edit.php break;
 rewrite ^/store/api/place/([^/]+)$ 		/api/place/view.php?place_id=place:$1 break;
 rewrite ^/store/api/place/([^/]+)/menu$ 	/api/menu/view.php?place_id=place:$1 break;
+rewrite ^/store/api/place/([^/]+)/personalization$ /api/place/personalization.php?place_id=place:$1 break;
 rewrite ^/store/api/menu/edit$ 	/api/menu/edit.php break;
 rewrite ^/store/api/menu/newbeers/([^/]+)/([^/]+)/([^/]+)$ /api/menu/newbeers.php?country=$1&state=$2&city=$3 break;
 rewrite ^/store/api/menu/statistics$ 	/api/menu/statistics.php break;

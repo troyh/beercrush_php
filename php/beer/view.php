@@ -149,7 +149,7 @@ include("../header.php");
 	<a href="/style/<?=$styles_lookup[$beerdoc->styles[0]]->id?>"><?=$styles_lookup[$beerdoc->styles[0]]->name?></a>
 	<div id="ratings_section" class="cf">
 		<div class="star_rating" title="Average rating: <?=$beerdoc->review_summary->avg?> out of 5"><div id="avgrating" style="width: <?=$beerdoc->review_summary->avg/5*100?>%"></div></div>
-		<div class="star_rating" title="Predicted rating for you: <?=$beerdoc->review_summary->avg?> out of 5"><div id="predrating" style="width: <?=$beerdoc->review_summary->avg/5*100?>%"></div></div>
+		<div class="star_rating" title=""><div id="predrating" style="width: 0%"></div></div>
 		<a href="#ratings" id="ratingcount"><?=count($reviews->reviews)?> ratings</a>
 		<div class="flavors">
 			<?php foreach ($beerdoc->review_summary->flavors as $f):?>
@@ -713,6 +713,11 @@ function pageMain()
 	});
 	
 	// show_history();
+	
+	$.getJSON('/api/'+$('#beer_id').val().replace(/:/g,'/')+'/personalization',null,function(data){
+		$('#predrating').parent('div').attr('title','Predicted rating for you: '+data.predictedrating+' out of 5');
+		$('#predrating').css('width',data.predictedrating/5*100+'%');
+	});
 
 	$('#ratebeer').click(function(){
 		if (get_user_id()==null) { // Not logged in

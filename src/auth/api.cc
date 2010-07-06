@@ -37,7 +37,7 @@ bool is_an_asshole(const char* userid) {
 	return false;
 }
 
-bool login_is_trusted(const char* userid)
+bool login_is_trusted(const char* userid,char* correct_usrkey=NULL, char* actual_usrkey=NULL)
 {
 	bool isTrusted=false;
 	
@@ -79,6 +79,11 @@ bool login_is_trusted(const char* userid)
 			{
 				isTrusted=true;
 			}
+			
+			if (correct_usrkey)
+				strcpy(correct_usrkey,md5sum_str);
+			if (actual_usrkey)
+				strcpy(actual_usrkey,usrkey);
 			
 			free(secret);
 		}
@@ -247,6 +252,14 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 	// { "url": "/api/users"},
 	// { "url": "/api/search"},
 	// { "urlregex": "/api/wishlist/([^/]+)", "validlogin": true, "authtest": "$userid==$1" }
+	
+	// Reject assholes (users who are abusing their site privileges)
+	if (is_an_asshole(user_id)) {
+		FCGX_FPrintF(out,"Status: 403 Permission denied\r\n");
+		FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
+		FCGX_FPrintF(out,"Access prohibited (NAR)\n"); // NAR=No Asshole Rule
+		return 0;
+	}
 
 	const char* const valid_login_urls[]={
 		"/api/beer/review",
@@ -262,13 +275,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 	for (size_t i=0;i < (sizeof(valid_login_urls)/sizeof(valid_login_urls[0]));++i) {
 		if (!strcmp(valid_login_urls[i],cgiPathInfo)) {
 
-			// Reject assholes (users who are abusing their editing privileges)
-			if (is_an_asshole(user_id)) {
-				FCGX_FPrintF(out,"Status: 403 Permission denied\r\n");
-				FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
-				FCGX_FPrintF(out,"Access prohibited (NAR)\n"); // NAR=No Asshole Rule
-			}
-			else if (!login_is_trusted(user_id)) {
+			if (!login_is_trusted(user_id)) {
 				FCGX_FPrintF(out,"Status: 403 Permission denied\r\n");
 				FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
 				FCGX_FPrintF(out,"Login required\n");
@@ -282,10 +289,21 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 		}
 	}
 
-	/*
-		These URLs are publicly-accessible
-	*/
-	if (!strncmp(cgiPathInfo,"/api/beer/",10) ||
+	if ((!strncmp(cgiPathInfo,"/api/beer/",10) || !strncmp(cgiPathInfo,"/api/place/",11)) &&
+		(strlen(cgiPathInfo)>16) && !strcmp(&cgiPathInfo[strlen(cgiPathInfo)-16],"/personalization")) {
+		// Verify that the requesting user has access permissions to this personalization (i.e., it's their own document)
+		if (!login_is_trusted(user_id)) {
+			FCGX_FPrintF(out,"Status: 403 Permission denied\r\n");
+			FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
+			FCGX_FPrintF(out,"Permission denied (not trusted)\n");
+		}
+		else
+		{
+			FCGX_FPrintF(out,"X-Accel-Redirect: /store%s\r\n",cgiPathInfo);
+			FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
+		}
+	}
+	else if (!strncmp(cgiPathInfo,"/api/beer/",10) || /* These URLs are publicly-accessible */
 		!strcmp(cgiPathInfo,"/api/brewery/edit") ||
 		!strcmp(cgiPathInfo,"/api/beer/edit") ||
 		!strcmp(cgiPathInfo,"/api/beercolors") ||
@@ -326,7 +344,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 		{
 			FCGX_FPrintF(out,"Status: 403 Permission denied\r\n");
 			FCGX_FPrintF(out,"Content-Type: text/plain; charset=utf-8\r\n\r\n");
-			FCGX_FPrintF(out,"Permission denied");
+			FCGX_FPrintF(out,"Permission denied\n");
 		}
 		else
 		{
