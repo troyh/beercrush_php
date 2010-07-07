@@ -34,19 +34,16 @@ include("../header.php");
 
 <div id="user">
 	<h1 id="user_name"><?=empty($userdoc->name)?"Anonymous":$userdoc->name?></h1>
-
 	<div>Joined <span class="datestring"><?=date(BeerCrush::DATE_FORMAT,$userdoc->meta->timestamp)?></span></div>
-	
-
 	<input type="hidden" id="user_id" value="<?=$userdoc->id?>" />
-
 	<h2>About Me</h2>
 	<div id="user_aboutme"><?=$userdoc->aboutme?></div>
+</div>
 
-	<div id="editable_save_msg"></div>
-	<input class="editable_savechanges_button hidden" type="button" value="Save Changes" />
-	<input class="editable_cancelchanges_button hidden" type="button" value="Discard Changes" />
-
+<div id="user_edit" class="hidden">
+	<input type="text" id="user_name_edit" value="<?=empty($userdoc->name)?"Anonymous":$userdoc->name?>" />
+	<h2>About Me</h2>
+	<textarea id="user_aboutme_edit" rows="5" cols="40"><?=$userdoc->aboutme?></textarea>
 </div>
 
 
@@ -160,10 +157,27 @@ function pageMain()
 		// It's me (I think), let's request my userdoc and see if the server gives it to me.
 		$.getJSON('/api/user/fullinfo',function(data,status) {
 			// This is my page
-			userinfo=data;
-			makeDocEditable('#user','user_id','/api/user/edit');
-			if (userinfo.gravatar_url)
+			if (data.gravatar_url)
 				$('#avatar').append('I have a <a href="http://en.gravatar.com/">Gravatar</a>. <input type="button" value="Use my Gravatar" onclick="useGravatar();" />');
+
+			// Put edit button
+			$('#user').before('<input id="edit_button" type="button" value="Edit This" />');
+			$('#user').editabledoc('/api/user/edit',{
+				args: {
+					user_id: $('#user_id').val()
+				},
+				stripprefix: 'user_',
+				fields: {
+					'user_name': {
+						postSuccess: function(name,value) {
+							$('#user_name').html(value); // Change the H1 tag on the page (the beer name)
+						}
+					}
+				}
+			});				
+
+			// $('#editthis_button').click(function(){
+			// });
 		});
 
 		$.getJSON('/api/wishlist/'+$.cookie('userid'),function(data,status){
