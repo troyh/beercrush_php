@@ -81,7 +81,6 @@ $('#beer_review_form').load('/beer/reviewform',null,function() {
 					$.getJSON('/api/review/'+$('#beer_id').val().replace(/:/g,'/')+'/'+get_user_id(),
 						null,
 						function(data){
-							console.log(data);
 							$('#aftertaste-slider').slider('value',data.aftertaste);
 							$('#balance-slider').slider('value',data.balance);
 							$('#body-slider').slider('value',data.body);

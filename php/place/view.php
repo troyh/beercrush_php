@@ -80,6 +80,7 @@ $header['title']=$place->name;
 $header['js'][]='<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>';
 $header['js'][]='<script type="text/javascript" src="/js/jquery.uploadify.v2.1.0.js"></script>';
 $header['js'][]='<script type="text/javascript" src="/js/swfobject.js"></script>';
+$header['css'][]='<link href="/css/jquery.ui.stars.css" rel="stylesheet" type="text/css" />';
 
 // Add the CSS for Uploadify
 $header['css'][]='<link href="/css/uploadify.css" rel="stylesheet" type="text/css" />';
@@ -164,45 +165,56 @@ include("../header.php");
 </div>
 <?php endforeach?>
 
-<h3>Add your review</h3>
+<div id="review_page" class="hidden">
 <form id="review_form" method="post" action="/api/place/review">
-	<input type="hidden" name="place_id" value="<?=$place->id?>">
-	<div>Rating:
-		<input type="radio" name="rating" value="1" />1 
-		<input type="radio" name="rating" value="2" />2
-		<input type="radio" name="rating" value="3" />3
-		<input type="radio" name="rating" value="4" />4
-		<input type="radio" name="rating" value="5" />5
+	<input type="hidden" name="place_id" value="" />
+	<div class="cf">
+		<div class="label">Rating:</div>
+		<div id="rating-wrapper">
+			<input type="radio" name="rating" value="1" /> 
+			<input type="radio" name="rating" value="2" />
+			<input type="radio" name="rating" value="3" />
+			<input type="radio" name="rating" value="4" />
+			<input type="radio" name="rating" value="5" />
+		</div>
 	</div>
-	<div>Service:
-		
-		<input type="radio" name="kidfriendly" value="1" />1 
-		<input type="radio" name="kidfriendly" value="2" />2
-		<input type="radio" name="kidfriendly" value="3" />3
-		<input type="radio" name="kidfriendly" value="4" />4
-		<input type="radio" name="kidfriendly" value="5" />5
+	<div class="cf">
+		<div class="label">Service:</div>
+		<div id="service-wrapper">
+			<input type="radio" name="service" value="1" /> 
+			<input type="radio" name="service" value="2" />
+			<input type="radio" name="service" value="3" />
+			<input type="radio" name="service" value="4" />
+			<input type="radio" name="service" value="5" />
+		</div>
 	</div>
-	<div>Atmosphere:
-		
-		<input type="radio" name="kidfriendly" value="1" />1 
-		<input type="radio" name="kidfriendly" value="2" />2
-		<input type="radio" name="kidfriendly" value="3" />3
-		<input type="radio" name="kidfriendly" value="4" />4
-		<input type="radio" name="kidfriendly" value="5" />5
+	<div class="cf">
+		<div class="label">Atmosphere:</div>
+		<div id="atmosphere-wrapper">
+			<input type="radio" name="atmosphere" value="1" /> 
+			<input type="radio" name="atmosphere" value="2" />
+			<input type="radio" name="atmosphere" value="3" />
+			<input type="radio" name="atmosphere" value="4" />
+			<input type="radio" name="atmosphere" value="5" />
+		</div>
 	</div>
-	<div>Food:
-		
-		<input type="radio" name="kidfriendly" value="1" />1 
-		<input type="radio" name="kidfriendly" value="2" />2
-		<input type="radio" name="kidfriendly" value="3" />3
-		<input type="radio" name="kidfriendly" value="4" />4
-		<input type="radio" name="kidfriendly" value="5" />5
+	<div class="cf">
+		<div class="label">Food:</div>
+		<div id="food-wrapper">
+			<input type="radio" name="food" value="1" /> 
+			<input type="radio" name="food" value="2" />
+			<input type="radio" name="food" value="3" />
+			<input type="radio" name="food" value="4" />
+			<input type="radio" name="food" value="5" />
+		</div>
 	</div>
 	<div>Comments:</div>
-	<div><textarea name="comments" rows="5" cols="60"></textarea></div>
+	<div><textarea name="comments" rows="5" cols="40"></textarea></div>
 	
-	<input type="submit" value="Post Rating" />
+	<input id="post_review_button" type="button" value="Post Rating" />
 </form>
+</div>
+
 </div>
 <div id="mwl_left_300">
 	<div id="map"></div>
@@ -301,7 +313,7 @@ include("../header.php");
 	
 <ul class="command">
 	<li style="background-image: url('/img/wishlist.png')"><a id="bookmark_link" href="">Bookmark this Place</a></li>
-	<li style="background-image: url('/img/ratebeer.png')"><a href="">Rate this Place</a></li>
+	<li style="background-image: url('/img/ratebeer.png')"><a id="rateplace_link" href="">Rate this Place</a></li>
 </ul>
 
 <h3>Place Edit History</h3>
@@ -677,7 +689,7 @@ function pageMain()
 	var user_id=get_user_id();
 	if (user_id!=null) { // I'm logged in
 		// Get my bookmarks to see if this place is on it
-		$.getJSON('/api/bookmarks',function(data){
+		$.getJSON('/api/bookmarks/'+user_id,function(data){
 			if (data.items[$('#place_id').val()]) {
 				place_is_bookmarked=true;
 				$('#bookmark_link').html('Unbookmark this Place');
@@ -698,6 +710,56 @@ function pageMain()
 			});
 		}
 
+		return false;
+	});
+	
+	$('#rateplace_link').click(function(){
+		$.getScript('/js/jquery.ui.stars.js',function() {
+			$('#rating-wrapper').stars();
+			$('#service-wrapper').stars();
+			$('#atmosphere-wrapper').stars();
+			$('#food-wrapper').stars();
+			
+			$('#review_form input[name=place_id]').val($('#place_id').val());
+			
+			$('#review_page').dialog({
+				title: "Add your review",
+				modal:true,
+				resizable: false,
+				open: function() {
+
+					// If there's an existing review, fill out the fields
+					if (get_user_id()!=null && $('#place_id').val().trim().length) {
+						$.getJSON('/api/review/'+$('#place_id').val().replace(/:/g,'/')+'/'+get_user_id(),
+							null,
+							function(data){
+								console.log(data);
+								$('#rating-wrapper').stars('select',data.rating);
+								$('#service-wrapper').stars('select',data.atmosphere);
+								$('#atmosphere-wrapper').stars('select',data.atmosphere);
+								$('#food-wrapper').stars('select',data.food);
+								$('#review_form textarea[name=comments]').val(data.comments);
+							}
+						);
+					}
+
+					$('#post_review_button').click(function(){
+						$.ajax({
+							url: '/api/place/review',
+							type: 'POST',
+							data: $('#review_form').serialize(),
+							dataType: 'json',
+							success: function(data,textStatus,xhr) {
+								$('#review_page').dialog('close');
+							},
+							error: function(xhr,textStatus,err) {
+								// TODO: error-handling
+							}
+						})
+					});
+				}
+			});
+		});
 		return false;
 	});
 

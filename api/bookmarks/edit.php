@@ -12,7 +12,7 @@ function oakMain($oak) {
 	
 	$adds=preg_split('/\s+/',$oak->get_cgi_value('add_item',$cgi_fields),-1,PREG_SPLIT_NO_EMPTY);
 	$dels=preg_split('/\s+/',$oak->get_cgi_value('del_item',$cgi_fields),-1,PREG_SPLIT_NO_EMPTY);
-	
+
 	// Remove any duplicates in each list
 	$adds=array_unique($adds);
 	$dels=array_unique($dels);
@@ -23,6 +23,12 @@ function oakMain($oak) {
 	// Take the difference of the intersection in each list
 	$adds=array_diff($adds,$common);
 	$dels=array_diff($dels,$common);
+	
+	if (count($adds)==0 && count($dels)==0) {
+		header('HTTP/1.0 406 No-op');
+		print "\n";
+		exit;
+	}
 	
 	// TODO: verify that the item being added really exists
 
