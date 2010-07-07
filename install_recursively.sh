@@ -101,54 +101,51 @@ install_routine() {
 	#################################
 	# Install cron jobs
 	#################################
-	if [ -f *.crontab ]; then
-		for CRONTAB in *.crontab; do
-			CRON_NAME=$(basename $CRONTAB .crontab);
-			if iamcron $CRON_NAME; then
-				# crond will not run scripts with a _ or a . in the name! see http://www.debian-administration.org/articles/56
-				# So we remove _ or . from the name:
-				CROND_FILENAME=$(echo $CRON_NAME|sed -e 's/[_\.]//g');
-				
-				if [ ! -f /etc/cron.d/$CROND_FILENAME ]; then
-					echo "Installing crontab: $CRONTAB";
-					sudo cp $CRONTAB /etc/cron.d/$CROND_FILENAME;
-				elif ! files_are_identical $CRONTAB /etc/cron.d/$CROND_FILENAME; then
-					echo "Updating crontab: $CRONTAB";
-					sudo cp $CRONTAB /etc/cron.d/$CROND_FILENAME;
-				fi
-			elif [ -f /etc/cron.d/$CROND_FILENAME ]; then
-				echo "Uninstalling crontab: $CRONTAB";
-				sudo rm /etc/cron.d/$CROND_FILENAME;
+	shopt -s nullglob;
+	for CRONTAB in *.crontab; do
+		CRON_NAME=$(basename $CRONTAB .crontab);
+		# crond will not run scripts with a _ or a . in the name! see http://www.debian-administration.org/articles/56
+		# So we remove _ or . from the name:
+		CROND_FILENAME=$(echo $CRON_NAME|sed -e 's/[_\.]//g');
+		if iamcron $CRON_NAME; then
+			if [ ! -f /etc/cron.d/$CROND_FILENAME ]; then
+				echo "Installing crontab: $CRONTAB";
+				sudo cp $CRONTAB /etc/cron.d/$CROND_FILENAME;
+			elif ! files_are_identical $CRONTAB /etc/cron.d/$CROND_FILENAME; then
+				echo "Updating crontab: $CRONTAB";
+				sudo cp $CRONTAB /etc/cron.d/$CROND_FILENAME;
 			fi
-		done
-	fi
+		elif [ -f /etc/cron.d/$CROND_FILENAME ]; then
+			echo "Uninstalling crontab: $CRONTAB";
+			sudo rm /etc/cron.d/$CROND_FILENAME;
+		fi
+	done
 
 	#################################
 	# Install Supervisord programs
 	#################################
-	if [ -f *.supervisord ]; then
-		for SUP in *.supervisord; do
-			DAEMON_NAME=$(basename $SUP .supervisord);
-			if iamdaemon $DAEMON_NAME; then
-				if [ ! -f /etc/supervisor/conf.d/$DAEMON_NAME.conf ]; then
-					echo "Installing supervisord program: $DAEMON_NAME.conf";
-					sudo cp $SUP /etc/supervisor/conf.d/$DAEMON_NAME.conf;
-				elif ! files_are_identical $SUP /etc/supervisor/conf.d/$DAEMON_NAME.conf; then
-					echo "Updating supervisord config file: $DAEMON_NAME.conf";
-					sudo cp $SUP /etc/supervisor/conf.d/$DAEMON_NAME.conf;
-				fi
-
-				if [ $installed_bin_file -ne 0 ]; then
-					echo "One or more bin files were installed. Restarting supervisord daemon: $DAEMON_NAME";
-					sudo supervisorctl restart $DAEMON_NAME;
-				fi
-
-			elif [ -f /etc/supervisord/conf.d/$DAEMON_NAME.conf ]; then
-				echo "Uninstalling supervisord program: $DAEMON_NAME.conf";
-				sudo rm /etc/supervisor/conf.d/$DAEMON_NAME.conf;
+	shopt -s nullglob;
+	for SUP in *.supervisord; do
+		DAEMON_NAME=$(basename $SUP .supervisord);
+		if iamdaemon $DAEMON_NAME; then
+			if [ ! -f /etc/supervisor/conf.d/$DAEMON_NAME.conf ]; then
+				echo "Installing supervisord program: $DAEMON_NAME.conf";
+				sudo cp $SUP /etc/supervisor/conf.d/$DAEMON_NAME.conf;
+			elif ! files_are_identical $SUP /etc/supervisor/conf.d/$DAEMON_NAME.conf; then
+				echo "Updating supervisord config file: $DAEMON_NAME.conf";
+				sudo cp $SUP /etc/supervisor/conf.d/$DAEMON_NAME.conf;
 			fi
-		done
-	fi
+
+			if [ $installed_bin_file -ne 0 ]; then
+				echo "One or more bin files were installed. Restarting supervisord daemon: $DAEMON_NAME";
+				sudo supervisorctl restart $DAEMON_NAME;
+			fi
+
+		elif [ -f /etc/supervisord/conf.d/$DAEMON_NAME.conf ]; then
+			echo "Uninstalling supervisord program: $DAEMON_NAME.conf";
+			sudo rm /etc/supervisor/conf.d/$DAEMON_NAME.conf;
+		fi
+	done
 
 	#################################
 	# Run install.sh (if exists)

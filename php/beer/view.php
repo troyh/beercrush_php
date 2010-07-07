@@ -94,6 +94,14 @@ if (isset($recommends->beer)) {
 	}
 }
 
+if (isset($recommends->similar)) {
+	foreach ($recommends->similar as &$rec_beer) {
+		$rec_beer=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl($rec_beer));
+		$rec_beer->brewery=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl($rec_beer->brewery_id));
+		// print_r($rec_beer);exit;
+	}
+}
+
 function build_style_lookup_table($styles) {
 	global $styles_lookup;
 	
@@ -268,10 +276,10 @@ include("../header.php");
 </div>
 
 	<div id="mwr_right_300">
-	<?php if (isset($recommends->beer)):?>
-	<h2>Similar Beers to This Beer (showing same data as also likes for now)</h2>
+	<?php if (isset($recommends->similar)):?>
+	<h2>Similar Beers to This Beer</h2>
 	<ul class="otherlist">
-		<?php foreach($recommends->beer as $recommend) :?>
+		<?php foreach($recommends->similar as $recommend) :?>
 			<li><?php if ($recommend->photos->total):?><img src="<?=$recommend->photos->thumbnail?>" /><?php endif?>
 			<a href="/<?=BeerCrush::docid_to_docurl($recommend->brewery->id)?>" class="brewery"><?=$recommend->brewery->name?></a>
 			<a href="/<?=BeerCrush::docid_to_docurl($recommend->id)?>"><?=$recommend->name?></a>

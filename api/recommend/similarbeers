@@ -1,0 +1,105 @@
+#!/bin/bash
+#
+# For every beer, find similar beers and put them in the recommend: document for that beer
+#
+
+conf_file=;
+email=;
+password=;
+
+while getopts "C:e:p:" opt; do
+	case $opt in
+		C)
+			conf_file=$OPTARG;
+			;;
+		e)
+			email=$OPTARG;
+			;;
+		p)
+			password=$OPTARG;
+			;;
+		\?)
+			# echo "Invalid option: -$OPTARG" >&2
+			exit 1;
+			;;
+	esac
+done
+
+function usage() {
+	cat <<EOF
+Usage: ${0##*/} -C <config file> -e <email> -p <password>
+
+  -C   Path to config file
+  -e   Email for admin user (to log into Beer Crush)
+  -p   Password for admin user (to log into Beer Crush)
+
+EOF
+	exit 1;
+}
+
+if [ -z "$conf_file" -o -z "$email" -o -z "$password" ]; then
+	usage;
+fi
+
+if [ ! -f $conf_file ]; then
+	echo "$conf_file doesn't exist";
+	usage;
+fi
+
+data_dir="/var/local/BeerCrush/similar/";
+bindir="/usr/local/beercrush/bin";
+
+if [ ! -d $data_dir ]; then mkdir -p $data_dir; fi
+
+read couchdb_host couchdb_db <<<$(/usr/local/beercrush/bin/jsonpath -1 "couchdb.nodes[0]" couchdb.database < $conf_file);
+read api_url <<<$(/usr/local/beercrush/bin/jsonpath -1 api.base_uri < $conf_file);
+
+# For now, just pick random beers
+# TODO: actually do statistical stuff to find similar beers
+
+if [ ! -f $data_dir/beers.tab ]; then
+	# Get list of all the beers
+	curl --silent  $api_url/beers | 
+		OAKConfig=$conf_file /usr/local/beercrush/bin/json2xml  | 
+		xmlstarlet sel -t -m '//obj[@tag=&quot;item&quot;]' -v 'scalar[@tag=&quot;id&quot;]/@val' -n |
+		sed -e '/^\s*$/d' > $data_dir/beers.tab
+fi
+	
+total_beers=$(wc -l $data_dir/beers.tab);
+total_beers=${total_beers%% *};
+
+# Log in
+logininfo=$(curl --silent --fail -d email=$email -d password=$password $api_url/login);
+if [ $? != 0 ]; then
+	echo "Unable to login";
+	exit;
+fi
+
+read userid usrkey <<<$(echo $logininfo | $bindir/jsonpath userid usrkey);
+
+fails=0;
+successes=0;
+
+# For each beer...
+while read beer_id; do
+	# echo $beer_id;
+	
+	# Pick 5 at random
+	similar_beer_ids=;
+	for pick in 1 2 3 4 5; do
+		n=$(($RANDOM % $total_beers + 1));
+		random_beer_id=$(sed -n -e "$n,${n}p" $data_dir/beers.tab);
+		similar_beer_ids="${similar_beer_ids:+$similar_beer_ids }$random_beer_id";
+	done
+	# echo $similar_beer_ids;
+	RESPONSE=$(curl --silent --fail -X POST -d userid=$userid -d usrkey=$usrkey -d "similar=$similar_beer_ids" $api_url/recommend/edit?id=recommend:$beer_id);
+	if [ $? -ne 0 ]; then
+		echo "Failed to post similar beers: $beer_id";
+		fails=$((fails + 1));
+	else
+		successes=$((successes + 1));
+	fi
+	
+done < $data_dir/beers.tab;
+
+echo "Similars completed. $successes successes, $fails failures.";

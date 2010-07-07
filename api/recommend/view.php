@@ -9,6 +9,7 @@ if (empty($_GET['id'])) {
 $oak=new OAK(BeerCrush::CONF_FILE);
 if ($oak->get_document("recommend:".$_GET['id'],&$doc)===false) {
 	header("HTTP/1.0 404 Not found");
+	print "\n";
 	exit;
 }
 
