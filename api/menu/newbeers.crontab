@@ -1,0 +1,4 @@
+MAILTO=troy@beercrush.com
+
+# m h dom mon dow user    command
+0 1 * * * www-data /usr/local/beercrush/bin/newbeers -C /etc/BeerCrush/webapp.conf 
