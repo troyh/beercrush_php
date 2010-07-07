@@ -156,7 +156,6 @@ function display_list(sel,start,count) {
 
 		var atag=$(this);
 		$.getJSON('/api/'+$(this).attr('href'),null,function(place){
-			console.log(place);
 			$('#bt_content_name').html(place.name);
 			$('#bt_content_placetype').html(place.placetype);
 			$('#bt_content_avg').html(place.review_summary.avg);

@@ -520,7 +520,6 @@ function sort_beermenu(selector,reverse) {
 }
 
 function booleans_click_handler() {
-	console.log('booleans_click_handler:'+$(this).attr('name'));
 	$('#place_'+$(this).attr('name')+'_icon').addClass('ui-icon-help'); // By default, make it unknown, it'll get set appropriately in postSuccess
 	$('#place_'+$(this).attr('name')+'_edit').val($(this).val().length?$(this).val():"");
 }
@@ -733,7 +732,6 @@ function pageMain()
 						$.getJSON('/api/review/'+$('#place_id').val().replace(/:/g,'/')+'/'+get_user_id(),
 							null,
 							function(data){
-								console.log(data);
 								$('#rating-wrapper').stars('select',data.rating);
 								$('#service-wrapper').stars('select',data.atmosphere);
 								$('#atmosphere-wrapper').stars('select',data.atmosphere);
