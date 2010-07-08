@@ -87,7 +87,22 @@ function showusername()
 }
 
 function show_login_dialog(success_func) {
-	// #inplacelogin is defined in footer.php
+
+	if ($('#inplacelogin').size()==0) {
+		$('#page_wrap').append(
+			'<div id="inplacelogin" class="hidden">'+
+				'<form method="post" action="/api/login">'+
+					'<label for="email">Email: </label><input name="email" type="text" size="25" />'+
+					'<label for="password">Password: </label><input name="password" type="password" size="10" /><input type="checkbox" name="login_days" value="1" /><label for="login_days" class="tiny">Remember me</label>'+
+					'<div id="inplacelogin_buttons">'+
+						'<input value="Sign In" type="submit" />'+
+			 			'or <input value="Create Account" type="button" />'+
+					'</div>'+
+					'<div id="login_dialog_msg"></div>'+
+				'</form>'+
+			'</div>');
+	}
+
 	$('#inplacelogin form').submit(function(evt) {
 		$('#login_dialog_msg').hide('blind','fast');
 		$('#login_dialog_msg').removeClass('ui-state-error');
@@ -216,45 +231,9 @@ function forgot_password(evt) {
 
 function showlogin()
 {
-	$('#login').html('\
-	<form id="login_form" method="post" action="/api/login">\
-		<label for="email">Email: </label><input name="email" type="text" size="25" />\
-		<label for="password">Password: </label><input name="password" type="password" size="10" /><input type="checkbox" name="login_days" value="1" /><label for="login_days" class="tiny">Remember me</label>\
-		<div id="login_buttons"><input value="Sign In" type="submit" /> or <input value="Create Account" type="submit" /></div>\
-		<div id="login_msg"></div>\
-	</form>\
-	');
+	$('#login').html('<div><a href="">Login</a> or <a href="">Create Account</a></div>');
 
-	$('#login_form').submit(function() {
-		$('#login_msg').hide('blind','fast');
-		$('#login_msg').removeClass('ui-state-error');
-		login($("#login_form input[name=email]").val(),$("#login_form input[name=password]").val(),function(data){
-			set_login_cookies(data,parseInt($('#inplacelogin input:checkbox[name=login_days]').val()));
-			showusername();
-		},
-		function(status) {
-			switch (status) {
-				case 403:
-					$('#login_msg').addClass('ui-state-error');
-					$('#login_msg').show('blind','slow');
-					$('#login_msg').html('<span class="ui-icon ui-icon-alert"></span>Hmm, that combination doesn\'t match our files.  <a href="" onclick="forgot_password(event);return false;">Forgot your password</a>?');
-					break;
-				case 405:
-					$('#login_msg').addClass('ui-state-error');
-					$('#login_msg').show('blind','slow');
-					$('#login_msg').html('<span class="ui-icon ui-icon-alert"></span>No account with that email.  Create one.');
-					break;
-				default:
-					$('#login_msg').addClass('ui-state-error');
-					$('#login_msg').show('blind','slow');
-					$('#login_msg').html('<span class="ui-icon ui-icon-alert"></span>It didn\'t work and I don\'t know why.');
-					break;
-			}
-		});
-		return false;
-	});
-
-	$('#show_register').click(function() {
+	$('#login a').click(function() {
 		show_login_dialog();
 		return false;
 	});

@@ -722,15 +722,18 @@ function pageMain()
 	
 	// show_history();
 	
-	$.getJSON('/api/'+$('#beer_id').val().replace(/:/g,'/')+'/personalization',null,function(data){
-		$('#predrating').parent('div').attr('title','Predicted rating for you: '+data.predictedrating+' out of 5');
-		$('#predrating').css('width',data.predictedrating/5*100+'%');
-	});
+	if (get_user_id()!=null) {
+		$.getJSON('/api/'+$('#beer_id').val().replace(/:/g,'/')+'/personalization',null,function(data){
+			$('#predrating').parent('div').attr('title','Predicted rating for you: '+data.predictedrating+' out of 5');
+			$('#predrating').css('width',data.predictedrating/5*100+'%');
+		});
+	}
 
-	$('#ratebeer').click(function(){
+	$('#ratebeer').click(function(evt){
+
 		if (get_user_id()==null) { // Not logged in
 			show_login_dialog(function(){ // Successful login
-				$.getScript("/js/beerreview.js");
+			       $.getScript("/js/beerreview.js");
 			});
 		}
 		else {
@@ -738,9 +741,8 @@ function pageMain()
 		}
 		return false;
 	});
+	
 }
 
-
 </script>
-
 <?php include("../footer.php"); ?>

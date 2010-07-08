@@ -68,18 +68,6 @@
 	&copy; <!-- YEAR --> Beer Crush (r<!-- SVNVERSION -->)
 </div>
 
-<div id="inplacelogin">
-	<form method="post" action="/api/login">
-		<label for="email">Email: </label><input name="email" type="text" size="25" />
-		<label for="password">Password: </label><input name="password" type="password" size="10" /><input type="checkbox" name="login_days" value="1" /><label for="login_days" class="tiny">Remember me</label>
-		<div id="inplacelogin_buttons">
-			<input value="Sign In" type="submit" />
- 			or <input value="Create Account" type="button" />
-		</div>
-		<div id="login_dialog_msg"></div>
-	</form>
-</div>
-
 <script type="text/javascript">
 
 function BeerCrushMain()
