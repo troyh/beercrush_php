@@ -15,6 +15,11 @@ if (is_null($password)) {
 	print "\n";
 	exit;
 }
+else if ($password===false) {
+	header('HTTP/1.0 406 Email not found');
+	print "\n";
+	exit;
+}
 
 $BC->oak->broadcast_msg('sendmail',array(
 	'template' => 'password_reminder',
@@ -33,6 +38,9 @@ function get_password($email) {
 		if ($BC->oak->get_view('user/email?key=%22'.urlencode($email).'%22',&$results)===false)
 			return null;
 
+		if (count($results->rows)==0)
+			return false;
+			
 		if (count($results->rows)>1)
 			$BC->oak->log(count($results->rows).' accounts with email address '.$email,OAK::LOGPRI_WARN);
 		

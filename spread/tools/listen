@@ -5,8 +5,11 @@ require_once('OAK/listener.class.php');
 
 $opts=getopt('p:i:g:');
 
-if (!empty($opts['p']))
-	file_put_contents($opts['p'],getmypid());
+if (!empty($opts['p'])) {
+	if (file_put_contents($opts['p'],getmypid()) === false) {
+		exit(2);
+	}
+}
 
 if (!empty($opts['g']))
 	$groupname=$opts['g'];

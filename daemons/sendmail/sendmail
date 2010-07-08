@@ -46,11 +46,15 @@ oaklog "Re-routing all mail to $reroute_to";
 
 $bindir/listen -p /var/run/BeerCrush/$progname.pid -i sendmail -g sendmail |
 while read json; do
+	if [ -z "$json" ]; then
+		oaklog "Ignoring empty Spread message";
+		continue;
+	fi
 
 	declare -A params;
 
 	while read param value; do
-		params["$param"]=$value;
+		params[$param]=$value;
 	done < <(echo $json | php -r '$data=json_decode(file_get_contents("php://stdin")); foreach ($data as $k=>$v) { print "$k\t$v\n";}');
 	
 	if [ ! -f "$template_dir/${params[template]}" ]; then
@@ -68,3 +72,6 @@ while read json; do
 	oaklog "Sent ${params[template]} to ${params[email]}";
 	
 done
+
+oaklog "sendmail shutting down";
+

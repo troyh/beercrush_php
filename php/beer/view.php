@@ -729,16 +729,8 @@ function pageMain()
 		});
 	}
 
-	$('#ratebeer').click(function(evt){
-
-		if (get_user_id()==null) { // Not logged in
-			show_login_dialog(function(){ // Successful login
-			       $.getScript("/js/beerreview.js");
-			});
-		}
-		else {
-			$.getScript("/js/beerreview.js");
-		}
+	$('#ratebeer').click(function(){
+		$.getScript("/js/beerreview.js");
 		return false;
 	});
 	

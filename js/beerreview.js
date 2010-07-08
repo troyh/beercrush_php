@@ -1,5 +1,13 @@
 var flavors_selected={};
 
+if (get_user_id()==null) { // Not logged in
+	show_login_dialog('Beer reviews cannot be anonymous', function(){ // Successful login
+		show_beer_review_dialog();
+	});
+}
+else
+	show_beer_review_dialog();
+
 function set_flavors_value(f) {
 	var flavors_arr=[];
 	$.each(f,function(k,v){
@@ -9,6 +17,7 @@ function set_flavors_value(f) {
 	$('#beer_review_form input[name=flavors]').val(flavors_arr.join(' '));
 }
 
+function show_beer_review_dialog() {
 $('#beer_review_form').load('/beer/reviewform',null,function() {
 	$.getScript("/js/jquery.ui.stars.js",function(){
 		$('#star-rating').stars();
@@ -119,3 +128,4 @@ $('#beer_review_form').load('/beer/reviewform',null,function() {
 		});
 	});
 });
+}

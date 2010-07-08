@@ -86,7 +86,7 @@ function showusername()
 	$('#login').html((login_data.avatar?'<img src="'+login_data.avatar+'" />':'')+'Cheers, <a href="/user/'+$.cookie('userid')+'">'+login_data.name+'</a>! <a href="javascript:logout();">Logout</a>');
 }
 
-function show_login_dialog(success_func) {
+function show_login_dialog(title,success_func) {
 
 	if ($('#inplacelogin').size()==0) {
 		$('#page_wrap').append(
@@ -215,16 +215,36 @@ function show_login_dialog(success_func) {
 		}
 	});
 	
-	$('#inplacelogin').dialog({modal:true},{title:'That action requires an account.'},{minWidth: 400});
+	$('#inplacelogin').dialog({
+		modal:true,
+		title:title,
+		resizable: false,
+		minWidth: 400
+	});
 }
 
 function forgot_password(evt) {
 	var email=$(evt.target).parentsUntil('form').parent().find('input[name=email]').val();//.replace(/^\s+/,'').replace(/\s+$/,'');
 	if (email.length) {
-		$.post('/api/forgotpassword',{
-			'email': email
-		},function(data){
-			// TODO: tell user to expect email
+		$.ajax({
+			type: 'POST',
+			url: '/api/forgotpassword',
+			data: {'email': email},
+			success:function(data){
+				// TODO: tell user to expect email
+				$('#login_dialog_msg').html('Check your mail.');
+			},
+			error: function(xhr,status,err) {
+				switch (xhr.status) {
+					case 406: // Email not found
+						$('#login_dialog_msg').html('No account with that email address. Try creating an account instead.');
+						break;
+					case 404: // Password not found
+					default:
+						$('#login_dialog_msg').html('Unable to email your password.');
+						break;
+				}
+			}
 		});
 	}
 }
@@ -234,7 +254,7 @@ function showlogin()
 	$('#login').html('<div><a href="">Login</a> or <a href="">Create Account</a></div>');
 
 	$('#login a').click(function() {
-		show_login_dialog();
+		show_login_dialog('Login');
 		return false;
 	});
 }
