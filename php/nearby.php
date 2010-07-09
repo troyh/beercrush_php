@@ -3,7 +3,7 @@
 require_once 'beercrush/beercrush.php';
 
 $header['js'][]='<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>';
-$header['js'][]='<script type="text/javascript" src="/js/jquery.bt.js"></script>';
+// $header['js'][]='<script type="text/javascript" src="/js/jquery.bt.js"></script>';
 $header['js'][]='<!--[if IE]><script type="text/javascript" src="/js/excanvas.js"></script><![endif]-->';
 include('./header.php');
 ?>
@@ -21,6 +21,7 @@ include('./header.php');
 	<a href="foo" onclick="$('#setlocation_form').removeClass('hidden');return false;">Locate me</a>
 </div>
 
+<div id="map_canvas" style="float:right;width:500px;height:500px;"></div>
 <ul id="nearbylist">
 </ul>
 <div id="pagenav_showing"></div>
@@ -44,13 +45,6 @@ include('./header.php');
 
 function shownearbyplaces(lat,lon) {
 	window.location.href='/nearby?lat='+lat+'&lon='+lon;
-	return;
-	$.getJSON('/api/nearby.fcgi',{
-		'lat': lat,
-		'lon': lon
-	},
-	function (data,textStatus) {
-	});
 }
 
 $.extend({
@@ -128,17 +122,20 @@ function gps_distance(loc1,loc2) {
 function requery_url(within) {
 	window.location.href='?lat='+settings.centerpoint.lat+'&lon='+settings.centerpoint.lon+'&within='+within;
 }
+
 function display_list(sel,start,count) {
 	var j=Math.min(count,places_list.length-start);
-	if ((start+j) < places_list.length)
+	if ((start+j) < places_list.length) {
 		$('#pagenav_showing').html('Showing '+(start+j)+' places (of '+places_list.length+') within '+settings.within+' miles. <input type="button" value="Show '+Math.min(count,places_list.length-(start+count))+' more" onclick="display_list(\''+sel+'\','+(start+count)+','+count+');" />');
-	else
+	}
+	else {
 		$('#pagenav_showing').html('Showing all '+places_list.length+' places within '+settings.within+' miles. Extend range:'+
 		'<select onchange="requery_url($(this).val());">'+
 		'<option value="'+(settings.within*2)+'">'+(settings.within*2)+' miles</option>'+
 		'<option value="'+(settings.within*3)+'">'+(settings.within*3)+' miles</option>'+
 		'<option value="'+(settings.within*4)+'">'+(settings.within*4)+' miles</option>'+
 		'</select>');
+	}
 		
 	var placetype_strings=[
 		"",
@@ -149,58 +146,18 @@ function display_list(sel,start,count) {
 	];
 		
 	for (var i=start;i<(start+j);++i) {
-		$(sel).append('<li><a href="/'+places_list[i].id.replace(/:/g,'/')+'">'+places_list[i].name+'</a> ['+placetype_strings[places_list[i].placetype]+'] ('+(places_list[i].distance*0.621371192).toFixed(2)+' mi / '+places_list[i].distance.toFixed(2)+' km)</li>');
-	}
-	
-	$('#nearbylist li a').click(function(evt){
-
-		var atag=$(this);
-		$.getJSON('/api/'+$(this).attr('href'),null,function(place){
-			$('#bt_content_name').html(place.name);
-			$('#bt_content_placetype').html(place.placetype);
-			$('#bt_content_avg').html(place.review_summary.avg);
-			$('#bt_content_food_avg').html(place.review_summary.food_avg);
-			$('#bt_content_service_avg').html(place.review_summary.service_avg);
-			$('#bt_content_atmosphere_avg').html(place.review_summary.atmosphere_avg);
-			var addr='';
-			if (place.address.street)
-				addr+=place.address.street+'<br />';
-			addr+=place.address.city+', '+place.address.state+' '+place.address.zip;
-			if (place.phone)
-				addr+='<br />'+place.phone;
-				
-			$('#bt_content_address').html(addr);
-			$('#bt_content_url').attr('href',$(atag).attr('href'));
-			$('#bt_content_url').text('More Info');
-			
-			$('#bt_content_wrapper').html($('#bt_content').html());
+		var id=places_list[i].id.replace(/:/g,'-');
+		$(sel).append('<li id="'+id+'"><a href="/'+places_list[i].id.replace(/:/g,'/')+'">'+places_list[i].name+'</a> ['+placetype_strings[places_list[i].placetype]+'] ('+(places_list[i].distance*0.621371192).toFixed(2)+' mi / '+places_list[i].distance.toFixed(2)+' km)</li>');
+		var marker=new google.maps.Marker({
+			position: new google.maps.LatLng(places_list[i].lat,places_list[i].lon),
+			map: map
 		});
-		
-		$(this).bt('<div id="bt_content_wrapper" style="height:200px"></div>',{
-			trigger: 'none',
-			closeWhenOthersOpen: true,
-			centerPointY: .1,
-			positions: ['right', 'left'], 
-			padding: 10, 
-			width: 256, 
-			spikeGirth: 30, 
-			spikeLength: 75, 
-			cornerRadius: 10, 
-			fill: '#FFF', 
-			strokeStyle: '#B9090B', 
-			shadow: true, 
-			shadowBlur: 12,
-			shadowOffsetX: 0,
-			shadowOffsetY: 5, 
-			cssStyles: {
-				fontSize: '12px',
-			}
-		}).btOn();
-		
-		return false; // Prevent nav to the href
-	});
-	
+		makeInfoWindow(marker,places_list[i]);
+		makeListItemClickable(id,marker);
+	}
 }
+
+var map=null;
 
 function pageMain() {
 	
@@ -244,12 +201,78 @@ function pageMain() {
 				);
 			}
 			places_list.sort(function(a,b){return a.distance-b.distance});
+			
+			// Draw map and put places on map
+			var opts={
+				zoom: 12,
+				center: latlng,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			};
+			map=new google.maps.Map(document.getElementById('map_canvas'),opts);
+
+			// var loc_marker=new google.maps.Marker({
+			// 	position: latlng,
+			// 	map: map,
+			// 	title: 'Your location'
+			// });
+			
 			display_list('#nearbylist',0,settings.display_limit);
+	
 		});
 	}
 	
 }
+
+var openinfowindow=null;
+
+function makeInfoWindow(marker,place) {
+	var infowindow=new google.maps.InfoWindow({
+		content: place.name,
+		size: new google.maps.Size(50,50)
+	});
+	google.maps.event.addListener(marker,'click',function(){
+		$.getJSON('/api/'+place.id.replace(/:/,'/'),null,function(place){
+			
+			// Close any other infowindows
+			if (openinfowindow)
+				openinfowindow.close();
 	
+			var addr='';
+			if (place.address.street)
+				addr+=place.address.street+'<br />';
+			addr+=place.address.city+', '+place.address.state+' '+place.address.zip;
+			if (place.phone)
+				addr+='<br />'+place.phone;
+
+			infowindow.setContent('<div id="bt_content_wrapper" style="height:200px">'+
+			'<div id="bt_content">'+
+				'<h3 id="bt_content_name">'+place.name+'</h3>'+
+				'<div id="bt_content_placetype">'+place.placetype+'</div>'+
+				'<a id="bt_content_url" href="'+place.url+'">More Info</a>'+
+				'<hr />'+
+				'<div>Rating: <span id="bt_content_avg">'+place.review_summary.avg+'</span></div>'+
+				'<div>Food: <span id="bt_content_food_avg">'+place.review_summary.food_avg+'</span></div>'+
+				'<div>Service: <span id="bt_content_service_avg">'+place.review_summary.service_avg+'</span></div>'+
+				'<div>Atmosphere: <span id="bt_content_atmosphere_avg">'+place.review_summary.atmosphere_avg+'</span></div>'+
+				'<hr />'+
+				'<div id="bt_content_address">'+addr+'</div>'+
+			'</div>'+
+			'</div>');
+			
+			infowindow.open(map,marker);
+			openinfowindow=infowindow;
+		});
+	});
+
+}
+
+function makeListItemClickable(id,marker) {
+	$('#'+id).click(function(evt){
+		google.maps.event.trigger(marker,'click');
+		return false;
+	});
+}
+
 </script>
 
 <?php include("./footer.php"); ?>
