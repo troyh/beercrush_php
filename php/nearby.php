@@ -22,7 +22,7 @@ include('./header.php');
 </div>
 
 <div id="map_canvas" style="float:right;width:500px;height:500px;"></div>
-<ul id="nearbylist">
+<ul id="nearbylist" style="overflow:auto;width:440px;height:500px;">
 </ul>
 <div id="pagenav_showing"></div>
 
@@ -88,7 +88,7 @@ function geolocate(str) {
 				$.cookie('location_lon',position.coords.longitude);
 				shownearbyplaces(position.coords.latitude,position.coords.longitude)
 			}, function() {
-				// Browser failed to provide location
+				// TODO: handle this: Browser failed to provide location
 			});
 		}
 	}
@@ -101,6 +101,8 @@ var settings={
 	display_limit: 20
 };
 var places_list=null;
+var map=null;
+var openinfowindow=null;
 
 function toRad(d) {
 	return d * (Math.PI/180);
@@ -157,8 +159,6 @@ function display_list(sel,start,count) {
 	}
 }
 
-var map=null;
-
 function pageMain() {
 	
 	if (typeof($.getUrlVar('lat'))=='undefined' || typeof($.getUrlVar('lon'))=='undefined') {
@@ -187,11 +187,13 @@ function pageMain() {
 		if (typeof($.getUrlVar('within'))!='undefined' && $.getUrlVar('within').length)
 			settings.within=$.getUrlVar('within');
 		
+		$('#nearbylist').spinner();
 		$.getJSON('/api/nearby.fcgi',{
 			within:settings.within,
 			lat: settings.centerpoint.lat, 
 			lon: settings.centerpoint.lon
 		},function(data,textStatus){
+			$('#nearbylist').spinner('close');
 			places_list=data.places;
 			// Calculate distance for each place
 			for (var i=0;i<places_list.length;++i) {
@@ -222,8 +224,6 @@ function pageMain() {
 	}
 	
 }
-
-var openinfowindow=null;
 
 function makeInfoWindow(marker,place) {
 	var infowindow=new google.maps.InfoWindow({

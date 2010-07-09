@@ -308,6 +308,43 @@ function flatten_json(data,prefix) {
 	return flattened;
 }
 
+////////////////////////////////////////////////
+// Loading Spinner jQuery Plugin
+////////////////////////////////////////////////
+(function($){
+$.fn.spinner = function(options) {
+	
+	if (typeof(options)=='string') {
+		// It's a method call
+		return this.each(function() {
+			if (options=='close') {
+				$('div.spinner',this).remove();
+			}
+		});
+	}
+	
+	var defaults={
+		style: {
+			width: 100,
+			height: 100,
+			background: 'rgba(0,0,0,.25)'
+		}
+	};
+	
+	var options=$.extend(defaults,options);
+
+	return this.each(function(){
+		
+		// Find the center of the element
+		var x=$(this).offset().left+($(this).width()/2)-options.style.width;
+		var y=$(this).offset().top+($(this).height()/2)-options.style.height;
+		
+		$(this).append('<div class="spinner" style="position:absolute;left:'+
+			x+';top:'+y+';width:'+options.style.width+';height:'+options.style.height+';background:'+options.style.background+
+			';"><img src="/img/loading.gif" style="position:relative;top:'+((options.style.height-32)/2)+'px;left:'+((options.style.width-32)/2)+'px" /></div>');
+	});
+}
+})(jQuery);
 
 ////////////////////////////////////////////////
 // editabledoc jQuery Plugin
