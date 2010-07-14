@@ -4,7 +4,7 @@
 			<ul>
 				<li><a href="">Wishlist</a></li>
 				<li><a href="">My Account</a></li>
-				<li><a href="javascript: logout();">Logout</a></li>
+				<li><a href="javascript: BeerCrush.logout();">Logout</a></li>
 			</ul>
 		</div>
 		<div class="menu">Explore
@@ -75,9 +75,9 @@ function BeerCrushMain()
 	if ($.cookie('login_data'))
 		login_data=jQuery.parseJSON($.cookie('login_data'));
 		
-	if ($.cookie('userid'))
+	if (BeerCrush.get_user_id())
 	{
-		showusername();
+		BeerCrush.showusername();
 		if (login_data.login_days)
 		{
 			// Extend login so that the user stays logged in if they continue to use the site
@@ -92,13 +92,13 @@ function BeerCrushMain()
 			var tmp_data=login_data;
 			tmp_data.userid=$.cookie('userid');
 			tmp_data.usrkey=$.cookie('usrkey');
-			set_login_cookies(tmp_data,date);
+			BeerCrush.set_login_cookies(tmp_data,date);
 		}
 	}
 	else
 	{
 		// Put login window at top of page
-		showlogin();
+		BeerCrush.showlogin();
 	}
 	
 	formatDates('.datestring');

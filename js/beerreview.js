@@ -1,7 +1,7 @@
 var flavors_selected={};
 
-if (get_user_id()==null) { // Not logged in
-	show_login_dialog('Beer reviews cannot be anonymous', function(){ // Successful login
+if (BeerCrush.get_user_id()==null) { // Not logged in
+	BeerCrush.show_login_dialog('Beer reviews cannot be anonymous', function(){ // Successful login
 		show_beer_review_dialog();
 	});
 }
@@ -86,8 +86,8 @@ $('#beer_review_form').load('/beer/reviewform',null,function() {
 				});
 			
 				// If there's an existing review, fill out the fields
-				if (get_user_id()!=null && $('#beer_id').val().trim().length) {
-					$.getJSON('/api/review/'+$('#beer_id').val().replace(/:/g,'/')+'/'+get_user_id(),
+				if (BeerCrush.get_user_id()!=null && $('#beer_id').val().trim().length) {
+					$.getJSON('/api/review/'+$('#beer_id').val().replace(/:/g,'/')+'/'+BeerCrush.get_user_id(),
 						null,
 						function(data){
 							$('#aftertaste-slider').slider('value',data.aftertaste);

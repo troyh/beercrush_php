@@ -68,6 +68,9 @@ function get_password($email) {
 	$user_doc=new OAKDocument('');
 	if ($BC->oak->get_document($docid,&$user_doc)!==true)
 		return null;
+
+	if (empty($user_doc->password))
+		return null;
 		
 	return $user_doc->password;
 }

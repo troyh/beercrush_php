@@ -3,7 +3,7 @@ header("Cache-Control: no-cache");
 require_once 'OAK/oak.class.php';
 
 /*
-	Take email and password CGI vars and validate them against the user db.
+	Take email and password/MD5 CGI vars and validate them against the user db.
 */
 
 function login_failure($status_code,$reason='')
@@ -19,26 +19,26 @@ function login_failure($status_code,$reason='')
 	exit;
 }
 
-$email=null;
-$password=null;
-
-// TODO: use OAK's get_cgi_value() instead of $_GET/$_POST directly
-if (empty($_GET['email']))
-	$email=$_POST['email'];
-else
-	$email=$_GET['email'];
-
-if (empty($_GET['password']))
-	$password=$_POST['password'];
-else
-	$password=$_GET['password'];
-	
-if (is_null($email) || is_null($password))
-{
-	login_failure(400,'email and password are required'); // Create failed
+function get_cgi_value($name) {
+	if (!empty($_POST[$name]))
+		return $_POST[$name];
+	if (!empty($_GET[$name]))
+		return $_GET[$name];
+	return null;
 }
-else
-{
+
+$email=get_cgi_value('email');
+$password=get_cgi_value('password');
+$md5=get_cgi_value('md5');
+
+if (is_null($md5) && !is_null($password)) {
+	$md5=md5($password);
+}
+	
+if (is_null($email) || is_null($md5)) {
+	login_failure(400,'email and password/MD5 are required'); // Create failed
+}
+else {
 	$docid=null;
 	
 	$oak=new OAK();
@@ -51,7 +51,7 @@ else
 		else
 		{
 			if (count($results->rows)>1)
-				$oak->log(count($results->rows).' accounts with email address '.$email,OAK::LOGPRI_WARN);
+				$oak->log(count($results->rows).' accounts with email address '.$email);
 			
 			/*
 				Find the user doc for this email/password combo.
@@ -64,13 +64,14 @@ else
 			
 			foreach ($results->rows as $row)
 			{
-				if ($row->key===$email && $row->value===$password)
-				{
-					$docid=$row->id;
-					break;
+				if ($row->key===$email) {
+					if ($row->value[1]===$md5 || md5($row->value[0])===$md5) {
+						$docid=$row->id;
+						break;
+					}
 				}
 			}
-			
+
 			if (is_null($docid)) {
 				if (count($results->rows)) {
 					$oak->log('failed login attempt (from couchdb):'.$email);
@@ -91,8 +92,12 @@ else
 	if ($oak->get_document($docid,&$user_doc)!==true) {
 		login_failure(500,'Internal error');
 	}
-	else if ($user_doc->password!==$password) {
+	else if (empty($user_doc->md5) && md5($user_doc->password)!==$md5) {
 		$oak->log('failed login attempt (from memcached):'.$email);
+		login_failure(403,'Login failed');
+	}
+	else if ($user_doc->md5!==$md5) {
+		$oak->log('failed login attempt (from memcached):'.$email.' md5='.$md5.' should be='.$user_doc->md5);
 		login_failure(403,'Login failed');
 	}
 	else {

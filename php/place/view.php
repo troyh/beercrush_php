@@ -685,7 +685,7 @@ function pageMain()
 	});
 
 	var place_is_bookmarked=false;
-	var user_id=get_user_id();
+	var user_id=BeerCrush.get_user_id();
 	if (user_id!=null) { // I'm logged in
 		// Get my bookmarks to see if this place is on it
 		$.getJSON('/api/bookmarks/'+user_id,function(data){
@@ -728,8 +728,8 @@ function pageMain()
 				open: function() {
 
 					// If there's an existing review, fill out the fields
-					if (get_user_id()!=null && $('#place_id').val().trim().length) {
-						$.getJSON('/api/review/'+$('#place_id').val().replace(/:/g,'/')+'/'+get_user_id(),
+					if (BeerCrush.get_user_id()!=null && $('#place_id').val().trim().length) {
+						$.getJSON('/api/review/'+$('#place_id').val().replace(/:/g,'/')+'/'+BeerCrush.get_user_id(),
 							null,
 							function(data){
 								$('#rating-wrapper').stars('select',data.rating);

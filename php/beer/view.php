@@ -739,10 +739,13 @@ function pageMain()
 		}
 	});
 	
-	if (get_user_id()!=null) {
-		$.getJSON('/api/'+$('#beer_id').val().replace(/:/g,'/')+'/personalization',null,function(data){
-			$('#predrating').parent('div').attr('title','Predicted rating for you: '+data.predictedrating+' out of 5');
-			$('#predrating').css('width',data.predictedrating/5*100+'%');
+	if (BeerCrush.get_user_id()!=null) {
+		BeerCrush.getJSON({
+			url: '/api/'+$('#beer_id').val().replace(/:/g,'/')+'/personalization',
+			success: function(data) {
+				$('#predrating').parent('div').attr('title','Predicted rating for you: '+data.predictedrating+' out of 5');
+				$('#predrating').css('width',data.predictedrating/5*100+'%');
+			}
 		});
 	}
 

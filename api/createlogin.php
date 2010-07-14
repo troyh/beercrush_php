@@ -4,6 +4,15 @@ require_once 'OAK/oak.class.php';
 
 $oak=new OAK();
 
+
+function get_cgi_value($name) {
+	if (!empty($_POST[$name]))
+		return $_POST[$name];
+	if (!empty($_GET[$name]))
+		return $_GET[$name];
+	return null;
+}
+
 function login_create_failure($status_code,$reason='')
 {
 	$msg=array(
@@ -49,28 +58,15 @@ function email_exists($email)
 	Take email and password CGI vars and create a login
 */
 
+$email=get_cgi_value('email');
+$password=get_cgi_value('password');
+$md5=get_cgi_value('md5');
 
-$email=null;
-$password=null;
-
-if (empty($_POST['email']) || empty($_POST['password']))
-{
-	if (empty($_GET['email']) || empty($_GET['password']))
-	{
-	}
-	else
-	{
-		$email=$_GET['email'];
-		$password=$_GET['password'];
-	}
-}
-else
-{
-	$email=$_POST['email'];
-	$password=$_POST['password'];
+if (is_null($md5) && !is_null($password)) {
+	$md5=md5($password);
 }
 
-if (is_null($email) || is_null($password))
+if (is_null($email) || is_null($md5))
 {
 	login_create_failure(400,'email and password are required'); // Create failed
 }
@@ -87,7 +83,7 @@ else
 	$user_doc->type='user';
 	$user_doc->userid=$userid;
 	$user_doc->email=$email;
-	$user_doc->password=$password;
+	$user_doc->md5=$md5;
 
 	if ($oak->put_document('user:'.$userid,$user_doc)!==true)
 	{
