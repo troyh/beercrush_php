@@ -334,10 +334,16 @@ $.fn.spinner = function(options) {
 	var options=$.extend(defaults,options);
 
 	return this.each(function(){
+		if ($(this).width() < options.style.width) { // Expand the width of the element
+			$(this).width(options.style.width);
+		}
+		if ($(this).height() < options.style.height) { // Expand the height of the element
+			$(this).height(options.style.height);
+		}
 		
-		// Find the center of the element
-		var x=$(this).offset().left+($(this).width()/2)-options.style.width;
-		var y=$(this).offset().top+($(this).height()/2)-options.style.height;
+		// Calculate the position of the element
+		var x=$(this).offset().left+(($(this).width()-options.style.width)/2);
+		var y=$(this).offset().top+(($(this).height()-options.style.height)/2);
 		
 		$(this).append('<div class="spinner" style="position:absolute;left:'+
 			x+';top:'+y+';width:'+options.style.width+';height:'+options.style.height+';background:'+options.style.background+
@@ -367,6 +373,12 @@ $.fn.editabledoc = function(posturl,options) {
 		var doc=$(this);
 
 		$(options.edit_button_selector).toggle(function(){
+			
+			// Call onedit, if one is provided
+			if (options.startEditing) {
+				options.startEditing();
+			}
+			
 			$(this).data('orig_value',$(this).attr('value'));
 			$(this).attr('value',options.done_button_text);
 		

@@ -15,7 +15,7 @@ function validate_brewery_id($name,$value,$attribs,$converted_value,$oak)
 
 function validate_srm_value($name,$value,$attribs,$converted_value,$oak)
 {
-	return 2 <= $converted_value && $converted_value <= 40;
+	return 0 <= $converted_value && $converted_value <= 40;
 }
 
 function validate_beer_style_id($name,$value,$attribs,$converted_value,$oak)
@@ -149,6 +149,11 @@ function oakMain($oak)
 	
 	// Give it this request's edits
 	$oak->assign_cgi_values(&$beer,$cgi_fields);
+	
+	// Remove SRM if the new value is zero (the only way to remove SRM)
+	if ($beer->srm==0) {
+		unset($beer->srm);
+	}
 	
 	$beer->name			=trim(preg_replace('/\s\s+/',' ',$beer->name));
 	$beer->description	=trim(preg_replace('/\s\s+/',' ',$beer->description));

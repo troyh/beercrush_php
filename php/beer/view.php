@@ -156,7 +156,7 @@ include("../header.php");
 	<h1><?=$beerdoc->name?></h1>
 	<a href="/style/<?=$styles_lookup[$beerdoc->styles[0]]->id?>"><?=$styles_lookup[$beerdoc->styles[0]]->name?></a>
 	<div id="ratings_section" class="cf">
-		<div class="star_rating" title="Average rating: <?=$beerdoc->review_summary->avg?> out of 5"><div id="avgrating" style="width: <?=$beerdoc->review_summary->avg/5*100?>%"></div></div>
+		<div class="star_rating" title="Average rating: <?=number_format($beerdoc->review_summary->avg,2)?> out of 5"><div id="avgrating" style="width: <?=number_format($beerdoc->review_summary->avg/5*100,2)?>%"></div></div>
 		<div class="star_rating" title=""><div id="predrating" style="width: 0%"></div></div>
 		<a href="#ratings" id="ratingcount"><?=count($reviews->reviews)?> ratings</a>
 		<div class="flavors">
@@ -165,11 +165,11 @@ include("../header.php");
 			<?php endforeach?>
 		</div>
 		<p>Body</p>
-		<div class="body"><div class="meter"><div style="width: <?=$beerdoc->review_summary->body_avg/5*100?>%"></div></div></div>
+		<div class="body"><div class="meter"><div style="width: <?=number_format($beerdoc->review_summary->body_avg/5*100,2)?>%"></div></div></div>
 		<p>Balance</p>
-		<div class="balance"><div class="meter"><div style="width: <?=$beerdoc->review_summary->balance_avg/5*100?>%"></div></div></div>
+		<div class="balance"><div class="meter"><div style="width: <?=number_format($beerdoc->review_summary->balance_avg/5*100,2)?>%"></div></div></div>
 		<p>Aftertaste</p>
-		<div class="aftertaste"><div class="meter"><div style="width: <?=$beerdoc->review_summary->aftertaste_avg/5*100?>%"></div></div></div>
+		<div class="aftertaste"><div class="meter"><div style="width: <?=number_format($beerdoc->review_summary->aftertaste_avg/5*100,2)?>%"></div></div></div>
 	</div>
 
 	<span class="label">Brewer's description:</span>
@@ -186,10 +186,10 @@ include("../header.php");
 		
 		<div class="cf"><div class="label">Color: </div><div id="beer_srm_name"><div <?php if (!is_null($color)):?>style="background-color:<?=sprintf("#%02x%02x%02x",$color->rgb[0],$color->rgb[1],$color->rgb[2])?>"<?php endif;?>></div><?=$color->name?>&nbsp;</div></div>
 		
-		<div class="cf"><div class="label">Alcohol (abv): </div><div id="beer_abv"><?=$beerdoc->abv?>&#37;</div></div>
+		<div class="cf"><div class="label">Alcohol (abv): </div><div id="beer_abv"><?=number_format($beerdoc->abv,2)?>&#37;</div></div>
 		<div class="cf"><div class="label">Bitterness (IBUs): </div><div id="beer_ibu"><?=$beerdoc->ibu?></div></div>
-		<div class="cf"><div class="label">Original Gravity: </div><div id="beer_og"><?=$beerdoc->og?></div></div>
-		<div class="cf"><div class="label">Final Gravity: </div><div id="beer_fg"><?=$beerdoc->fg?></div></div>
+		<div class="cf"><div class="label">Original Gravity: </div><div id="beer_og"><?=number_format($beerdoc->og,3)?></div></div>
+		<div class="cf"><div class="label">Final Gravity: </div><div id="beer_fg"><?=number_format($beerdoc->fg,3)?></div></div>
 		<div class="cf"><div class="label">Hops: </div><div id="beer_hops"><?=$beerdoc->hops?></div></div>
 		<div class="cf"><div class="label">Grains: </div><div id="beer_grains"><?=$beerdoc->grains?></div></div>
 		<div class="cf"><div class="label">Yeast: </div><div id="beer_yeast"><?=$beerdoc->yeast?></div></div>
@@ -220,7 +220,7 @@ include("../header.php");
 			<option value="40" style="background-color: rgb(0,0,0)">Black</option>
 		</select></div>
 		
-		<div class="cf"><div class="label">Alcohol (abv): </div><input type="text" id="beer_abv_edit" /></div>
+		<div class="cf"><div class="label">Alcohol (abv): </div><input type="text" id="beer_abv_edit" />&#37;</div>
 		<div class="cf"><div class="label">Bitterness (IBUs): </div><input type="text" id="beer_ibu_edit" /></div>
 		<div class="cf"><div class="label">Original Gravity: </div><input type="text" id="beer_og_edit" /></div>
 		<div class="cf"><div class="label">Final Gravity: </div><input type="text" id="beer_fg_edit" /></div>
@@ -266,7 +266,7 @@ include("../header.php");
 			<div class="aftertaste" title="Aftertaste: <?=$review->aftertaste?> of 5"><div class="meter"><div style="width: <?=$review->aftertaste/5*100?>%"></div></div></div>
 		</div>
 		<div class="cf"><div class="label">Date Drank: </div><span class="datestring"><?=!empty($review->date_drank)?date('D, d M Y H:i:s O',strtotime($review->date_drank)):''?></span></div>
-		<div class="cf"><div class="label">Price: </div>$<?=$review->purchase_price?> at <a href="/<?=str_replace(':','/',$review->purchase_place_id)?>"><?=$places[$review->purchase_place_id]->name?></a></div>
+		<div class="cf"><div class="label">Price: </div>$<?=number_format($review->purchase_price,2)?> at <a href="/<?=str_replace(':','/',$review->purchase_place_id)?>"><?=$places[$review->purchase_place_id]->name?></a></div>
 		<div class="cf"><div class="label">Poured: </div><?=$review->poured_from?></div>
 	</div>
 </div>
@@ -283,7 +283,7 @@ include("../header.php");
 			<li><?php if ($recommend->photos->total):?><img src="<?=$recommend->photos->thumbnail?>" /><?php endif?>
 			<a href="/<?=BeerCrush::docid_to_docurl($recommend->brewery->id)?>" class="brewery"><?=$recommend->brewery->name?></a>
 			<a href="/<?=BeerCrush::docid_to_docurl($recommend->id)?>"><?=$recommend->name?></a>
-			<div class="star_rating" title="Rating: <?=$recommend->review_summary->avg?> of 5"><div id="avgrating" style="width: <?=$recommend->review_summary->avg/5*100?>%"></div></div></li>
+			<div class="star_rating" title="Rating: <?=number_format($recommend->review_summary->avg,2)?> of 5"><div id="avgrating" style="width: <?=number_format($recommend->review_summary->avg/5*100,2)?>%"></div></div></li>
 		<?php endforeach; ?>
 	</ul>
 	<?php endif; ?>
@@ -296,7 +296,7 @@ include("../header.php");
 			<li><?php if ($recommend->photos->total):?><img src="<?=$recommend->photos->thumbnail?>" /><?php endif?>
 			<a href="/<?=BeerCrush::docid_to_docurl($recommend->brewery->id)?>" class="brewery"><?=$recommend->brewery->name?></a>
 			<a href="/<?=BeerCrush::docid_to_docurl($recommend->id)?>"><?=$recommend->name?></a>
-			<div class="star_rating" title="Rating: <?=$recommend->review_summary->avg?> of 5"><div id="avgrating" style="width: <?=$recommend->review_summary->avg/5*100?>%"></div></div></li>
+			<div class="star_rating" title="Rating: <?=number_format($recommend->review_summary->avg,2)?> of 5"><div id="avgrating" style="width: <?=number_format($recommend->review_summary->avg/5*100,2)?>%"></div></div></li>
 		<?php endforeach; ?>
 	</ul>
 	<?php endif; ?>
@@ -308,7 +308,7 @@ include("../header.php");
 			$b=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl($id));
 			$b->brewery=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl(BeerCrush::beer_id_to_brewery_id($id)));
 		?>
-			<li><?php if ($b->photos->total):?><img src="<?=$b->photos->thumbnail?>" /><?php endif?><a href="/<?=BeerCrush::docid_to_docurl($id)?>"><?=$b->name?></a> by <a href="/<?=BeerCrush::docid_to_docurl($b->brewery->id)?>"><?=$b->brewery->name?></a> (<?=$b->review_summary->avg?>)</li>
+			<li><?php if ($b->photos->total):?><img src="<?=$b->photos->thumbnail?>" /><?php endif?><a href="/<?=BeerCrush::docid_to_docurl($id)?>"><?=$b->name?></a> by <a href="/<?=BeerCrush::docid_to_docurl($b->brewery->id)?>"><?=$b->brewery->name?></a> (<?=number_format($b->review_summary->avg,2)?>)</li>
 		<?php endforeach;?>
 	</ul>
 	<?php endif;?>
@@ -332,7 +332,7 @@ include("../header.php");
 			// Remove it so it isn't selected again
 			array_splice($beerlist->beers,$n,1);
 		?>
-			<li><?php if ($morebeer->photos->total):?><img src="<?=$morebeer->photos->thumbnail?>" /><?php endif?><a href="/<?=$u?>"><?=$morebeer->name?></a> (<?=$morebeer->review_summary->avg?>)</li>
+			<li><?php if ($morebeer->photos->total):?><img src="<?=$morebeer->photos->thumbnail?>" /><?php endif?><a href="/<?=$u?>"><?=$morebeer->name?></a> (<?=number_format($morebeer->review_summary->avg,2)?>)</li>
 		<?php endfor; ?>
 	</ul>
 	<?php endif;?>
@@ -363,6 +363,7 @@ include("../header.php");
 <div id="nearby_results"></div>
 <h3>Beer Edit History</h3>
 <div>Beer last modified: <span id="beer_lastmodified" class="datestring"><?=date('D, d M Y H:i:s O',$beerdoc->meta->mtime)?></span></div>
+<a href="" onclick="show_history();return false;">Show history</a>
 <div id="history"></div>
 
 <?php
@@ -535,8 +536,10 @@ function show_diff(a,b) {
 }
 
 function show_history() {
+	$('#history').spinner();
 	var path=$('#beer_id').val().replace(/:/g,'/');
 	$.getJSON('/api/history/'+path,function(data){
+		$('#history').spinner('close');
 		for (var i=0,j=data.changes.length;i<j;++i) {
 			dochistory.push(data.changes[i].index);
 			$('#history').append('<div id="version_'+data.changes[i].index+'">'+data.changes[i].date+'</div>');
@@ -627,25 +630,40 @@ function pageMain()
 		}
 	});
 
-	// $.getScript('/js/beerstyles.js',function(data,textStatus){
-	// 	$("#beer_stylename_edit").autocomplete(beerstyles,{
-	// 		"mustMatch": true,
-	// 		"matchContains": true,
-	// 		"formatItem": function(item) {
-	// 			return item.name;
-	// 		}
-	// 	}).result(function(evt,item) {
-	// 		$('#beer_style_edit').val(item.id);
-	// 		$('#beer_stylename').val(item.name);
-	// 	});
-	// });
-	
-
 	$('#beer').editabledoc('/api/beer/edit',{
 		args: {
 			beer_id: $('#beer_id').val()
 		},
 		stripprefix: 'beer_',
+		startEditing: function() {
+			$.getScript('/js/beerstyles.js',function(data,textStatus) {
+				var styles=[];
+				$.each(beerstyles,function(idx,elem){
+					styles.push({
+						label: elem.name,
+						value: elem.id
+					});
+				});
+				
+				$("#beer_stylename_edit").autocomplete(beerstyles, {
+					source: styles,
+					focus: function(event,ui) {
+						$('#beer_stylename_edit').val(ui.item.label);
+						return false;
+					},
+					change: function(event,ui) {
+						$('#beer_stylename_edit').val(ui.item.label);
+						return false;
+					},
+					select: function(event,ui) {
+						$('#beer_style_edit').val(ui.item.value);
+						$('#beer_stylename').val(ui.item.label);
+						$('#beer_stylename_edit').val(ui.item.label);
+						return false;
+					}
+				});
+			});
+		},
 		fields: {
 			'beer_name': {
 				postSuccess: function(name,value) {
@@ -692,6 +710,7 @@ function pageMain()
 				}
 			},
 			'beer_abv': {
+				displayValueToEditValue: function() {return $('#beer_abv').text().replace(/%\s*$/,'').replace(/[^\d\.]/,'');},
 				postSuccess: function(name,value) { $('#'+name).html(value+'&#37;'); /* Add % sign */ }
 			}
 		}
@@ -719,8 +738,6 @@ function pageMain()
 			return true;
 		}
 	});
-	
-	// show_history();
 	
 	if (get_user_id()!=null) {
 		$.getJSON('/api/'+$('#beer_id').val().replace(/:/g,'/')+'/personalization',null,function(data){
