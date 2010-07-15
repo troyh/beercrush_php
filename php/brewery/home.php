@@ -12,7 +12,7 @@ function solr_query($params) {
 	return json_decode(file_get_contents($url));
 }
 
-
+$header['js'][]='<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>';
 
 include('../header.php');
 ?>
@@ -66,8 +66,19 @@ $beers=solr_query(array(
 </ul>
 
 <h1>Breweries Nearby</h1>
+Your Location: <span id="location_text"></span>
+<a href="" onclick="$('#setlocation_form').toggleClass('hidden');return false;">Change my location</a>
+<div id="setlocation_form" class="hidden">
+	<input id="location_box" type="text" size="10" value="" /><input type="button" onclick="BeerCrush.geolocate_user($('#location_box').val(),show_nearby_breweries);" value="Go" />
+	<a href="" onclick="BeerCrush.geolocate_user(null,show_nearby_breweries);return false;">Ask my browser</a>
+</div>
 
-NYI <!-- TODO: Show nearby breweries -->
+<div id="nolocation_msg" class="hidden">
+	<h2>Your location is not known.</h2>
+	<a href="" onclick="$('#setlocation_form').removeClass('hidden');return false;">Locate me</a>
+</div>
+
+<ul id="nearby_breweries"></ul>
 
 <h1>5 New Breweries</h1>
 
@@ -87,7 +98,33 @@ $breweries=solr_query(array(
 	</li>
 <?php endforeach;?>
 </ul>
+<script type="text/javascript">
 
+function show_nearby_breweries() {
+	$('#nearby_breweries').empty();
+	var latlon=BeerCrush.get_user_location();
+	if (latlon) {
+		BeerCrush.geocode_location(latlon.lat,latlon.lon, function(s) {
+			$('#location_text').html(s);
+		});
+		$.getJSON('/api/nearby.fcgi',{
+			lat: latlon.lat,
+			lon: latlon.lon,
+			types: 16
+		},function(data) {
+			$.each(data.places,function(i,item){
+				$('#nearby_breweries').append('<li><a href="/'+item.id.replace(/:/,'/')+'">'+item.name+'</a></li>');
+			});
+		});
+	}
+}
+
+function pageMain() {
+	// Ajax in the nearby breweries
+	show_nearby_breweries();
+
+}
+</script>
 <?php
 include('../footer.php');
 ?>

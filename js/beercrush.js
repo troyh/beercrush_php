@@ -307,6 +307,61 @@ var BeerCrush = {
 		};
 		
 		$.ajax(options);
+	},
+	geolocate_user: function(str,success_func) {
+		if (typeof(str)=='string' && str.length) {
+
+			var geocoder = new google.maps.Geocoder();
+			geocoder.geocode({
+				address: str
+			},
+			function(results,status){
+				if (status==google.maps.GeocoderStatus.OK) {
+					$.cookie('location_lat',results[0].geometry.location.lat());
+					$.cookie('location_lon',results[0].geometry.location.lng());
+					if (success_func)
+						success_func();
+				}
+			});
+
+		}
+		else {
+			if(navigator.geolocation) {
+				browserSupportFlag = true;
+				navigator.geolocation.getCurrentPosition(function(position) {
+					$.cookie('location_lat',position.coords.latitude);
+					$.cookie('location_lon',position.coords.longitude);
+					if (success_func)
+						success_func();
+				}, function() {
+					// TODO: handle this: Browser failed to provide location
+				});
+			}
+		}
+		return false;
+	},
+	geocode_location: function(lat,lon,success_func,fail_func) {
+		var latlng=new google.maps.LatLng(lat,lon);
+		var geocoder=new google.maps.Geocoder();
+		geocoder.geocode({'latLng': latlng}, function(results,status){
+			if (status==google.maps.GeocoderStatus.OK) {
+				if (success_func)
+					success_func(results[0].formatted_address);
+			}
+			else { // Failed
+				if (fail_func)
+					fail_func();
+			}
+		});
+	},
+	get_user_location: function() {
+		if ($.cookie('location_lat') && $.cookie('location_lon')) {
+			return {
+				lat: $.cookie('location_lat'),
+				lon: $.cookie('location_lon')
+			};
+		}
+		return null;
 	}
 };
 

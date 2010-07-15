@@ -78,7 +78,7 @@ $response=solr_query(array(
 	<?php foreach ($response->response->docs as $doc):
 		$brewery=BeerCrush::api_doc($BC->oak,BeerCrush::docid_to_docurl(BeerCrush::beer_id_to_brewery_id($doc->id)));
 	?>
-		<li><a href="/<?=BeerCrush::docid_to_docurl($doc->id)?>"><?=$doc->name?></a> by <a href="/<?=BeerCrush::docid_to_docurl($brewery->id)?>"><?=$brewery->name?></a> (<?=$doc->avgrating?>)</li>
+		<li><a href="/<?=BeerCrush::docid_to_docurl($doc->id)?>"><?=$doc->name?></a> by <a href="/<?=BeerCrush::docid_to_docurl($brewery->id)?>"><?=$brewery->name?></a> (<?=number_format($doc->avgrating,2)?>)</li>
 	<?php endforeach;?>
 </ul>
 
@@ -125,13 +125,13 @@ foreach ($beer->review_summary->flavors as $flavor) {
 	<a href="/<?=BeerCrush::docid_to_docurl($beer->id)?>"><?=$beer->name?></a>
 	
 	<?php if ($beer->photos->total && $beer->photos->thumbnail):?><div><img src="<?=$beer->photos->thumbnail?>" /></div><?php endif;?>
-	<div class="star_rating" title="Rating: <?=$beer->review_summary->avg?> of 5"><div class="avgrating" style="width: <?=$beer->review_summary->avg/5*100?>%"></div></div>
+	<div class="star_rating" title="Rating: <?=number_format($beer->review_summary->avg,2)?> of 5"><div class="avgrating" style="width: <?=number_format($beer->review_summary->avg/5*100,2)?>%"></div></div>
 	<div>Description:<?=$beer->description?></div>
 	<div>Flavors:<?=join(', ',$flavor_names)?></div>
-	<div>Body:<?=$beer->review_summary->body_avg?></div>
-	<div>Balance:<?=$beer->review_summary->balance_avg?></div>
-	<div>Aftertaste:<?=$beer->review_summary->aftertaste_avg?></div>
-	<div>Style:<?=$styles->{$beer->styles[0]}->name?></div>
+	<div>Body:<?=number_format($beer->review_summary->body_avg,2)?></div>
+	<div>Balance:<?=number_format($beer->review_summary->balance_avg,2)?></div>
+	<div>Aftertaste:<?=number_format($beer->review_summary->aftertaste_avg,2)?></div>
+	<div>Style:<?php if (!empty($beer->styles[0])) echo $styles->{$beer->styles[0]}->name;?></div>
 </div>
 
 <?php

@@ -1,4 +1,5 @@
 #include <fcgiapp.h>
+#define __STDC_LIMIT_MACROS
 extern "C"
 {
 #include "external/cgic/cgic.h"
@@ -8,17 +9,20 @@ extern "C"
 #include <fstream>
 #include <string.h>
 #include <ctype.h>
+// #include <stdint.h>
 
 #define MAX_PLACE_ID_LEN 256
 
 static time_t datafile_last_read=0;
 
+// NOTE: the values should be bit numbers, not just sequential values
 enum PLACETYPE {
 	PLACETYPE_UNKNOWN=0,
-	PLACETYPE_BAR,
-	PLACETYPE_BREWPUB,
-	PLACETYPE_RESTAURANT,
-	PLACETYPE_STORE
+	PLACETYPE_BAR=1,
+	PLACETYPE_BREWPUB=2,
+	PLACETYPE_RESTAURANT=4,
+	PLACETYPE_STORE=8,
+	PLACETYPE_BREWERY=16
 };
 
 // const char* placetype_strings[]={
@@ -111,6 +115,8 @@ extern "C" void fcgiInit()
 										latlonpairs[n].placetype=PLACETYPE_BAR;
 									else if (!strcasecmp(p,"Restaurant"))
 										latlonpairs[n].placetype=PLACETYPE_RESTAURANT;
+									else if (!strcasecmp(p,"Brewery"))
+										latlonpairs[n].placetype=PLACETYPE_BREWERY;
 									else
 										latlonpairs[n].placetype=PLACETYPE_UNKNOWN;
 								}
@@ -167,10 +173,16 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 	char latstr[32];
 	char lonstr[32];
 	char withinstr[32];
+	char types[32];
 	
 	cgiFormString((char*)"lat",latstr,sizeof(latstr));
 	cgiFormString((char*)"lon",lonstr,sizeof(lonstr));
 	cgiFormString((char*)"within",withinstr,sizeof(withinstr));
+	cgiFormString((char*)"types",types,sizeof(types));
+	
+	size_t filter_types=atoi(types);
+	if (filter_types==0)
+		filter_types=UINT16_MAX;
 
 	double lat=strtod(latstr,NULL);
 	double lon=strtod(lonstr,NULL);
@@ -205,7 +217,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 	for(size_t i = min_idx; i < max_idx; ++i)
 	{
 		// Find each longitude value that is between lon_min & lon_max
-		if (lon_min <= latlonpairs[i].lon && latlonpairs[i].lon <= lon_max)
+		if ((latlonpairs[i].placetype&filter_types) && lon_min <= latlonpairs[i].lon && latlonpairs[i].lon <= lon_max)
 		{
 			++count;
 		}
@@ -221,7 +233,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 		{
 			// Find each longitude value that is between lon_min & lon_max
 			// FCGI_printf("Potential loc:%f,%f\n",latlonpairs[i].lat,latlonpairs[i].lon);
-			if (lon_min <= latlonpairs[i].lon && latlonpairs[i].lon <= lon_max)
+			if ((latlonpairs[i].placetype&filter_types) && lon_min <= latlonpairs[i].lon && latlonpairs[i].lon <= lon_max)
 			{
 				// Found one!
 				FCGX_FPrintF(out,"%c{ \"id\": \"%s\", \"lat\": %f, \"lon\": %f, \"name\": \"%s\", \"placetype\": %d }",

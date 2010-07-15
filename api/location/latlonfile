@@ -33,7 +33,7 @@ if (uasort($rows,'compare_lat'))
 		// Get placetype for the place
 		$doc=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl($row->id));
 
-		print $row->value->lat."\t".$row->value->lon."\t".$row->id."\t".trim(json_encode($row->key),'"')."\t".$doc->placetype."\n";
+		print $row->value->lat."\t".$row->value->lon."\t".$row->id."\t".trim(json_encode($row->key),'"')."\t".(empty($doc->placetype)?'Brewery':$doc->placetype)."\n";
 	}
 }
 

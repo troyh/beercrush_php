@@ -18,7 +18,7 @@ include('./header.php');
 
 <div id="nolocation_msg" class="hidden">
 	<h2>Your location is not known.</h2>
-	<a href="foo" onclick="$('#setlocation_form').removeClass('hidden');return false;">Locate me</a>
+	<a href="" onclick="$('#setlocation_form').removeClass('hidden');return false;">Locate me</a>
 </div>
 
 <div id="map_canvas" style="float:right;width:500px;height:500px;"></div>
