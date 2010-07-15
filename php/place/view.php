@@ -118,7 +118,7 @@ include("../header.php");
 
 <h2><?=count($beerlist->items)?> Beers on the Menu</h2>
 <h3>Sort by <a href="" onclick="sort_beermenu('.brewery');return false;">Brewery</a> &#124; <a href="" onclick="sort_beermenu('.beername');return false;">Beer Name</a> &#124; <a href="" onclick="sort_beermenu('.servingtype');return false;">Served</a> &#124; <a href="" onclick="sort_beermenu('.rating',true);return false;">Rating</a></h3>
-<p class="notice tiny">Last updated x days ago</p>
+<p class="notice tiny">Last updated <span class="datestring"><?=date('D, d M Y H:i:s O',$beerlist->meta->mtime)?></span></p>
 
 <ul id="beermenu">
 	<?foreach ($beerlist->items as $item) :?>
@@ -139,28 +139,30 @@ include("../header.php");
 	<div>Beer: <input id="beerlist_new_beer"    type="text" size="20" name="beerlist_new_beer" /><input id="beerlist_new_beer_id" type="hidden" name="beerlist_new_beer_id" /></div>
 	<div>Price: $<input id="beerlist_new_price" type="text" size="4" name="beerlist_new_price" /></div>
 	<div>Served:
-	<select name="serving_<?=$item->id?>" size="1">
-		<option value="tap" selected>On Tap</option>
+	<select id="beerlist_new_serving" name="beerlist_new_serving" size="1">
+		<option value="tap" selected="selected">On Tap</option>
 		<option value="bottle">In Bottle</option>
 		<option value="bottle22">In Large Bottle</option>
 		<option value="can">In Can</option>
 		<option value="cask">On Cask</option>
 	</select>
 	</div>
-	<input type="button" onclick="beerlist_add(event,$('#beerlist_new_brewery').val(),$('#beerlist_new_beer').val(),$('#beerlist_new_price').val());" value="Add Beer" />
+	<input type="button" onclick="beerlist_add(event,$('#beerlist_new_beer_id').val(),$('#beerlist_new_serving').val(),$('#beerlist_new_price').val());" value="Add Beer" />
 
 </div>
 
 <h3 id="ratings"><?=count($reviews->reviews)?> Reviews</h3>
-<?php foreach($reviews->reviews as $review):?>
+<?php foreach($reviews->reviews as $review):
+	$user=$BC->docobj('user/'.$review->user_id);
+?>
 <div class="areview">
-	<img src="<?=$BC->docobj('user/'.$review->user_id)->avatar?>" /><span class="user"><a href="/user/<?=$review->user_id?>"><?=$BC->docobj('user/'.$review->user_id)->name?></a> posted <span class="datestring"><?=date('D, d M Y H:i:s O',$review->meta->timestamp)?></span></span>
+	<?if (!empty($user->avatar)):?><img src="<?=$user->avatar?>" /><?endif;?><span class="user"><a href="/user/<?=$review->user_id?>"><?=$BC->docobj('user/'.$review->user_id)->name?></a> posted <span class="datestring"><?=date('D, d M Y H:i:s O',$review->meta->timestamp)?></span></span>
 	<div class="triangle-border top">
 		<div class="star_rating"><div id="avgrating" style="width: <?=$review->rating?>0%"></div></div>
 		<div><?=$review->comments?></div>
-		<div class="cf"><div class="label">Service: </div><!--TROY TODO--></div>
-		<div class="cf"><div class="label">Atmosphere: </div><!--TROY TODO--></div>
-		<div class="cf"><div class="label">Food: </div><!--TROY TODO--></div>
+		<div class="cf"><div class="label">Service: </div><?=$review->service?></div>
+		<div class="cf"><div class="label">Atmosphere: </div><?=$review->atmosphere?></div>
+		<div class="cf"><div class="label">Food: </div><?=$review->food?></div>
 	</div>
 </div>
 <?php endforeach?>
@@ -317,7 +319,7 @@ include("../header.php");
 </ul>
 
 <h3>Place Edit History</h3>
-<div>Beer last modified: <span id="beer_lastmodified" class="datestring"><?=date('D, d M Y H:i:s O',$beerdoc->meta->mtime)?></span></div>
+<div>Beer last modified: <span id="beer_lastmodified" class="datestring"><?=date('D, d M Y H:i:s O',$place->meta->mtime)?></span></div>
 <div id="history"></div>
 
 
@@ -339,12 +341,12 @@ include("../header.php");
 <p></p>
 	<h2>People Who Like This Place, Also Like</h2>
 	<ul>
-		<?php foreach ($recommend->place as $rp):
+		<?php if (count($recommend->place)) : foreach ($recommend->place as $rp):
 			$rpurl=BeerCrush::docid_to_docurl($rp);
 			$rpdoc=BeerCrush::api_doc($BC->oak,$rpurl);
 		?>
 			<li><a href="/<?=$rpurl?>"><?=$rpdoc->name?></a></li>
-		<?php endforeach;?>
+		<?php endforeach;endif;?>
 	</ul>
 	<h2>Other Beer Places Nearby</h2>
 	<ul>
@@ -357,46 +359,44 @@ include("../header.php");
 
 <script type="text/javascript">
 
-function beerlist_add(evt,brewery_name,beer_name,beer_price) {
+function beerlist_add(evt,beer_id,serving_type,price) {
 	$.post('/api/menu/edit',{
 		"place_id": $('#place_id').val(),
-		"add_item": beerlist_new_beer_id+';;'+beer_price
+		"add_item": beer_id+';'+serving_type+';'+price
 	},
 	function(data) {
-		brewery_beerlist=[];
-		brewery_beerlist_ids=[];
-		beerlist_new_beer_id=null;
-
-		if (data.items.length) {
-			// Add a row to the beerlist table
-			var newrow=$('#beerlist table tr').first().next().clone();
-			var tds=$('td',$(newrow));
-
-			$('a',$(tds[0])).attr('href','/'+data.items[data.items.length-1].brewery.id.replace(/:/g,'/')).text(data.items[data.items.length-1].brewery.name);
-
-			$('a',$(tds[1])).attr('href','/'+data.items[data.items.length-1].id.replace(/:/g,'/')).text(data.items[data.items.length-1].name);
-			$('input[type=button]',$(tds[1])).attr('onclick','').click(function(delevt){beerlist_delete(data.items[data.items.length-1].id,delevt);});
-
-			if (data.items[data.items.length-1].price)
-				$(tds[2]).text('$'+data.items[data.items.length-1].price.toFixed(2));
-			else
-				$(tds[2]).text('');
-
-			var serving_types=["ontap","oncask","inbottle","inbottle22","incan"];
-			
-			for (i=0,j=serving_types.length;i<j;++i) {
-				$('input',$(tds[i+3])).attr('name','serving_'+data.items[data.items.length-1].id).attr('checked',data.items[data.items.length-1][serving_types[i]]?"checked":"").change(beerlist_edit);
-			}
-		
-			$('#beerlist table tr').last().prev().prev().after(newrow);
-		}
-		
 		// Clear fields
 		$('#beerlist_new_brewery').val('');
 		$('#beerlist_new_brewery_id').val('');
 		$('#beerlist_new_beer').val('');
 		$('#beerlist_new_beer_id').val('');
 		$('#beerlist_new_price').val('');
+
+		$('#beerlist_new_beer').autocomplete('destroy'); // Destroy this, it will be re-created if the user starts entering another brewery name
+
+		// if (data.items.length) {
+		// 	// Add a row to the beerlist table
+		// 	var newrow=$('#beerlist table tr').first().next().clone();
+		// 	var tds=$('td',$(newrow));
+		// 
+		// 	$('a',$(tds[0])).attr('href','/'+data.items[data.items.length-1].brewery.id.replace(/:/g,'/')).text(data.items[data.items.length-1].brewery.name);
+		// 
+		// 	$('a',$(tds[1])).attr('href','/'+data.items[data.items.length-1].id.replace(/:/g,'/')).text(data.items[data.items.length-1].name);
+		// 	$('input[type=button]',$(tds[1])).attr('onclick','').click(function(delevt){beerlist_delete(data.items[data.items.length-1].id,delevt);});
+		// 
+		// 	if (data.items[data.items.length-1].price)
+		// 		$(tds[2]).text('$'+data.items[data.items.length-1].price.toFixed(2));
+		// 	else
+		// 		$(tds[2]).text('');
+		// 
+		// 	var serving_types=["ontap","oncask","inbottle","inbottle22","incan"];
+		// 	
+		// 	for (i=0,j=serving_types.length;i<j;++i) {
+		// 		$('input',$(tds[i+3])).attr('name','serving_'+data.items[data.items.length-1].id).attr('checked',data.items[data.items.length-1][serving_types[i]]?"checked":"").change(beerlist_edit);
+		// 	}
+		// 
+		// 	$('#beerlist table tr').last().prev().prev().after(newrow);
+		// }
 	});
 }
 
@@ -421,10 +421,6 @@ function beerlist_edit(evt){
 		"add_item": $(evt.target).attr('name').replace(/^serving_/,'')+';'+serving_types.join(',')
 	});
 }
-
-var brewery_beerlist=[];
-var brewery_beerlist_ids=[];
-var beerlist_new_beer_id=null;
 
 function geocodeAddress(callback) {
 	var addressstr=$('#place_address\\:street').text() + ', ' +
@@ -642,39 +638,61 @@ function pageMain()
 	
 	$('#beerlist input[type=checkbox]').change(beerlist_edit);
 	
-	// TODO: bring this back, we're using the JQuery UI Autocomplete instead of this one
-	// $('#beerlist_new_brewery').autocomplete('/api/autocomplete.fcgi',{
-	// 	"mustMatch": true,
-	// 	"extraParams": {
-	// 		"dataset": "breweries"
-	// 	}
-	// }).result(function(evt,data,formatted) {
-	// 	brewery_beerlist=[];
-	// 	brewery_beerlist_ids=[];
-	// 
-	// 	$('#beerlist_new_beer').flushCache();
-	// 	
-	// 	$.getJSON('/api/search',{
-	// 		"q": jQuery.isArray(data)?data[0]:data,
-	// 		"dataset": "brewery"
-	// 	},
-	// 	function (data,status) {
-	// 		if (data.response.docs.length) {
-	// 			var brewery_id=data.response.docs[0].id;
-	// 			$.getJSON('/api/brewery/'+brewery_id.replace(/^brewery:/,'')+'/beerlist',function(data,status){
-	// 				$(data.beers).each(function(i,v){
-	// 					brewery_beerlist.push(v.name);
-	// 					brewery_beerlist_ids[v.name]=v.beer_id;
-	// 				});
-	// 				$('#beerlist_new_beer').autocomplete(brewery_beerlist).result(function(evt,data,formatted) {
-	// 					beerlist_new_beer_id=brewery_beerlist_ids[data];
-	// 				});
-	// 			});
-	// 		}
-	// 	});
-	// }
-	// );
-
+	$('#beerlist_new_brewery').autocomplete({
+		source: function(request,callback) {
+			$.get('/api/autocomplete.fcgi',{
+				dataset: "breweries",
+				q: request.term
+			},
+			function(data) {
+				var lines=data.trim().split(/\n/);
+				callback(lines);
+			});
+		},
+		select: function(event,ui) {
+			$('#beerlist_new_beer').val('');
+			$.getJSON('/api/search',{
+				q: ui.item.label,
+				dataset: "brewery"
+			},
+			function(brewery_results) {
+				if (brewery_results.response.docs.length) {
+					// Find the brewery in the list
+					$.each(brewery_results.response.docs,function(idx,item){
+						if (item.id.substr(0,8)=='brewery:') {
+							// Get the brewery's beerlist
+							$.getJSON('/api/brewery/'+item.id.replace(/^brewery:/,'')+'/beerlist',
+							function(beerlist,status) {
+								var brewery_beerlist=[];
+								$(beerlist.beers).each(function(i,v){
+									brewery_beerlist.push({
+										label: v.name,
+										value: v.beer_id
+									});
+								});
+								$('#beerlist_new_beer').autocomplete({
+									minLength: 0,
+									source: brewery_beerlist,
+									focus: function(event,ui) {
+										$('#beerlist_new_beer').val(ui.item.label);
+										return false;
+									},
+									select: function(event,ui) {
+										$('#beerlist_new_beer').val(ui.item.label);
+										$('#beerlist_new_beer_id').val(ui.item.value);
+										return false;
+									}
+								});
+								$('#beerlist_new_beer').autocomplete('search');
+							});
+							return false;
+						}
+					});
+				}
+			});
+		}
+	});
+		
 	$('#review_form').submit(function(){
 		$.post($('#review_form').attr('action'),
 		$('#review_form').serialize(),

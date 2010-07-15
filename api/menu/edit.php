@@ -99,6 +99,7 @@ function oakMain($oak)
 					$menu->items[$item]=new stdClass; // Create a new one
 				}
 
+				// TODO: verify that the beer ID is legit
 				$parts=explode(':',$id);
 
 				$menu->items[$item]->type=$parts[0];
