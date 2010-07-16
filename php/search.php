@@ -62,7 +62,7 @@ include("header.php");
 ///////////////////////////////////////////
 // Beers
 ///////////////////////////////////////////
-if (empty($_GET['dt']) || $_GET['dt']=='beers') :
+if (empty($_GET['dt']) || $_GET['dt']=='beers' || $_GET['dt']=='beersandbreweries') :
 	$url='search?q='.urlencode($_GET['q']).'&doctype=beer&start='.(empty($_GET['start'])?0:$_GET['start']);
 	$results=BeerCrush::api_doc($BC->oak,$url);
 ?>

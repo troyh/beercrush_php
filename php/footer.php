@@ -105,6 +105,23 @@ function BeerCrushMain()
 
 	if (typeof(window['pageMain'])!='undefined' && jQuery.isFunction(pageMain))
 		pageMain();
+		
+	$('#searchbox').autocomplete({
+		source: function(request,callback) {
+			var dt=$('#searchform input[name=dt]:radio:checked').val();
+			if (dt=='people') {
+				// TODO: get rid of spinner that autocomplete puts up automatically
+			}
+			else {
+				$.get('/api/autocomplete.fcgi',{
+					q: request.term,
+					dataset: dt
+				},function(data) {
+					callback(data.trim().split(/\n/));
+				});
+			}
+		}
+	});
 }
 
 google.setOnLoadCallback(BeerCrushMain);

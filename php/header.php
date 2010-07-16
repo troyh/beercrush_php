@@ -48,7 +48,7 @@ foreach (array('css','js') as $t) {
 					<input type="submit" value="Go">
 					<div>
 						<input type="radio" name="dt" value=""       <?=empty($_GET['dt'])   ?"checked=\"checked\"":""?>>All
-						<input type="radio" name="dt" value="beers"  <?=$_GET['dt']=='beers' ?"checked=\"checked\"":""?>>Beers/Breweries
+						<input type="radio" name="dt" value="beersandbreweries"  <?=$_GET['dt']=='beersandbreweries' ?"checked=\"checked\"":""?>>Beers/Breweries
 						<input type="radio" name="dt" value="places" <?=$_GET['dt']=='places'?"checked=\"checked\"":""?>>Places
 						<input type="radio" name="dt" value="people" <?=$_GET['dt']=='people'?"checked=\"checked\"":""?>>People
 					</div>

@@ -40,8 +40,8 @@ $statistics=BeerCrush::api_doc($BC->oak,'menu/statistics');
 <div id="location_text"></div>
 <a href="" onclick="$('#setlocation_form').toggleClass('hidden');return false;">Change my location</a>
 <div id="setlocation_form" class="hidden">
-	<input id="location_box" type="text" size="10" value="" /><input type="button" onclick="geolocate($('#location_box').val());" value="Go" />
-	<a href="" onclick="geolocate();return false;">Ask my browser</a>
+	<input id="location_box" type="text" size="10" value="" /><input type="button" onclick="BeerCrush.geolocate_user($('#location_box').val(),show_new_beers);" value="Go" />
+	<a href="" onclick="BeerCrush.geolocate_user(null,show_new_beers);return false;">Ask my browser</a>
 </div>
 
 <ul id="newbeers_list"></ul>
@@ -164,8 +164,12 @@ function geolocate(str) {
 }
 
 function pageMain() {
-	if ($.cookie('location_id') && $.cookie('location_name')) {
-		$('#location_text').html($.cookie('location_name'));
+	var latlon=BeerCrush.get_user_location();
+	if (latlon) {
+		BeerCrush.geocode_location(latlon.lat,latlon.lon,function(s){
+			$('#location_text').html(s);
+		});
+		shownearbylocations(latlon.lat,latlon.lon);
 		$.getJSON('/api/menu/newbeers/'+$.cookie('location_id').replace(/^location:/,'').replace(/:/g,'/'),null,function(data,textStatus){
 			show_new_beers($.cookie('location_id'));
 		});
