@@ -443,7 +443,7 @@ class OAK
 		// Call user func, if specified
 		if (isset($attribs['validatefunc']) && is_callable($attribs['validatefunc']))
 		{
-			if (call_user_func($attribs['validatefunc'],$name,$value,$attribs,$attribs['converted_value'],$this)!==true)
+			if (call_user_func($attribs['validatefunc'],$name,$value,$attribs,&$attribs['converted_value'],$this)!==true)
 				return false;
 		}
 		

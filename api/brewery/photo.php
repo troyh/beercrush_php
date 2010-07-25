@@ -17,8 +17,6 @@ function oakMain($oak)
 	}
 	else
 	{
-		// TODO: verify that it's a JPEG
-		
 		$uuid=$oak->create_uuid();
 		$filename=$uuid.'.jpg';
 		$path='/var/local/BeerCrush/images/'.chunk_split(substr($uuid,0,8),2,'/');

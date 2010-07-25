@@ -68,6 +68,7 @@ function add_dependency($source_url,$dep_url) {
 		$dependencies[$source_url]=array();
 	if (!array_key_exists($dep_url,$dependencies[$source_url])) {
 		$dependencies[$source_url][$dep_url]=1; // 1 is arbitrary, just has to be some value
+		$oak->log('new dependency for '.$source_url.' '.$dep_url);
 
 		// Add any extras too
 		foreach ($config->dependencies as $dep) {
@@ -86,6 +87,7 @@ function add_dependency($source_url,$dep_url) {
 						$extra=preg_replace('|'.$dep->source.'|',$extra_regex_replacement,$source_path);
 						if (!is_null($extra)) { // $extra is the extra source to add
 							$dependencies[$source_url][$extra]=2; // 2 is arbitrary, just a different value from the 1 above
+							$oak->log('new extra dependency for '.$source_url.' '.$extra);
 						}
 					}
 				}

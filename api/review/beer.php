@@ -1,5 +1,5 @@
 <?php
-require_once('OAK/oak.class.php');
+require_once('beercrush/beercrush.php');
 
 $cgi_fields=array(
 	"beer_id"				=> array(type=>OAK::DATATYPE_TEXT,minlen=>9),
@@ -67,8 +67,7 @@ function oakMain($oak)
 	$rows=array_slice($reviews->rows,$seqnum*20,20);
 	foreach ($rows as $row)
 	{
-		$review=new OAKDocument('');
-		$oak->get_document($row->id,$review); // TODO: use API, don't go straight to the db
+		$review=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl($row->id));
 		$output['reviews'][]=$review;
 	}
 

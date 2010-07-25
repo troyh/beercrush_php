@@ -1,6 +1,6 @@
 <?php
 header("Cache-Control: no-cache");
-require_once 'OAK/oak.class.php';
+require_once 'beercrush/beercrush.php';
 
 $cgi_fields=array(
 	"menu_id"				=> array(type=>OAK::DATATYPE_TEXT),
@@ -18,6 +18,11 @@ function oakMain($oak)
 	if ($oak->cgi_value_exists('menu_id',$cgi_fields)) // Editing existing menu
 	{
 		$menu_id=$oak->get_cgi_value('menu_id',$cgi_fields);
+
+		// Verify that the ID is a menu
+		if (!BeerCrush::is_a_menu($menu_id))
+			throw new Exception('Not a menu: '.$menu_id);
+			
 		// Get existing menu, if there is one so that we can update just the parts added/changed in this request
 		if ($oak->get_document($menu_id,&$menu)!==true)
 			throw new Exception("No existing menu $menu_id");
@@ -82,11 +87,11 @@ function oakMain($oak)
 				$parts[1]="";
 				$parts[2]=""; // No price specified
 			}
-			
+		
 			if (count($parts)) {
 				list($id,$types,$price)=$parts;
 				$types_array=preg_split('/,/',$types,null,PREG_SPLIT_NO_EMPTY);
-			
+		
 				// Does it already exist?
 				$item=null;
 				for ($i=0,$j=count($menu->items);$i<$j;++$i)
@@ -95,11 +100,17 @@ function oakMain($oak)
 						$item=$i;
 				}
 				if (is_null($item)) {
+
+					// Verify that the beer ID is legit
+					$beer=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl($id));
+					if (is_null($beer)) {
+						throw new Exception("No existing document $id");
+					}
+
 					$item=count($menu->items); // Add to end
 					$menu->items[$item]=new stdClass; // Create a new one
 				}
 
-				// TODO: verify that the beer ID is legit
 				$parts=explode(':',$id);
 
 				$menu->items[$item]->type=$parts[0];
@@ -120,16 +131,16 @@ function oakMain($oak)
 				}
 			}
 		}
-		
-		// Store in db
-		if ($oak->put_document($menu->getID(),$menu)!==true)
-		{
-			header("HTTP/1.0 500 Save failed");
-			exit;
-		}
-
-		$oak->log('Edited:'.$menu->getID());
 	}
+	
+	// Store in db
+	if ($oak->put_document($menu->getID(),$menu)!==true)
+	{
+		header("HTTP/1.0 500 Save failed");
+		exit;
+	}
+
+	$oak->log('Edited:'.$menu->getID());
 
 	/*
 	This block should be identical to that in menu/view.php and kept in-sync!!!
@@ -167,7 +178,7 @@ function oakMain($oak)
 	}
 	
 	header('Content-Type: application/json; charset=utf-8');
-	print json_encode($menu);
+	print json_encode($menu)."\n";
 }
 
 require_once 'OAK/oak.php';

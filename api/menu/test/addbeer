@@ -78,14 +78,14 @@ if [ -z "$serving_type" ]; then
 fi
 
 
-response=$(curl --silent --fail -d email=$email -d password=$password $api_url/login);
-if [ $? -ne 0 ]; then
-	echo "Failed to login";
-	exit;
-fi
-
-userid=$(echo $response | $bindir/jsonpath -1 userid);
-usrkey=$(echo $response | $bindir/jsonpath -1 usrkey);
+# response=$(curl --silent --fail -d email=$email -d password=$password $api_url/login);
+# if [ $? -ne 0 ]; then
+# 	echo "Failed to login";
+# 	exit;
+# fi
+# 
+# userid=$(echo $response | $bindir/jsonpath -1 userid);
+# usrkey=$(echo $response | $bindir/jsonpath -1 usrkey);
 
 add_item="$beer_id;$serving_type";
 

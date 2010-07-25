@@ -58,7 +58,6 @@ function load_flavors_data(&$flavorslist, $oak)
 				// Store list in shared mem
 				if (shm_put_var($shm_id,'1',$flavorslist)===false)
 				{
-					// TODO: what to do? We don't want to keep parsing the XML doc if this keeps failing.
 					$oak->log('Failed to store flavors data in shared memory',OAK::LOGPRI_CRIT);
 				}
 			}
@@ -76,17 +75,22 @@ function oakMain($oak)
 	
 	$user_id=$oak->get_user_id();
 	$beer_id=$oak->get_cgi_value('beer_id',$cgi_fields);
-	// Validate the beer_id
-	$beer=new OAKDocument('');
-	if ($oak->get_document($beer_id,&$beer)!==true)
-		throw new Exception('Invalid beer_id:'.$beer_id);
 
 	if (empty($beer_id))
 		throw new Exception('beer_id is empty');
 	if (empty($user_id))
 		throw new Exception('user_id is empty');
 
-	// TODO: verify that beer_id and user_id are valid IDs for existing documents
+	// Validate the beer_id
+	$beer=new OAKDocument('');
+	if ($oak->get_document($beer_id,&$beer)!==true)
+		throw new Exception('Invalid beer_id:'.$beer_id);
+
+	// Verify that user_id is a valid ID for existing user
+	$user=new OAKDocument('');
+	if ($oak->get_document('user:'.$user_id,&$user)!==true)
+		throw new Exception('Invalid user_id:'.$user_id);
+
 	$review=new OAKDocument('review');
 	$review->beer_id=$beer_id;
 	$review->user_id=$user_id;

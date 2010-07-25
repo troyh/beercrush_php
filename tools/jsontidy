@@ -2,6 +2,10 @@
 <?php
 $s=file_get_contents("php://stdin");
 $json=json_decode($s);
+if (is_null($json)) {
+	print "Invalid JSON:$s\n";
+	exit;
+}
 
 function tidyjson($json,$level=0)
 {

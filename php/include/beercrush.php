@@ -38,6 +38,10 @@ class BeerCrush
 		$brewerydoc=BeerCrush::api_doc($oak,BeerCrush::docid_to_docurl($doc->brewery_id));
 		return trim($brewerydoc->name);
 	}
+	
+	static public function is_a_menu($id) {
+		return substr($id,0,5)==='menu:';
+	}
 
 	public $oak;
 	

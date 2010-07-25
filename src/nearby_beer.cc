@@ -159,7 +159,7 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 
 	// Formula from https://answers.google.com/answers/threadview?id=577262
 	double lon_deg_len=69.1703234283616 * cos(lat*0.0174532925199433);
-	const double lat_deg_len=69; // 1 degree of latitude is approx 69 miles TODO: get exact number!
+	const double lat_deg_len=69.172; // 1 degree of latitude is 69.172 miles
 	
 	double lat_max=lat+(double)(within/lat_deg_len);
 	double lat_min=lat-(double)(within/lat_deg_len);

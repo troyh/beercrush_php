@@ -1,6 +1,6 @@
 <?php
 header("Cache-Control: no-cache");
-require_once 'OAK/oak.class.php';
+require_once 'beercrush/beercrush.php';
 
 function validate_brewery_id($name,$value,$attribs,$converted_value,$oak)
 {
@@ -20,7 +20,21 @@ function validate_srm_value($name,$value,$attribs,$converted_value,$oak)
 
 function validate_beer_style_id($name,$value,$attribs,$converted_value,$oak)
 {
-	// TODO: validate it for real against the true list of styles
+	// Validate it for real against the true list of styles
+	$styles=preg_split('/\s+/',trim($value));
+	if (count($styles)) {
+		global $BC;
+		// Get styles list
+		$beerstyles=BeerCrush::api_doc($BC->oak,'style/flatlist');
+		foreach ($styles as $style) {
+			if (!isset($beerstyles->$style)) {
+				return FALSE;
+			}
+		}
+	}
+	
+	$converted_value=$styles;
+	
 	return TRUE;
 }
 
@@ -164,7 +178,7 @@ function oakMain($oak)
 	if ($oak->cgi_value_exists('styles',$cgi_fields))
 	{
 		// Could be more than one...
-		$beer->styles=preg_split('/\s+/',$oak->get_cgi_value('styles',$cgi_fields));
+		$beer->styles=$oak->get_cgi_value('styles',$cgi_fields);
 	}
 	
 	// Store in db
@@ -180,7 +194,7 @@ function oakMain($oak)
 		unset($beer->_id);
 		unset($beer->_rev);
 		header('Content-Type: application/json; charset=utf-8');
-		print json_encode($beer);
+		print json_encode($beer)."\n";
 	}
 }
 

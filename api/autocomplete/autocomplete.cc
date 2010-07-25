@@ -38,126 +38,138 @@ const char** styles_list=NULL;
 
 bool readFile(const char* fname, size_t* count, const char*** names, TYPES** types)
 {
-	char* buf=0;
-	const char** list=0;
-	TYPES* list_types=0;
-	size_t entries=0;
-	
 	struct stat statbuf;
 	stat(fname,&statbuf);
-	// TODO: use the file's time to determine whether to load the file again
 
-	// Read the entire file into memory
-	FILE* f=fopen(fname,"r");
-	if (f)
-	{
-		buf=new char[statbuf.st_size+1];
+	// Use the file's time to determine whether to load the file again
+	if (statbuf.st_mtime > datafile_last_read) {
+
+		if (*names) // Re-alloc'ing space, so free existing space
+			free(*names);
+		
+		char* buf=0;
+		const char** list=0;
+		TYPES* list_types=0;
+		size_t entries=0;
+
+		// Read the entire file into memory
+		FILE* f=fopen(fname,"r");
+		if (f)
+		{
+			buf=new char[statbuf.st_size+1];
+			if (buf)
+			{
+				size_t n=fread(buf,sizeof(buf[0]),statbuf.st_size,f);
+				buf[n]='\0';
+			}
+		
+			fclose(f);
+		}
+	
 		if (buf)
 		{
-			size_t n=fread(buf,sizeof(buf[0]),statbuf.st_size,f);
-			buf[n]='\0';
-		}
-		
-		fclose(f);
-	}
-	
-	if (buf)
-	{
-		// Walk buf and count the newlines
-		for (char* p=strchr(buf,'\n');p;p=strchr(p+1,'\n'))
-		{
-			*p='\0'; // change the newline to a null-terminator
-			++entries;
-		}
-		
-		if (entries)
-		{
-			list=new const char*[entries];
-			list_types=new TYPES[entries];
-			
-			char* p=buf;
-			for(size_t i = 0; i < entries; ++i)
+			// Walk buf and count the newlines
+			for (char* p=strchr(buf,'\n');p;p=strchr(p+1,'\n'))
 			{
-				list[i]=p;
-				char* tab=strchr(p,'\t');
-				
-				for (p+=strlen(p)+1;*p=='\0';++p)
-				{ // Skip to next line, just in case there's multiple null-terminators at the end
-				}
-				
-				if (tab)
+				*p='\0'; // change the newline to a null-terminator
+				++entries;
+			}
+		
+			if (entries)
+			{
+				list=new const char*[entries];
+				list_types=new TYPES[entries];
+			
+				char* p=buf;
+				for(size_t i = 0; i < entries; ++i)
 				{
-					*tab='\0';
-					++tab;
-					if (!strcasecmp(tab,"beer"))
-						list_types[i]=BEER;
-					else if (!strcasecmp(tab,"brewery"))
-						list_types[i]=BREWERY;
-					else if (!strcasecmp(tab,"place"))
-						list_types[i]=PLACE;
-				}
-				else
-					list_types[i]=UNKNOWN;
+					list[i]=p;
+					char* tab=strchr(p,'\t');
 				
+					for (p+=strlen(p)+1;*p=='\0';++p)
+					{ // Skip to next line, just in case there's multiple null-terminators at the end
+					}
+				
+					if (tab)
+					{
+						*tab='\0';
+						++tab;
+						if (!strcasecmp(tab,"beer"))
+							list_types[i]=BEER;
+						else if (!strcasecmp(tab,"brewery"))
+							list_types[i]=BREWERY;
+						else if (!strcasecmp(tab,"place"))
+							list_types[i]=PLACE;
+					}
+					else
+						list_types[i]=UNKNOWN;
+				
+				}
 			}
 		}
-	}
 	
-	*count=entries;
-	*names=list;
-	*types=list_types;
+		*count=entries;
+		*names=list;
+		*types=list_types;
+	}
 	
 	datafile_last_read=time(0);
 }
 
 bool readStylesFiles(const char* fname, size_t* count, const char*** styles) {
-	char* buf=0;
-	const char** list=0;
-	
+
 	struct stat statbuf;
 	stat(fname,&statbuf);
-	// TODO: use the file's time to determine whether to load the file again
+	// Use the file's time to determine whether to load the file again
+	if (statbuf.st_mtime > styles_datafile_last_read) {
+		
+		if (*styles) // Re-alloc'ing space, so free existing space
+			free(*styles);
+			
+		char* buf=0;
+		const char** list=0;
 
-	// Read the entire file into memory
-	FILE* f=fopen(fname,"r");
-	if (f)
-	{
-		buf=new char[statbuf.st_size+1];
+		// Read the entire file into memory
+		FILE* f=fopen(fname,"r");
+		if (f)
+		{
+			buf=new char[statbuf.st_size+1];
+			if (buf)
+			{
+				size_t n=fread(buf,sizeof(buf[0]),statbuf.st_size,f);
+				buf[n]='\0';
+			}
+		
+			fclose(f);
+		}
+	
+		size_t entries=0;
 		if (buf)
 		{
-			size_t n=fread(buf,sizeof(buf[0]),statbuf.st_size,f);
-			buf[n]='\0';
-		}
-		
-		fclose(f);
-	}
-	
-	size_t entries=0;
-	if (buf)
-	{
-		// Count the number of lines so we can alloc enough space for the list of pointers
-		for (char* p=strchr(buf,'\n');p;p=strchr(p+1,'\n'))
-		{
-			entries++;
-		}
-		
-		// Alloc space for the list of pointers
-		list=new const char*[entries];
-		entries=0; // Start over
-		if (list) {
-			// Walk buf and turn newlines into nulls and record each string in list
-			list[entries++]=buf; // The first is the beginning of the buffer
+			// Count the number of lines so we can alloc enough space for the list of pointers
 			for (char* p=strchr(buf,'\n');p;p=strchr(p+1,'\n'))
 			{
-				*p='\0'; // change the newline to a null-terminator
-				if (*(p+1)) // The last time this should be the null-terminator at the end of buf, so don't add an entry
-					list[entries++]=p+1;
+				entries++;
+			}
+		
+			// Alloc space for the list of pointers
+			list=new const char*[entries];
+			entries=0; // Start over
+			if (list) {
+				// Walk buf and turn newlines into nulls and record each string in list
+				list[entries++]=buf; // The first is the beginning of the buffer
+				for (char* p=strchr(buf,'\n');p;p=strchr(p+1,'\n'))
+				{
+					*p='\0'; // change the newline to a null-terminator
+					if (*(p+1)) // The last time this should be the null-terminator at the end of buf, so don't add an entry
+						list[entries++]=p+1;
+				}
 			}
 		}
-	}
 	
-	*count=entries;
-	*styles=list;
+		*count=entries;
+		*styles=list;
+	}
 	
 	styles_datafile_last_read=time(0);
 }
@@ -326,17 +338,13 @@ extern "C" int fcgiMain(FCGX_Stream *in,FCGX_Stream *out,FCGX_Stream *err,FCGX_P
 {
 	// See if we should refresh the data (older than 1 hour)
 	if (datafile_last_read < (time(0)-(60*60))) {
-		free(searchable_names);
-		searchable_names_count=0;
 		readFile(dataFilename,&searchable_names_count,&searchable_names,&searchable_types);
 	}
 
 	if (styles_datafile_last_read < (time(0)-(60*60))) {
-		free(styles_list);
-		styles_count=0;
 		readStylesFiles(stylesDataFilename,&styles_count,&styles_list);
 	}
-	
+
 	bool bXMLOutput=false;
 
 	char query[256]="";

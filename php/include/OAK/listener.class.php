@@ -11,10 +11,10 @@ class OAKListener {
 		$this->msg_group=$group;
 		
 		if ($this->oak && $this->oak->spread_connect(4803,$my_name,TRUE)!==TRUE) {
-			// TODO: do something
+			$this->oak->log('Unable to connect to Spread daemon',OAK::LOGPRI_CRIT);
 		}
 		else if ($this->oak->spread_join($this->msg_group)!==TRUE) {
-			// TODO: do something
+			$this->oak->log('Unable to join Spread group '.$this->msg_group,OAK::LOGPRI_CRIT);
 		}
 	}
 

@@ -42,6 +42,8 @@ function process_new_photo($oakjobs,$photoinfo) {
 	// print "Filename:".$photoinfo->filename."\n";
 	// print "Time:".date('r',$photoinfo->timestamp)."\n\n";
 	
+	// TODO: Verify that it's a valid JPEG
+	
 	// Update the database
 	$bFound=FALSE;
 	$photoset=new OAKDocument('');

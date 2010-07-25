@@ -78,7 +78,6 @@ case $1 in
 		fi
 
 		# TODO: setup replication between this server and another
-		# TODO: update design docs from src/db/designdocs.json
 		# TODO: setup snapshots of db
 		
 		;;
@@ -118,8 +117,6 @@ case $1 in
 			svn update $BEERCRUSH_SOURCE_DIR
 		fi
 
-		# TODO: kill update_doc, if running, and start new process
-		
 		;;
 	app)
 		echo "Setting up app server...";

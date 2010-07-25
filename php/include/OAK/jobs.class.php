@@ -22,15 +22,14 @@ class OAKJobs {
 		$this->job_group=basename($_SERVER['PHP_SELF']).'-jobq';
 		
 		if ($this->oak && $this->oak->spread_connect(4803,$my_name,TRUE)!==TRUE) {
-			// TODO: do something
+			$this->oak->log('Unable to connect to Spread daemon',OAK::LOGPRI_CRIT);
 		}
 		else if ($this->oak->spread_join($this->job_group)!==TRUE) {
-			// TODO: do something
+			$this->oak->log('Unable to join Spread group '.$this->job_group,OAK::LOGPRI_CRIT);
 		}
 		else {
 			foreach ($this->msg_group as $g) {
 				if ($this->oak->spread_join($g)!==TRUE) {
-					// TODO: do something
 					$this->oak->log('Unable to join Spread group '.$g,OAK::LOGPRI_ERR);
 				}
 			}
