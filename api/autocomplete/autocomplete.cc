@@ -176,7 +176,6 @@ bool readStylesFiles(const char* fname, size_t* count, const char*** styles) {
 
 extern "C" void fcgiInit() 
 {
-	// TODO: make it read from the config file and load the data straight from couchdb so the file location is not hardcoded
 	// // Read the conf file
 	// Config cfg("/etc/BeerCrush/BeerCrush.conf");
 	// 
