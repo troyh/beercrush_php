@@ -7,16 +7,10 @@ conf_file=;
 email=;
 password=;
 
-while getopts "C:e:p:" opt; do
+while getopts "C:" opt; do
 	case $opt in
 		C)
 			conf_file=$OPTARG;
-			;;
-		e)
-			email=$OPTARG;
-			;;
-		p)
-			password=$OPTARG;
 			;;
 		\?)
 			# echo "Invalid option: -$OPTARG" >&2
@@ -37,7 +31,7 @@ EOF
 	exit 1;
 }
 
-if [ -z "$conf_file" -o -z "$email" -o -z "$password" ]; then
+if [ -z "$conf_file" ]; then
 	usage;
 fi
 
@@ -51,55 +45,142 @@ bindir="/usr/local/beercrush/bin";
 
 if [ ! -d $data_dir ]; then mkdir -p $data_dir; fi
 
-read couchdb_host couchdb_db <<<$(/usr/local/beercrush/bin/jsonpath -1 "couchdb.nodes[0]" couchdb.database < $conf_file);
-read api_url <<<$(/usr/local/beercrush/bin/jsonpath -1 api.base_uri < $conf_file);
+read couchdb_host couchdb_db api_url email password <<<$($bindir/jsonpath -1 "couchdb.nodes[0]" couchdb.database api.base_uri webservices.BeerCrush.admin.email webservices.BeerCrush.admin.password < $conf_file);
 
-# For now, just pick random beers
-# TODO: actually do statistical stuff to find similar beers
+for v in couchdb_host couchdb_db api_url email password; do
+	if [ -z "${!v}" ]; then
+		echo $v not found in $conf_file;
+		exit;
+	fi
+done
 
-if [ ! -f $data_dir/beers.tab ]; then
-	# Get list of all the beers
+#
+# Get the characteristics of every beer
+#
+if [ ! -f $data_dir/characteristics.tab ]; then
+	# Get list of all beers
 	curl --silent  $api_url/beers | 
-		OAKConfig=$conf_file /usr/local/beercrush/bin/json2xml  | 
-		xmlstarlet sel -t -m '//obj[@tag=&quot;item&quot;]' -v 'scalar[@tag=&quot;id&quot;]/@val' -n |
-		sed -e '/^\s*$/d' > $data_dir/beers.tab
+		OAKConfig=$conf_file /usr/local/beercrush/bin/json2xml | 
+		xmlstarlet sel -t -m '//scalar[@tag=&quot;id&quot;]' -v @val -n |
+		sort |
+		while read beer_id; do 
+			if [ -n "$beer_id" ]; then
+
+				curl --silent $api_url/${beer_id//://} | php -r '
+				$doc=json_decode(file_get_contents("php://stdin"));
+				if (!is_null($doc)) {
+					$v=array();
+					$v[]=$doc->id;
+					$v[]=$doc->srm;
+					$v[]=$doc->ibu;
+					$v[]=$doc->abv;
+					$v[]=$doc->og;
+					$v[]=$doc->fg;
+					$v[]=$doc->review_summary->body_avg;
+					$v[]=$doc->review_summary->balance_avg;
+					$v[]=$doc->review_summary->aftertaste_avg;
+					print "\"".join("\"\t\"",$v)."\"\n";
+						
+				}
+				';
+			fi
+		done > $data_dir/characteristics.tab;
 fi
-	
-total_beers=$(wc -l $data_dir/beers.tab);
-total_beers=${total_beers%% *};
+
+#
+# For each beer, for each characteristic, find all the beers that are in the range of that beer
+#
+
+if [ ! -f $data_dir/rankings.tab ]; then
+	declare -a cols;
+
+	cat $data_dir/characteristics.tab |
+	while read beer_id srm ibu abv og fg body_avg balance_avg aftertaste_avg; do
+		
+		# The following must be in the order as the column are ordered in the $data_dir/characteristics.tab file
+		php -B '
+		$weights=array(
+			srm => 5,
+			ibu => 10,
+			abv => 8,
+			og => 6,
+			fg => 6,
+			body_avg => 10,
+			balance_avg => 8,
+			aftertaste_avg => 9,
+		);
+		$characteristics=array_keys($weights);
+		array_shift($argv);
+		$basis_vals=$argv;
+		foreach ($basis_vals as &$v) {
+			$v=trim($v,"\"");
+		}
+		$basis_beer_id=array_shift($basis_vals);
+		' -R '
+		$cols=str_getcsv($argn,"\t","\"");
+		$beer_id=array_shift($cols);
+		if ($beer_id != $basis_beer_id && count($cols) == count($characteristics)) {
+			$diff=0;
+			for ($i=0,$j=count($characteristics);$i<$j;++$i) {
+				if (empty($basis_vals[$i]) || empty($cols[$i]))
+					$diff+=1.0 * $weights[$characteristics[$i]];
+				else
+					$diff+=(abs($cols[$i] - $basis_vals[$i]) / $basis_vals[$i]) * $weights[$characteristics[$i]];
+			}
+			print $basis_beer_id."\t".$beer_id."\t".$diff."\n";
+		}
+' $beer_id $srm $ibu $abv $og $fg $body_avg $balance_avg $aftertaste_avg < $data_dir/characteristics.tab;
+
+	done > $data_dir/rankings.tab;
+fi
 
 # Log in
-logininfo=$(curl --silent --fail -d email=$email -d password=$password $api_url/login);
+password_md5=$(echo -n $password | md5sum | awk '{print $1}');
+logininfo=$(curl --silent --fail -d email=$email -d md5=$password_md5 $api_url/login);
 if [ $? != 0 ]; then
 	echo "Unable to login";
 	exit;
 fi
-
 read userid usrkey <<<$(echo $logininfo | $bindir/jsonpath userid usrkey);
+
+# Split them up by beer_id
+echo "Getting lines_per_beer";
+lines_per_beer=$(cut -f 1 /var/local/BeerCrush/similar/rankings.tab  | uniq -c | head -n 1);
+lines_per_beer=${lines_per_beer%% beer:*};
+
+echo "Getting total_lines";
+total_lines=$(( $lines_per_beer * ($lines_per_beer + 1) ));
+
+echo "Getting lines_count";
+lines_count=$(wc -l "$data_dir/rankings.tab");
+lines_count=${lines_count%% *};
+
+if [[ $lines_count != $total_lines ]]; then
+	echo "$data_dir/rankings.tab should have $total_lines lines, but it has $lines_count.";
+	exit;
+fi
 
 fails=0;
 successes=0;
 
-# For each beer...
-while read beer_id; do
-	# echo $beer_id;
-	
-	# Pick 5 at random
+for (( group=0, group_total=$(( $lines_per_beer + 1 )); $group < $group_total; group++ )); do
+	head -n $(( $group * $lines_per_beer + $lines_per_beer )) "$data_dir/rankings.tab" | tail -n $lines_per_beer | sort -k 1,1d -k 3,3n | head -n 10 > $data_dir/similars.tab;
+	beer_id=$(head -n 1 $data_dir/similars.tab | awk '{print $1}');
+
 	similar_beer_ids=;
-	for pick in 1 2 3 4 5; do
-		n=$(($RANDOM % $total_beers + 1));
-		random_beer_id=$(sed -n -e "$n,${n}p" $data_dir/beers.tab);
-		similar_beer_ids="${similar_beer_ids:+$similar_beer_ids }$random_beer_id";
-	done
-	# echo $similar_beer_ids;
-	RESPONSE=$(curl --silent --fail -X POST -d userid=$userid -d usrkey=$usrkey -d "similar=$similar_beer_ids" $api_url/recommend/edit?id=recommend:$beer_id);
+	while read id; do 
+		similar_beer_ids="${similar_beer_ids:+$similar_beer_ids }$id";
+	done < <(awk '{print $2}' $data_dir/similars.tab);
+
+	response=$(curl --silent --fail -X POST -d userid=$userid -d usrkey=$usrkey -d "similar=$similar_beer_ids" $api_url/recommend/edit?id=recommend:$beer_id);
 	if [ $? -ne 0 ]; then
 		echo "Failed to post similar beers: $beer_id";
 		fails=$((fails + 1));
 	else
+		echo $beer_id;
 		successes=$((successes + 1));
 	fi
-	
-done < $data_dir/beers.tab;
+
+done
 
 echo "Similars completed. $successes successes, $fails failures.";

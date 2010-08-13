@@ -450,6 +450,7 @@
    <field name="user_id" type="text" indexed="true" stored="true"/>
    <field name="date_drank" type="tdate" indexed="true" stored="true"/>
    <field name="flavor" type="string" indexed="true" stored="false" multiValued="true"/>
+   <field name="meta_beersreviewed" type="tint" indexed="true" stored="true" multiValued="false"/>
 
    <!-- Common metadata fields, named specifically to match up with
      SolrCell metadata when parsing rich documents such as Word, PDF.

@@ -5,19 +5,13 @@ email=;
 password=;
 doctype=;
 
-while getopts "C:de:p:t:" opt; do
+while getopts "C:dt:" opt; do
 	case $opt in
 		C)
 			conf_file=$OPTARG;
 			;;
 		d)
 			debug=1;
-			;;
-		e)
-			email=$OPTARG;
-			;;
-		p)
-			password=$OPTARG;
 			;;
 		t)
 			doctype=$OPTARG;
@@ -31,18 +25,16 @@ done
 
 function usage() {
 	cat <<EOF
-Usage: ${0##*/} -C <config file> -e <email> -p <password>
+Usage: ${0##*/} -C <config file>
 
   -C   Path to config file
-  -e   Email for admin user (to log into Beer Crush)
-  -p   Password for admin user (to log into Beer Crush)
   -t   Type of reviews (beer or place) to base recommendatios on
 
 EOF
 	exit 1;
 }
 
-if [ -z "$conf_file" -o -z "$email" -o -z "$password" ]; then
+if [ -z "$conf_file" ]; then
 	usage;
 fi
 
@@ -52,9 +44,15 @@ if [ ! -f $conf_file ]; then
 fi
 
 data_dir="/var/local/BeerCrush/recommend/$doctype";
+bindir="/usr/local/beercrush/bin";
+read couchdb_host couchdb_db api_url email password <<<$($bindir/jsonpath -1 "couchdb.nodes[0]" couchdb.database api.base_uri webservices.BeerCrush.admin.email webservices.BeerCrush.admin.password < $conf_file);
 
-read couchdb_host couchdb_db <<<$(/usr/local/beercrush/bin/jsonpath -1 "couchdb.nodes[0]" couchdb.database < $conf_file);
-read api_url <<<$(/usr/local/beercrush/bin/jsonpath -1 api.base_uri < $conf_file);
+for v in couchdb_host couchdb_db api_url email password; do
+	if [ -z "${!v}" ]; then
+		echo $v not found in $conf_file;
+		exit;
+	fi
+done
 
 if [ ! -d $data_dir ]; then mkdir -p $data_dir; fi
 

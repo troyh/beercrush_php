@@ -34,13 +34,11 @@ foreach ($answer as $country=>$total) {
 
 <?php
 $answer=solr_query(array(
-	'q' => 'doctype:brewery',
+	'q' => 'doctype:brewery AND meta_beersreviewed:[5 TO *]',
 	'sort' => 'random_'.date('Ymd').' asc',
 	'rows' => 1,
 ));
 $botd=BeerCrush::api_doc($BC->oak,BeerCrush::docid_to_docurl($answer->response->docs[0]->id));
-// TODO: Index the number of rated beers for each brewery so we can search by it
-// TODO: Only pick a brewery that has 5 rated beers
 
 // Get their top-rated beers
 $brewery_id=explode(':',BeerCrush::beer_id_to_brewery_id($botd->id));

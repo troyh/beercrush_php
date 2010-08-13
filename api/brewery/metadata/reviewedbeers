@@ -1,0 +1,62 @@
+#!/bin/bash
+
+usage() {
+	cat - <<EOF
+Usage: ${0##*/} -C <configfile>
+
+  -C   Configuration file
+
+EOF
+
+	exit;
+}
+
+getdata() {
+	curl --silent "$couchdb_url/_design/beer_reviews/_view/stats_per_beer?group=true" | 
+	sed -e 1d -e '$d' -e 's/,\s*$//' | 
+	/usr/local/beercrush/bin/jsonpath key | 
+	awk 'FS=":" {print $2}' | 
+	sort | 
+	sed -e '/^\s*$/d' | 
+	uniq -c;
+}
+
+while getopts "C:" opt; do
+	case $opt in
+		C )
+			conf_file=$OPTARG;
+			;;
+		\? )
+			usage;
+			;;
+	esac
+done
+
+if [ -z "$conf_file" ]; then
+	usage;
+fi
+
+couchdb_url="http://$(cat $conf_file | /usr/local/beercrush/bin/jsonpath -1 couchdb.nodes[0])/$(cat $conf_file| /usr/local/beercrush/bin/jsonpath -1 couchdb.database)";
+api_url=$(cat $conf_file | /usr/local/beercrush/bin/jsonpath -1 api.base_uri);
+
+if [ -z "$api_url" ]; then
+	echo "Beer Crush API URL not found";
+	exit;
+fi
+
+declare -i successes failures;
+
+successes=0;
+failures=0;
+
+while read count brewery_id; do
+	response=$(curl -X POST --silent --fail -d "beers.reviewed=$count" "$api_url/brewery/$brewery_id/metadata");
+	if [ $? -ne 0 ]; then
+		echo "Failed: $response";
+		failures=$((failures+1));
+	else
+		successes=$((successes+1));
+	fi
+done < <(getdata);
+
+echo "$successes successes. $failures failures.";

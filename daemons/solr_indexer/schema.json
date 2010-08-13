@@ -1,5 +1,5 @@
 {
-	"phpincludes": ["beercrush/beercrush.php"],
+	"phpincludes": ["beercrush/beercrush.php","beercrush/metadata_index_functions.php"],
 	"doc_id": "id",
 	"doctypes": {
 		"beer": {
@@ -17,7 +17,8 @@
 			"description": "text",
 			"address_street": { "fieldtype": "text", "propname": "address.street" },
 			"address_city": { "fieldtype": "text", "propname": "address.city" },
-			"address_state": { "fieldtype": "text", "propname": "address.state" }
+			"address_state": { "fieldtype": "text", "propname": "address.state" },
+			"meta_beersreviewed": { "fieldtype": "integer", "php_function": "BeerCrush\\Metadata\\Brewery\\beersreviewed" }
 		},
 		"place": {
 			"doctype": { "fieldtype":"text", "propname": "type" },

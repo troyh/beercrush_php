@@ -1,4 +1,4 @@
 MAILTO=troy@beercrush.com
 
 # m h dom mon dow user    command
-30 3 * * * www-data /usr/local/beercrush/bin/similarbeers -C /etc/BeerCrush/webapp.conf -e troy.hakala@gmail.com -p blah
+30 3 * * * www-data /usr/local/beercrush/bin/similarbeers -C /etc/BeerCrush/webapp.conf 

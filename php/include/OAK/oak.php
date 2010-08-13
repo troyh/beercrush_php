@@ -77,7 +77,7 @@ catch(Exception $x)
 		// }
 	}
 
-	print json_encode($exception);
+	print json_encode($exception)."\n";
 }
 
 function OAK_error_handler($errno,$errstr,$errfile,$errline,$errcontext)
