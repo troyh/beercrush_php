@@ -11,7 +11,11 @@ autocomplete.fcgi: autocomplete.o ../../src/external/cgic/libcgic.a
 clean:
 	rm -f $(FCGI_PROGS) $(patsubst %.fcgi,%.o,$(FCGI_PROGS))
 
-local_install: /var/local/BeerCrush/meta/autocomplete_names.tsv /var/local/BeerCrush/meta/autocomplete_styles.tab
+local_install: /var/local/BeerCrush/meta/ /var/local/BeerCrush/meta/autocomplete_names.tsv /var/local/BeerCrush/meta/autocomplete_styles.tab
+
+/var/local/BeerCrush/meta/:
+	sudo mkdir $@;
+	sudo chmod g+rw $@;
 
 /var/local/BeerCrush/meta/autocomplete_names.tsv:
 	./autocomplete_list > $@

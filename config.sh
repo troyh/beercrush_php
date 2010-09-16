@@ -8,7 +8,7 @@ BEERCRUSH_APPSERVER_USER=www-data
 
 PATH=$PATH:$BEERCRUSH_BIN_DIR
 
-WWW_DIR=$(php -r '$$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $$cfg->file_locations->WWW_DIR."\n";');
+WWW_DIR=$(php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $cfg->file_locations->WWW_DIR."\n";');
 
 if [ -z "$WWW_DIR" ]; then
 	echo "WWW_DIR is empty!"
@@ -20,6 +20,15 @@ MGMT_SERVER=`php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/setup.co
 SITE_DOMAIN_NAME=`php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $cfg->domainname."\n";'`;
 WWW_DIR=`php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $cfg->file_locations->WWW_DIR."\n";'`;
 LOCALDATA_DIR=`php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $cfg->file_locations->LOCAL_DIR."\n";'`;
+
+for D in $WWW_DIR $BEERCRUSH_BIN_DIR $BEERCRUSH_ETC_DIR/cron $BEERCRUSH_ETC_DIR/daemons $LOCALDATA_DIR; do
+	if [ ! -d $D ]; then
+		sudo mkdir -p $D;
+		sudo chgrp $BEERCRUSH_APPSERVER_USER $D;
+		sudo chmod g+rw $D;
+	fi
+done
+
 
 iamcron() {
 	if ls $BEERCRUSH_ETC_DIR/cron/ | grep $1 > /dev/null; then
