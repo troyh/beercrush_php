@@ -1,0 +1,4 @@
+/etc/default/spread default 
+/etc/init.d/spread init-script 
+/etc/spread.conf spread.conf 
+SYMLINK /etc/rc2.d/S17spread /etc/init.d/spread

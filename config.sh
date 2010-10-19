@@ -6,6 +6,8 @@ BEERCRUSH_PHPINC_DIR="/usr/share/php/beercrush/"
 BEERCRUSH_SOURCE_DIR="$HOME/beercrush/"
 BEERCRUSH_APPSERVER_USER=www-data
 
+beercrush_conf_file="/etc/BeerCrush/webapp.conf";
+
 PATH=$PATH:$BEERCRUSH_BIN_DIR
 
 WWW_DIR=$(php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $cfg->file_locations->WWW_DIR."\n";');

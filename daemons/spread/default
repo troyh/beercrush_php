@@ -1,0 +1,5 @@
+# Change to enable spread
+ENABLED=1
+
+# Options, see spread.1 for list
+OPTIONS=""

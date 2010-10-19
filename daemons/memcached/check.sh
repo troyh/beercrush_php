@@ -1,16 +1,5 @@
 #!/bin/bash
 
-if ../../tools/iamservertype -q memcached; then
-
-	# Verify that memcached is installed
-	STATUS=$(dpkg --status memcached | grep "Status:");
-	if [ "$STATUS" != "Status: install ok installed" ]; then
-		echo "memcached is not installed. Installing...";
-		sudo apt-get install memcached
-	fi
-
-fi
-
 # Verify that memcached servers are in setup.conf and webapp.conf
 MC_SERVERS=$(cat /etc/BeerCrush/setup.conf | ../../tools/jsonpath -1 servers.memcached.servers);
 if [ "$MC_SERVERS" = "null" ]; then
