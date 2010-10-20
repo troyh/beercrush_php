@@ -609,12 +609,14 @@ class OAK
 		);
 		$this->broadcast_msg('dependency',$msg);
 
-		if (is_null($rev) && ($_SERVER['REQUEST_METHOD']=="GET") && !empty($_SERVER['REQUEST_URI'])) {
-			$msg=array(
-				'url' => 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].$_SERVER['REQUEST_URI'],
-				'doc_id' => $couchdb_url
-			);
-			$this->broadcast_msg('dependency',$msg);
+		if (!empty($_SERVER['REQUEST_METHOD'])) { // Only do this for requests on the web server
+			if (is_null($rev) && ($_SERVER['REQUEST_METHOD']=="GET") && !empty($_SERVER['REQUEST_URI'])) {
+				$msg=array(
+					'url' => 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].$_SERVER['REQUEST_URI'],
+					'doc_id' => $couchdb_url
+				);
+				$this->broadcast_msg('dependency',$msg);
+			}
 		}
 
 		return true;
@@ -627,11 +629,13 @@ class OAK
 	}
 	
 	public function get_http_document($url) {
-		$msg=array(
-			'url' => 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].$_SERVER['REQUEST_URI'],
-			'doc_url' => $url
-		);
-		$this->broadcast_msg('dependency',$msg);
+		if (!empty($_SERVER['SERVER_NAME'])) { // Only do this for requests on the web server
+			$msg=array(
+				'url' => 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].$_SERVER['REQUEST_URI'],
+				'doc_url' => $url
+			);
+			$this->broadcast_msg('dependency',$msg);
+		}
 		return @file_get_contents($url);
 	}
 	
