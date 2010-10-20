@@ -2,7 +2,9 @@ include ../../Makefile.rules
 
 FCGI_PROGS=nearby_locations.fcgi
 
-build: $(FCGI_PROGS) ../../src/external/cgic/libcgic.a $(LOCALDATA_DIR)/meta/nearby_locations.txt
+build: $(FCGI_PROGS) ../../src/external/cgic/libcgic.a 
+
+install: $(LOCALDATA_DIR)/meta/nearby_locations.txt
 
 nearby_locations.fcgi: nearby_locations.o ../../src/external/cgic/libcgic.a
 	$(CXX) $^ -lfcgi -o $@

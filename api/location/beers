@@ -28,8 +28,7 @@ else
 			{
 				// print "Unable to get place document {$place_id}\n";
 			}
-			else
-			{
+			else if (!empty($place->address->latitude) && !empty($place->address->longitude)) {
 				// Get the beers on their menu
 				foreach ($menu->items as $item)
 				{
