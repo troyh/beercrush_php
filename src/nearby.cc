@@ -9,7 +9,7 @@ extern "C"
 #include <fstream>
 #include <string.h>
 #include <ctype.h>
-// #include <stdint.h>
+#include <stdint.h>
 
 #define MAX_PLACE_ID_LEN 256
 
