@@ -2,7 +2,7 @@
 
 . ../config.sh
 
-if ../tools/iamservertype -q php-cgi; then
+if iamdaemon php5-fpm; then
 
 	if [ ! -d $WWW_DIR/api ]; then
 		mkdir $WWW_DIR/api;
@@ -23,6 +23,9 @@ if ../tools/iamservertype -q php-cgi; then
 	# Note: the order of --exclude & --include matters here... (we only want non-hidden .php files)
 	rsync --recursive --delete --times --exclude=".*" --include="*/" --include="*.php" --exclude="*" ./ $WWW_DIR/api/;
 	
+	# NOTE: This needs to not require sudo because this script will run on development servers by incron for every change
+	# to a file and it can't answer a prompt for root's password
+	#
 	# Delete the NGiNX cache
 	rm -rf /var/local/nginx/caches/api;
 	# Re-create the NGiNX cache so that we have the permissions we want (NGiNX won't change 
@@ -34,3 +37,4 @@ if ../tools/iamservertype -q php-cgi; then
 	chmod g+rwX /var/local/nginx/caches/api;
 	
 fi
+

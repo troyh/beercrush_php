@@ -2,7 +2,7 @@
 
 . ../../config.sh
 
-if ../../tools/iamservertype -q cgi; then
+if iamdaemon php5-fpm; then
 	if [ ! -d $WWW_DIR/auth/ ]; then
 		mkdir $WWW_DIR/auth;
 	fi

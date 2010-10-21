@@ -18,11 +18,7 @@ if [ ! -f $BEERCRUSH_ETC_DIR/webapp.conf ]; then
 	exit 1;
 fi
 
-cp tools/iamservertype /usr/local/beercrush/bin/;
-cp tools/iamdaemon /usr/local/beercrush/bin/;
-
-
-if tools/iamservertype -q php-cgi || tools/iamservertype -q web; then
+if iamdaemon php5-fpm || iamdaemon web; then
 
 	if [ ! -d $WWW_DIR ]; then
 		echo "Creating $WWW_DIR";
@@ -37,7 +33,7 @@ if tools/iamservertype -q php-cgi || tools/iamservertype -q web; then
 
 fi
 
-if tools/iamservertype -q php-cgi || tools/iamservertype -q cgi; then
+if iamdaemon php5-fpm; then
 
 	for DIR in  $LOCALDATA_DIR  /var/local/BeerCrush/meta/; do
 		if [ ! -d $DIR ]; then
@@ -47,24 +43,20 @@ if tools/iamservertype -q php-cgi || tools/iamservertype -q cgi; then
 
 	# Set correct permissions on directories
 	for D in meta uploads images; do
-		chgrp $BEERCRUSH_APPSERVER_USER /var/local/BeerCrush/$D;
-		chmod g+rwX /var/local/BeerCrush/$D;
+		sudo chown $BEERCRUSH_APPSERVER_USER.$BEERCRUSH_APPSERVER_USER /var/local/BeerCrush/$D;
+		sudo chmod g+rwX /var/local/BeerCrush/$D;
 	done
 	
 fi
 
-if tools/iamservertype -q mgmt; then
-
-	if [ ! -d /var/run/BeerCrush ]; then
-		sudo mkdir /var/run/BeerCrush;
-	fi
-	
-	sudo chown www-data.www-data /var/run/BeerCrush;
-	sudo chmod g+w /var/run/BeerCrush;
-	
+if [ ! -d /var/run/BeerCrush ]; then
+	sudo mkdir /var/run/BeerCrush;
 fi
 
-if tools/iamservertype -q gitrepo; then
+sudo chown www-data.www-data /var/run/BeerCrush;
+sudo chmod g+w /var/run/BeerCrush;
+
+if iamdaemon dbchanges2git; then
 	if [ ! -d /var/local/BeerCrush/git ]; then
 		mkdir -p /var/local/BeerCrush/git;
 	fi
@@ -99,5 +91,9 @@ fi
 # TODO: make autocompletenames.txt and latlonpairs.txt in /var/local/BeerCrush/meta
 
 # TODO: the stop and start should wrap all installs for children directories
-bash ./supervisord.sh stop;
-bash ./supervisord.sh start;
+if sudo service supervisor status > /dev/null; then
+	sudo service supervisor restart;
+else
+	sudo service supervisor start;
+fi
+

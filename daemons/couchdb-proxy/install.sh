@@ -64,6 +64,8 @@ EOF
 	if [ $cfg_changed = true ]; then
 		echo "NGiNX configuration changed.";
 		sudo service nginx restart
+	elif ! sudo service nginx status > /dev/null; then 
+		sudo service nginx start;
 	fi
 
 	# Test that the CouchDB proxy works

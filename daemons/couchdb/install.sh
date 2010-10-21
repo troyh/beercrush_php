@@ -14,8 +14,6 @@ EOF
 	exit 1;
 fi
 
-exit;
-
 COUCHDB_HOST=$(php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $cfg->couchdb->nodes[0];');
 COUCHDB_DBNAME=$(php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $cfg->couchdb->database;');
 
@@ -74,6 +72,8 @@ rm -f design/*.json;
 
 if [ $design_changed -ne 0 ]; then
 	# Restart couchdb
-	# sudo /etc/init.d/couchdb stop;
-	sudo /etc/init.d/couchdb restart;
+	sudo service couchdb restart;
+elif ! sudo service couchdb status > /dev/null; then
+	sudo service couchdb start;
 fi
+

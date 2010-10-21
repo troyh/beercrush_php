@@ -2,7 +2,7 @@
 
 if [ "$1" = "stop" ]; then
 
-	if [ `tools/iamservertype -q php-cgi` -o `tools/iamservertype -q mgmt` ]; then
+	if iamdaemon php5-fpm; then
 		# Try 3 times to stop supervisord
 		for N in 1 2 3; do
 			if [ "$(/etc/init.d/supervisor status)" = " is running" ]; then 
@@ -18,7 +18,7 @@ if [ "$1" = "stop" ]; then
 
 elif [ "$1" = "start" ]; then
 	
-	if [ `tools/iamservertype -q php-cgi` -o `tools/iamservertype -q mgmt` ]; then
+	if iamdaemon php5-fpm; then
 		sudo /etc/init.d/supervisor start;
 		# Try 3 times to start supervisord
 		for N in 1 2 3; do

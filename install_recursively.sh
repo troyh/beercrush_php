@@ -166,7 +166,7 @@ for SUBDIR in $(find . -type d ! -name '.*' | sort | grep -v -e '/\.' | sed -e '
 
 	ORIGDIR=$(pwd);
 	cd $SUBDIR;
-	# echo "Running script in $(pwd)";
+	echo "Running script in $(pwd)";
 	install_routine $SUBDIR; # Run through install routine in the subdir
 	cd $ORIGDIR;
 done
