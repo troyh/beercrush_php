@@ -59,3 +59,22 @@ files_are_identical() {
 	return 0; # The files are identical
 }
 
+my_ip_addresses() {
+	echo $(ifconfig $e | awk '/inet addr:([0-9\.]+)/ { print substr($2,match($2,/([0-9]+)/));}');
+}
+
+start_or_restart_service() {
+	if sudo service $1 status > /dev/null; then
+		if [ "$1" = "supervisor" ]; then
+			# supervisord doesn't restart, you have to stop and then start it
+			sudo service $1 stop;
+			sleep 5;
+			sudo service $1 start;
+		else
+			sudo service $1 restart;
+		fi
+	else
+		sudo service $1 start;
+	fi
+}
+
