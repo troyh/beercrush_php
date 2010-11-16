@@ -1,0 +1,144 @@
+#!/bin/bash
+
+function http_request_reset {
+	http_request_time_total=0;
+	http_request_count=0;
+}
+
+function http_request {
+	curl --write-out "\n%{time_total}\n" --fail --silent $1 > /tmp/curl.out;
+	local curl_status=$?;
+	
+	(( http_request_count++ ));
+
+	local s=$(sed -n -e '$p' /tmp/curl.out);
+	http_request_time_total=$(bc <<<"$s + $http_request_time_total" );
+
+	sed -e '$d' /tmp/curl.out;
+	return $curl_status;
+}
+
+function http_request_summary {
+	echo "$(bc <<<"scale=0;$http_request_count / $http_request_time_total")r/s ($http_request_count requests in $http_request_time_total seconds, $(bc <<<"scale=4;$http_request_time_total / $http_request_count")s/r)";
+}
+
+function brewery_list {
+	if [ ! -f breweries.json ]; then
+		if ! http_request $base_uri/breweries > breweries.json; then
+			echo "Failed to get breweries list";
+			exit;
+		fi
+	fi
+	
+	cat breweries.json | php -r '$breweries=json_decode(file_get_contents("php://stdin"));
+	foreach ($breweries as $letter=>$list) { 
+		foreach ($list as $brewery) { 
+			print $brewery->id."\n"; 
+		} 
+	} 
+'
+}
+
+function beer_list {
+	if [ ! -f beers.json ]; then
+		if ! http_request $base_uri/beers > beers.json; then
+			echo "Failed to get beers list";
+			exit;
+		fi
+	fi
+
+	cat beers.json | php -r '$beers=json_decode(file_get_contents("php://stdin"));
+	foreach ($beers as $letter=>$list) { 
+		foreach ($list as $beer) { 
+			print $beer->id."\n"; 
+		} 
+	} 
+'
+}
+
+# function print_rate {
+# 	rate=$( bc <<<"scale=3;($2 - $1) / $3" );
+# 	echo "$(( $2 - $1 )) seconds (${rate}s/doc )";
+# }
+
+http_request_reset;
+
+base_uri=$(php -r '$cfg=json_decode(file_get_contents("/etc/BeerCrush/webapp.conf"));print $cfg->api->base_uri;');
+
+declare -a urls;
+
+urls=(
+	flavors
+	beercolors
+	beerstyles
+	breweries
+);
+
+for url in ${urls[*]}; do 
+	echo -n "$base_uri/$url ... ";
+	if ! http_request $base_uri/$url > /dev/null; then
+		echo "Error";
+	else
+		echo "Ok";
+	fi
+done
+
+#
+# Iterate all the beers from all the breweries
+#
+total_breweries=0;
+while read brewery_id; do
+	(( total_breweries++ ));
+done < <(brewery_list);
+
+echo "Getting $total_breweries brewery docs...";
+while read brewery_id; do
+	# echo $brewery_id;
+	brewery_url=$base_uri/${brewery_id//:/\/}
+	if ! http_request $brewery_url > /dev/null; then
+		echo "ERROR: $brewery_url";
+	fi
+done < <(brewery_list);
+
+echo "Getting $total_breweries beerlist docs...";
+total_beerlist_beers=0;
+while read brewery_id; do
+	beerlist_url=$base_uri/${brewery_id//:/\/}/beerlist
+	# echo $beerlist_url;
+	if ! http_request $beerlist_url > /tmp/beerlist.json; then
+		echo "ERROR: $beerlist_url";
+	else
+		 
+		beerlist_count=$(cat /tmp/beerlist.json | php -r '$obj=json_decode(file_get_contents("php://stdin")); print count($obj->beers);');
+		let total_beerlist_beers+=$beerlist_count;
+		# echo $total_beers $brewery_id;
+		# 
+		# 
+		# cat /tmp/beerlist.json | 
+		# php -r '$obj=json_decode(file_get_contents("php://stdin"));foreach($obj->beers as $beer) {print $beer->beer_id."\n";}' |
+		# while read beer_id; do
+		# 	echo $beer_id;
+		# done
+	fi
+done < <(brewery_list);
+
+total_beers=0;
+while read beer_id; do
+	(( total_beers++ )); 
+done < <(beer_list);
+
+echo "Getting $total_beers beer docs...";
+while read beer_id; do
+	beer_url=$base_uri/${beer_id//:/\/};
+	if ! http_request $beer_url > /dev/null; then
+		echo "ERROR: $beer_url";
+	fi
+done < <(beer_list);
+
+echo;
+echo "$total_breweries breweries";
+echo "$total_beers beers";
+echo "$total_beerlist_beers beers listed on brewery beer lists";
+echo;
+
+http_request_summary;
